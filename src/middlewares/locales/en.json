@@ -1,0 +1,18 @@
+{
+	"Something went wrong, Please try again.": "Something went wrong, Please try again.",
+	"Success": "Success",
+	"Not found": "Not found",
+	"Please authenticate": "Please authenticate",
+	"Validation Failed, Kindly check your parameters": "Validation Failed, Kindly check your parameters",
+	"Email not found": "Email not found",
+	"This email already exist": {
+		" Please try with other email": "This email already exist. Please try with other email"
+	},
+	"User successfully logged out": "User successfully logged out",
+	"Password changed successfully": "Password changed successfully",
+	"Password is Incorrect": "Password is Incorrect",
+	"Account does not exist": "Account does not exist",
+	"Report sent successfully": "Report sent successfully",
+	"You are not authorized to perform this action": "You are not authorized to perform this action",
+	"Your are successfully logged out": "Your are successfully logged out"
+}

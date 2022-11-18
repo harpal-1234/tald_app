@@ -1,0 +1,50 @@
+{
+  "name": "pushhy_app",
+  "version": "1.0.0",
+  "description": "API's of pushhy_app ",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodemon index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git push --set-upstream origin master"
+  },
+  "keywords": [
+    "Express",
+    "Mongodb",
+    "&",
+    "nodejs"
+  ],
+  "author": "tarun <tarunkaushal255@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.1",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^6.6.0",
+    "handlebars": "^4.7.7",
+    "hbs": "^4.2.0",
+    "helmet": "^6.0.0",
+    "i18n": "^0.15.1",
+    "joi": "^17.7.0",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.38",
+    "mongoose": "^6.7.1",
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.8.0",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.0",
+    "twilio": "^3.83.1",
+    "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
