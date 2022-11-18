@@ -22,7 +22,7 @@ const adminLogin = catchAsync(async (req, res) => {
   const admin = await vendorAdminService.adminLogin(email, password);
   const token = await tokenService.generateAuthToken(admin, USER_TYPE.VENDOR_ADMIN);
   const user = {
-    Name: admin.firstName,
+    Name: admin.userName,
     email: admin.email,
   };
   return successResponse(
