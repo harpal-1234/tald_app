@@ -16,12 +16,14 @@ const {
     res,
     statusCode = STATUS_CODES.SUCCESS,
     message = SUCCESS_MESSAGES.SUCCESS,
-    data
+    data,
+    value
   ) => {
     const result = {
       statusCode,
       message: res.__(message), //Added Localization to response
       data,
+      value
     };
   
     return res.status(statusCode).json(result);
