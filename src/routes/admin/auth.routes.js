@@ -15,6 +15,13 @@ router.post(
   authController.adminLogin
 )
 
+router.put(
+  "/changePassword",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.changePassword),
+  authController.changePassword
+);
+
 router.post("/logout", auth(USER_TYPE.ADMIN), authController.adminLogout);
 
 module.exports = router;

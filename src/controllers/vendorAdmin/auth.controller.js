@@ -56,7 +56,6 @@ const dashBoard = catchAsync(async (req, res) => {
 });
 
 const adminLogout=catchAsync(async (req,res) =>{
-  console.log(req.token._id)
   await vendorAdminService.adminLogout(req.token._id)
   return successResponse(
     req,

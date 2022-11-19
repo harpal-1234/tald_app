@@ -16,6 +16,16 @@ const userSchema = mongoose.Schema(
       sparse:true,
       default:""
     },
+    location:{
+      street: { type: String, default: "" },
+      loc: {
+        type: { type: String, default: "Point" },
+        coordinates: {
+          type: [Number],
+          default: [0, 0],
+        },
+      },
+    },
     phoneNumber:{ type: String, default: "" },
     socialId:{
       googleId:{ type: String,sparse:true},

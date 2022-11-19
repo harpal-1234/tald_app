@@ -1,6 +1,7 @@
 module.exports = {
     Token: require("./token.model"),
     User: require("./user.model"),
-    VendorAdmin:require("./vendorAdmin.model"),
+    Vendor:require("./vendor.model"),
     Admin: require("./admin.model"),
+    Coupon: require("./coupon.model")
   };

@@ -1,4 +1,4 @@
-const { User, VendorAdmin ,Token} = require("../../models");
+const { User, Vendor ,Token} = require("../../models");
 const {
   STATUS_CODES,
   ERROR_MESSAGES,
@@ -7,20 +7,20 @@ const { OperationalError } = require("../../utils/errors");
 
 const adminSignUp=async(adminData) =>{
   
-  const admin=await VendorAdmin.findOne({email:adminData.email,isDeleted:false});
+  const admin=await Vendor.findOne({email:adminData.email,isDeleted:false});
   if (admin) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
       ERROR_MESSAGES.EMAIL_ALREADY_EXIST
     );
   }
-  const newAdmin= await VendorAdmin.create(adminData);
+  const newAdmin= await Vendor.create(adminData);
   return newAdmin;
 
 }
 
 const adminLogin = async (email, password) => {
-  const admin = await VendorAdmin.findOne({ email:email });
+  const admin = await Vendor.findOne({ email:email });
  
 
   if (!admin) {
@@ -39,7 +39,7 @@ const adminLogin = async (email, password) => {
 };
 
 const changePassword = async (adminId, oldPassword, newPassword) => {
-  const admin = await VendorAdmin.findById(adminId);
+  const admin = await Vendor.findById(adminId);
   if (!(await admin.isPasswordMatch(oldPassword))) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,

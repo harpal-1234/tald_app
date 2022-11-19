@@ -2,7 +2,7 @@ const express = require("express");
 const userAuth = require("./user/auth.routes");
 const userProfile = require("./user/profile.routes");
 const staticRoutes=require("../routes/static.routes");
-const vendorAdminAuth=require("./vendorAdmin/auth.routes");
+const vendorAuth=require("./vendorAdmin/auth.routes");
 const adminAuth=require("./admin/auth.routes")
 
 
@@ -18,8 +18,8 @@ const defaultRoutes = [
 
   },
   {
-    path:'/vendoradmin/auth',
-    route:vendorAdminAuth
+    path:'/vendor/auth',
+    route:vendorAuth
   },
   {
     path: "/user/auth",
