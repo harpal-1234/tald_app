@@ -9,11 +9,13 @@ const { successResponse } = require("../../utils/response");
 
 const adminSignUp = catchAsync(async (req, res) => {
   const admin = await vendorAdminService.adminSignUp(req.body);
+  const token = await tokenService.generateAuthToken(admin, USER_TYPE.VENDOR_ADMIN);
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.DEFAULT,
+    token
   );
 });
 
