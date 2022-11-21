@@ -1,8 +1,8 @@
 const express = require("express");
 const { validate } = require("../../middlewares/validate");
 const auth = require("../../middlewares/auth");
-const adminController = require("../../controllers/vendorAdmin/auth.controller");
-const adminValidation = require("../../validations/adminVendor/auth.validation");
+const adminController = require("../../controllers/vendor/auth.controller");
+const adminValidation = require("../../validations/vendor/auth.validation");
 const { USER_TYPE } = require("../../config/appConstants");
 
 const router = express.Router();

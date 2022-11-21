@@ -5,6 +5,7 @@ const Joi = require("joi");
 dotenv.config({ path: path.join(__dirname, "../../.env") });
 
 
+
 const envVarsSchema = Joi.object()
   .keys({
     PORT: Joi.number().required(),

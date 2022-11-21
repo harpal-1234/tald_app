@@ -3,11 +3,10 @@ const mongoSanitize = require("express-mongo-sanitize");
 const cors = require("cors");
 const passport = require("passport");
 const compression = require("compression");
-const helmet = require("helmet");
+// const helmet = require("helmet");
 const { jwtStrategy } = require("./src/config/passport");
 const routes = require("./src/routes");
 const { errorHandler } = require("./src/middlewares/common");
-// const scheduler = require("./src/libs/scheduler");
 const { authLimiter } = require("./src/middlewares/common");
 const i18n = require("./src/middlewares/i18n");
 const {
@@ -50,10 +49,12 @@ app.use(passport.initialize());
 passport.use("jwt", jwtStrategy);
 
 // limit repeated failed requests to auth endpoints
-app.use("/user/auth", authLimiter);
+// app.use("/user/auth", authLimiter);
 
 // v1 api routes
 app.use("/", routes);
+
+
 
 //send back a 404 error for any unknown api request
 app.use((req, res, next) => {

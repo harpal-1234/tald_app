@@ -7,10 +7,12 @@ const {
   SUCCESS_MESSAGES,
   USER_TYPE
 } = require("../../config/appConstants");
+
 // const formatRes = require("../../../utils/formatResponse");
 const { forgotPasswordEmail } = require("../../utils/sendMail");
-const {successMessageWithoutData}=require("../../utils/commonFunction")
+const {successMessageWithoutData,successMessage}=require("../../utils/commonFunction")
 const dotenv = require("dotenv");
+dotenv.config();
 
 const signUp= catchAsync(async (req, res) => {
 
@@ -62,10 +64,11 @@ const forgotPassword = catchAsync(async (req, res) => {
 //-------page render---------------//
 const forgotPage = async (req, res) => {
   try {
+  
     const tokenData = await tokenService.verifyResetPasswordToken(
       req.query.token
     );
-
+      
     if (tokenData) {
       return res.render("forgotPassword/forgotPassword", {
         title: "forgot Password",
@@ -89,6 +92,7 @@ const forgotPage = async (req, res) => {
 
 const resetForgotPassword = catchAsync(async (req, res) => {
   try {
+    console.log(req)
     const token = req.query.token;
     const tokenData = await tokenService.verifyResetPasswordToken(token);
     if (!tokenData)
@@ -102,7 +106,7 @@ const resetForgotPassword = catchAsync(async (req, res) => {
       tokenData,
       req.body.newPassword
     );
-    
+    console.log(value);
 
     return res.render("forgotPassword/commonMessage", {
       title: "Forgot Password",

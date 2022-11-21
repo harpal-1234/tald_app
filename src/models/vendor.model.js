@@ -27,6 +27,6 @@ vendorAdminSchema.pre("save", async function (next) {
   next();
 });
 
-const Vendor = mongoose.model("vendorAdmins", vendorAdminSchema);
+const Vendor = mongoose.model("vendors", vendorAdminSchema);
 
 module.exports = Vendor;

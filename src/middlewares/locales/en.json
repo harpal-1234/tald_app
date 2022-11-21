@@ -14,5 +14,7 @@
 	"Account does not exist": "Account does not exist",
 	"Report sent successfully": "Report sent successfully",
 	"You are not authorized to perform this action": "You are not authorized to perform this action",
-	"Your are successfully logged out": "Your are successfully logged out"
+	"Your are successfully logged out": "Your are successfully logged out",
+	"Please Provide Different Coupon Code": "Please Provide Different Coupon Code",
+	"Coupon Deleted Successfully": "Coupon Deleted Successfully"
 }

@@ -1,3 +1,8 @@
+const successMessage = (code, data) => {
+  return { statusCode: code, message: "success", data };
+};
+
+
 const successMessageWithoutData = (code, message) => {
     return { statusCode: code, message: message };
   };
@@ -38,6 +43,34 @@ const successMessageWithoutData = (code, message) => {
     return userData;
   };
 
+  const formatCoupon=(userData) => {
+   
+    if (userData.length) {
+      userData.forEach((data) => {
+        delete data.__v;
+        delete data.isBlocked;
+        delete data.isDeleted;
+        delete data.createdAt;
+        delete data.updatedAt;
+        delete data.customerId;
+      });
+    } else {
+      delete userData.__v;
+      delete userData.isBlocked;
+      delete userData.isDeleted;
+      delete userData.createdAt;
+      delete userData.updatedAt;
+      delete userData.__v;
+      delete userData._id;
+      delete userData.vendorId
+    
+      
+    }
+    return userData;
+  };
+
   module.exports={
-    successMessageWithoutData 
+    successMessageWithoutData ,
+    successMessage,
+    formatCoupon
   }

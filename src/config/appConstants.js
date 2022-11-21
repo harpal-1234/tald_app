@@ -90,6 +90,7 @@ const ERROR_MESSAGES = {
   USER_NOT_FOUND: "User not found",
   SKILL_ALREADY_EXIST: "Skill already exist with this name.",
   WRONG_PASSWORD: "Password is Incorrect",
+  COUPON_CODE:'Please Provide Different Coupon Code'
 };
 
 const STATUS_CODES = {
@@ -123,9 +124,15 @@ const socialAuth={
 
 }
 
+const DELETE_MASSAGES = {
+ USER_DELETED:'User Deleted Successfully',
+  COUPON_DELETED:'Coupon Deleted Successfully',
+ 
+};
 
 
 module.exports = {
+  DELETE_MASSAGES,
   socialMedia,
   socialAuth,
   TOKEN_TYPE,

@@ -182,7 +182,7 @@ const generateResetPasswordToken = async (email) => {
 
 const verifyResetPasswordToken = async (token) => {
   try {
-   
+   console.log("working")
     
     const payload = jwt.verify(token, config.jwt.secret);
 
@@ -191,7 +191,7 @@ const verifyResetPasswordToken = async (token) => {
       isDeleted: false,
       // expires: { $gte: new Date() },
     });
-    
+    console.log(tokenData);
     return tokenData;
   } catch (error) {
     throw error;

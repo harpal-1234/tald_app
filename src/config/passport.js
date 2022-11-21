@@ -17,12 +17,15 @@ const jwtVerify = async (payload, done) => {
     }
 
     let token = {};
-    
+   
     if (payload.role === USER_TYPE.VENDOR_ADMIN) {
+ 
       token = await Token.findOne({ _id: payload.id, isDeleted: false })
         .populate({ path: "vendor" })
         .lean();
+       
     }
+   ;
    
         if (payload.role === USER_TYPE.ADMIN) {
       token = await Token.findOne({ _id: payload.id, isDeleted: false })

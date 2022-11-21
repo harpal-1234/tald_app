@@ -2,7 +2,8 @@ const express = require("express");
 const userAuth = require("./user/auth.routes");
 const userProfile = require("./user/profile.routes");
 const staticRoutes=require("../routes/static.routes");
-const vendorAuth=require("./vendorAdmin/auth.routes");
+const vendorAuth=require("./vendor/auth.routes");
+const coupon=require("./vendor/coupon.routes");
 const adminAuth=require("./admin/auth.routes")
 
 
@@ -12,6 +13,7 @@ const adminAuth=require("./admin/auth.routes")
 const router = express.Router();
 
 const defaultRoutes = [
+ 
   {
     path:'/admin/auth',
     route:adminAuth
@@ -20,6 +22,10 @@ const defaultRoutes = [
   {
     path:'/vendor/auth',
     route:vendorAuth
+  },
+  {
+    path:'/vendor/coupon',
+    route:coupon
   },
   {
     path: "/user/auth",

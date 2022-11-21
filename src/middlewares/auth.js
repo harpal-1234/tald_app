@@ -9,7 +9,7 @@ const { AuthFailedError } = require("../utils/errors");
 const verifyCallback =
   (req, resolve, reject, role) => async (err, token, info) => {
    
-   
+  
   
     if (err || info || !token) {
       return reject(new AuthFailedError());
