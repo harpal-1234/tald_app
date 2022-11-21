@@ -24,6 +24,7 @@ const createCoupon=catchAsync(async(req,res)=>{
 const getCoupon=catchAsync(async(req,res)=>{
 
   const coupon=await vendorCouponService.getCoupon(req.query,req.token.vendor._id);
+  console.log(coupon);
   const value=formatCoupon(coupon);
   return successResponse(
       req,

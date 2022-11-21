@@ -53,6 +53,14 @@ const getCoupon=async(data,tokendata)=>{
     }
 
     const coupon=await Coupon.findOne({couponCode:data.couponCode,isDeleted:false}).lean();
+    if(!coupon)
+    {
+        throw new OperationalError(
+            STATUS_CODES.ACTION_FAILED,
+            ERROR_MESSAGES.COUPON_DATA
+          );
+    }
+    
 
     return coupon;
 

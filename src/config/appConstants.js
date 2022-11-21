@@ -90,7 +90,8 @@ const ERROR_MESSAGES = {
   USER_NOT_FOUND: "User not found",
   SKILL_ALREADY_EXIST: "Skill already exist with this name.",
   WRONG_PASSWORD: "Password is Incorrect",
-  COUPON_CODE:'Please Provide Different Coupon Code'
+  COUPON_CODE:'Please Provide Different Coupon Code',
+  COUPON_DATA:'Coupon not exists'
 };
 
 const STATUS_CODES = {

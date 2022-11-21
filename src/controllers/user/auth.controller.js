@@ -18,12 +18,14 @@ const signUp= catchAsync(async (req, res) => {
 
 
   const newUser = await userService.createUser(req.body);
+  const token = await tokenService.generateAuthToken(newUser, USER_TYPE.USER);
 
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.SUCCESS,
+    token
   );
 });
 
