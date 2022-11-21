@@ -122,6 +122,8 @@ const resetForgotPassword = catchAsync(async (req, res) => {
   }
 });
 
+
+
 module.exports = {
   signUp,
   userLogin,
