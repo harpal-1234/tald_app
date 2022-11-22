@@ -21,17 +21,18 @@ const createCoupon=catchAsync(async(req,res)=>{
       );
     });
 
-const getCoupon=catchAsync(async(req,res)=>{
+const getAllCoupon=catchAsync(async(req,res)=>{
 
-  const coupon=await vendorCouponService.getCoupon(req.query,req.token.vendor._id);
-  console.log(coupon);
-  const value=formatCoupon(coupon);
+  const coupon=await vendorCouponService.getAllCoupon(req.query,req.token.vendor._id);
+  const value=formatCoupon(coupon.couponData);
+ 
   return successResponse(
       req,
       res,
       STATUS_CODES.SUCCESS,
       SUCCESS_MESSAGES.DEFAULT,
-     value
+     value,
+     coupon.total
     );
   });
 
@@ -48,6 +49,6 @@ const deleteCoupon=catchAsync(async(req,res)=>{
 
 module.exports={
     createCoupon,
-    getCoupon,
+    getAllCoupon,
     deleteCoupon
 }

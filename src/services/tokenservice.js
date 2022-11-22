@@ -10,7 +10,7 @@ const {
   STATUS_CODES,
   ERROR_MESSAGES,
 } = require("../config/appConstants");
-const { Token, Admin ,User} = require("../models");
+const { Token, Admin, User } = require("../models");
 // const { workSeekerProfileService } = require("../services");
 const { OperationalError } = require("../utils/errors");
 const { formatUser } = require("../utils/formatResponse");
@@ -18,7 +18,6 @@ const { Console } = require("winston/lib/winston/transports");
 // const { verifyAccount } = require("../utils/sendMail");
 
 const generateToken = (data, secret = config.jwt.secret) => {
-    
   const payload = {
     // user: data.user,
     exp: data.tokenExpires.unix(),
@@ -27,13 +26,12 @@ const generateToken = (data, secret = config.jwt.secret) => {
     role: data.userType,
   };
 
-
   return jwt.sign(payload, secret);
 };
 
 const saveToken = async (data) => {
   // console.log("-------------------------------")
-    
+
   let dataToBesaved = {
     expires: data.tokenExpires.toDate(),
     type: data.tokenType,
@@ -42,22 +40,20 @@ const saveToken = async (data) => {
     role: data.userType,
     token: data.token,
   };
- 
-  if(data.userType === USER_TYPE.VENDOR_ADMIN)
-  {
+
+  if (data.userType === USER_TYPE.VENDOR_ADMIN) {
     dataToBesaved.vendor = data.user._id;
   }
   if (data.userType === USER_TYPE.ADMIN) {
     dataToBesaved.admin = data.user._id;
-  } if(data.userType=== USER_TYPE.USER){
-   
+  }
+  if (data.userType === USER_TYPE.USER) {
     // console.log(data.user._id,"daaataaa")
     // data.userType == USER_TYPE.USER
-      // ? (dataToBesaved = data.user._id)
-       //: (dataToBesaved = data.user._id);
+    // ? (dataToBesaved = data.user._id)
+    //: (dataToBesaved = data.user._id);
     dataToBesaved.user = data.user._id;
   }
- 
 
   const tokenDoc = await Token.create(dataToBesaved);
   // console.log(tokenDoc);
@@ -65,7 +61,6 @@ const saveToken = async (data) => {
 };
 
 const generateAuthToken = async (user, userType) => {
-
   const tokenExpires = moment().add(config.jwt.accessExpirationMinutes, "days");
 
   var tokenId = new ObjectID();
@@ -76,8 +71,8 @@ const generateAuthToken = async (user, userType) => {
     userType,
     tokenId,
   });
- 
-  const data=await saveToken({
+
+  const data = await saveToken({
     token: accessToken,
     tokenExpires,
     tokenId,
@@ -85,18 +80,18 @@ const generateAuthToken = async (user, userType) => {
     userType,
     user,
   });
-  
+
   return {
     token: accessToken,
     expires: tokenExpires.toDate(),
   };
 };
 
-const adminverifyToken = async (tokenData,admintype) => {
+const adminverifyToken = async (tokenData, admintype) => {
   const payload = jwt.verify(tokenData.token, config.jwt.secret);
   const tokenDoc = await Token.findOne({
     tokenData,
-    isDeleted:false,
+    isDeleted: false,
     role: admintype,
   });
   if (!tokenDoc) {
@@ -120,70 +115,62 @@ const logout = async (tokenId) => {
       ERROR_MESSAGES.AUTHENTICATION_FAILED
     );
   }
-  if(token.isDeleted){
-    throw new OperationalError(
-      STATUS_CODES.NOT_FOUND,
-      ERROR_MESSAGES.LOG_OUT
-    )
+  if (token.isDeleted) {
+    throw new OperationalError(STATUS_CODES.NOT_FOUND, ERROR_MESSAGES.LOG_OUT);
   }
 
   const updatedToken = await Token.findByIdAndUpdate(tokenId, {
     isDeleted: true,
   });
- 
+
   return updatedToken;
 };
 
 const generateResetPasswordToken = async (email) => {
-  const user= await User.findOne({email:email});
-  
-  if(!user)
-  {
+  const user = await User.findOne({ email: email });
+
+  if (!user) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
       ERROR_MESSAGES.ACCOUNT_NOT_EXIST
     );
   }
- 
 
-    if (user.isDeleted) {
-      throw new OperationalError(
-        STATUS_CODES.ACTION_FAILED,
-        ERROR_MESSAGES.ACCOUNT_BLOCKED
-      );
-    }
-  
+  if (user.isDeleted) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.ACCOUNT_BLOCKED
+    );
+  }
+
   var tokenId = new ObjectID();
   const tokenExpires = moment().add(
     config.jwt.resetPasswordExpirationMinutes,
     "minutes"
   );
- 
+
   const resetPasswordToken = generateToken({
     user: user.id,
     tokenId,
     tokenExpires,
     tokenType: TOKEN_TYPE.RESET_PASSWORD,
   });
- 
-  const data=await saveToken({
+
+  const data = await saveToken({
     token: resetPasswordToken,
     tokenId,
     resetPasswordToken,
     user,
     tokenExpires,
     tokenType: TOKEN_TYPE.RESET_PASSWORD,
-    userType:USER_TYPE.USER,
+    userType: USER_TYPE.USER,
   });
 
-  
-  return { resetPasswordToken};
+  return { resetPasswordToken };
 };
 
 const verifyResetPasswordToken = async (token) => {
   try {
-   console.log("working")
-    
     const payload = jwt.verify(token, config.jwt.secret);
 
     const tokenData = await Token.findOne({
@@ -191,7 +178,7 @@ const verifyResetPasswordToken = async (token) => {
       isDeleted: false,
       // expires: { $gte: new Date() },
     });
-    console.log(tokenData);
+
     return tokenData;
   } catch (error) {
     throw error;

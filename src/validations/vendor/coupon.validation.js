@@ -13,10 +13,11 @@ exports.create = {
   }),
 };
 
-exports.getCoupon = {
+exports.getAllCoupon = {
   query: Joi.object().keys({
-    couponCode: Joi.string().required(), 
-  
+    page:Joi.number().allow(null).allow(''),
+    limit:Joi.number().allow(null).allow(''),
+    search:Joi.string().allow(null).allow(''),
   }),
 };
 

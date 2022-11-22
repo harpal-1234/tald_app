@@ -3,12 +3,10 @@ const { User } = require("../../models");
 const { ApiError } = require("../../utils/universalFunction");
 const {
   joi,
-  loginType,
   USER_TYPE,
   STATUS_CODES,
   ERROR_MESSAGES,
   SUCCESS_MESSAGES,
-  POPULATE_SKILLS,
 } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 const config = require("../../config/config");
@@ -34,10 +32,6 @@ const editProfile=async(id,data)=>{
   return updateUser;
 
 }
-
-
-
-
 
 const changePassword = async (userId, oldPassword, newPassword) => {
   

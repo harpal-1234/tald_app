@@ -8,8 +8,9 @@ module.exports.tokenService=require("./tokenservice")
 module.exports.vendorAdminService=require('./vendor/auth.service');
 module.exports.vendorCouponService=require('./vendor/coupon.service')
 
-//admin 
+//admin Services
 module.exports.adminService=require("./admin/auth.service");
+module.exports.bannerService=require("./admin/banner.service");
 
 //user services
 module.exports.userService=require("./user/auth.service");

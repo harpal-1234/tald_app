@@ -91,7 +91,8 @@ const ERROR_MESSAGES = {
   SKILL_ALREADY_EXIST: "Skill already exist with this name.",
   WRONG_PASSWORD: "Password is Incorrect",
   COUPON_CODE:'Please Provide Different Coupon Code',
-  COUPON_DATA:'Coupon not exists'
+  COUPON_DATA:'Coupon not exist',
+  COUPON_WEBLINK:'Coupon Already exist'
 };
 
 const STATUS_CODES = {
@@ -128,6 +129,7 @@ const socialAuth={
 const DELETE_MASSAGES = {
  USER_DELETED:'User Deleted Successfully',
   COUPON_DELETED:'Coupon Deleted Successfully',
+  BANNER_DELETED:'Banner Deleted Successfully'
  
 };
 

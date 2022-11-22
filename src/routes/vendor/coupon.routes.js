@@ -16,10 +16,10 @@ router.post(
 
 
   router.get(
-    "/getCoupon",
+    "/getAllCoupon",
     auth(USER_TYPE.VENDOR_ADMIN),
-    validate(couponValidation.getCoupon),
-    couponController.getCoupon
+    validate(couponValidation.getAllCoupon),
+    couponController.getAllCoupon
   );
 
   router.delete(

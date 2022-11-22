@@ -94,7 +94,7 @@ const forgotPage = async (req, res) => {
 
 const resetForgotPassword = catchAsync(async (req, res) => {
   try {
-    console.log(req)
+   
     const token = req.query.token;
     const tokenData = await tokenService.verifyResetPasswordToken(token);
     if (!tokenData)
@@ -108,7 +108,7 @@ const resetForgotPassword = catchAsync(async (req, res) => {
       tokenData,
       req.body.newPassword
     );
-    console.log(value);
+   
 
     return res.render("forgotPassword/commonMessage", {
       title: "Forgot Password",
