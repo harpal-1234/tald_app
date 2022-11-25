@@ -26,3 +26,10 @@ exports.userContactUs = {
     contactUsData: Joi.string().required()
   }),
 };
+
+exports.userLocation = {
+  body: Joi.object().keys({
+  location:Joi.string(),
+  }),
+};
+

@@ -68,9 +68,62 @@ const successMessageWithoutData = (code, message) => {
     }
     return userData;
   };
+  const formatBanner=(userData) => {
+   
+    if (userData.length) {
+      userData.forEach((data) => {
+        delete data.__v;
+        delete data.isBlocked;
+        delete data.isDeleted;
+        delete data.createdAt;
+        delete data.updatedAt;
+        delete data.customerId;
+      });
+    } else {
+      delete userData.__v;
+      delete userData.isBlocked;
+      delete userData.isDeleted;
+      delete userData.createdAt;
+      delete userData.updatedAt;
+      delete userData.__v;
+      delete userData._id;
+      delete userData.vendorId
+    
+      
+    }
+    return userData;
+  };
+
+const formatResturant=(userData) => {
+   
+  if (userData.length) {
+    userData.forEach((data) => {
+      delete data.__v;
+      delete data.isBlocked;
+      delete data.isDeleted;
+      delete data.createdAt;
+      delete data.updatedAt;
+      delete data.customerId;
+    });
+  } else {
+    delete userData.__v;
+    delete userData.isBlocked;
+    delete userData.isDeleted;
+    delete userData.createdAt;
+    delete userData.updatedAt;
+    delete userData.__v;
+    delete userData._id;
+    delete userData.vendorId
+  
+    
+  }
+  return userData;
+};
 
   module.exports={
     successMessageWithoutData ,
     successMessage,
-    formatCoupon
+    formatCoupon,
+    formatBanner,
+    formatResturant
   }

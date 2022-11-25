@@ -49,9 +49,20 @@ const userContactUs= catchAsync(async (req, res) => {
   );
 });
 
+const userLocation= catchAsync(async (req, res) => {
+  const location=await userProfileService.userLocation(req,res);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.USER_LOCATION
+  );
+});
+
 
 module.exports = {
   editProfile,
   changePassword,
-  userContactUs
+  userContactUs,
+  userLocation
 };

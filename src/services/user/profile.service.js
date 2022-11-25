@@ -10,7 +10,8 @@ const {
 } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 const config = require("../../config/config");
-const bcrypt=require("bcryptjs")
+const bcrypt=require("bcryptjs");
+
 
 const editProfile=async(id,data)=>{
   const user=await User.findOne({_id:id,isDeleted:false});
@@ -71,8 +72,31 @@ const contactUs=async(name,email)=>{
   return 
 }
 
+const userLocation=async(req,res)=>{
+  const user=await User.findOne({_id:req.token.user._id});
+  if(!user)
+  {
+    throw new OperationalError(
+      STATUS_CODES.NOT_FOUND,
+      ERROR_MESSAGES.USER_NOT_FOUND
+    );
+
+  }
+  const userLocation=await User.findByIdAndUpdate({_id:user.id},{
+    location:{
+      address:req.body.address,
+      loc:{
+      coordinates:[(req.body.long),(req.body.lat)]
+      }
+    }
+  },{upsert:false});
+ 
+  return 
+}
+
 module.exports={
   editProfile,
   changePassword,
-  contactUs
+  contactUs,
+  userLocation
 }

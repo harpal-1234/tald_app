@@ -25,6 +25,14 @@ const STATUS = {
   REJECTED: "rejected",
 };
 
+const COUPON_SERVICE={
+  SPA:'spa',
+  FOOD:'food',
+  FOOTWEAR:'footwear',
+  CLOTHING:'clothing',
+  CANNABIS:'cannabis'
+}
+
 const JOI = {
   EMAIL: Joi.string().email().lowercase().trim().required(),
   PASSWORD: Joi.string().min(6).required(),
@@ -72,7 +80,18 @@ const SUCCESS_MESSAGES = {
   LOGOUT: "Your are successfully logged out",
   USER_SUCCESS:"User Created successfully",
   USER_PASSWORD:"Password changed successfully",
-  CONTACT_US:"Report sent successfully"
+  CONTACT_US:"Report sent successfully",
+  USER_LOCATION:'Location Updated Successfully'
+};
+
+
+const UPDATED_MESSAGES = {
+  SUCCESS: "Success",
+  LOGOUT: "Your are successfully logged out",
+  USER_SUCCESS:"User Created successfully",
+  USER_PASSWORD:"Password changed successfully",
+  CONTACT_US:"Report sent successfully",
+  USER_LOCATION:'Location Updated Successfully'
 };
 
 const ERROR_MESSAGES = {
@@ -92,7 +111,8 @@ const ERROR_MESSAGES = {
   WRONG_PASSWORD: "Password is Incorrect",
   COUPON_CODE:'Please Provide Different Coupon Code',
   COUPON_DATA:'Coupon not exist',
-  COUPON_WEBLINK:'Coupon Already exist'
+  COUPON_WEBLINK:'Coupon Already exist',
+  STORE_NOT_EXIST:'Store not exists'
 };
 
 const STATUS_CODES = {
@@ -129,12 +149,13 @@ const socialAuth={
 const DELETE_MASSAGES = {
  USER_DELETED:'User Deleted Successfully',
   COUPON_DELETED:'Coupon Deleted Successfully',
-  BANNER_DELETED:'Banner Deleted Successfully'
- 
+  BANNER_DELETED:'Banner Deleted Successfully',
+  STORE_DELETED:'Store Deleted Sucessfully'
 };
 
 
 module.exports = {
+  COUPON_SERVICE,
   DELETE_MASSAGES,
   socialMedia,
   socialAuth,
@@ -150,4 +171,5 @@ module.exports = {
   SUCCESS_MESSAGES,
   ERROR_MESSAGES,
   STATUS_CODES,
+  UPDATED_MESSAGES 
 };

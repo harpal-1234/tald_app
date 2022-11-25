@@ -17,7 +17,7 @@ const userSchema = mongoose.Schema(
       default:""
     },
     location:{
-      street: { type: String, default: "" },
+      address: { type: String, default: "" },
       loc: {
         type: { type: String, default: "Point" },
         coordinates: {
@@ -25,7 +25,7 @@ const userSchema = mongoose.Schema(
           default: [0, 0],
         },
       },
-    },
+    },//logitude and latitude
     phoneNumber:{ type: String, default: "" },
     socialId:{
       googleId:{ type: String,sparse:true},

@@ -5,5 +5,6 @@ module.exports = {
     Vendor:require("./vendor.model"),
     Admin: require("./admin.model"),
     Coupon: require("./coupon.model"),
-    Banner:require('./banner.model')
+    Banner:require('./banner.model'),
+    Store:require('./store.model'),
   };

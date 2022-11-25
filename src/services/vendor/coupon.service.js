@@ -26,6 +26,7 @@ const createCoupon = async (data, tokendata) => {
   const newCoupon = await Coupon.create({
     vendorId: vendor.id,
     couponCode: data.couponCode,
+    type:data.type,
     name: data.name,
     worth: data.worth,
     description: data.description,

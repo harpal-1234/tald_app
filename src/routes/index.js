@@ -3,10 +3,11 @@ const userAuth = require("./user/auth.routes");
 const userProfile = require("./user/profile.routes");
 const staticRoutes=require("../routes/static.routes");
 const vendorAuth=require("./vendor/auth.routes");
-const coupon=require("./vendor/coupon.routes");
-const adminAuth=require("./admin/auth.routes")
-const bannerRoutes=require('./admin/banner.routes')
-
+const couponRoutes=require("./vendor/coupon.routes");
+const adminAuth=require("./admin/auth.routes");
+const bannerRoutes=require('./admin/banner.routes');
+const dealsRoutes=require("./user/deals.routes");
+const storeRoutes=require("./vendor/store.routes");
 //const staticRoutes = require("./");
 //const commonRoutes = require("./user/common.routes");
 
@@ -29,11 +30,19 @@ const defaultRoutes = [
   },
   {
     path:'/vendor/coupon',
-    route:coupon
+    route:couponRoutes
+  },
+  {
+    path:'/vendor/store',
+    route:storeRoutes
   },
   {
     path: "/user/auth",
     route: userAuth,
+  },
+  {
+    path:"/user/deals",
+    route:dealsRoutes
   },
   {
     path:"/user/profile",
