@@ -3,6 +3,9 @@ const bcrypt = require("bcryptjs");
 
 const bannerSchema = mongoose.Schema(
   {
+    vendorId:{ type: mongoose.SchemaTypes.ObjectId,
+      ref: "vendor",
+      required: true},
     image: { type: String, default: "" },
     title: { type: String, default: "" },
     description: { type: String, default: "" },

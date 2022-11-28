@@ -1,4 +1,4 @@
-const { User, Vendor ,Token} = require("../../models");
+const { User, Vendor ,Deal,Token} = require("../../models");
 const {
   STATUS_CODES,
   ERROR_MESSAGES,
@@ -52,13 +52,13 @@ const changePassword = async (adminId, oldPassword, newPassword) => {
   return admin;
 };
 
-// const dashBoard = async () => {
-//   const [workProvider, workSeeker] = await Promise.all([
-//     User.countDocuments({ isWorkProvider: true }),
-//     User.countDocuments({ isWorkSeeker: true }),
-//   ]);
-//   return { workProvider, workSeeker };
-// };
+const dashBoard = async (req,res) => {
+  const [totalDeals, deal] = await Promise.all([
+    Deal.countDocuments({ isDeleted: false }),
+    Deal.countDocuments({ isDeleted: false }),
+  ]);
+  return { totalDeals, deal};
+};
 
 const adminLogout = async (tokenId) => {
   const token = await Token.findOne({ _id: tokenId, isDeleted: false });
@@ -79,6 +79,6 @@ module.exports = {
   adminSignUp,
   adminLogin,
   changePassword,
-  // dashBoard,
+  dashBoard,
   adminLogout
 };

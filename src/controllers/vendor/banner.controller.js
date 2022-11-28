@@ -10,7 +10,7 @@ const { successResponse } = require("../../utils/response");
 
 
 const createBanner = catchAsync(async (req, res) => {
-    const banner = await bannerService.createBanner(req.body);
+    const banner = await bannerService.createBanner(req.body,req.token.vendor._id);
    
     return successResponse(
       req,
@@ -32,6 +32,17 @@ const createBanner = catchAsync(async (req, res) => {
       SUCCESS_MESSAGES.DEFAULT,
       banner
     );
+  });
+
+  const bannerRequest=catchAsync(async()=>{
+    const banner=await bannerService.bannerRequest(req.body,req.token.vendor._id);
+    return successResponse(
+      req,
+      res,
+      STATUS_CODES.SUCCESS,
+      DELETE_MASSAGES.BANNER_DELETED
+    );
+
   })
 
 
@@ -64,5 +75,6 @@ const createBanner = catchAsync(async (req, res) => {
     createBanner,
     editBanner,
     deleteBanner,
-    getBanner
+    getBanner,
+    bannerRequest
   }

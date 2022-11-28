@@ -27,7 +27,7 @@ router.put(
   adminController.changePassword
 );
 
-router.get("/dashboard", auth(USER_TYPE.ADMIN), adminController.dashBoard);
+router.get("/dashboard", auth(USER_TYPE.VENDOR_ADMIN), adminController.dashBoard);
 
 
 router.post(

@@ -17,7 +17,7 @@ router.post(
   router.delete(
     "/deleteStore",
     auth(USER_TYPE.VENDOR_ADMIN),
-    validate(storeValidation.createStore),
+    validate(storeValidation.deleteStore),
     storeController.deleteStore
   );
 

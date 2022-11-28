@@ -52,7 +52,7 @@ const changePassword = catchAsync(async (req, res) => {
 });
 
 const dashBoard = catchAsync(async (req, res) => {
-  const data = await vendorAdminService.dashBoard();
+  const data = await vendorAdminService.dashBoard(req,res);
   return successResponse(
     req,
     res,
