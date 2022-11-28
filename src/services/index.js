@@ -6,7 +6,7 @@ module.exports.tokenService=require("./tokenservice")
 
 //admin Vendor service
 module.exports.vendorAdminService=require('./vendor/auth.service');
-module.exports.vendorCouponService=require('./vendor/coupon.service');
+module.exports.vendorDealsService=require('./vendor/coupon.service');
 module.exports.vendorStoreService=require('./vendor/store.service');
 
 //admin Services

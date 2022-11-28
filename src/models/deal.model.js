@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-const {COUPON_SERVICE} = require("../config/appConstants");
-const couponSchema = mongoose.Schema(
+const {DEALS_SERVICE} = require("../config/appConstants");
+const dealsSchema = mongoose.Schema(
   {
     vendorId:{ type: mongoose.SchemaTypes.ObjectId,
       ref: "vendor",
       required: true},
-    couponCode: { type: String , default:""},
-    type:{type: String, enum:[...Object.values(COUPON_SERVICE)]},
+    couponCode: { type: Number , default:""},
+    category:{type: String, enum:[...Object.values(DEALS_SERVICE)]},
     name:{ type: String, default:""},
     worth: { type: Number, default:""},
     description: { type: String, default:""},
@@ -24,6 +24,6 @@ const couponSchema = mongoose.Schema(
 );
 
 
-const Coupon = mongoose.model("coupons", couponSchema);
+const Deal = mongoose.model("deals", dealsSchema);
 
-module.exports = Coupon;
+module.exports = Deal;

@@ -1,4 +1,4 @@
-const { vendorCouponService, tokenService } = require("../../services");
+const { vendorDealsService, tokenService } = require("../../services");
 const {
   USER_TYPE,
   STATUS_CODES,
@@ -10,9 +10,9 @@ const { successResponse} = require("../../utils/response");
 const {formatCoupon}=require("../../utils/commonFunction");
 
 
-const createCoupon=catchAsync(async(req,res)=>{
+const createDeal=catchAsync(async(req,res)=>{
 
-    const coupon=await vendorCouponService.createCoupon(req.body,req.token.vendor._id);
+    const deal=await vendorDealsService.createDeal(req.body,req.token.vendor._id);
     return successResponse(
         req,
         res,
@@ -21,10 +21,10 @@ const createCoupon=catchAsync(async(req,res)=>{
       );
     });
 
-const getAllCoupon=catchAsync(async(req,res)=>{
+const getAllDeal=catchAsync(async(req,res)=>{
 
-  const coupon=await vendorCouponService.getAllCoupon(req.query,req.token.vendor._id);
-  const value=formatCoupon(coupon.couponData);
+  const deal=await vendorDealsService.getAllDeal(req.query,req.token.vendor._id);
+  const value=formatCoupon(deal.couponData);
  
   return successResponse(
       req,
@@ -32,13 +32,13 @@ const getAllCoupon=catchAsync(async(req,res)=>{
       STATUS_CODES.SUCCESS,
       SUCCESS_MESSAGES.DEFAULT,
      value,
-     coupon.total
+     deal.total
     );
   });
 
-const deleteCoupon=catchAsync(async(req,res)=>{
+const deleteDeal=catchAsync(async(req,res)=>{
 
-  const coupon=await vendorCouponService.deleteCoupon(req.query,req.token.vendor._id);
+  const coupon=await vendorDealsService.deleteDeal(req.query,req.token.vendor._id);
   return successResponse(
       req,
       res,
@@ -48,7 +48,7 @@ const deleteCoupon=catchAsync(async(req,res)=>{
   });
 
 module.exports={
-    createCoupon,
-    getAllCoupon,
-    deleteCoupon
+    createDeal,
+    getAllDeal,
+    deleteDeal
 }

@@ -4,7 +4,7 @@ module.exports = {
     User: require("./user.model"),
     Vendor:require("./vendor.model"),
     Admin: require("./admin.model"),
-    Coupon: require("./coupon.model"),
+    Deal: require("./deal.model"),
     Banner:require('./banner.model'),
     Store:require('./store.model'),
   };

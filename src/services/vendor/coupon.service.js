@@ -1,9 +1,9 @@
-const { Vendor, Coupon, Token, User } = require("../../models");
+const { Vendor, Deal, Token, User } = require("../../models");
 const { STATUS_CODES, ERROR_MESSAGES } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 const moment = require("moment");
 
-const createCoupon = async (data, tokendata) => {
+const createDeal = async (data, tokendata) => {
   const vendor = await Vendor.findOne({ _id: tokendata, isDeleted: false });
   if (!vendor) {
     throw new OperationalError(
@@ -12,7 +12,7 @@ const createCoupon = async (data, tokendata) => {
     );
   }
 
-  const coupon = await Coupon.findOne({
+  const coupon = await Deal.findOne({
     couponCode: data.couponCode,
     isDeleted: false,
   });
@@ -23,10 +23,10 @@ const createCoupon = async (data, tokendata) => {
     );
   }
 
-  const newCoupon = await Coupon.create({
+  const newCoupon = await Deal.create({
     vendorId: vendor.id,
     couponCode: data.couponCode,
-    type:data.type,
+    category:data.category,
     name: data.name,
     worth: data.worth,
     description: data.description,
@@ -37,7 +37,7 @@ const createCoupon = async (data, tokendata) => {
   return newCoupon;
 };
 
-const getAllCoupon = async (data, tokendata) => {
+const getAllDeal = async (data, tokendata) => {
   const user = await Vendor.findOne({ _id: tokendata, isDeleted: false });
   if (!user) {
     throw new OperationalError(
@@ -53,12 +53,12 @@ const getAllCoupon = async (data, tokendata) => {
   if (search) {
     const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
  
-    await Coupon.updateMany(
+    await Deal.updateMany(
           { $and:[{ validTo: { $lte: date }} ,{isDeleted:false}]},
           { $set:{status: "deactivate", isActive:false} },
           { upsert:false }
         );
-    let couponData = await Coupon.find({
+    let couponData = await Deal.find({
       $or: [
         { couponCode: { $regex: new RegExp(search, "i") } },
         { name: { $regex: new RegExp(search, "i") } },
@@ -72,7 +72,7 @@ const getAllCoupon = async (data, tokendata) => {
       .sort({ _id: 1 })
       .lean();
 
-    let total = await Coupon.countDocuments({
+    let total = await Deal.countDocuments({
       $or: [
         { couponCode: { $regex: new RegExp(search, "i") } },
         { name: { $regex: new RegExp(search, "i") } },
@@ -86,20 +86,20 @@ const getAllCoupon = async (data, tokendata) => {
   } else {
     const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
  
-    await Coupon.updateMany(
+    await Deal.updateMany(
           { $and:[{ validTo: { $lte: date }} ,{isDeleted:false}]},
           { $set:{status: "deactivate", isActive:false} },
           { upsert:false }
         );
     
-    var couponData = await Coupon.find({ isDeleted: false })
+    var couponData = await Deal.find({ isDeleted: false })
       .skip(skip)
       .limit(limit)
       .sort({ _id: 1 })
       .lean();
 
 
-    let total = await Coupon.countDocuments({ isDeleted: false });
+    let total = await Deal.countDocuments({ isDeleted: false });
    
    
     
@@ -108,7 +108,7 @@ const getAllCoupon = async (data, tokendata) => {
   }
 };
 
-const deleteCoupon = async (data, tokendata) => {
+const deleteDeal = async (data, tokendata) => {
   const user = await Vendor.findOne({ _id: tokendata, isDeleted: false });
   if (!user) {
     throw new OperationalError(
@@ -117,17 +117,17 @@ const deleteCoupon = async (data, tokendata) => {
     );
   }
 
-  const coupon = await Coupon.findOneAndUpdate(
+  const deal= await Deal.findOneAndUpdate(
     { _id: data.id },
     { isDeleted: true },
     { new: true }
   );
 
-  return coupon;
+  return deal;
 };
 
 module.exports = {
-  createCoupon,
-  getAllCoupon,
-  deleteCoupon,
+  createDeal,
+  getAllDeal,
+  deleteDeal,
 };

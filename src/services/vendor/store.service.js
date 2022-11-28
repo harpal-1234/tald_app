@@ -18,8 +18,8 @@ const createStore = async (req, res) => {
     vendorId: vendor.id,
     storeName: req.body.storeName,
     location: {
-      address: req.body.address,
       loc: {
+        address: req.body.address,
         coordinates: [req.body.long, req.body.lat],
       },
     },

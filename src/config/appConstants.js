@@ -25,12 +25,16 @@ const STATUS = {
   REJECTED: "rejected",
 };
 
-const COUPON_SERVICE={
+const DEALS_SERVICE={
   SPA:'spa',
   FOOD:'food',
   FOOTWEAR:'footwear',
   CLOTHING:'clothing',
-  CANNABIS:'cannabis'
+  CANNABIS:'cannabis',
+  BUFFET:'buffet',
+  SALON:'salon',
+  HEATH:'heath',
+  ACTIVITY:'activity'
 }
 
 const JOI = {
@@ -155,7 +159,7 @@ const DELETE_MASSAGES = {
 
 
 module.exports = {
-  COUPON_SERVICE,
+  DEALS_SERVICE,
   DELETE_MASSAGES,
   socialMedia,
   socialAuth,

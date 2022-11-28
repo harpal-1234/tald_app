@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const { JOI, COUPON_SERVICE } = require("../../config/appConstants");
+const { JOI, DEALS_SERVICE } = require("../../config/appConstants");
 
 exports.create = {
   body: Joi.object().keys({
@@ -9,8 +9,8 @@ exports.create = {
     description: Joi.string().required(), 
     validFrom: Joi.string().required(), 
     validTo:Joi.string().required(),
-    type:Joi.string().valid(
-      ...Object.values(COUPON_SERVICE)
+    category:Joi.string().valid(
+      ...Object.values(DEALS_SERVICE)
     )
   }),
 };

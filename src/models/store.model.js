@@ -9,8 +9,8 @@ const storeSchema = mongoose.Schema(
     },
     type: { type: String, default: "" },
     storeName: { type: String, default: "" },
+    address: { type: String, default: "" },
     location: {
-      address: { type: String, default: "" },
       loc: {
         type: { type: String, default: "Point" },
         coordinates: {
