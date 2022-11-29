@@ -11,6 +11,7 @@ module.exports.vendorStoreService=require('./vendor/store.service');
 
 //admin Services
 module.exports.adminService=require("./admin/auth.service");
+module.exports.adminBannerService=require("./admin/banner.service");
 module.exports.bannerService=require("./vendor/banner.service");
 
 //user services

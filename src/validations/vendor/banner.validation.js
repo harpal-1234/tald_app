@@ -6,7 +6,7 @@ exports.createBanner = {
     image: Joi.string().required(),
     title: Joi.string().required(),
     description: Joi.string().required(),
-    webLink: Joi.string().required(),
+    // webLink: Joi.string().required(),
   }),
 };
 

@@ -1,15 +1,9 @@
-const { Admin,Token } = require("../../models");
-const {
- 
-  STATUS_CODES,
-  ERROR_MESSAGES,
-} = require("../../config/appConstants");
+const { Admin, Token, Banner } = require("../../models");
+const { STATUS_CODES, ERROR_MESSAGES } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 
 const adminLogin = async (email, password) => {
-
-  console.log(email);
-  const admin = await Admin.findOne({ email:email });
+  const admin = await Admin.findOne({ email: email });
 
   if (!admin) {
     throw new OperationalError(
@@ -40,13 +34,14 @@ const changePassword = async (adminId, oldPassword, newPassword) => {
   return admin;
 };
 
-// const dashBoard = async () => {
-//   const [workProvider, workSeeker] = await Promise.all([
-//     User.countDocuments({ isWorkProvider: true }),
-//     User.countDocuments({ isWorkSeeker: true }),
-//   ]);
-//   return { workProvider, workSeeker };
-// };
+const dashBoard = async (req, res) => {
+  const bannerRequest = await Banner.findByIdAndUpdate(
+    { $and: [{ _id: req.body.id }, { status: "pending" }] },
+    { status:req.body.status },
+    { new: true }
+  );
+  return bannerRequest
+};
 
 const adminLogout = async (tokenId) => {
   const token = await Token.findOne({ _id: tokenId, isDeleted: false });
@@ -63,9 +58,11 @@ const adminLogout = async (tokenId) => {
   return updatedToken;
 };
 
+
+
 module.exports = {
   adminLogin,
   changePassword,
-//   dashBoard,
-adminLogout
+  dashBoard,
+  adminLogout,
 };

@@ -36,4 +36,11 @@ router.post(
     bannerController.deleteBanner
   );
 
+  router.post(
+    "/request",
+    auth(USER_TYPE.VENDOR_ADMIN),
+    // validate(bannerValidation.createBanner),
+    bannerController.bannerRequest
+  );
+
 module.exports=router

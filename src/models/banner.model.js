@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const {BANNER_STATUS}=require("../config/appConstants")
 
 const bannerSchema = mongoose.Schema(
   {
@@ -11,6 +12,7 @@ const bannerSchema = mongoose.Schema(
     description: { type: String, default: "" },
     webLink: { type: String, default: "" },
     viewedBy:{type:Array,default:[]},
+    status:{type:String, enum: [...Object.values(BANNER_STATUS)] ,default:"pending"},
     isBlocked: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
   },

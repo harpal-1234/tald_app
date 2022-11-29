@@ -8,6 +8,7 @@ const adminAuth=require("./admin/auth.routes");
 const bannerRoutes=require('./vendor/banner.routes');
 const dealsRoutes=require("./user/deals.routes");
 const storeRoutes=require("./vendor/store.routes");
+const adminBannerRoutes=require("./admin/banner.routes");
 //const staticRoutes = require("./");
 //const commonRoutes = require("./user/common.routes");
 
@@ -18,6 +19,11 @@ const defaultRoutes = [
   {
     path:'/admin/auth',
     route:adminAuth
+
+  },
+  {
+    path:'/admin/banner',
+    route:adminBannerRoutes
 
   },
   {

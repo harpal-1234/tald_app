@@ -19,7 +19,7 @@ const DEVICE_TYPE = {
   WEB: "web",
 };
 
-const STATUS = {
+const BANNER_STATUS = {
   PENDING: "pending",
   ACCEPTED: "accepted",
   REJECTED: "rejected",
@@ -85,7 +85,10 @@ const SUCCESS_MESSAGES = {
   USER_SUCCESS:"User Created successfully",
   USER_PASSWORD:"Password changed successfully",
   CONTACT_US:"Report sent successfully",
-  USER_LOCATION:'Location Updated Successfully'
+  USER_LOCATION:'Location Updated Successfully',
+  BANNER_REQUEST:'Request Sent Successfully',
+  BANNER_DATA:'All Bannner Request',
+  BANNER_STATUS:'Banner Request Accepted '
 };
 
 
@@ -159,13 +162,13 @@ const DELETE_MASSAGES = {
 
 
 module.exports = {
+  BANNER_STATUS ,
   DEALS_SERVICE,
   DELETE_MASSAGES,
   socialMedia,
   socialAuth,
   TOKEN_TYPE,
   USER_TYPE,
-  STATUS,
   JOI,
   DEVICE_TYPE,
   SKILL_LEVEL,
