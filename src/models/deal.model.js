@@ -1,11 +1,10 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const {DEALS_SERVICE} = require("../config/appConstants");
-const dealsSchema = mongoose.Schema(
+const dealSchema = mongoose.Schema(
   {
     vendorId:{ type: mongoose.SchemaTypes.ObjectId,
-      ref: "vendor",
-      required: true},
+      ref: "vendor"},
     couponCode: { type: Number , default:""},
     category:{type: String, enum:[...Object.values(DEALS_SERVICE)]},
     name:{ type: String, default:""},
@@ -24,6 +23,6 @@ const dealsSchema = mongoose.Schema(
 );
 
 
-const Deal = mongoose.model("deals", dealsSchema);
+const Deal = mongoose.model("deals", dealSchema);
 
 module.exports = Deal;

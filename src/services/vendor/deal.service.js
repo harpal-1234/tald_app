@@ -40,7 +40,9 @@ const createDeal = async (data, tokendata) => {
 const getAllDeal = async (req, res) => {
   let { page, limit, search } = req.query;
   let skip = page * limit;
-
+   console.log(page,"page");
+   console.log(limit,"page");
+   console.log(skip,"skip");
   if (search) {
     const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
 
@@ -58,7 +60,7 @@ const getAllDeal = async (req, res) => {
     })
       .skip(skip)
       .limit(limit)
-      .sort({ _id: 1 })
+      .sort({ _id: -1 })
       .lean();
 
     let total = await Deal.countDocuments({
@@ -82,7 +84,7 @@ const getAllDeal = async (req, res) => {
     var dealData = await Deal.find({ isDeleted: false })
       .skip(skip)
       .limit(limit)
-      .sort({ _id: 1 })
+      .sort({ _id: -1 })
       .lean();
 
     let total = await Deal.countDocuments({ isDeleted: false });
