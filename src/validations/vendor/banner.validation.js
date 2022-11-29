@@ -30,3 +30,10 @@ exports.getBanner = {
    id:Joi.string().required(),
   }),
 };
+
+exports.bannerRequest={
+  body: Joi.object().keys({
+    id: Joi.string().required()
+  }),
+
+}
