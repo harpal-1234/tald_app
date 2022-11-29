@@ -17,9 +17,9 @@ exports.create = {
 
 exports.getAllCoupon = {
   query: Joi.object().keys({
-    page:Joi.number().allow(null).allow(''),
-    limit:Joi.number().allow(null).allow(''),
-    search:Joi.string().allow(null).allow(''),
+    page:Joi.number().optional(),
+    limit:Joi.number().optional(),
+    search:Joi.string().optional(),
   }),
 };
 
