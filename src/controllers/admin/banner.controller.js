@@ -13,7 +13,7 @@ const bannerAction=catchAsync(async(req,res)=>{
         req,
         res,
         STATUS_CODES.SUCCESS,
-        SUCCESS_MESSAGES.LOGOUT,
+        SUCCESS_MESSAGES.BANNER_STATUS,
         bannerAction
         )
 
@@ -25,7 +25,7 @@ const bannerRequest=catchAsync(async(req,res)=>{
         req,
         res,
         STATUS_CODES.SUCCESS,
-        SUCCESS_MESSAGES.BANNER_STATUS,
+        SUCCESS_MESSAGES.BANNER_DATA,
         bannerRequest
         )
 

@@ -37,7 +37,7 @@ router.post(
   );
 
   router.post(
-    "/request",
+    "/request/:id",
     auth(USER_TYPE.VENDOR_ADMIN),
     validate(bannerValidation.bannerRequest),
     bannerController.bannerRequest

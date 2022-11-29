@@ -16,14 +16,14 @@ router.post(
 
 
   router.get(
-    "/getAllCoupon",
+    "/getAllDeal",
     auth(USER_TYPE.VENDOR_ADMIN),
     validate(dealValidation.getAllCoupon),
     dealController.getAllDeal
   );
 
   router.delete(
-    "/deleteCoupon",
+    "/deleteDeal",
     auth(USER_TYPE.VENDOR_ADMIN),
     validate(dealValidation.deleteCoupon),
     dealController.deleteDeal

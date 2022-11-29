@@ -32,7 +32,7 @@ exports.getBanner = {
 };
 
 exports.bannerRequest={
-  body: Joi.object().keys({
+  params: Joi.object().keys({
     id: Joi.string().required()
   }),
 

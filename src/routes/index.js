@@ -35,7 +35,7 @@ const defaultRoutes = [
     route:vendorAuth
   },
   {
-    path:'/vendor/coupon',
+    path:'/vendor/deal',
     route:couponRoutes
   },
   {
@@ -47,7 +47,7 @@ const defaultRoutes = [
     route: userAuth,
   },
   {
-    path:"/user/deals",
+    path:"/user/deal",
     route:dealsRoutes
   },
   {

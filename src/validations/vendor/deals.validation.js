@@ -3,9 +3,9 @@ const { JOI, DEALS_SERVICE } = require("../../config/appConstants");
 
 exports.create = {
   body: Joi.object().keys({
-    couponCode: Joi.string().required(), 
+    couponCode: Joi.number().required(), 
     name:Joi.string().required(), 
-    worth: Joi.string().required(), 
+    worth: Joi.number().required(), 
     description: Joi.string().required(), 
     validFrom: Joi.string().required(), 
     validTo:Joi.string().required(),

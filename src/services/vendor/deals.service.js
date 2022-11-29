@@ -4,6 +4,7 @@ const { OperationalError } = require("../../utils/errors");
 const moment = require("moment");
 
 const createDeal = async (data, tokendata) => {
+  console.log(data);
   const vendor = await Vendor.findOne({ _id: tokendata, isDeleted: false });
   if (!vendor) {
     throw new OperationalError(
@@ -33,7 +34,7 @@ const createDeal = async (data, tokendata) => {
     validFrom: moment(data.validFrom + "Z", "YYYY-MM-DD" + "Z").toDate(),
     validTo: moment(data.validTo + "Z", "YYYY-MM-DD" + "Z").toDate(),
   });
-
+console.log(newCoupon)
   return newCoupon;
 };
 
