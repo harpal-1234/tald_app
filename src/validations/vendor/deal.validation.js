@@ -15,7 +15,7 @@ exports.create = {
   }),
 };
 
-exports.getAllCoupon = {
+exports.getAllDeal = {
   query: Joi.object().keys({
     page:Joi.number().optional(),
     limit:Joi.number().optional(),
@@ -23,7 +23,7 @@ exports.getAllCoupon = {
   }),
 };
 
-exports.deleteCoupon = {
+exports.deleteDeal = {
   query: Joi.object().keys({
     id: Joi.string().required(), 
   }),
