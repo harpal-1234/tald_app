@@ -43,7 +43,7 @@ const successMessageWithoutData = (code, message) => {
     return userData;
   };
 
-  const formatCoupon=(userData) => {
+  const formatDeal=(userData) => {
    
     if (userData.length) {
       userData.forEach((data) => {
@@ -123,7 +123,7 @@ const formatResturant=(userData) => {
   module.exports={
     successMessageWithoutData ,
     successMessage,
-    formatCoupon,
+    formatDeal,
     formatBanner,
     formatResturant
   }

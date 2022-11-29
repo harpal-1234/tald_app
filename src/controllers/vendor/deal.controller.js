@@ -7,7 +7,7 @@ const {
 } = require("../../config/appConstants");
 const { catchAsync } = require("../../utils/universalFunction");
 const { successResponse} = require("../../utils/response");
-const {formatCoupon}=require("../../utils/commonFunction");
+const { formatDeal}=require("../../utils/commonFunction");
 
 
 const createDeal=catchAsync(async(req,res)=>{
@@ -23,8 +23,8 @@ const createDeal=catchAsync(async(req,res)=>{
 
 const getAllDeal=catchAsync(async(req,res)=>{
 
-  const deal=await vendorDealsService.getAllDeal(req.query,req.token.vendor._id);
-  const value=formatCoupon(deal.couponData);
+  const deal=await vendorDealsService.getAllDeal(req,res);
+  const value=formatDeal(deal.dealData);
  
   return successResponse(
       req,

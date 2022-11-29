@@ -26,7 +26,7 @@ const createDeal = async (data, tokendata) => {
   const newCoupon = await Deal.create({
     vendorId: vendor.id,
     couponCode: data.couponCode,
-    category:data.category,
+    category: data.category,
     name: data.name,
     worth: data.worth,
     description: data.description,
@@ -37,34 +37,22 @@ const createDeal = async (data, tokendata) => {
   return newCoupon;
 };
 
-const getAllDeal = async (data, tokendata) => {
-  const user = await Vendor.findOne({ _id: tokendata, isDeleted: false });
-  if (!user) {
-    throw new OperationalError(
-      STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.USER_NOT_FOUND
-    );
-  }
-
-  //const coupon=await Coupon.find({isDeleted:false}).lean();
-  let { page, limit, search } = data;
+const getAllDeal = async (req, res) => {
+  let { page, limit, search } = req.query;
   let skip = page * limit;
-  console.log(skip,"skip")
 
   if (search) {
     const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
- 
+
     await Deal.updateMany(
-          { $and:[{ validTo: { $lte: date }} ,{isDeleted:false}]},
-          { $set:{status: "deactivate", isActive:false} },
-          { upsert:false }
-        );
-    let couponData = await Deal.find({
+      { $and: [{ validTo: { $lte: date } }, { isDeleted: false }] },
+      { $set: { status: "deactivate", isActive: false } },
+      { upsert: false }
+    );
+    let dealData = await Deal.find({
       $or: [
         { couponCode: { $regex: new RegExp(search, "i") } },
         { name: { $regex: new RegExp(search, "i") } },
-        //   { lastName: { $regex: new RegExp(search,"i") }, },
-        //   { fullName: { $regex: new RegExp(search,"i") }, },
       ],
       isDeleted: false,
     })
@@ -81,31 +69,25 @@ const getAllDeal = async (data, tokendata) => {
       isDeleted: false,
     });
 
-   
-
-    return { total, couponData };
+    return { total, dealData };
   } else {
     const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
- 
+
     await Deal.updateMany(
-          { $and:[{ validTo: { $lte: date }} ,{isDeleted:false}]},
-          { $set:{status: "deactivate", isActive:false} },
-          { upsert:false }
-        );
-    
-    var couponData = await Deal.find({ isDeleted: false })
+      { $and: [{ validTo: { $lte: date } }, { isDeleted: false }] },
+      { $set: { status: "deactivate", isActive: false } },
+      { upsert: false }
+    );
+
+    var dealData = await Deal.find({ isDeleted: false })
       .skip(skip)
       .limit(limit)
       .sort({ _id: 1 })
       .lean();
 
-
     let total = await Deal.countDocuments({ isDeleted: false });
-   
-   
-    
 
-    return { total, couponData };
+    return { total, dealData };
   }
 };
 
@@ -118,7 +100,7 @@ const deleteDeal = async (data, tokendata) => {
     );
   }
 
-  const deal= await Deal.findOneAndUpdate(
+  const deal = await Deal.findOneAndUpdate(
     { _id: data.id },
     { isDeleted: true },
     { new: true }
