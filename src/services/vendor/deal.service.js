@@ -73,13 +73,13 @@ const getAllDeal = async (req, res) => {
 
     return { total, dealData };
   } else {
-    const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
+    // const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
 
-    await Deal.updateMany(
-      { $and: [{ validTo: { $lte: date } }, { isDeleted: false }] },
-      { $set: { status: "deactivate", isActive: false } },
-      { upsert: false }
-    );
+    // await Deal.updateMany(
+    //   { $and: [{ validTo: { $lte: date } }, { isDeleted: false }] },
+    //   { $set: { status: "deactivate", isActive: false } },
+    //   { upsert: false }
+    // );
 
     var dealData = await Deal.find({ isDeleted: false })
       .skip(skip)
