@@ -1,7 +1,7 @@
 const express = require("express");
 const { validate } = require("../../middlewares/validate");
 const auth = require("../../middlewares/auth");
-const dealController = require("../../controllers/vendor/deals.controller");
+const dealController = require("../../controllers/vendor/deal.controller");
 const dealValidation = require("../../validations/vendor/deal.validation");
 const { USER_TYPE } = require("../../config/appConstants");
 

@@ -49,6 +49,7 @@ const getAllDeal = async (data, tokendata) => {
   //const coupon=await Coupon.find({isDeleted:false}).lean();
   let { page, limit, search } = data;
   let skip = page * limit;
+  console.log(skip,"skip")
 
   if (search) {
     const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
