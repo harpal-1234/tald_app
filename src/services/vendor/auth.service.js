@@ -1,13 +1,14 @@
-const { User, Vendor ,Deal,Token} = require("../../models");
+const { User, Vendor, Deal, Token } = require("../../models");
+const bcrypt = require("bcryptjs");
 const {
   STATUS_CODES,
   ERROR_MESSAGES,
+  USER_TYPE,
 } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 
 const adminLogin = async (email, password) => {
-  const admin = await Vendor.findOne({ email:email });
- 
+  const admin = await Vendor.findOne({ email: email });
 
   if (!admin) {
     throw new OperationalError(
@@ -38,12 +39,12 @@ const changePassword = async (adminId, oldPassword, newPassword) => {
   return admin;
 };
 
-const dashBoard = async (req,res) => {
+const dashBoard = async (req, res) => {
   const [totalDeals, deal] = await Promise.all([
     Deal.countDocuments({ isDeleted: false }),
     Deal.countDocuments({ isDeleted: false }),
   ]);
-  return { totalDeals, deal};
+  return { totalDeals, deal };
 };
 
 const adminLogout = async (tokenId) => {
@@ -61,9 +62,36 @@ const adminLogout = async (tokenId) => {
   return updatedToken;
 };
 
+const resetPassword = async (tokenData, newPassword) => {
+  let query = tokenData.vendor;
+  newPassword = await bcrypt.hash(newPassword, 8);
+  if (tokenData.role === USER_TYPE.VENDOR_ADMIN) {
+    const userdata = await Vendor.findOneAndUpdate(
+      { _id: query },
+      { $set: { password: newPassword } }
+    );
+    const tokenvalue = await Token.findByIdAndUpdate(tokenData._id, {
+      isDeleted: true,
+    });
+
+    return { userdata, tokenvalue };
+  }
+
+  const adminvalue = await Admin.findOneAndUpdate(
+    { _id: query },
+    { $set: { password: newPassword } }
+  );
+  const tokenvalue = await Token.findByIdAndUpdate(tokenData._id, {
+    isDeleted: true,
+  });
+
+  return { tokenvalue, adminvalue };
+};
+
 module.exports = {
   adminLogin,
   changePassword,
   dashBoard,
-  adminLogout
+  adminLogout,
+  resetPassword,
 };

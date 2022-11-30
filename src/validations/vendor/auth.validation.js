@@ -22,3 +22,23 @@ exports.changePassword = {
     newPassword: JOI.PASSWORD,
   }),
 };
+
+exports.forgotPassword = {
+  body: Joi.object().keys({
+    email: JOI.EMAIL,
+    // userType: Joi.string().required(),
+  }),
+};
+
+exports.resetForgotPassword = {
+  body: Joi.object().keys({
+    newPassword: Joi.string().min(6).required(),
+    confirmPassword: Joi.any()
+      .valid(Joi.ref("newPassword"))
+      .required()
+      .messages({ "any.only": "Password does not match" }),
+  }),
+  query: Joi.object().keys({
+    token: Joi.string().required(),
+  }),
+};

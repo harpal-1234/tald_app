@@ -10,7 +10,7 @@ const {
   STATUS_CODES,
   ERROR_MESSAGES,
 } = require("../config/appConstants");
-const { Token, Admin, User } = require("../models");
+const { Token, Admin, User, Vendor } = require("../models");
 // const { workSeekerProfileService } = require("../services");
 const { OperationalError } = require("../utils/errors");
 const { formatUser } = require("../utils/formatResponse");
@@ -169,6 +169,49 @@ const generateResetPasswordToken = async (email) => {
   return { resetPasswordToken };
 };
 
+const generateVendorResetPassword= async (email) => {
+  const user= await Vendor.findOne({ email: email });
+
+  if (!user) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.ACCOUNT_NOT_EXIST
+    );
+  }
+
+  if (user.isDeleted) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.ACCOUNT_BLOCKED
+    );
+  }
+
+  var tokenId = new ObjectID();
+  const tokenExpires = moment().add(
+    config.jwt.resetPasswordExpirationMinutes,
+    "minutes"
+  );
+
+  const resetPasswordToken = generateToken({
+    vendor: user.id,
+    tokenId,
+    tokenExpires,
+    tokenType: TOKEN_TYPE.RESET_PASSWORD,
+  });
+
+  const data = await saveToken({
+    token: resetPasswordToken,
+    tokenId,
+    resetPasswordToken,
+    user,
+    tokenExpires,
+    tokenType: TOKEN_TYPE.RESET_PASSWORD,
+    userType: USER_TYPE.VENDOR_ADMIN,
+  });
+
+  return { resetPasswordToken };
+};
+
 const verifyResetPasswordToken = async (token) => {
   try {
     const payload = jwt.verify(token, config.jwt.secret);
@@ -186,6 +229,7 @@ const verifyResetPasswordToken = async (token) => {
 };
 
 module.exports = {
+  generateVendorResetPassword,
   generateAuthToken,
   saveToken,
   refreshAuth,

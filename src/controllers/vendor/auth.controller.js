@@ -4,16 +4,27 @@ const {
   STATUS_CODES,
   SUCCESS_MESSAGES,
 } = require("../../config/appConstants");
+const config = require("../../config/config");
 const { catchAsync } = require("../../utils/universalFunction");
 const { successResponse } = require("../../utils/response");
+const {
+  successMessageWithoutData,
+  successMessage,
+} = require("../../utils/commonFunction");
+const { forgotPasswordEmail } = require("../../utils/mailSend");
+const dotenv = require("dotenv");
+dotenv.config();
 
 const adminSignUp = catchAsync(async (req, res) => {
   const admin = await vendorAdminService.adminSignUp(req.body);
-  const data= {
+  const data = {
     Name: admin.userName,
     email: admin.email,
   };
-  const token = await tokenService.generateAuthToken(admin, USER_TYPE.VENDOR_ADMIN);
+  const token = await tokenService.generateAuthToken(
+    admin,
+    USER_TYPE.VENDOR_ADMIN
+  );
   return successResponse(
     req,
     res,
@@ -27,7 +38,10 @@ const adminSignUp = catchAsync(async (req, res) => {
 const adminLogin = catchAsync(async (req, res) => {
   let { email, password } = req.body;
   const admin = await vendorAdminService.adminLogin(email, password);
-  const token = await tokenService.generateAuthToken(admin, USER_TYPE.VENDOR_ADMIN);
+  const token = await tokenService.generateAuthToken(
+    admin,
+    USER_TYPE.VENDOR_ADMIN
+  );
   const user = {
     Name: admin.userName,
     email: admin.email,
@@ -52,7 +66,7 @@ const changePassword = catchAsync(async (req, res) => {
 });
 
 const dashBoard = catchAsync(async (req, res) => {
-  const data = await vendorAdminService.dashBoard(req,res);
+  const data = await vendorAdminService.dashBoard(req, res);
   return successResponse(
     req,
     res,
@@ -62,21 +76,88 @@ const dashBoard = catchAsync(async (req, res) => {
   );
 });
 
-const adminLogout=catchAsync(async (req,res) =>{
-  await vendorAdminService.adminLogout(req.token._id)
+const adminLogout = catchAsync(async (req, res) => {
+  await vendorAdminService.adminLogout(req.token._id);
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.LOGOUT,
-    
-    )
-} )
+    SUCCESS_MESSAGES.LOGOUT
+  );
+});
+
+const forgotPassword = catchAsync(async (req, res) => {
+  const token = await tokenService.generateVendorResetPassword(req.body.email);
+
+  await forgotPasswordEmail(req.body.email, token.resetPasswordToken);
+  return res.send(successMessageWithoutData(200, "Email successfully sent"));
+});
+
+//-------page render---------------//
+const forgotPage = async (req, res) => {
+  try {
+    const tokenData = await tokenService.verifyResetPasswordToken(
+      req.query.token
+    );
+
+    if (tokenData) {
+      return res.render("passwordForgot/forgotPassword", {
+        title: "forgot Password",
+        token: req.query.token,
+      });
+    }
+    res.render("passwordForgot/commonMessage", {
+      title: "Forgot Password",
+      errorMessage: "You have already changed your password",
+      projectName: process.env.PROJECT_NAME,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.send(
+      successMessage(400, { msg: "Your password link has been expired" })
+    );
+  }
+};
+
+//-------resetPassword-----------//
+
+const resetForgotPassword = catchAsync(async (req, res) => {
+  try {
+    const token = req.query.token;
+    const tokenData = await tokenService.verifyResetPasswordToken(token);
+    if (!tokenData)
+      return res.render("passwordForgot/commonMessage", {
+        title: "Forgot Password",
+        errorMessage: "Sorry, this link has been expired",
+        projectName: config.projectName,
+      });
+
+    const value = await vendorAdminService.resetPassword(
+      tokenData,
+      req.body.newPassword
+    );
+
+    return res.render("passwordForgot/commonMessage", {
+      title: "Forgot Password",
+      successMessage: "Your password is successfully changed",
+      projectName: config.projectName,
+    });
+  } catch (error) {
+    return res.render("passwordForgot/commonMessage", {
+      title: "Forgot Password",
+      errorMessage: "Sorry, this link has been expired",
+      projectName: config.projectName,
+    });
+  }
+});
 
 module.exports = {
   adminLogin,
   changePassword,
   dashBoard,
   adminLogout,
-  adminSignUp
+  adminSignUp,
+  forgotPassword,
+  forgotPage,
+  resetForgotPassword,
 };
