@@ -22,7 +22,7 @@ router.post(
 
 router.put(
   "/changePassword",
-  auth(USER_TYPE.ADMIN),
+  auth(USER_TYPE.VENDOR_ADMIN),
   validate(adminValidation.changePassword),
   adminController.changePassword
 );

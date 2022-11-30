@@ -44,7 +44,7 @@ const adminLogin = catchAsync(async (req, res) => {
 
 const changePassword = catchAsync(async (req, res) => {
   await vendorAdminService.changePassword(
-    req.token.admin._id,
+    req.token.vendor._id,
     req.body.oldPassword,
     req.body.newPassword
   );

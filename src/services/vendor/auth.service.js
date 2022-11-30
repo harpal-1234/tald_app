@@ -5,20 +5,6 @@ const {
 } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 
-const adminSignUp=async(adminData) =>{
-  
-  const admin=await Vendor.findOne({email:adminData.email,isDeleted:false});
-  if (admin) {
-    throw new OperationalError(
-      STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.EMAIL_ALREADY_EXIST
-    );
-  }
-  const newAdmin= await Vendor.create(adminData);
-  return newAdmin;
-
-}
-
 const adminLogin = async (email, password) => {
   const admin = await Vendor.findOne({ email:email });
  
@@ -76,7 +62,6 @@ const adminLogout = async (tokenId) => {
 };
 
 module.exports = {
-  adminSignUp,
   adminLogin,
   changePassword,
   dashBoard,

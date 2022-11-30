@@ -73,7 +73,6 @@ const getAllDeal = async (req, res) => {
 
     return { total, dealData };
   } else {
-    console.log(skip);
     const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
 
     await Deal.updateMany(

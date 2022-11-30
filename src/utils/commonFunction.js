@@ -120,10 +120,40 @@ const formatResturant=(userData) => {
   return userData;
 };
 
+
+const formatVendor=(userData) => {
+   
+  if (userData.length) {
+    userData.forEach((data) => {
+      delete data.__v;
+      delete data.isBlocked;
+      delete data.isDeleted;
+      delete data.createdAt;
+      delete data.updatedAt;
+      delete data.customerId;
+      delete data.password
+    });
+  } else {
+    delete userData.__v;
+    delete userData.isBlocked;
+    delete userData.isDeleted;
+    delete userData.createdAt;
+    delete userData.updatedAt;
+    delete userData.__v;
+    delete userData._id;
+    delete userData.vendorId;
+    delete data.password
+  
+    
+  }
+  return userData;
+};
+
   module.exports={
     successMessageWithoutData ,
     successMessage,
     formatDeal,
     formatBanner,
-    formatResturant
+    formatResturant,
+    formatVendor
   }

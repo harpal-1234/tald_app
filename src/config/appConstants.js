@@ -88,7 +88,8 @@ const SUCCESS_MESSAGES = {
   USER_LOCATION:'Location Updated Successfully',
   BANNER_REQUEST:'Request Sent Successfully',
   BANNER_DATA:'All Bannner Request',
-  BANNER_STATUS:'Banner Request Accepted '
+  BANNER_STATUS:'Banner Request Accepted ',
+  VENDOR_ADMIN:'User created Successfully'
 };
 
 
