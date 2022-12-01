@@ -16,6 +16,7 @@ const createStore = async (req, res) => {
   }
   const store = await Store.create({
     vendorId: vendor.id,
+    service:req.body.service,
     storeName: req.body.storeName,
     location: {
       loc: {

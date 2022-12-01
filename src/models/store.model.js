@@ -1,17 +1,18 @@
 const mongoose = require("mongoose");
+const {DEALS_SERVICE} = require("../config/appConstants");
 
 const storeSchema = mongoose.Schema(
   {
     vendorId: {
       type: mongoose.SchemaTypes.ObjectId,
-      ref: "vendor",
+      ref: "vendors",
       required: true,
     },
-    type: { type: String, default: "" },
     storeName: { type: String, default: "" },
-    address: { type: String, default: "" },
+    service:{type: String, enum:[...Object.values(DEALS_SERVICE)]},
     location: {
       loc: {
+        address: { type: String, default: "" },
         type: { type: String, default: "Point" },
         coordinates: {
           type: [Number],

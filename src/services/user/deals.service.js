@@ -12,7 +12,7 @@ const {
 const { OperationalError } = require("../../utils/errors");
 const config = require("../../config/config");
 const { userLocation } = require("./profile.service");
-const {formatBanner,formatCoupon,formatResturant}=require("../../utils/commonFunction");
+const {formatBanner,formatDeal,formatResturant}=require("../../utils/commonFunction");
 
 const homeData = async (req, res) => {
   const query = {
@@ -35,14 +35,52 @@ const homeData = async (req, res) => {
     await Deal.find({category:'footwear',isDeleted: false}).lean(),
   ]);
 
- const buffetDeals=formatCoupon(buffet);
- const bannerData=formatCoupon(banner);
- const resturantData=formatCoupon(resturant);
+ const buffetDeals=formatDeal(buffet);
+ const bannerData=formatBanner(banner);
+ const resturantData=formatResturant(resturant);
   return { buffetDeals, bannerData,resturantData,spa,clothing,cannabis,footwear};
 };
 
+const getCategoryData=async(req,res)=>{
+  const user=await User.findOne({_id:req.token.user._id,isDeleted:false});
+  if(!user)
+  {
+    throw new OperationalError(
+      STATUS_CODES.NOT_FOUND,
+      ERROR_MESSAGES.USER_NOT_FOUND
+    );
+  }
+ 
+  const dealData=await Deal.find({category:req.query.category,isDeleted:false}).lean();
+  return dealData
 
+}
+
+const nearestService=async(req,res)=>{
+  const user=await User.findOne({_id:req.token.user._id,isDeleted:false});
+  if(!user)
+  {
+    throw new OperationalError(
+      STATUS_CODES.NOT_FOUND,
+      ERROR_MESSAGES.USER_NOT_FOUND
+    );
+  }
+  const query = {
+    "location.loc": {
+      $near: {
+        $geometry: { type: "Point", coordinates:  [ req.body.long, req.body.lat] },
+        $maxDistance: 1000,
+        // $maxDistance:1000
+      },
+    },
+  }
+  const nearestService=await Store.find({query}).lean();
+  return nearestService
+
+}
 
 module.exports = {
   homeData,
+  getCategoryData,
+  nearestService
 };

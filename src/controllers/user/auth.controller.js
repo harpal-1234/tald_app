@@ -128,6 +128,28 @@ const resetForgotPassword = catchAsync(async (req, res) => {
   }
 });
 
+const pushNotificationStatus =catchAsync(async(req,res)=>{
+  const notification=await userService.pushNotificationStatus (req,res);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.LOGOUT,
+  );
+
+})
+
+const pushNotification=catchAsync(async(req,res)=>{
+  const notification=await userService.pushNotification(req,res);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.LOGOUT,
+    notification
+  );
+
+})
 
 
 module.exports = {
@@ -136,5 +158,7 @@ module.exports = {
   userLogout,
   forgotPassword,
   forgotPage,
-  resetForgotPassword
+  resetForgotPassword,
+  pushNotificationStatus,
+  pushNotification
 };

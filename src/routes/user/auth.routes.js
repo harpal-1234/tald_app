@@ -63,6 +63,22 @@ router
 
 router.post("/logout", auth(USER_TYPE.USER), authController.userLogout);
 
+router.post(
+  "/pushNotificationStatus ",
+  auth(USER_TYPE.USER), 
+  validate(authValidation.pushNotificationStatus ),
+  authController.pushNotificationStatus 
+
+)
+
+router.get(
+  "/pushNotification",
+  auth(USER_TYPE.USER), 
+  // validate(authValidation.pushNotificationStatus ),
+  authController.pushNotification 
+
+)
+
 // router.get("/getCustomerList", auth(USER_TYPE.USER), authController.getCustomerList);
 
 // router.get("/dashBoard",auth(USER_TYPE.USER), authController.dashBoard);

@@ -14,75 +14,69 @@ const {
 } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 const config = require("../../config/config");
+const OneSignal = require('@onesignal/node-onesignal');
 
 const createUser = async (userData) => {
-
-    const data=await User.findOne({email:userData.email,isDeleted:false});
-    if(data)
-    {
-        throw new OperationalError(
-            STATUS_CODES.ACTION_FAILED,
-            ERROR_MESSAGES.EMAIL_ALREADY_EXIST
-          );
-    }
-    const user = await User.create(userData);
-    return user;
+  const data = await User.findOne({ email: userData.email, isDeleted: false });
+  if (data) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.EMAIL_ALREADY_EXIST
+    );
   }
-;
+  const user = await User.create(userData);
+  return user;
+};
+const userLogin = async (email, name, password, socialId) => {
+  if (socialId) {
+    if (Object.keys(socialId).toString() === "facebookId") {
+      const facebookUser = await User.findOneAndUpdate(
+        { $or: [{ socialId: socialId.facebookId }, { email: email }] },
+        {
+          $set: { socialId: { facebookId: socialId.facebookId } },
+          $setOnInsert: {
+            email: email,
+            name: name,
+          },
+        },
+        { upsert: true, new: true }
+      );
 
-const userLogin = async (email,name,password,socialId) => {
-
- if(socialId)
- {
- if(Object.keys(socialId).toString()=== 'facebookId')
- {
-
-  const facebookUser = await User.findOneAndUpdate({ $or:[{socialId: socialId.facebookId},{email:email}] },{
-    $set:{socialId:{facebookId:socialId.facebookId}},
-    $setOnInsert:{
-      email:email,
-      name:name
-       
+      return facebookUser;
     }
-  },{upsert:true,new:true});
-  
 
-  return facebookUser;
- }
-  
- if(Object.keys(socialId).toString() === 'googleId')
- {
-  
-  const googleUser = await User.findOneAndUpdate({ $or:[{socialId: socialId.googleId},{email:email}] },{
-    $set:{socialId:{googleId:socialId.googleId}},
-    $setOnInsert:{
-      email:email,
-      name:name
-       
+    if (Object.keys(socialId).toString() === "googleId") {
+      const googleUser = await User.findOneAndUpdate(
+        { $or: [{ socialId: socialId.googleId }, { email: email }] },
+        {
+          $set: { socialId: { googleId: socialId.googleId } },
+          $setOnInsert: {
+            email: email,
+            name: name,
+          },
+        },
+        { upsert: true, new: true }
+      );
+
+      return googleUser;
     }
-  },{upsert:true,new:true});
+    if (Object.keys(socialId).toString() === "appleId") {
+      const appleUser = await User.findOneAndUpdate(
+        { $or: [{ socialId: socialId.appleId }, { email: email }] },
+        {
+          $set: { socialId: { appleId: socialId.appleId } },
+          $setOnInsert: {
+            email: email,
+            name: name,
+          },
+        },
+        { upsert: true, new: true }
+      );
 
-
-  return googleUser;
-
- }
- if(Object.keys(socialId).toString() === 'appleId')
- {
-
-  const appleUser = await User.findOneAndUpdate( {$or:[{socialId: socialId.appleId},{email:email}] },
-    {$set:{socialId:{appleId:socialId.appleId}},
-    $setOnInsert:{
-      email:email,
-      name:name
-    }}
-  ,{upsert:true,new:true});
-  
-
-  return appleUser;
-
- }
-}
-  let user = await User.findOne({ email:email});
+      return appleUser;
+    }
+  }
+  let user = await User.findOne({ email: email });
 
   if (!user) {
     throw new OperationalError(
@@ -133,25 +127,25 @@ const getUserById = async (userId) => {
   return user;
 };
 
-const userLogout=async(userId)=>{
-  const token=await Token.findOne({_id:userId,isDeleted:false});
- 
+const userLogout = async (userId) => {
+  const token = await Token.findOne({ _id: userId, isDeleted: false });
+
   if (!token) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
       ERROR_MESSAGES.AUTHENTICATION_FAILED
     );
   }
-  if(token.isDeleted){
-    throw new OperationalError(
-      STATUS_CODES.NOT_FOUND,
-      ERROR_MESSAGES.LOG_OUT
-    )
+  if (token.isDeleted) {
+    throw new OperationalError(STATUS_CODES.NOT_FOUND, ERROR_MESSAGES.LOG_OUT);
   }
-  await Token.findByIdAndUpdate({_id:userId},{isDeleted:true},{new:true});
-  return 
-
-}
+  await Token.findByIdAndUpdate(
+    { _id: userId },
+    { isDeleted: true },
+    { new: true }
+  );
+  return;
+};
 
 const resetPassword = async (tokenData, newPassword) => {
   let query = tokenData.user;
@@ -178,10 +172,57 @@ const resetPassword = async (tokenData, newPassword) => {
   return { tokenvalue, adminvalue };
 };
 
+const pushNotificationStatus = async (req, res) => {
+  const user = await User.findOne({ id: req.token.user._id });
+  if (!user) {
+    throw new OperationalError(
+      STATUS_CODES.NOT_FOUND,
+      ERROR_MESSAGES.USER_NOT_FOUND
+    );
+  }
+  const notification = await User.findOneAndUpdate(
+    { _id: user.id },
+    {
+      pushNotification: req.body.pushNotification,
+    },
+    { new: true }
+  );
 
-module.exports={
-    createUser,
-    userLogin,
-    userLogout,
-    resetPassword
-}
+  return notification;
+};
+
+const pushNotification = async (req, res) => {
+  const app_key_provider = {
+    getToken() {
+      return config.onesignal_api_key;
+    },
+  };
+  const configuration = OneSignal.createConfiguration({
+    authMethods: {
+      app_key: {
+        tokenProvider: app_key_provider,
+      },
+    },
+  });
+  const client = new OneSignal.DefaultApi(configuration);
+  const notification = new OneSignal.Notification();
+  notification.app_id = config.onesignal_app_key
+  notification.included_segments = ["Subscribed Users"];
+  notification.contents = {
+    en: "Hello OneSignal!",
+  };
+  const { id } = await client.createNotification(notification);
+  const response = await client.getNotification(config.onesignal_app_key, id);
+  console.log(response);
+
+  return response
+};
+
+module.exports = {
+  createUser,
+  userLogin,
+  userLogout,
+  resetPassword,
+  pushNotificationStatus,
+  pushNotification,
+};

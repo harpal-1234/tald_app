@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-const {WORK_TYPE, USER_TYPE, JOB_TITLE} = require("../config/appConstants");
+const {WORK_TYPE, USER_TYPE, JOB_TITLE,PUSH_NOTIFICATION_STATUS,NOTIFICATION_STATUS} = require("../config/appConstants");
 // const { address } = require("./commonField.models");
 const { string } = require("joi");
 
@@ -32,10 +32,11 @@ const userSchema = mongoose.Schema(
       facebookId:{ type: String,sparse:true},
       appleId:{ type: String,sparse:true},
     },
+    pushNotification:{type: String,enum: [...Object.values(PUSH_NOTIFICATION_STATUS)] },
+    notification:{type:String,enum: [...Object.values(NOTIFICATION_STATUS)]},
     isBlocked: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
-    isVerified:{type: Boolean, default: false}
-
+    isVerified:{type: Boolean, default: false},
   },
   {
     timestamps: true,

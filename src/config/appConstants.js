@@ -37,6 +37,16 @@ const DEALS_SERVICE={
   ACTIVITY:'activity'
 }
 
+const PUSH_NOTIFICATION_STATUS={
+  ENABLE:'Enable',
+  DISABLE:'Disable'
+}
+
+const NOTIFICATION_STATUS={
+  ENABLE:'Enable',
+  DISABLE:'Disable'
+}
+
 const JOI = {
   EMAIL: Joi.string().email().lowercase().trim().required(),
   PASSWORD: Joi.string().min(6).required(),
@@ -164,6 +174,8 @@ const DELETE_MASSAGES = {
 
 module.exports = {
   BANNER_STATUS ,
+  PUSH_NOTIFICATION_STATUS,
+  NOTIFICATION_STATUS,
   DEALS_SERVICE,
   DELETE_MASSAGES,
   socialMedia,

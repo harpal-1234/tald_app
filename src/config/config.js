@@ -61,6 +61,8 @@ module.exports = {
   smtp: { email: envVars.EMAIL, password: envVars.PASSWORD },
   baseurl: envVars.API_BASE_URL,
   projectName: envVars.PROJECT_NAME,
+  onesignal_api_key:envVars.ONESIGNAL_API_KEY,
+  onesignal_app_key:envVars.ONESIGNAL_APP_KEY,
   panelurl: envVars.ADMIN_BASE_URL,
   stripe: {
     publishableKey: envVars.STRIPE_PUBLISHABLE_KEY,
