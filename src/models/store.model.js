@@ -8,6 +8,10 @@ const storeSchema = mongoose.Schema(
       ref: "vendors",
       required: true,
     },
+    dealId:[{type: mongoose.SchemaTypes.ObjectId,
+    ref: "deals",
+    required: true,
+    }],
     storeName: { type: String, default: "" },
     service:{type: String, enum:[...Object.values(DEALS_SERVICE)]},
     location: {

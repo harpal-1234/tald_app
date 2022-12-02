@@ -1,4 +1,4 @@
-const { Vendor, Deal, Token, User } = require("../../models");
+const { Vendor, Deal, Token, User, Store } = require("../../models");
 const { STATUS_CODES, ERROR_MESSAGES } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 const moment = require("moment");
@@ -27,12 +27,15 @@ const createDeal = async (data, tokendata) => {
     vendorId: vendor.id,
     couponCode: data.couponCode,
     category: data.category,
+    storeId:data.storeId,
     name: data.name,
     worth: data.worth,
     description: data.description,
     validFrom: moment(data.validFrom + "Z", "YYYY-MM-DD" + "Z").toDate(),
     validTo: moment(data.validTo + "Z", "YYYY-MM-DD" + "Z").toDate(),
   });
+
+
 
   return newCoupon;
 };

@@ -9,6 +9,7 @@ exports.create = {
     description: Joi.string().required(), 
     validFrom: Joi.string().required(), 
     validTo:Joi.string().required(),
+    storeId:Joi.string().required(),
     category:Joi.string().valid(
       ...Object.values(DEALS_SERVICE)
     )

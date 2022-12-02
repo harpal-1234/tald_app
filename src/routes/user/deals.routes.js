@@ -24,7 +24,7 @@ router.get(
 router.get(
   "/services",
   auth(USER_TYPE.USER),
-  validate(authValidation.nearestService),
+  // validate(authValidation.nearestService),
   authController.nearestService
 )
 

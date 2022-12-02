@@ -35,12 +35,13 @@ const getCategoryData = catchAsync(async (req, res) => {
 const nearestService = catchAsync(async (req, res) => {
   const data = await dealsService.nearestService(req, res);
   const nearYou = formatDeal(data);
+  console.log(nearYou);
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.SUCCESS,
-    nearYou
+   nearYou
   );
 });
 

@@ -60,13 +60,13 @@ try {
     });
   }
    
-  function contactUs(body,email){
+  function contactUs(name,body,email){
     return new Promise((resolve, reject) => {
       var info = {
         from:process.env.SENDER_EMAIL,
         to:process.env.SENDER_EMAIL,
         subject: "Contact Us Report",
-        html:`<b><span>Name:</span></b><span>${name}</span><b><br><br><span>Email:</span></b>${email}<br><br><b><span>Message:</span></b>${data1}`,
+        html:`<b><span>Name:</span></b><span>${name}</span><b><br><br><span>Email:</span></b>${email}<br><br><b><span>Message:</span></b>${body}`,
       };
 
       transporter.sendMail(info, (error, accept) => {

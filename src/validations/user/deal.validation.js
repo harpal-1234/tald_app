@@ -16,5 +16,6 @@ exports.nearestService = {
   query: Joi.object().keys({
     lat: Joi.string().required(),
     long: Joi.string().required(),
+    address: Joi.string().required(),
   }),
 };

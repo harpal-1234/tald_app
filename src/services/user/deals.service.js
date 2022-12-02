@@ -65,16 +65,8 @@ const nearestService=async(req,res)=>{
       ERROR_MESSAGES.USER_NOT_FOUND
     );
   }
-  const query = {
-    "location.loc": {
-      $near: {
-        $geometry: { type: "Point", coordinates:  [ req.body.long, req.body.lat] },
-        $maxDistance: 1000,
-        // $maxDistance:1000
-      },
-    },
-  }
-  const nearestService=await Store.find({query}).lean();
+  const nearestService=await Deal.find({storeId:req.query.storeId}).lean();
+
   return nearestService
 
 }
