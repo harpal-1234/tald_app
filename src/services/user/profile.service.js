@@ -61,9 +61,9 @@ const changePassword = async (userId, oldPassword, newPassword) => {
 };
 
 const contactUs=async(name,email)=>{
-  console.log(email);
+
   const user= await User.findOne({email:email,isDeleted:false});
-  console.log(user,"user");
+
   if(!user)
   {
     throw new OperationalError(
