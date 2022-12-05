@@ -34,12 +34,11 @@ const formatUser = (userData) => {
     delete userData.jobTitle;
     delete userData.__v;
     delete userData.password;
-    delete data.location;
-    delete data.dealId;
-    delete data.phoneNumber;
-    delete data.isPushNotification;
-    delete data.isVerified;
-    delete data.socialId;
+    delete userData.location;
+    delete userData.phoneNumber;
+    delete userData.isPushNotification;
+    delete userData.isVerified;
+    delete userData.socialId;
   }
   return userData;
 };

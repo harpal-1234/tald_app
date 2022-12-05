@@ -8,6 +8,7 @@ const {
   SUCCESS_MESSAGES,
   USER_TYPE
 } = require("../../config/appConstants");
+const { formatUser } = require("../../utils/commonFunction");
 
 const editProfile = catchAsync(async (req, res) => {
   const user = await userProfileService.editProfile(
@@ -82,6 +83,7 @@ const favourites= catchAsync(async (req, res) => {
 
 const myFavourites= catchAsync(async (req, res) => {
   const user=await userProfileService.myFavourites(req,res);
+  const value=formatUser(user);
   return successResponse(
     req,
     res,

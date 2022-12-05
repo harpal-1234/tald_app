@@ -159,7 +159,7 @@ const myFavourites=async(req,res)=>{
     );
 
   }
-  const favourite=await User.findOne({_id:user.id}).populate({path:'dealId'});
+  const favourite=await User.findOne({_id:user.id}).populate({path:'dealId'}).lean();
   return favourite
   
 
