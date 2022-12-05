@@ -54,7 +54,7 @@ const getCategoryData=async(req,res)=>{
   const dealData=await Deal.find({category:req.query.category,isDeleted:false}).lean();
   return dealData
 
-}
+};
 
 const nearestService=async(req,res)=>{
   const user=await User.findOne({_id:req.token.user._id,isDeleted:false});
@@ -69,9 +69,24 @@ const nearestService=async(req,res)=>{
 
   return nearestService
 
+};
+
+const notification=async(req,res)=>{
+  const user=await User.findOne({_id:req.token.user._id,isDeleted:false});
+  if(!user)
+  {
+    throw new OperationalError(
+      STATUS_CODES.NOT_FOUND,
+      ERROR_MESSAGES.USER_NOT_FOUND
+    );
+  }
+ 
+
 }
 
+
 module.exports = {
+  notification,
   homeData,
   getCategoryData,
   nearestService

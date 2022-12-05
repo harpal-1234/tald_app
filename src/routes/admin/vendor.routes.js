@@ -19,4 +19,17 @@ router.get(
   authController.getAllVendor
 );
 
+router.put(
+  "/editProfile",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.editVendorProfile),
+  authController.editVendorProfile
+);
+
+router.delete(
+  "/delete",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.deleteVendor),
+  authController.deleteVendor
+);
 module.exports = router;

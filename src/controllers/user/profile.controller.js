@@ -49,6 +49,17 @@ const userContactUs= catchAsync(async (req, res) => {
   );
 });
 
+const pushNotificationStatus =catchAsync(async(req,res)=>{
+  const notification=await userProfileService.pushNotificationStatus(req,res);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.LOGOUT,
+  );
+
+})
+
 const userLocation= catchAsync(async (req, res) => {
   const location=await userProfileService.userLocation(req,res);
   return successResponse(
@@ -59,10 +70,33 @@ const userLocation= catchAsync(async (req, res) => {
   );
 });
 
+const favourites= catchAsync(async (req, res) => {
+  const user=await userProfileService.favourites(req,res);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.USER_LOCATION
+  );
+});
+
+const myFavourites= catchAsync(async (req, res) => {
+  const user=await userProfileService.myFavourites(req,res);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.USER_LOCATION,
+    user
+  );
+});
 
 module.exports = {
   editProfile,
   changePassword,
   userContactUs,
-  userLocation
+  userLocation,
+  pushNotificationStatus,
+  favourites,
+  myFavourites
 };

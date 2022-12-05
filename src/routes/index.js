@@ -1,79 +1,86 @@
 const express = require("express");
 const userAuth = require("./user/auth.routes");
 const userProfile = require("./user/profile.routes");
-const staticRoutes=require("../routes/static.routes");
-const vendorAuth=require("./vendor/auth.routes");
-const couponRoutes=require("./vendor/deal.routes");
-const adminAuth=require("./admin/auth.routes");
-const bannerRoutes=require('./vendor/banner.routes');
-const dealsRoutes=require("./user/deals.routes");
-const storeRoutes=require("./vendor/store.routes");
-const adminBannerRoutes=require("./admin/banner.routes");
-const adminVendorRoutes=require('./admin/vendor.routes');
+const staticRoutes = require("../routes/static.routes");
+const vendorAuth = require("./vendor/auth.routes");
+const couponRoutes = require("./vendor/deal.routes");
+const adminAuth = require("./admin/auth.routes");
+const bannerRoutes = require("./vendor/banner.routes");
+const dealsRoutes = require("./user/deals.routes");
+const storeRoutes = require("./vendor/store.routes");
+const adminBannerRoutes = require("./admin/banner.routes");
+const adminVendorRoutes = require("./admin/vendor.routes");
+const adminNotification = require("./admin/notification.routes");
+const adminUserRoutes=require("./admin/user.routes");
 //const staticRoutes = require("./");
 //const commonRoutes = require("./user/common.routes");
 
 const router = express.Router();
 
 const defaultRoutes = [
- 
   {
-    path:'/admin/auth',
-    route:adminAuth
-
+    path: "/admin/auth",
+    route: adminAuth,
   },
   {
-    path:'/admin/vendor',
-    route:adminVendorRoutes
+    path: "/admin/notification",
+    route: adminNotification,
   },
   {
-    path:'/admin/banner',
-    route:adminBannerRoutes
-
+    path: "/admin/user",
+    route: adminUserRoutes,
   },
   {
-    path:'/vendor/banner',
-    route:bannerRoutes
+    path: "/admin/vendor",
+    route: adminVendorRoutes,
   },
   {
-    path:'/vendor/auth',
-    route:vendorAuth
+    path: "/admin/banner",
+    route: adminBannerRoutes,
   },
   {
-    path:'/vendor/deal',
-    route:couponRoutes
+    path: "/vendor/banner",
+    route: bannerRoutes,
   },
   {
-    path:'/vendor/store',
-    route:storeRoutes
+    path: "/vendor/auth",
+    route: vendorAuth,
+  },
+  {
+    path: "/vendor/deal",
+    route: couponRoutes,
+  },
+  {
+    path: "/vendor/store",
+    route: storeRoutes,
   },
   {
     path: "/user/auth",
     route: userAuth,
   },
   {
-    path:"/user/deal",
-    route:dealsRoutes
+    path: "/user/deal",
+    route: dealsRoutes,
   },
   {
-    path:"/user/profile",
-    route:userProfile
+    path: "/user/profile",
+    route: userProfile,
   },
- 
-//   {
-//     path: "/admin",
-//     route: adminAuth,
-//   },
 
-    {
-      path: "/",
-      route: staticRoutes,
-    },
+  //   {
+  //     path: "/admin",
+  //     route: adminAuth,
+  //   },
 
-    // {
-    //   path: "/user",
-    //   route: commonRoutes,
-    // },
+  {
+    path: "/",
+    route: staticRoutes,
+  },
+
+  // {
+  //   path: "/user",
+  //   route: commonRoutes,
+  // },
 ];
 
 defaultRoutes.forEach((route) => {

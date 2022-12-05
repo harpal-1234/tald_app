@@ -26,13 +26,14 @@ const userSchema = mongoose.Schema(
         },
       },
     },//logitude and latitude
+    dealId:[{ type: mongoose.SchemaTypes.ObjectId, ref: 'deals' }],
     phoneNumber:{ type: String, default: "" },
     socialId:{
       googleId:{ type: String,sparse:true},
       facebookId:{ type: String,sparse:true},
       appleId:{ type: String,sparse:true},
     },
-    pushNotification:{type: String,enum: [...Object.values(PUSH_NOTIFICATION_STATUS)] },
+    isPushNotification:{type: Boolean, default: false },
     notification:{type:String,enum: [...Object.values(NOTIFICATION_STATUS)]},
     isBlocked: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },

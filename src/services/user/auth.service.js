@@ -172,26 +172,10 @@ const resetPassword = async (tokenData, newPassword) => {
   return { tokenvalue, adminvalue };
 };
 
-const pushNotificationStatus = async (req, res) => {
-  const user = await User.findOne({ id: req.token.user._id });
-  if (!user) {
-    throw new OperationalError(
-      STATUS_CODES.NOT_FOUND,
-      ERROR_MESSAGES.USER_NOT_FOUND
-    );
-  }
-  const notification = await User.findOneAndUpdate(
-    { _id: user.id },
-    {
-      pushNotification: req.body.pushNotification,
-    },
-    { new: true }
-  );
 
-  return notification;
-};
 
 const pushNotification = async (req, res) => {
+
   const app_key_provider = {
     getToken() {
       return config.onesignal_api_key;
@@ -206,12 +190,14 @@ const pushNotification = async (req, res) => {
   });
   const client = new OneSignal.DefaultApi(configuration);
   const notification = new OneSignal.Notification();
+
   notification.app_id = config.onesignal_app_key
-  notification.included_segments = ["Subscribed Users"];
+  notification.included_segments = [req.token.device.token];
   notification.contents = {
     en: "Hello OneSignal!",
   };
   const { id } = await client.createNotification(notification);
+ 
   const response = await client.getNotification(config.onesignal_app_key, id);
   console.log(response);
 
@@ -223,6 +209,5 @@ module.exports = {
   userLogin,
   userLogout,
   resetPassword,
-  pushNotificationStatus,
   pushNotification,
 };

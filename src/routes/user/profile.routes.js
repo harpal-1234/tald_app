@@ -27,6 +27,13 @@ router.post(
   validate(authValidation.userContactUs),
   authController.userContactUs
 );
+
+router.post(
+  "/pushNotificationStatus",
+  auth(USER_TYPE.USER),
+  authController.pushNotificationStatus
+);
+
 router.post(
   "/userLocation",
   auth(USER_TYPE.USER),
@@ -34,4 +41,24 @@ router.post(
   authController.userLocation
 );
 
+router.post(
+  "/userLocation",
+  auth(USER_TYPE.USER),
+  // validate(authValidation.userLocation),
+  authController.userLocation
+);
+
+router.post(
+  "/favourites",
+  auth(USER_TYPE.USER),
+  // validate(authValidation.userLocation),
+  authController.favourites
+);
+
+router.get(
+  "/myFavourites",
+  auth(USER_TYPE.USER),
+  // validate(authValidation.userLocation),
+  authController.myFavourites
+);
 module.exports = router;

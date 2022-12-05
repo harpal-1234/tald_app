@@ -1,5 +1,5 @@
 const { successResponse } = require("../../utils/response");
-const { User } = require("../../models");
+const { User, Deal } = require("../../models");
 const { ApiError } = require("../../utils/universalFunction");
 const {
   joi,
@@ -62,17 +62,54 @@ const changePassword = async (userId, oldPassword, newPassword) => {
 
 const contactUs=async(name,email)=>{
 
-  const user= await User.findOne({email:email,isDeleted:false});
+  const user= await User.findOne({$and:[{email:email},{name:name}],isDeleted:false});
 
   if(!user)
   {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.ACCOUNT_NOT_EXIST
+      ERROR_MESSAGES.USER_CREDENTIAL
     );
   }
   return 
 }
+
+const pushNotificationStatus = async (req, res) => {
+  const user = await User.findOne({ id: req.token.user._id });
+  if (!user) {
+    throw new OperationalError(
+      STATUS_CODES.NOT_FOUND,
+      ERROR_MESSAGES.USER_NOT_FOUND
+    );
+  }
+  console.log(user.isPushNotification);
+  if(user.isPushNotification===false)
+  {
+    console.log("working")
+  const notification = await User.findOneAndUpdate(
+    { _id: user.id},
+    {
+      isPushNotification:true
+    },
+    { new:true,upsert:false }
+  );
+  console.log(notification);
+
+  return notification;
+  }
+  if(user.isPushNotification===true){
+    console.log("working in ehh");
+    const notification = await User.findOneAndUpdate(
+      { _id: user.id},
+      {
+        isPushNotification:false
+      },
+      { new: true,upsert:false }
+    );
+  
+    return notification;
+  }
+};
 
 const userLocation=async(req,res)=>{
   const user=await User.findOne({_id:req.token.user._id});
@@ -94,11 +131,46 @@ const userLocation=async(req,res)=>{
   },{upsert:false});
  
   return 
+};
+
+const favourites=async(req,res)=>{
+  const user=await User.findOne({_id:req.token.user._id,isDeleted:false});
+  if(!user)
+  {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.ACCOUNT_NOT_EXIST
+    );
+
+  }
+  const favourite=await User.findByIdAndUpdate({_id:user.id},{dealId:req.body.dealId},{upsert:false});
+  return 
+  
+
+};
+
+const myFavourites=async(req,res)=>{
+  const user=await User.findOne({_id:req.token.user._id,isDeleted:false});
+  if(!user)
+  {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.ACCOUNT_NOT_EXIST
+    );
+
+  }
+  const favourite=await User.findOne({_id:user.id}).populate({path:'dealId'});
+  return favourite
+  
+
 }
 
 module.exports={
   editProfile,
   changePassword,
   contactUs,
-  userLocation
+  userLocation,
+  pushNotificationStatus,
+  favourites,
+  myFavourites
 }

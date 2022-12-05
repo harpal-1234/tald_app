@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const {
   TOKEN_TYPE,
   USER_TYPE,
+  DEVICE_TYPE
 } = require("../config/appConstants");
 
 const tokenSchema = mongoose.Schema(
@@ -12,6 +13,13 @@ const tokenSchema = mongoose.Schema(
     expires: { type: Date, required: true },
     token: { type: String, unique: true},
     role: { type: String, enum: [...Object.values(USER_TYPE)]  },
+    device: {
+      type: {
+        type: String,
+        enum: [...Object.values(DEVICE_TYPE)],
+      },
+      token: { type: String },
+    },
     isDeleted: { type: Boolean, default: false },
     blacklisted: {
       type: Boolean,

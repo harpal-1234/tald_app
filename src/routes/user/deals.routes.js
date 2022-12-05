@@ -15,7 +15,7 @@ router.post(
   )
   
 router.get(
-  "/category",
+  "/getCategory",
   auth(USER_TYPE.USER),
   validate(authValidation.getCategoryData),
   authController.getCategoryData

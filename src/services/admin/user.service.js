@@ -1,24 +1,24 @@
-const { Admin, Vendor } = require("../../models");
+const { Admin, User } = require("../../models");
 const { STATUS_CODES, ERROR_MESSAGES } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 
-const createVendor = async (data, adminData) => {
-  const admin = await Admin.findOne({ id: adminData, isDeleted: false });
-  if (!admin) {
+const createUser = async (data) => {
+  const user = await User.findOne({ email: data.email, isDeleted: false });
+  if (user) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.USER_NOT_FOUND
+      ERROR_MESSAGES.EMAIL_ALREADY_EXIST
     );
   }
-  const newAdmin = await Vendor.create(data);
-  return newAdmin;
+  const newUser = await User.create(data);
+  return newUser;
 };
 
-const getAllVendor = async (req, res) => {
+const getAllUser= async (req, res) => {
   let { page, limit, search } = req.query;
   let skip = page * limit;
   if (search) {
-    let vednorData = await Vendor.find({
+    let userData = await User.find({
       $or: [
         { email: { $regex: new RegExp(search, "i") } },
         { name: { $regex: new RegExp(search, "i") } },
@@ -30,45 +30,46 @@ const getAllVendor = async (req, res) => {
       .sort({ _id: -1 })
       .lean();
 
-    let total = await Vendor.countDocuments({
+    let total = await User.countDocuments({
       $or: [
-        { couponCode: { $regex: new RegExp(search, "i") } },
+        { email: { $regex: new RegExp(search, "i") } },
         { name: { $regex: new RegExp(search, "i") } },
       ],
       isDeleted: false,
     });
 
-    return { total, vednorData };
+    return { total, userData };
   } else {
-    var vendorData = await Vendor.find({ isDeleted: false })
+    var userData = await User.find({ isDeleted: false })
       .skip(skip)
       .limit(limit)
       .sort({ _id: -1 })
       .lean();
 
-    let total = await Vendor.countDocuments({ isDeleted: false });
+    let total = await User.countDocuments({ isDeleted: false });
 
-    return { total, vendorData };
+    return { total, userData };
   }
 };
 
-const editVendorProfile = async (req, res) => {
-  const vendorData = await Vendor.findOne({
+const editUserProfile = async (req, res) => {
+  const userData = await User.findOne({
     _id: req.body.id,
     isDeleted: false,
   });
+  console.log(userData);
 
-  if (!vendorData) {
+  if (!userData) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
       ERROR_MESSAGES.USER_NOT_FOUND
     );
   }
 
-  const valueData = await Vendor.findOne({ email: req.body.email });
+  const valueData = await User.findOne({ email: req.body.email });
 
   if (valueData) {
-    if (vendorData.email !== valueData.email) {
+    if (userData.email !== valueData.email) {
       throw new OperationalError(
         STATUS_CODES.ACTION_FAILED,
         ERROR_MESSAGES.EMAIL_ALREADY_EXIST
@@ -76,11 +77,11 @@ const editVendorProfile = async (req, res) => {
     }
   }
 
-  const vendor = await Vendor.findOneAndUpdate(
+  const user = await User.findOneAndUpdate(
     { _id: req.body.id },
     {
       email: req.body.email,
-      userName: req.body.userName,
+      name: req.body.name,
     },
     {
       upsert: false,
@@ -89,20 +90,20 @@ const editVendorProfile = async (req, res) => {
   return;
 };
 
-const deleteVendor = async (req, res) => {
-  const vendorData = await Vendor.findOne({
+const deleteUser = async (req, res) => {
+  const userData = await User.findOne({
     _id: req.query.id,
     isDeleted: false,
   });
 
-  if (!vendorData) {
+  if (!userData) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
       ERROR_MESSAGES.USER_NOT_FOUND
     );
   }
 
-  const vendor = await Vendor.findOneAndUpdate(
+  const user = await User.findOneAndUpdate(
     { _id: req.query.id },
     {
       isDeleted: true,
@@ -115,8 +116,8 @@ const deleteVendor = async (req, res) => {
 };
 
 module.exports = {
-  createVendor,
-  getAllVendor,
-  deleteVendor,
-  editVendorProfile,
+  createUser,
+  getAllUser,
+  deleteUser,
+  editUserProfile,
 };

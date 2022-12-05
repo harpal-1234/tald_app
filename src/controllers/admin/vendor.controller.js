@@ -3,6 +3,8 @@ const {
   USER_TYPE,
   STATUS_CODES,
   SUCCESS_MESSAGES,
+  DELETE_MASSAGES,
+  UPDATED_MESSAGES,
 } = require("../../config/appConstants");
 const { catchAsync } = require("../../utils/universalFunction");
 const { successResponse } = require("../../utils/response");
@@ -30,7 +32,29 @@ const getAllVendor=catchAsync(async(req,res)=>{
       )
 })
 
+const deleteVendor=catchAsync(async(req,res)=>{
+  const vendor=await adminVendorService.deleteVendor(req,res);
+  return successResponse(
+      req,
+      res,
+      STATUS_CODES.SUCCESS,
+      DELETE_MASSAGES.ADMIN_DELETED_VENDOR,
+      )
+});
+
+
+const editVendorProfile=catchAsync(async(req,res)=>{
+  const vendor=await adminVendorService.editVendorProfile(req,res);
+  return successResponse(
+      req,
+      res,
+      STATUS_CODES.SUCCESS,
+      UPDATED_MESSAGES.USER_UPDATED
+      )
+})
 module.exports={
     createVendor,
-    getAllVendor
+    getAllVendor,
+    deleteVendor,
+    editVendorProfile
 }

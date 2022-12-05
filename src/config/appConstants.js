@@ -9,8 +9,8 @@ const TOKEN_TYPE = {
 
 const USER_TYPE = {
   ADMIN: "Admin",
-  USER:"User",
-  VENDOR_ADMIN:"Vendor"
+  USER: "User",
+  VENDOR_ADMIN: "Vendor",
 };
 
 const DEVICE_TYPE = {
@@ -25,27 +25,27 @@ const BANNER_STATUS = {
   REJECTED: "rejected",
 };
 
-const DEALS_SERVICE={
-  SPA:'spa',
-  FOOD:'food',
-  FOOTWEAR:'footwear',
-  CLOTHING:'clothing',
-  CANNABIS:'cannabis',
-  BUFFET:'buffet',
-  SALON:'salon',
-  HEATH:'heath',
-  ACTIVITY:'activity'
-}
+const DEALS_SERVICE = {
+  SPA: "spa",
+  FOOD: "food",
+  FOOTWEAR: "footwear",
+  CLOTHING: "clothing",
+  CANNABIS: "cannabis",
+  BUFFET: "buffet",
+  SALON: "salon",
+  HEATH: "heath",
+  ACTIVITY: "activity",
+};
 
-const PUSH_NOTIFICATION_STATUS={
-  ENABLE:'Enable',
-  DISABLE:'Disable'
-}
+const PUSH_NOTIFICATION_STATUS = {
+  ENABLE: "Enable",
+  DISABLE: "Disable",
+};
 
-const NOTIFICATION_STATUS={
-  ENABLE:'Enable',
-  DISABLE:'Disable'
-}
+const NOTIFICATION_STATUS = {
+  ENABLE: "Enable",
+  DISABLE: "Disable",
+};
 
 const JOI = {
   EMAIL: Joi.string().email().lowercase().trim().required(),
@@ -60,9 +60,7 @@ const JOI = {
   DEVICE_TYPE: Joi.string()
     .valid(...Object.values(DEVICE_TYPE))
     .required(),
-  USER_TYPE: Joi.string()
-    .valid(USER_TYPE.USER, USER_TYPE.ADMIN)
-    .required(),
+  USER_TYPE: Joi.string().valid(USER_TYPE.USER, USER_TYPE.ADMIN).required(),
 };
 
 const SKILL_LEVEL = {
@@ -92,27 +90,32 @@ const REQUEST_STATUS = {
 const SUCCESS_MESSAGES = {
   SUCCESS: "Success",
   LOGOUT: "Your are successfully logged out",
-  USER_SUCCESS:"User Created successfully",
-  USER_PASSWORD:"Password changed successfully",
-  CONTACT_US:"Report sent successfully",
-  USER_LOCATION:'Location Updated Successfully',
-  BANNER_REQUEST:'Request Sent Successfully',
-  BANNER_DATA:'All Bannner Request',
-  BANNER_STATUS:'Banner Request Accepted ',
-  VENDOR_ADMIN:'User created Successfully'
+  USER_SUCCESS: "User Created successfully",
+  USER_PASSWORD: "Password changed successfully",
+  CONTACT_US: "Report sent successfully",
+  USER_LOCATION: "Location Updated Successfully",
+  BANNER_REQUEST: "Request Sent Successfully",
+  BANNER_DATA: "All Bannner Request",
+  BANNER_STATUS: "Banner Request Accepted ",
+  VENDOR_ADMIN: "User created Successfully",
+  ALL_USER:'All User Details',
+  NOTIFICATION_STATUS: "Notification Created Sucessfully",
+  NOTIFICATION_DETAILS: "ALl Notification Details",
 };
-
 
 const UPDATED_MESSAGES = {
   SUCCESS: "Success",
   LOGOUT: "Your are successfully logged out",
-  USER_SUCCESS:"User Created successfully",
-  USER_PASSWORD:"Password changed successfully",
-  CONTACT_US:"Report sent successfully",
-  USER_LOCATION:'Location Updated Successfully'
+  USER_SUCCESS: "User Created successfully",
+  USER_PASSWORD: "Password changed successfully",
+  CONTACT_US: "Report sent successfully",
+  USER_LOCATION: "Location Updated Successfully",
+  NOTIFICATION_EDITED: "Notification Upadted Successfully",
+  USER_UPDATED:'User Profile Updated Sucessfully'
 };
 
 const ERROR_MESSAGES = {
+  USER_CREDENTIAL: "Pease Check Your Parameter",
   NOT_FOUND: "Not found",
   VALIDATION_FAILED: "Validation Failed, Kindly check your parameters",
   SERVER_ERROR: "Something went wrong, Please try again.",
@@ -127,10 +130,11 @@ const ERROR_MESSAGES = {
   USER_NOT_FOUND: "User not found",
   SKILL_ALREADY_EXIST: "Skill already exist with this name.",
   WRONG_PASSWORD: "Password is Incorrect",
-  COUPON_CODE:'Please Provide Different Coupon Code',
-  COUPON_DATA:'Coupon not exist',
-  COUPON_WEBLINK:'Coupon Already exist',
-  STORE_NOT_EXIST:'Store not exists'
+  COUPON_CODE: "Please Provide Different Coupon Code",
+  COUPON_DATA: "Coupon not exist",
+  COUPON_WEBLINK: "Coupon Already exist",
+  STORE_NOT_EXIST: "Store not exists",
+  NOTIFICATION_DATA:'Notification Not Exists'
 };
 
 const STATUS_CODES = {
@@ -153,27 +157,28 @@ const STATUS_CODES = {
   GATEWAY_TIMEOUT: 504,
 };
 
-const socialMedia={
-    TRUE:"true",
-    FALSE:"false"
+const socialMedia = {
+  TRUE: "true",
+  FALSE: "false",
 };
-const socialAuth={
-  googleId:"googleId",
-  facebookId:"facebookId",
-  appleId:"appleId"
-
-}
+const socialAuth = {
+  googleId: "googleId",
+  facebookId: "facebookId",
+  appleId: "appleId",
+};
 
 const DELETE_MASSAGES = {
- USER_DELETED:'User Deleted Successfully',
-  COUPON_DELETED:'Coupon Deleted Successfully',
-  BANNER_DELETED:'Banner Deleted Successfully',
-  STORE_DELETED:'Store Deleted Sucessfully'
+  USER_DELETED: "User Deleted Successfully",
+  COUPON_DELETED: "Coupon Deleted Successfully",
+  BANNER_DELETED: "Banner Deleted Successfully",
+  STORE_DELETED: "Store Deleted Sucessfully",
+  NOTIFICATION_DELETED: "Notification Deleted Successfully",
+  ADMIN_DELETED_VENDOR:'Admin Deleted Vendor',
+  ADMIN_DELETED_USER:'Admin Deleted User'
 };
 
-
 module.exports = {
-  BANNER_STATUS ,
+  BANNER_STATUS,
   PUSH_NOTIFICATION_STATUS,
   NOTIFICATION_STATUS,
   DEALS_SERVICE,
@@ -191,5 +196,5 @@ module.exports = {
   SUCCESS_MESSAGES,
   ERROR_MESSAGES,
   STATUS_CODES,
-  UPDATED_MESSAGES 
+  UPDATED_MESSAGES,
 };

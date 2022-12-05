@@ -1,24 +1,30 @@
-const { userService,tokenService } = require("../../services");
+const { userService, tokenService } = require("../../services");
 const config = require("../../config/config");
 const { catchAsync } = require("../../utils/universalFunction");
 const { successResponse } = require("../../utils/response");
 const {
   STATUS_CODES,
   SUCCESS_MESSAGES,
-  USER_TYPE
+  USER_TYPE,
 } = require("../../config/appConstants");
 
 // const formatRes = require("../../../utils/formatResponse");
 const { forgotPasswordEmail } = require("../../utils/sendMail");
-const {successMessageWithoutData,successMessage}=require("../../utils/commonFunction")
+const {
+  successMessageWithoutData,
+  successMessage,
+} = require("../../utils/commonFunction");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const signUp= catchAsync(async (req, res) => {
-
-
+const signUp = catchAsync(async (req, res) => {
   const newUser = await userService.createUser(req.body);
-  const token = await tokenService.generateAuthToken(newUser, USER_TYPE.USER);
+  const token = await tokenService.generateAuthToken(
+    newUser,
+    USER_TYPE.USER,
+    req.body.deviceToken,
+    req.body.deviceType
+  );
 
   return successResponse(
     req,
@@ -29,14 +35,23 @@ const signUp= catchAsync(async (req, res) => {
   );
 });
 
-const userLogin= catchAsync(async (req, res) => {
-
-  const newUser = await userService.userLogin(req.body.email,req.body.name,req.body.password,req.body.socialId);
-  const data= {
+const userLogin = catchAsync(async (req, res) => {
+  const newUser = await userService.userLogin(
+    req.body.email,
+    req.body.name,
+    req.body.password,
+    req.body.socialId
+  );
+  const data = {
     Name: newUser.name,
     email: newUser.email,
   };
-  const token = await tokenService.generateAuthToken(newUser, USER_TYPE.USER);
+  const token = await tokenService.generateAuthToken(
+    newUser,
+    USER_TYPE.USER,
+    req.body.deviceToken,
+    req.body.deviceType
+  );
 
   return successResponse(
     req,
@@ -48,15 +63,14 @@ const userLogin= catchAsync(async (req, res) => {
   );
 });
 
-const userLogout=catchAsync(async (req, res) => {
-  
+const userLogout = catchAsync(async (req, res) => {
   const newUser = await userService.userLogout(req.token._id);
 
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.LOGOUT,
+    SUCCESS_MESSAGES.LOGOUT
   );
 });
 
@@ -70,11 +84,10 @@ const forgotPassword = catchAsync(async (req, res) => {
 //-------page render---------------//
 const forgotPage = async (req, res) => {
   try {
-  
     const tokenData = await tokenService.verifyResetPasswordToken(
       req.query.token
     );
-      
+
     if (tokenData) {
       return res.render("forgotPassword/forgotPassword", {
         title: "forgot Password",
@@ -98,7 +111,6 @@ const forgotPage = async (req, res) => {
 
 const resetForgotPassword = catchAsync(async (req, res) => {
   try {
-   
     const token = req.query.token;
     const tokenData = await tokenService.verifyResetPasswordToken(token);
     if (!tokenData)
@@ -112,7 +124,6 @@ const resetForgotPassword = catchAsync(async (req, res) => {
       tokenData,
       req.body.newPassword
     );
-   
 
     return res.render("forgotPassword/commonMessage", {
       title: "Forgot Password",
@@ -128,19 +139,8 @@ const resetForgotPassword = catchAsync(async (req, res) => {
   }
 });
 
-const pushNotificationStatus =catchAsync(async(req,res)=>{
-  const notification=await userService.pushNotificationStatus (req,res);
-  return successResponse(
-    req,
-    res,
-    STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.LOGOUT,
-  );
-
-})
-
-const pushNotification=catchAsync(async(req,res)=>{
-  const notification=await userService.pushNotification(req,res);
+const pushNotification = catchAsync(async (req, res) => {
+  const notification = await userService.pushNotification(req, res);
   return successResponse(
     req,
     res,
@@ -148,9 +148,7 @@ const pushNotification=catchAsync(async(req,res)=>{
     SUCCESS_MESSAGES.LOGOUT,
     notification
   );
-
-})
-
+});
 
 module.exports = {
   signUp,
@@ -159,6 +157,5 @@ module.exports = {
   forgotPassword,
   forgotPage,
   resetForgotPassword,
-  pushNotificationStatus,
-  pushNotification
+  pushNotification,
 };

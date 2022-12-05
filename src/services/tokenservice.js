@@ -9,6 +9,7 @@ const {
   USER_TYPE,
   STATUS_CODES,
   ERROR_MESSAGES,
+  DEVICE_TYPE,
 } = require("../config/appConstants");
 const { Token, Admin, User, Vendor } = require("../models");
 // const { workSeekerProfileService } = require("../services");
@@ -36,7 +37,7 @@ const saveToken = async (data) => {
     expires: data.tokenExpires.toDate(),
     type: data.tokenType,
     _id: data.tokenId,
-    // device: { type: data.DEVICE_TYPE, token: data.deviceToken },
+    device: { type: data.deviceType, token: data.deviceToken },
     role: data.userType,
     token: data.token,
   };
@@ -60,7 +61,7 @@ const saveToken = async (data) => {
   return tokenDoc;
 };
 
-const generateAuthToken = async (user, userType) => {
+const generateAuthToken = async (user, userType,deviceToken, deviceType) => {
   const tokenExpires = moment().add(config.jwt.accessExpirationMinutes, "days");
 
   var tokenId = new ObjectID();
@@ -76,6 +77,8 @@ const generateAuthToken = async (user, userType) => {
     token: accessToken,
     tokenExpires,
     tokenId,
+    deviceToken,
+    deviceType,
     tokentype: TOKEN_TYPE.ACCESS,
     userType,
     user,
