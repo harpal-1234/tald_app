@@ -101,6 +101,7 @@ const SUCCESS_MESSAGES = {
   ALL_USER:'All User Details',
   NOTIFICATION_STATUS: "Notification Created Sucessfully",
   NOTIFICATION_DETAILS: "ALl Notification Details",
+  FAVOURITES_DEALS:'Favourites Deals'
 };
 
 const UPDATED_MESSAGES = {
