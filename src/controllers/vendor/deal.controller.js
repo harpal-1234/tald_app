@@ -47,8 +47,21 @@ const deleteDeal=catchAsync(async(req,res)=>{
     );
   });
 
+  const editDeal=catchAsync(async(req,res)=>{
+
+    const editDeal=await vendorDealsService.editDeal(req.body);
+    return successResponse(
+        req,
+        res,
+        STATUS_CODES.SUCCESS,
+        DELETE_MASSAGES.COUPON_DELETED,
+        editDeal
+      );
+    });
+
 module.exports={
     createDeal,
     getAllDeal,
-    deleteDeal
+    deleteDeal,
+    editDeal
 }

@@ -13,22 +13,20 @@ const config = require("../../config/config");
 const bcrypt = require("bcryptjs");
 
 const editProfile = async (id, data) => {
-  const user = await User.findOne({ _id: id, isDeleted: false });
-  if (!user) {
+  const userEmail = await User.findOne({ email: data.email, isDeleted: false });
+  if (userEmail) {
     throw new OperationalError(
       STATUS_CODES.NOT_FOUND,
-      ERROR_MESSAGES.USER_NOT_FOUND
+      ERROR_MESSAGES.EMAIL_ALREADY_EXIST
     );
   }
 
   const updateUser = await User.findByIdAndUpdate(
-    { _id: user.id },
+    { _id: data.id },
     {
-      $set: {
-        name: data.name,
-        email: data.email,
-        phoneNumber: data.phoneNumber,
-      },
+      name: data.name,
+      email: data.email,
+      phoneNumber: data.phoneNumber,
     }
   );
   return updateUser;
@@ -148,7 +146,6 @@ const favourites = async (req, res) => {
 
   if (user.dealId.length) {
     user.dealId.map(async (data) => {
-      console.log(data);
       if (data.toString() === req.body.dealId) {
         const favourite = await User.updateOne(
           { _id: user.id },
@@ -192,21 +189,6 @@ const myFavourites = async (req, res) => {
   return favourite;
 };
 
-// const deleteFavourites=async(req,res)=>{
-//   const user=await User.findOne({_id:req.token.user._id,isDeleted:false});
-//   if(!user)
-//   {
-//     throw new OperationalError(
-//       STATUS_CODES.ACTION_FAILED,
-//       ERROR_MESSAGES.ACCOUNT_NOT_EXIST
-//     );
-
-//   }
-
-//   const favourite=await User.findByIdAndUpdate({_id:user.id},{dealId:req.body.dealId},{upsert:false});
-
-// }
-
 module.exports = {
   editProfile,
   changePassword,
@@ -215,5 +197,4 @@ module.exports = {
   pushNotificationStatus,
   favourites,
   myFavourites,
-  // deleteFavourites
 };

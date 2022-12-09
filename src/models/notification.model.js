@@ -4,11 +4,16 @@ const { BANNER_STATUS } = require("../config/appConstants");
 
 const notificationSchema = mongoose.Schema(
   {
-    // vendorId: {
-    //   type: mongoose.SchemaTypes.ObjectId,
-    //   ref: "vendor",
-    //   required: true,
-    // },
+    vendorId: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: "vendor",
+      required: true,
+    },
+    dealId: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: "deals",
+      required: true,
+    },
     storeId: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: "stores",
@@ -16,7 +21,7 @@ const notificationSchema = mongoose.Schema(
     },
     image: { type: String, default: "" },
     title: { type: String, default: "" },
-    description: { type: String, default: ""},
+    description: { type: String, default: "" },
     // viewedBy: { type: Array, default: [] },
     isBlocked: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
@@ -26,6 +31,6 @@ const notificationSchema = mongoose.Schema(
   }
 );
 
-const Notification= mongoose.model("notifications", notificationSchema);
+const Notification = mongoose.model("notifications", notificationSchema);
 
 module.exports = Notification;

@@ -26,15 +26,22 @@ const BANNER_STATUS = {
 };
 
 const DEALS_SERVICE = {
-  SPA: "spa",
-  FOOD: "food",
-  FOOTWEAR: "footwear",
-  CLOTHING: "clothing",
-  CANNABIS: "cannabis",
-  BUFFET: "buffet",
-  SALON: "salon",
-  HEATH: "heath",
-  ACTIVITY: "activity",
+  RESTAURANTS: "Restaurants",
+  BARS: "Bars",
+  CANNABIS: "Cannabis",
+  NIGHTLIFE: "Nightlife",
+  SHOPPING: "Shopping",
+  BEAUTY_SPA: "Beauty & Spas",
+  ARTS_ENTERTAINMENT: "Arts & Entertainment",
+  ACTIVE_LIFE: "Active Life",
+  AUTOMOTIVE: "Automotive",
+  HOTELS: "Hotels",
+  BABY_KIDS: "Baby & Kids",
+  PETS: "Pets",
+  SPORTS_FITNESS: "Sports & Fitness",
+  ELECTRONICS: "Electronics",
+  WOMEN_CLOTHHING: "Women's Clothing",
+  MEN_CLOTHING: "Mens Clothing",
 };
 
 const PUSH_NOTIFICATION_STATUS = {
@@ -98,10 +105,10 @@ const SUCCESS_MESSAGES = {
   BANNER_DATA: "All Bannner Request",
   BANNER_STATUS: "Banner Request Accepted ",
   VENDOR_ADMIN: "User created Successfully",
-  ALL_USER:'All User Details',
+  ALL_USER: "All User Details",
   NOTIFICATION_STATUS: "Notification Created Sucessfully",
   NOTIFICATION_DETAILS: "ALl Notification Details",
-  FAVOURITES_DEALS:'Favourites Deals'
+  FAVOURITES_DEALS: "Favourites Deals",
 };
 
 const UPDATED_MESSAGES = {
@@ -112,7 +119,7 @@ const UPDATED_MESSAGES = {
   CONTACT_US: "Report sent successfully",
   USER_LOCATION: "Location Updated Successfully",
   NOTIFICATION_EDITED: "Notification Upadted Successfully",
-  USER_UPDATED:'User Profile Updated Sucessfully'
+  USER_UPDATED: "User Profile Updated Sucessfully",
 };
 
 const ERROR_MESSAGES = {
@@ -135,7 +142,7 @@ const ERROR_MESSAGES = {
   COUPON_DATA: "Coupon not exist",
   COUPON_WEBLINK: "Coupon Already exist",
   STORE_NOT_EXIST: "Store not exists",
-  NOTIFICATION_DATA:'Notification Not Exists'
+  NOTIFICATION_DATA: "Notification Not Exists",
 };
 
 const STATUS_CODES = {
@@ -174,8 +181,8 @@ const DELETE_MASSAGES = {
   BANNER_DELETED: "Banner Deleted Successfully",
   STORE_DELETED: "Store Deleted Sucessfully",
   NOTIFICATION_DELETED: "Notification Deleted Successfully",
-  ADMIN_DELETED_VENDOR:'Admin Deleted Vendor',
-  ADMIN_DELETED_USER:'Admin Deleted User'
+  ADMIN_DELETED_VENDOR: "Admin Deleted Vendor",
+  ADMIN_DELETED_USER: "Admin Deleted User",
 };
 
 module.exports = {
@@ -199,3 +206,15 @@ module.exports = {
   STATUS_CODES,
   UPDATED_MESSAGES,
 };
+
+
+
+// SPA: "spa",
+  // FOOD: "food",
+  // FOOTWEAR: "footwear",
+  // CLOTHING: "clothing",
+  // CANNABIS: "cannabis",
+  // BUFFET: "buffet",
+  // SALON: "salon",
+  // HEATH: "heath",
+  // ACTIVITY: "activity",

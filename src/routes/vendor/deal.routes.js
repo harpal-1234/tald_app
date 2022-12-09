@@ -14,6 +14,13 @@ router.post(
     dealController.createDeal
   );
 
+  router.put(
+    "/editDeal",
+    auth(USER_TYPE.VENDOR_ADMIN),
+    validate(dealValidation.editDeal),
+    dealController.editDeal
+  );
+
 
   router.get(
     "/getAllDeal",

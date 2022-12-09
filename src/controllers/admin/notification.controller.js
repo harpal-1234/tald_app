@@ -8,10 +8,11 @@ const {
 } = require("../../config/appConstants");
 const { catchAsync } = require("../../utils/universalFunction");
 const { successResponse } = require("../../utils/response");
+const {formatNotification}=require("../../utils/commonFunction")
 
 const createNotification = catchAsync(async (req, res) => {
   const notification = await adminNotificationService.createNotification(
-    req,
+    req.body,
     res
   );
   return successResponse(
@@ -19,7 +20,6 @@ const createNotification = catchAsync(async (req, res) => {
     res,
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.NOTIFICATION_STATUS,
-    notification
   );
 });
 
@@ -28,6 +28,7 @@ const getAllNotification = catchAsync(async (req, res) => {
     req,
     res
   );
+  const value=formatNotification(notification)
   return successResponse(
     req,
     res,
@@ -39,9 +40,10 @@ const getAllNotification = catchAsync(async (req, res) => {
 
 const editNotification = catchAsync(async (req, res) => {
   const notification = await adminNotificationService.editNotification(
-    req,
+    req.body,
     res
   );
+
   return successResponse(
     req,
     res,
@@ -52,8 +54,9 @@ const editNotification = catchAsync(async (req, res) => {
 });
 
 const deleteNotification = catchAsync(async (req, res) => {
+ 
   const notification = await adminNotificationService.deleteNotification(
-    req,
+    req.query,
     res
   );
   return successResponse(

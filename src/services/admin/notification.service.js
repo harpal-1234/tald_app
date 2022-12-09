@@ -11,6 +11,7 @@ const createNotification = async (data) => {
   if (
     await Notification.findOne({
       title: { $regex: RegExp(data.title, "i") },
+      isDeleted:false
     })
   ) {
     throw new OperationalError(
@@ -18,7 +19,14 @@ const createNotification = async (data) => {
       ERROR_MESSAGES.NOTIFICATION_DATA
     );
   }
-  const notification = await Notification.create(data);
+  const notification = await Notification.create({
+    vendorId: data.vendorId,
+    dealId: data.dealId,
+    storeId: data.storeId,
+    image: data.image,
+    title: data.title,
+    description: data.description,
+  });
 
   return notification;
 };
@@ -26,7 +34,7 @@ const createNotification = async (data) => {
 const getAllNotification = async (data) => {
   const notification = await Notification.find({
     isDeleted: false,
-  });
+  }).lean();
 
   if (!notification) {
     throw new OperationalError(
@@ -38,8 +46,11 @@ const getAllNotification = async (data) => {
   return notification;
 };
 
-const editNotification = async (data, updateData) => {
-  const notificationData = await Notification.findOne({ _id: data.id, isDeleted: false });
+const editNotification = async (updateData) => {
+  const notificationData = await Notification.findOne({
+    _id: updateData.id,
+    isDeleted: false,
+  });
 
   if (!notificationData) {
     throw new OperationalError(
@@ -49,20 +60,27 @@ const editNotification = async (data, updateData) => {
   }
 
   const notification = await Notification.findOneAndUpdate(
-    { _id: data.id },
+    { _id: updateData.id },
     {
+      vendorId: updateData.vendorId,
+      dealId: updateData.dealId,
+      storeId: updateData.storeId,
       image: updateData.image,
       title: updateData.title,
       description: updateData.description,
     },
-    { upsert: false }
+    { upsert: false, new:true}
   );
 
   return notification;
 };
 
-const deleteNotification = async (data, updateData) => {
-  const notificationData = await Notification.findOne({ _id: data.id, isDeleted: false });
+const deleteNotification = async (data) => {
+  console.log(data);
+  const notificationData = await Notification.findOne({
+    _id: data.id,
+    isDeleted: false,
+  });
 
   if (!notificationData) {
     throw new OperationalError(
@@ -77,7 +95,7 @@ const deleteNotification = async (data, updateData) => {
     },
     { upsert: false }
   );
-  return ;
+  return;
 };
 
 module.exports = {

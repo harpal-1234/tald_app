@@ -43,21 +43,21 @@ const formatUser = (userData) => {
   return userData;
 };
 
-const formatFavourites=(userData) => {
-    delete userData.__v;
-    delete userData.password;
-    delete userData.role;
-    delete userData.document;
-    delete userData.isBlocked;
-    delete userData.isDeleted;
-    delete userData.createdAt;
-    delete userData.updatedAt;
-    delete userData.jobTitle;
-    delete userData.__v;
-    delete userData.location;
-    delete userData.isPushNotification;
-    delete userData.isVerified;
-    delete userData.phoneNumber;
+const formatFavourites = (userData) => {
+  delete userData.__v;
+  delete userData.password;
+  delete userData.role;
+  delete userData.document;
+  delete userData.isBlocked;
+  delete userData.isDeleted;
+  delete userData.createdAt;
+  delete userData.updatedAt;
+  delete userData.jobTitle;
+  delete userData.__v;
+  delete userData.location;
+  delete userData.isPushNotification;
+  delete userData.isVerified;
+  delete userData.phoneNumber;
   if (userData.dealId.length) {
     userData.dealId.forEach((data) => {
       delete data.__v;
@@ -163,6 +163,36 @@ const formatResturant = (userData) => {
   return userData;
 };
 
+const formatNotification = (userData) => {
+  if (userData.length) {
+    userData.forEach((data) => {
+      delete data.__v;
+      delete data.isBlocked;
+      delete data.isDeleted;
+      delete data.createdAt;
+      delete data.updatedAt;
+      delete data.customerId;
+      delete data.password;
+      delete data.storeId;
+      delete data.vendorId;
+      delete data.dealId;
+    });
+  } else {
+    delete userData.__v;
+    delete userData.isBlocked;
+    delete userData.isDeleted;
+    delete userData.createdAt;
+    delete userData.updatedAt;
+    delete userData.__v;
+    delete userData._id;
+    delete userData.vendorId;
+    delete data.password;
+    delete data.storeId;
+    delete data.dealId;
+  }
+  return userData;
+};
+
 const formatVendor = (userData) => {
   if (userData.length) {
     userData.forEach((data) => {
@@ -196,5 +226,6 @@ module.exports = {
   formatResturant,
   formatVendor,
   formatUser,
-  formatFavourites
+  formatFavourites,
+  formatNotification,
 };

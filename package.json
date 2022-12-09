@@ -20,6 +20,7 @@
   "author": "tarun <tarunkaushal255@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "@joi/date": "^2.1.0",
     "@onesignal/node-onesignal": "^1.0.0-beta7",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.1",
@@ -42,6 +43,7 @@
     "nodemailer": "^6.8.0",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",
+    "socket.io": "^4.5.4",
     "twilio": "^3.83.1",
     "winston": "^3.8.2"
   },

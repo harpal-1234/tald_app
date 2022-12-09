@@ -43,9 +43,6 @@ const createDeal = async (data, tokendata) => {
 const getAllDeal = async (req, res) => {
   let { page, limit, search } = req.query;
   let skip = page * limit;
-   console.log(page,"page");
-   console.log(limit,"page");
-   console.log(skip,"skip");
   if (search) {
     const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
 
@@ -89,6 +86,7 @@ const getAllDeal = async (req, res) => {
       .limit(limit)
       .sort({ _id: -1 })
       .lean();
+     
 
     let total = await Deal.countDocuments({ isDeleted: false });
 
@@ -114,8 +112,39 @@ const deleteDeal = async (data, tokendata) => {
   return deal;
 };
 
+const editDeal=async(bodyData,res)=>{
+  const deal = await Deal.findOne({ _id: bodyData.id, vendorId:bodyData.vendorId,isDeleted: false });
+  if (!deal) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.ACCOUNT_NOT_EXIST
+    );
+  }
+  const validFromDate=moment(bodyData.validFrom).format("YYYY-MM-DD");
+  const validToDate=moment(bodyData.validTo).format("YYYY-MM-DD");
+  
+  
+  const editDeal = await Deal.findOneAndUpdate({_id: bodyData.id},{
+    vendorId: bodyData.vendorId,
+    couponCode: bodyData.couponCode,
+    category: bodyData.category,
+    storeId:bodyData.storeId,
+    name: bodyData.name,
+    worth: bodyData.worth,
+    description: bodyData.description,
+    validFrom: moment(validFromDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
+    validTo: moment(validToDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
+  },{upsert:false,new:true});
+
+ console.log(editDeal)
+
+  return editDeal;
+
+}
+
 module.exports = {
   createDeal,
   getAllDeal,
   deleteDeal,
+  editDeal
 };
