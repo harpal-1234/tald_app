@@ -143,6 +143,7 @@ const ERROR_MESSAGES = {
   COUPON_WEBLINK: "Coupon Already exist",
   STORE_NOT_EXIST: "Store not exists",
   NOTIFICATION_DATA: "Notification Not Exists",
+  DEAL_NOT_EXISTS:"Deal not Exists"
 };
 
 const STATUS_CODES = {

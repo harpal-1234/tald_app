@@ -45,8 +45,20 @@ const nearestService = catchAsync(async (req, res) => {
   );
 });
 
+const purchaseDeal = catchAsync(async (req, res) => {
+  const data = await dealsService.purchaseDeal(req.token.user._id, req.body.dealId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+  );
+});
+
 module.exports = {
   homeData,
   getCategoryData,
   nearestService,
+  purchaseDeal
 };

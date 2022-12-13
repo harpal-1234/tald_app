@@ -19,33 +19,35 @@ exports.login = {
         socialMedia: Joi.string().valid(socialMedia.TRUE),
       }).unknown(),
       {
+      
         then: Joi.object().keys({
+          socialAuth:Joi.string().valid("googleId"),
           socialId: Joi.object({
             googleId: Joi.string().required(),
           }),
           email: Joi.string(),
           name: Joi.string(),
-          password: Joi.string(),
         }),
       },
       {
         then: Joi.object().keys({
+          socialAuth:Joi.string().valid("appleId"),
           socialId: Joi.object({
             appleId: Joi.string(),
           }),
           email: Joi.string().required(),
           name: Joi.string().required(),
-          password: Joi.string().required(),
         }),
       },
-      {
+      {    
+  
         then: Joi.object().keys({
+          socialAuth:Joi.string().valid("facebookId"),
           socialId: Joi.object({
-            facebookId: Joi.string().valid(socialAuth.facebookId),
+            facebookId: Joi.string(),
           }),
           email: Joi.string().required(),
           name: Joi.string().required(),
-          password: Joi.string().required(),
         }),
       }
     )

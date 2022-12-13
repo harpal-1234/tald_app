@@ -61,4 +61,12 @@ router.get(
   // validate(authValidation.userLocation),
   authController.myFavourites
 );
+
+
+router.get(
+  "/purchaseData",
+  auth(USER_TYPE.USER),
+  // validate(authValidation.userLocation),
+  authController.dealPurchaseData
+);
 module.exports = router;

@@ -8,7 +8,7 @@ const {
   SUCCESS_MESSAGES,
   USER_TYPE
 } = require("../../config/appConstants");
-const { formatUser, formatFavourites } = require("../../utils/commonFunction");
+const { formatUser, formatFavourites, formatPurchase } = require("../../utils/commonFunction");
 
 const editProfile = catchAsync(async (req, res) => {
   const user = await userProfileService.editProfile(
@@ -94,6 +94,19 @@ const myFavourites= catchAsync(async (req, res) => {
 });
 
 
+const dealPurchaseData= catchAsync(async (req, res) => {
+  const user=await userProfileService.dealPurchaseData(req.token.user._id);
+  const value=formatPurchase(user);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.FAVOURITES_DEALS,
+    value
+  );
+});
+
+
 
 module.exports = {
   editProfile,
@@ -102,5 +115,6 @@ module.exports = {
   userLocation,
   pushNotificationStatus,
   favourites,
-  myFavourites
+  myFavourites,
+  dealPurchaseData
 };

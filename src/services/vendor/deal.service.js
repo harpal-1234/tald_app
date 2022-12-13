@@ -22,7 +22,9 @@ const createDeal = async (data, tokendata) => {
       ERROR_MESSAGES.COUPON_CODE
     );
   }
-
+  const validFromDate=moment(data.validFrom).format("YYYY-MM-DD");
+  const validToDate=moment(data.validTo).format("YYYY-MM-DD");
+   
   const newCoupon = await Deal.create({
     vendorId: vendor.id,
     couponCode: data.couponCode,
@@ -30,9 +32,10 @@ const createDeal = async (data, tokendata) => {
     storeId:data.storeId,
     name: data.name,
     worth: data.worth,
+    quantity:data.quantity,
     description: data.description,
-    validFrom: moment(data.validFrom + "Z", "YYYY-MM-DD" + "Z").toDate(),
-    validTo: moment(data.validTo + "Z", "YYYY-MM-DD" + "Z").toDate(),
+    validFrom: moment(validFromDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
+    validTo: moment(validToDate+ "Z", "YYYY-MM-DD" + "Z").toDate(),
   });
 
 
@@ -131,6 +134,7 @@ const editDeal=async(bodyData,res)=>{
     storeId:bodyData.storeId,
     name: bodyData.name,
     worth: bodyData.worth,
+    quantity:data.quantity,
     description: bodyData.description,
     validFrom: moment(validFromDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
     validTo: moment(validToDate + "Z", "YYYY-MM-DD" + "Z").toDate(),

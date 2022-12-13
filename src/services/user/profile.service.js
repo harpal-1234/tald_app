@@ -189,6 +189,23 @@ const myFavourites = async (req, res) => {
   return favourite;
 };
 
+const dealPurchaseData=async (userId) => {
+  const user = await User.findOne({
+    _id: userId,
+    isDeleted: false,
+  });
+  if (!user) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.ACCOUNT_NOT_EXIST
+    );
+  }
+  const purchaseData = await User.findOne({ _id: user.id })
+    .populate({ path: "dealPurchaseId" })
+    .lean();
+  return purchaseData;
+};
+
 module.exports = {
   editProfile,
   changePassword,
@@ -197,4 +214,5 @@ module.exports = {
   pushNotificationStatus,
   favourites,
   myFavourites,
+  dealPurchaseData
 };

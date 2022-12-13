@@ -14,7 +14,7 @@ const {
 } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 const config = require("../../config/config");
-const OneSignal = require('@onesignal/node-onesignal');
+const OneSignal = require("@onesignal/node-onesignal");
 
 const createUser = async (userData) => {
   const data = await User.findOne({ email: userData.email, isDeleted: false });
@@ -29,49 +29,62 @@ const createUser = async (userData) => {
 };
 const userLogin = async (email, name, password, socialId) => {
   if (socialId) {
-    if (Object.keys(socialId).toString() === "facebookId") {
-      const facebookUser = await User.findOneAndUpdate(
-        { $or: [{ socialId: socialId.facebookId }, { email: email }] },
-        {
-          $set: { socialId: { facebookId: socialId.facebookId } },
-          $setOnInsert: {
-            email: email,
-            name: name,
-          },
-        },
-        { upsert: true, new: true }
+    const newUser = await User.findOne({ email: email });
+
+    if (newUser) {
+      throw new OperationalError(
+        STATUS_CODES.ACTION_FAILED,
+        ERROR_MESSAGES.EMAIL_ALREADY_EXIST
       );
+    }
+
+    if (Object.keys(socialId).toString() === "facebookId") {
+      const facebookUser = await User.create({
+        email: email,
+        name: name,
+        socialId: socialId,
+      });
+      // const facebookUser = await User.findOneAndUpdate(
+      //   { $or: [{ socialId: socialId.facebookId }, { email: email }] },
+      //   {
+      //     $set: { socialId: { facebookId: socialId.facebookId } },
+      //     $setOnInsert: {
+      //       email: email,
+      //       name: name,
+      //     },
+      //   },
+      //   { upsert: true, new: true }
+      // );
 
       return facebookUser;
     }
 
     if (Object.keys(socialId).toString() === "googleId") {
-      const googleUser = await User.findOneAndUpdate(
-        { $or: [{ socialId: socialId.googleId }, { email: email }] },
-        {
-          $set: { socialId: { googleId: socialId.googleId } },
-          $setOnInsert: {
-            email: email,
-            name: name,
-          },
-        },
-        { upsert: true, new: true }
-      );
+      const googleUser = await User.create({
+        email: email,
+        name: name,
+        socialId: socialId,
+      });
 
       return googleUser;
     }
     if (Object.keys(socialId).toString() === "appleId") {
-      const appleUser = await User.findOneAndUpdate(
-        { $or: [{ socialId: socialId.appleId }, { email: email }] },
-        {
-          $set: { socialId: { appleId: socialId.appleId } },
-          $setOnInsert: {
-            email: email,
-            name: name,
-          },
-        },
-        { upsert: true, new: true }
-      );
+      const appleUser = await User.create({
+        email: email,
+        name: name,
+        socialId: socialId,
+      });
+      // const appleUser = await User.findOneAndUpdate(
+      //   { $or: [{ socialId: socialId.appleId }, { email: email }] },
+      //   {
+      //     $set: { socialId: { appleId: socialId.appleId } },
+      //     $setOnInsert: {
+      //       email: email,
+      //       name: name,
+      //     },
+      //   },
+      //   { upsert: true, new: true }
+      // );
 
       return appleUser;
     }
@@ -172,10 +185,7 @@ const resetPassword = async (tokenData, newPassword) => {
   return { tokenvalue, adminvalue };
 };
 
-
-
 const pushNotification = async (req, res) => {
-
   const app_key_provider = {
     getToken() {
       return config.onesignal_api_key;
@@ -191,17 +201,17 @@ const pushNotification = async (req, res) => {
   const client = new OneSignal.DefaultApi(configuration);
   const notification = new OneSignal.Notification();
 
-  notification.app_id = config.onesignal_app_key
+  notification.app_id = config.onesignal_app_key;
   notification.included_segments = [req.token.device.token];
   notification.contents = {
     en: "Hello OneSignal!",
   };
   const { id } = await client.createNotification(notification);
- 
+
   const response = await client.getNotification(config.onesignal_app_key, id);
   console.log(response);
 
-  return response
+  return response;
 };
 
 module.exports = {
@@ -210,5 +220,5 @@ module.exports = {
   userLogout,
   resetPassword,
   pushNotification,
-  getUserById
+  getUserById,
 };

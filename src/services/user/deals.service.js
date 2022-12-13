@@ -17,7 +17,7 @@ const {
   formatDeal,
   formatResturant,
 } = require("../../utils/commonFunction");
-const io=require("socket.io");
+const io = require("socket.io");
 
 const homeData = async (req, res) => {
   const query = {
@@ -36,7 +36,7 @@ const homeData = async (req, res) => {
     await Promise.all([
       await Deal.find({ category: "buffet", isDeleted: false }).lean(),
       await Banner.find({ isDeleted: false }).lean(),
-      await Store.find({query}).lean(),
+      await Store.find({ query }).lean(),
       await Deal.find({ category: "spa", isDeleted: false }).lean(),
       await Deal.find({ category: "clothing", isDeleted: false }).lean(),
       await Deal.find({ category: "cannabis", isDeleted: false }).lean(),
@@ -105,19 +105,39 @@ const notification = async (req, res) => {
   }
 };
 
-const dealPurachse = async (req, res) => {
+// const dealPurachse = async (req, res) => {
+//   const deal = await Deal.findOne({
+//     _id: req.body.id,
+//     isDeleted: false,
+//     isPurchase: false,
+//   });
+//   if (!deal) {
+//     throw new OperationalError(
+//       STATUS_CODES.NOT_FOUND,
+//       ERROR_MESSAGES.USER_NOT_FOUND
+//     );
+//   }
+//   const dealPurachse=await Deal.findOne({_id:req.body.id,is})
+// };
+
+const purchaseDeal = async (userId,dealId) => {
   const deal = await Deal.findOne({
-    _id: req.body.id,
+    _id: dealId,
     isDeleted: false,
-    isPurchase: false,
   });
   if (!deal) {
     throw new OperationalError(
       STATUS_CODES.NOT_FOUND,
-      ERROR_MESSAGES.USER_NOT_FOUND
+      ERROR_MESSAGES.DEAL_NOT_EXISTS
     );
   }
-  const dealPurachse=await Deal.findOne({_id:req.body.id,is})
+  const purchaseDeal = await User.updateOne(
+    { _id: userId },
+    { $push: { dealPurchaseId: dealId } },
+    { new: true }
+  );
+
+  return 
 };
 
 module.exports = {
@@ -125,4 +145,5 @@ module.exports = {
   homeData,
   getCategoryData,
   nearestService,
+  purchaseDeal,
 };

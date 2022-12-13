@@ -27,6 +27,11 @@ router.get(
   // validate(authValidation.nearestService),
   authController.nearestService
 )
-
+router.post(
+  "/purchase",
+  auth(USER_TYPE.USER),
+  // validate(authValidation.signUp),
+  authController.purchaseDeal
+)
 
 module.exports=router

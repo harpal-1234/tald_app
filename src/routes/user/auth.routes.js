@@ -15,7 +15,7 @@ router.post(
 
 router.post(
   "/login",
-  // validate(authValidation.login),
+  validate(authValidation.login),
   authController.userLogin
 )
 

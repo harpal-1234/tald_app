@@ -218,6 +218,60 @@ const formatVendor = (userData) => {
   return userData;
 };
 
+
+const formatPurchase = (userData) => {
+  delete userData.__v;
+  delete userData.password;
+  delete userData.role;
+  delete userData.document;
+  delete userData.isBlocked;
+  delete userData.isDeleted;
+  delete userData.createdAt;
+  delete userData.updatedAt;
+  delete userData.jobTitle;
+  delete userData.__v;
+  delete userData.location;
+  delete userData.dealId
+  delete userData.isPushNotification;
+  delete userData.isVerified;
+  delete userData.phoneNumber;
+  if (userData.dealPurchaseId.length) {
+    userData.dealPurchaseId.forEach((data) => {
+      delete data.__v;
+      delete data.password;
+      delete data.isBlocked;
+      delete data.isDeleted;
+      delete data.createdAt;
+      delete data.updatedAt;
+      delete data.customerId;
+      delete data.location;
+      delete data.dealId;
+      delete data.phoneNumber;
+      delete data.isPushNotification;
+      delete data.isVerified;
+      delete data.socialId;
+    });
+  } else {
+    delete userData.__v;
+    delete userData.password;
+    delete userData.role;
+    delete userData.document;
+    delete userData.isBlocked;
+    delete userData.isDeleted;
+    delete userData.createdAt;
+    delete userData.updatedAt;
+    delete userData.jobTitle;
+    delete userData.__v;
+    delete userData.password;
+    delete userData.location;
+    delete userData.phoneNumber;
+    delete userData.isPushNotification;
+    delete userData.isVerified;
+    delete userData.socialId;
+  }
+  return userData;
+};
+
 module.exports = {
   successMessageWithoutData,
   successMessage,
@@ -228,4 +282,5 @@ module.exports = {
   formatUser,
   formatFavourites,
   formatNotification,
+  formatPurchase
 };

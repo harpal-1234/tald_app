@@ -26,7 +26,8 @@ const userSchema = mongoose.Schema(
         },
       },
     },//logitude and latitude
-    dealId:[{ type: mongoose.SchemaTypes.ObjectId, ref: 'deals' }],
+    dealPurchaseId:[{ type: mongoose.SchemaTypes.ObjectId, ref: 'deals' }],
+    dealId:[{ type: mongoose.SchemaTypes.ObjectId, ref: 'deals' }],  //like deal Id
     phoneNumber:{ type: String, default: "" },
     socialId:{
       googleId:{ type: String,sparse:true},
@@ -38,6 +39,7 @@ const userSchema = mongoose.Schema(
     isBlocked: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
     isVerified:{type: Boolean, default: false},
+  
   },
   {
     timestamps: true,

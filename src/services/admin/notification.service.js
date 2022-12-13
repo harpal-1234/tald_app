@@ -70,7 +70,7 @@ const editNotification = async (updateData) => {
       description: updateData.description,
     },
     { upsert: false, new:true}
-  );
+  ); 
 
   return notification;
 };

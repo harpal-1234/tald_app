@@ -7,9 +7,10 @@ exports.create = {
     couponCode: Joi.number().required(), 
     name:Joi.string().required(), 
     worth: Joi.number().required(), 
-    description: Joi.string().required(), 
-    validFrom: Joidate.date().format('YYYY-MM-DD').iso(),
-    validTo:Joidate.date().format('YYYY-MM-DD').iso(),
+    description: Joi.string().required(),
+    quantity: Joi.number().required(),  
+    validFrom: Joidate.date().format('YYYY-MM-DD').utc(),
+    validTo:Joidate.date().format('YYYY-MM-DD').utc(),
     storeId:Joi.string().required(),
     category:Joi.string().valid(
       ...Object.values(DEALS_SERVICE)
@@ -24,7 +25,8 @@ exports.editDeal= {
     couponCode: Joi.number().required(), 
     name:Joi.string().required(), 
     worth: Joi.number().required(), 
-    description: Joi.string().required(), 
+    description: Joi.string().required(),
+    quantity: Joi.number().required(), 
     validFrom: Joidate.date().format('YYYY-MM-DD').utc(),
     validTo:Joidate.date().format('YYYY-MM-DD').utc(),
     storeId:Joi.string().required(),
