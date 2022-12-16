@@ -48,12 +48,7 @@ router.post(
   authController.userLocation
 );
 
-router.post(
-  "/favourites",
-  auth(USER_TYPE.USER),
-  // validate(authValidation.userLocation),
-  authController.favourites
-);
+
 
 router.get(
   "/myFavourites",
@@ -68,5 +63,12 @@ router.get(
   auth(USER_TYPE.USER),
   // validate(authValidation.userLocation),
   authController.dealPurchaseData
+);
+
+router.get(
+  "/favouriteStoreDeal",
+  auth(USER_TYPE.USER),
+  validate(authValidation.favouriteStoreDeal),
+  authController.favouriteStoreDeal
 );
 module.exports = router;

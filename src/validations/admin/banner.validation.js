@@ -18,3 +18,9 @@ exports.bannerRequest = {
       )
   }),
 };
+
+exports.deleteBanner= {
+  query: Joi.object().keys({
+    id:Joi.string().required(),
+  }),
+};

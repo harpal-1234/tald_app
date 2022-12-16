@@ -108,7 +108,12 @@ const SUCCESS_MESSAGES = {
   ALL_USER: "All User Details",
   NOTIFICATION_STATUS: "Notification Created Sucessfully",
   NOTIFICATION_DETAILS: "ALl Notification Details",
-  FAVOURITES_DEALS: "Favourites Deals",
+  FAVOURITES_DEALS: "User Favourite Deal stores",
+  CATEGORY_ADDED:'Category Added Sucessfully',
+  CATEGORY_DATA:'All Category',
+  STORE_DATA:'All Store Data',
+  FAVORITE_DATA:'Deal Added To Your Favourites',
+  STORE_DEALS:'Store All Deals'
 };
 
 const UPDATED_MESSAGES = {
@@ -143,7 +148,11 @@ const ERROR_MESSAGES = {
   COUPON_WEBLINK: "Coupon Already exist",
   STORE_NOT_EXIST: "Store not exists",
   NOTIFICATION_DATA: "Notification Not Exists",
-  DEAL_NOT_EXISTS:"Deal not Exists"
+  DEAL_NOT_EXISTS:"Deal not Exists",
+  BANNER_NOT_EXISTS:'Banner not exists',
+  CATEGORY_ALREADY_EXISTS:'Category Already Exists',
+  CATEGORY_NOT_EXISTS:'Category Not Exists'
+
 };
 
 const STATUS_CODES = {
@@ -184,6 +193,7 @@ const DELETE_MASSAGES = {
   NOTIFICATION_DELETED: "Notification Deleted Successfully",
   ADMIN_DELETED_VENDOR: "Admin Deleted Vendor",
   ADMIN_DELETED_USER: "Admin Deleted User",
+  CATEGORY_DELETED:'Category Deleted Successfully'
 };
 
 module.exports = {

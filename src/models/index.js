@@ -7,4 +7,5 @@ module.exports = {
   Banner: require("./banner.model"),
   Store: require("./store.model"),
   Notification: require("./notification.model"),
+  Category:require("./category.model")
 };

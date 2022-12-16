@@ -33,3 +33,11 @@ exports.userLocation = {
   }),
 };
 
+exports.favouriteStoreDeal = {
+  query: Joi.object().keys({
+  storeId:Joi.string().required(),
+  }),
+};
+
+
+

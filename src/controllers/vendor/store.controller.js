@@ -7,6 +7,8 @@ const {
 } = require("../../config/appConstants");
 const { catchAsync } = require("../../utils/universalFunction");
 const { successResponse } = require("../../utils/response");
+const { format } = require("morgan");
+const { formatStore } = require("../../utils/commonFunction");
 
 const createStore = catchAsync(async (req, res) => {
   const newStore = await vendorStoreService.createStore(req, res);
@@ -39,8 +41,24 @@ const deleteStore = catchAsync(async (req, res) => {
   );
 });
 
+const vendorStoreName=catchAsync(async (req, res) => {
+  const store = await vendorStoreService.vendorStoreName(req.token.vendor._id);
+  const value=formatStore(store)
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    DELETE_MASSAGES.STORE_DELETED,
+   value
+  );
+});
+
+
+
+
 module.exports = {
   createStore,
   editStoreDetails,
   deleteStore,
+  vendorStoreName,
 };

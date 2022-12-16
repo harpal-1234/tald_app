@@ -44,7 +44,11 @@ const formatUser = (userData) => {
 };
 
 const formatFavourites = (userData) => {
+
   delete userData.__v;
+  delete userData.name;
+  delete userData.email;
+  delete userData._id;
   delete userData.password;
   delete userData.role;
   delete userData.document;
@@ -58,8 +62,9 @@ const formatFavourites = (userData) => {
   delete userData.isPushNotification;
   delete userData.isVerified;
   delete userData.phoneNumber;
-  if (userData.dealId.length) {
-    userData.dealId.forEach((data) => {
+  delete userData.dealPurchaseId
+  if (userData.favouriteStore.length) {
+    userData.favouriteStore.forEach((data) => {
       delete data.__v;
       delete data.password;
       delete data.isBlocked;
@@ -69,6 +74,7 @@ const formatFavourites = (userData) => {
       delete data.customerId;
       delete data.location;
       delete data.dealId;
+      delete data.deals;
       delete data.phoneNumber;
       delete data.isPushNotification;
       delete data.isVerified;
@@ -235,6 +241,7 @@ const formatPurchase = (userData) => {
   delete userData.isPushNotification;
   delete userData.isVerified;
   delete userData.phoneNumber;
+  delete userData.socialId;
   if (userData.dealPurchaseId.length) {
     userData.dealPurchaseId.forEach((data) => {
       delete data.__v;
@@ -272,6 +279,115 @@ const formatPurchase = (userData) => {
   return userData;
 };
 
+const formatStoreDeal=(userData) => {
+  delete userData.__v;
+  delete userData.password;
+  delete userData.vendorId;
+  delete userData.role;
+  delete userData.document;
+  delete userData.isBlocked;
+  delete userData.isDeleted;
+  delete userData.createdAt;
+  delete userData.updatedAt;
+  delete userData.jobTitle;
+  delete userData.__v;
+  delete userData.location;
+  delete userData.isPushNotification;
+  delete userData.isVerified;
+  delete userData.phoneNumber;
+  if (userData.deals.length) {
+    userData.deals.forEach((data) => {
+      delete data.__v;
+      delete data.storeId;
+      delete data.vendorId;
+      delete data.password;
+      delete data.isBlocked;
+      delete data.isDeleted;
+      delete data.createdAt;
+      delete data.updatedAt;
+      delete data.customerId;
+      delete data.location;
+      delete data.dealId;
+      delete data.phoneNumber;
+      delete data.isPushNotification;
+      delete data.isVerified;
+      delete data.socialId;
+    });
+  } else {
+    delete userData.__v;
+    delete userData.password;
+    delete userData.role;
+    delete userData.document;
+    delete userData.isBlocked;
+    delete userData.isDeleted;
+    delete userData.createdAt;
+    delete userData.updatedAt;
+    delete userData.jobTitle;
+    delete userData.__v;
+    delete userData.password;
+    delete userData.location;
+    delete userData.phoneNumber;
+    delete userData.isPushNotification;
+    delete userData.isVerified;
+    delete userData.socialId;
+  }
+  return userData;
+};
+
+const formatCategory=(userData) => {
+  if (userData.length) {
+    userData.forEach((data) => {
+      delete data.__v;
+      delete data.isBlocked;
+      delete data.isDeleted;
+      delete data.createdAt;
+      delete data.updatedAt;
+      delete data.password;
+    });
+  } else {
+    delete userData.__v;
+    delete userData.isBlocked;
+    delete userData.isDeleted;
+    delete userData.createdAt;
+    delete userData.updatedAt;
+    delete userData.__v;
+    delete userData._id;
+    delete userData.vendorId;
+    delete data.password;
+  }
+  return userData;
+};
+
+const formatStore= (userData) => {
+  if (userData.length) {
+    userData.forEach((data) => {
+      delete data.__v;
+      delete data.isBlocked;
+      delete data.isDeleted;
+      delete data.createdAt;
+      delete data.updatedAt;
+      delete data.customerId;
+      delete data.password;
+      delete data.dealId;
+      delete data.deals;
+      delete data.vendorId;
+      delete data.location.loc.coordinates;
+      delete data.location.loc.type;
+    });
+  } else {
+    delete userData.__v;
+    delete userData.isBlocked;
+    delete userData.isDeleted;
+    delete userData.createdAt;
+    delete userData.updatedAt;
+    delete userData.__v;
+    delete userData._id;
+    delete userData.vendorId;
+    delete data.password;
+  }
+  return userData;
+}
+
 module.exports = {
   successMessageWithoutData,
   successMessage,
@@ -282,5 +398,8 @@ module.exports = {
   formatUser,
   formatFavourites,
   formatNotification,
-  formatPurchase
+  formatPurchase,
+  formatStoreDeal,
+  formatCategory,
+  formatStore
 };

@@ -19,9 +19,9 @@ exports.login = {
         socialMedia: Joi.string().valid(socialMedia.TRUE),
       }).unknown(),
       {
-      
+        
         then: Joi.object().keys({
-          socialAuth:Joi.string().valid("googleId"),
+          socialAuth:Joi.string().valid("googleId").required(),
           socialId: Joi.object({
             googleId: Joi.string().required(),
           }),
@@ -31,7 +31,7 @@ exports.login = {
       },
       {
         then: Joi.object().keys({
-          socialAuth:Joi.string().valid("appleId"),
+          socialAuth:Joi.string().valid("appleId").required(),
           socialId: Joi.object({
             appleId: Joi.string(),
           }),
@@ -42,7 +42,7 @@ exports.login = {
       {    
   
         then: Joi.object().keys({
-          socialAuth:Joi.string().valid("facebookId"),
+          socialAuth:Joi.string().valid("facebookId").required(),
           socialId: Joi.object({
             facebookId: Joi.string(),
           }),

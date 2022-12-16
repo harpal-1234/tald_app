@@ -38,6 +38,13 @@ const createDeal = async (data, tokendata) => {
     validTo: moment(validToDate+ "Z", "YYYY-MM-DD" + "Z").toDate(),
   });
 
+  if(newCoupon._id && newCoupon.storeId)
+  {
+  const value=await Store.updateOne({ _id: newCoupon.storeId },
+    { $push: { deals: newCoupon._id }},
+    { new:true});
+  }
+    
 
 
   return newCoupon;
@@ -140,7 +147,7 @@ const editDeal=async(bodyData,res)=>{
     validTo: moment(validToDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
   },{upsert:false,new:true});
 
- console.log(editDeal)
+ 
 
   return editDeal;
 
@@ -150,5 +157,6 @@ module.exports = {
   createDeal,
   getAllDeal,
   deleteDeal,
-  editDeal
+  editDeal,
+ 
 };

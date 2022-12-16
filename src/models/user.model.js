@@ -27,7 +27,7 @@ const userSchema = mongoose.Schema(
       },
     },//logitude and latitude
     dealPurchaseId:[{ type: mongoose.SchemaTypes.ObjectId, ref: 'deals' }],
-    dealId:[{ type: mongoose.SchemaTypes.ObjectId, ref: 'deals' }],  //like deal Id
+    favouriteStore:[{ type: mongoose.SchemaTypes.ObjectId, ref: 'stores' }],  //passing like storeId 
     phoneNumber:{ type: String, default: "" },
     socialId:{
       googleId:{ type: String,sparse:true},

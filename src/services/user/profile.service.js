@@ -1,5 +1,5 @@
 const { successResponse } = require("../../utils/response");
-const { User, Deal } = require("../../models");
+const { User, Deal, Store } = require("../../models");
 const { ApiError } = require("../../utils/universalFunction");
 const {
   joi,
@@ -132,45 +132,6 @@ const userLocation = async (req, res) => {
   return;
 };
 
-const favourites = async (req, res) => {
-  const user = await User.findOne({
-    _id: req.token.user._id,
-    isDeleted: false,
-  });
-  if (!user) {
-    throw new OperationalError(
-      STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.ACCOUNT_NOT_EXIST
-    );
-  }
-
-  if (user.dealId.length) {
-    user.dealId.map(async (data) => {
-      if (data.toString() === req.body.dealId) {
-        const favourite = await User.updateOne(
-          { _id: user.id },
-          { $pull: { dealId: req.body.dealId } },
-          { new: true }
-        );
-        return;
-      } else {
-        const favourite = await User.updateOne(
-          { _id: user.id },
-          { $push: { dealId: req.body.dealId } },
-          { new: true }
-        );
-        return;
-      }
-    });
-  } else {
-    const favourite = await User.updateOne(
-      { _id: user.id },
-      { $push: { dealId: req.body.dealId } },
-      { new: true }
-    );
-    return;
-  }
-};
 
 const myFavourites = async (req, res) => {
   const user = await User.findOne({
@@ -183,10 +144,12 @@ const myFavourites = async (req, res) => {
       ERROR_MESSAGES.ACCOUNT_NOT_EXIST
     );
   }
-  const favourite = await User.findOne({ _id: user.id })
-    .populate({ path: "dealId" })
+  const favourite = await User.findOne({ _id: user.id ,isDeleted:false})
+    .populate({ path: "favouriteStore"})
     .lean();
-  return favourite;
+  const count=favourite.favouriteStore.length;
+
+  return {favourite,count};
 };
 
 const dealPurchaseData=async (userId) => {
@@ -206,13 +169,32 @@ const dealPurchaseData=async (userId) => {
   return purchaseData;
 };
 
+const favouriteStoreDeal=async(req, res) => {
+  const store = await Store.findOne({
+    _id: req.query.storeId,
+    isDeleted: false,
+  });
+  if (!store) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.STORE_NOT_EXIST
+    );
+  }
+  const favourite = await Store.findOne({ _id: store.id ,isDeleted:false})
+    .populate({ path: "deals"})
+    .lean();
+  
+
+  return favourite;
+};
+
 module.exports = {
   editProfile,
   changePassword,
   contactUs,
   userLocation,
   pushNotificationStatus,
-  favourites,
   myFavourites,
-  dealPurchaseData
+  dealPurchaseData,
+  favouriteStoreDeal
 };

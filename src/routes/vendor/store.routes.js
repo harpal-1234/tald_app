@@ -21,5 +21,20 @@ router.post(
     storeController.deleteStore
   );
 
+  router.get(
+    "/vendorStoreName",
+    auth(USER_TYPE.VENDOR_ADMIN),
+    storeController.vendorStoreName
+  );
+
+
+  router.put(
+    "/edit",
+    auth(USER_TYPE.VENDOR_ADMIN),
+    validate(storeValidation.editStoreDetails),
+    storeController.editStoreDetails
+  );
+
+
 
   module.exports=router

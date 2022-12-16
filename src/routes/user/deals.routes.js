@@ -24,14 +24,30 @@ router.get(
 router.get(
   "/services",
   auth(USER_TYPE.USER),
-  // validate(authValidation.nearestService),
+  validate(authValidation.nearestService),
   authController.nearestService
 )
 router.post(
   "/purchase",
   auth(USER_TYPE.USER),
-  // validate(authValidation.signUp),
+  validate(authValidation.purchaseDeal),
   authController.purchaseDeal
 )
+
+router.get(
+  "/storeDeal",
+  auth(USER_TYPE.USER),
+  validate(authValidation.storeDeal),
+  authController.storeDeal
+);
+
+
+router.post(
+  "/favourites",
+  auth(USER_TYPE.USER),
+  validate(authValidation.favouriteStore),
+  authController.favouriteStore
+);
+
 
 module.exports=router

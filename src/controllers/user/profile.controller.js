@@ -8,7 +8,7 @@ const {
   SUCCESS_MESSAGES,
   USER_TYPE
 } = require("../../config/appConstants");
-const { formatUser, formatFavourites, formatPurchase } = require("../../utils/commonFunction");
+const { formatUser, formatFavourites, formatPurchase, formatStoreDeal } = require("../../utils/commonFunction");
 
 const editProfile = catchAsync(async (req, res) => {
   const user = await userProfileService.editProfile(
@@ -71,25 +71,19 @@ const userLocation= catchAsync(async (req, res) => {
   );
 });
 
-const favourites= catchAsync(async (req, res) => {
-  const user=await userProfileService.favourites(req,res);
-  return successResponse(
-    req,
-    res,
-    STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.USER_LOCATION
-  );
-});
+
 
 const myFavourites= catchAsync(async (req, res) => {
   const user=await userProfileService.myFavourites(req,res);
-  const value=formatFavourites(user);
+  const value=formatFavourites(user.favourite);
+  const dataCount=user.count;
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.FAVOURITES_DEALS,
-    user
+    value,
+    dataCount
   );
 });
 
@@ -106,6 +100,17 @@ const dealPurchaseData= catchAsync(async (req, res) => {
   );
 });
 
+const favouriteStoreDeal= catchAsync(async (req, res) => {
+  const user=await userProfileService.favouriteStoreDeal(req, res);
+  const value=formatStoreDeal(user)
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.STORE_DEALS,
+   value
+  );
+})
 
 
 module.exports = {
@@ -114,7 +119,7 @@ module.exports = {
   userContactUs,
   userLocation,
   pushNotificationStatus,
-  favourites,
   myFavourites,
-  dealPurchaseData
+  dealPurchaseData,
+  favouriteStoreDeal
 };

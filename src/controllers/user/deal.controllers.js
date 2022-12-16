@@ -7,7 +7,8 @@ const {
   SUCCESS_MESSAGES,
   USER_TYPE,
 } = require("../../config/appConstants");
-const { formatDeal } = require("../../utils/commonFunction");
+const { formatDeal,formatStoreDeal } = require("../../utils/commonFunction");
+const {storeDistance}=require("../../utils/storeDistance");
 
 const homeData = catchAsync(async (req, res) => {
   const data = await dealsService.homeData(req, res);
@@ -56,9 +57,36 @@ const purchaseDeal = catchAsync(async (req, res) => {
   );
 });
 
+const storeDeal= catchAsync(async (req, res) => {
+  const data = await dealsService.storeDeal(req.query.storeId);
+  const store=await storeDistance(req.query.storeId,req.query.long,req.query.lat);
+  console.log(store)
+  const value=formatStoreDeal(data);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+     value,
+     store
+  );
+});
+
+const favouriteStore= catchAsync(async (req, res) => {
+  const user=await dealsService.favouriteStore(req.body.storeId,req.token.user._id);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.FAVORITE_DATA
+  );
+});
+
 module.exports = {
   homeData,
   getCategoryData,
   nearestService,
-  purchaseDeal
+  purchaseDeal,
+  storeDeal,
+  favouriteStore
 };

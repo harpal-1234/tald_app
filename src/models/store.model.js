@@ -8,12 +8,11 @@ const storeSchema = mongoose.Schema(
       ref: "vendors",
       required: true,
     },
-    dealId:[{type: mongoose.SchemaTypes.ObjectId,
-    ref: "deals",
-    required: true,
-    }],
     storeName: { type: String, default: "" },
-    service:{type: String, enum:[...Object.values(DEALS_SERVICE)]},
+    service:{
+      category:{type: String, enum:[...Object.values(DEALS_SERVICE)]},
+      categoryId:{type:String}
+    },
     location: {
       loc: {
         address: { type: String, default: "" },
@@ -24,6 +23,10 @@ const storeSchema = mongoose.Schema(
         },
       },
     },
+    deals:[{type: mongoose.SchemaTypes.ObjectId,
+      ref: "deals",
+      required: true,
+      }],
     isBlocked: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
   },
