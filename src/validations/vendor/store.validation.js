@@ -21,7 +21,7 @@ exports.deleteStore = {
 
 
 exports.editStoreDetails = {
-  query: Joi.object().keys({
+  body: Joi.object().keys({
     storeId: Joi.string().required(),
     storeName: Joi.string().required(),
     address: Joi.string().required(),

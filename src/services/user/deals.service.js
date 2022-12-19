@@ -16,6 +16,7 @@ const {
   formatBanner,
   formatDeal,
   formatResturant,
+  formatStore,
 } = require("../../utils/commonFunction");
 const io = require("socket.io");
 
@@ -32,11 +33,11 @@ const homeData = async (req, res) => {
     },
   };
 
-  const [buffet, banner, resturant, spa, clothing, cannabis, footwear] =
+  const [buffet, banner, men_clothing, resturant, bars, cannabis, shopping, beauty_spa, art_entertaiment, active_life, automotive, hotels,baby_kids,women_clothing,pets,electronics, sports_fitness] =
     await Promise.all([
       await Deal.find({ category: "buffet", isDeleted: false }).lean(),
       await Banner.find({ isDeleted: false }).lean(),
-      await Store.find({ category: "Mens Clothing", query }).lean(),
+      await Store.find({ category: "Mens Clothing"}).lean(),
       await Store.find({ category: "Restaurants", query }).lean(),
       await Store.find({ category: "Bars", isDeleted: false }).lean(),
       await Store.find({ category: "Cannabis", isDeleted: false }).lean(),
@@ -62,16 +63,28 @@ const homeData = async (req, res) => {
       }).lean(),
     ]);
 
-  //     Baby & Kids
-  // Pets
-  // Sports & Fitness
-  // Electronics
-  // Women’s Clothing
-  // Mens Clothing
+    bars, 
+    cannabis,
+     shopping, 
+     beauty_spa, 
+     art_entertaiment, 
+     active_life, 
+     automotive,
+      hotels,
+      baby_kids,
+      women_clothing,
+      pets,
+      electronics, 
+      sports_fitness
 
   const buffetDeals = formatDeal(buffet);
   const bannerData = formatBanner(banner);
+  const manClothingData=formatStore(men_clothing)
   const resturantData = formatResturant(resturant);
+  const barData=formatStore(bars);
+  const shoppingData=formatStore(shopping);
+  const beautySpaData=formatStore(beauty_spa);
+ 
   return {
     buffetDeals,
     bannerData,
@@ -260,6 +273,32 @@ const favouriteStore = async (storeId,userId) => {
 //   }
 // };
 
+const reviewOrder=async(dealId,userId)=>{
+  const deal =await Deal.findOne({_id:dealId,isDeleted:false});
+  if(deal)
+  {
+    throw new OperationalError(
+      STATUS_CODES.NOT_FOUND,
+      ERROR_MESSAGES.DEAL_NOT_EXISTS
+    );
+
+  }
+  const userDeal=await User.findone({_id:userId,isDeleted:false}).lean();
+  const dealData=userDeal.dealPurchaseId.forEach(async(data)=>{
+    if(data.string()===dealId)
+    {
+      return {dealId}
+    }
+
+  })
+  const dealPurchase=await Deal.findOne({_id:dealData,isDeleted:false}).lean();
+
+  return dealPurchase
+
+
+}
+
+
 module.exports = {
   notification,
   homeData,
@@ -268,4 +307,5 @@ module.exports = {
   purchaseDeal,
   storeDeal,
   favouriteStore,
+  reviewOrder
 };

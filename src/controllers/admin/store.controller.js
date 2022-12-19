@@ -46,8 +46,20 @@ const deleteStore= catchAsync(async (req, res) => {
   );
 })
 
+
+const editStoreDetails= catchAsync(async (req, res) => {
+  const newStore = await adminStoreService.editStoreDetails(req.body);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.DEFAULT
+  );
+});
+
   module.exports={
     getAllStore,
     getStoreDeals,
-    deleteStore
+    deleteStore,
+    editStoreDetails
   }

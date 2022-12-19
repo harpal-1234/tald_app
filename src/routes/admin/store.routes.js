@@ -30,5 +30,12 @@ router.get(
   );
 
 
+  router.put(
+    "/editStore",
+    auth(USER_TYPE.ADMIN),
+    validate(authValidation.editStore),
+    authController.editStoreDetails
+  )
+
 
 module.exports = router;

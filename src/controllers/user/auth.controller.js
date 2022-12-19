@@ -19,6 +19,10 @@ dotenv.config();
 
 const signUp = catchAsync(async (req, res) => {
   const newUser = await userService.createUser(req.body);
+  const data = {
+    Name: newUser.name,
+    email: newUser.email,
+  };
   const token = await tokenService.generateAuthToken(
     newUser,
     USER_TYPE.USER,
@@ -31,6 +35,7 @@ const signUp = catchAsync(async (req, res) => {
     res,
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.SUCCESS,
+    data,
     token
   );
 });
