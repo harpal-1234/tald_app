@@ -17,10 +17,11 @@ const formatUser = (userData) => {
       delete data.customerId;
       delete data.location;
       delete data.dealId;
-      delete data.phoneNumber;
       delete data.isPushNotification;
       delete data.isVerified;
       delete data.socialId;
+      delete userData.dealPurchaseId;
+      delete userData.favouriteStore;
     });
   } else {
     delete userData.__v;
@@ -35,16 +36,16 @@ const formatUser = (userData) => {
     delete userData.__v;
     delete userData.password;
     delete userData.location;
-    delete userData.phoneNumber;
     delete userData.isPushNotification;
     delete userData.isVerified;
     delete userData.socialId;
+    delete userData.dealPurchaseId;
+    delete userData.favouriteStore;
   }
   return userData;
 };
 
 const formatFavourites = (userData) => {
-
   delete userData.__v;
   delete userData.name;
   delete userData.email;
@@ -62,7 +63,7 @@ const formatFavourites = (userData) => {
   delete userData.isPushNotification;
   delete userData.isVerified;
   delete userData.phoneNumber;
-  delete userData.dealPurchaseId
+  delete userData.dealPurchaseId;
   if (userData.favouriteStore.length) {
     userData.favouriteStore.forEach((data) => {
       delete data.__v;
@@ -224,7 +225,6 @@ const formatVendor = (userData) => {
   return userData;
 };
 
-
 const formatPurchase = (userData) => {
   delete userData.__v;
   delete userData.password;
@@ -237,7 +237,7 @@ const formatPurchase = (userData) => {
   delete userData.jobTitle;
   delete userData.__v;
   delete userData.location;
-  delete userData.dealId
+  delete userData.dealId;
   delete userData.isPushNotification;
   delete userData.isVerified;
   delete userData.phoneNumber;
@@ -279,7 +279,7 @@ const formatPurchase = (userData) => {
   return userData;
 };
 
-const formatStoreDeal=(userData) => {
+const formatStoreDeal = (userData) => {
   delete userData.__v;
   delete userData.password;
   delete userData.vendorId;
@@ -334,7 +334,7 @@ const formatStoreDeal=(userData) => {
   return userData;
 };
 
-const formatCategory=(userData) => {
+const formatCategory = (userData) => {
   if (userData.length) {
     userData.forEach((data) => {
       delete data.__v;
@@ -358,7 +358,7 @@ const formatCategory=(userData) => {
   return userData;
 };
 
-const formatStore= (userData) => {
+const formatStore = (userData) => {
   if (userData.length) {
     userData.forEach((data) => {
       delete data.__v;
@@ -386,7 +386,7 @@ const formatStore= (userData) => {
     delete data.password;
   }
   return userData;
-}
+};
 
 module.exports = {
   successMessageWithoutData,
@@ -401,5 +401,5 @@ module.exports = {
   formatPurchase,
   formatStoreDeal,
   formatCategory,
-  formatStore
+  formatStore,
 };

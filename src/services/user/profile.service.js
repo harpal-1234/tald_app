@@ -22,13 +22,13 @@ const editProfile = async (id, data) => {
   }
 
   const updateUser = await User.findByIdAndUpdate(
-    { _id: data.id },
+    { _id: id },
     {
       name: data.name,
       email: data.email,
       phoneNumber: data.phoneNumber,
-    }
-  );
+    },{upsert:false,new:true}
+  ).lean();
   return updateUser;
 };
 
