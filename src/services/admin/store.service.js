@@ -8,31 +8,32 @@ const {
 const { OperationalError } = require("../../utils/errors");
 
 const editStoreDetails = async (data) => {
-  const store = await Vendor.findOne({ _id: data.vendorId, isDeleted: false });
-  console.log(store);
-  if (!store) {
+  const vendor = await Vendor.findOne({ _id: data.vendorId, isDeleted: false });
+
+  if (!vendor) {
     throw new OperationalError(
       STATUS_CODES.NOT_FOUND,
       ERROR_MESSAGES.USER_NOT_FOUND
     );
   }
-  console.log(data);
 
   const updateStore = await Store.findOneAndUpdate(
     { _id: data.id },
     {
       storeName: data.storeName,
-      vendorId:data.vendorId,
+      vendorId: data.vendorId,
       service: data.service,
       location: {
         loc: {
           address: data.address,
           coordinates: [data.long, data.lat],
+          type: "Point",
         },
       },
     },
-    { upsert: false ,new:true}
+    { upsert: false, new: true }
   );
+
   return updateStore;
 };
 

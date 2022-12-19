@@ -242,6 +242,7 @@ const formatPurchase = (userData) => {
   delete userData.isVerified;
   delete userData.phoneNumber;
   delete userData.socialId;
+  delete userData.favouriteStore;
   if (userData.dealPurchaseId.length) {
     userData.dealPurchaseId.forEach((data) => {
       delete data.__v;

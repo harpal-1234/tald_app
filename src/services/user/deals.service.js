@@ -21,6 +21,7 @@ const {
 const io = require("socket.io");
 
 const homeData = async (req, res) => {
+
   const query = {
     "location.loc": {
       $near: {
@@ -33,51 +34,51 @@ const homeData = async (req, res) => {
     },
   };
 
-  const [
-    buffet,
-    banner,
-    men_clothing,
-    resturant,
-    bars,
-    cannabis,
-    shopping,
-    beauty_spa,
-    art_entertaiment,
-    active_life,
-    automotive,
-    hotels,
-    baby_kids,
-    women_clothing,
-    pets,
-    electronics,
-    sports_fitness,
-  ] = await Promise.all([
-    await Deal.find({service:{ category: "buffet" }, isDeleted: false}).lean(),
-    await Banner.find({service:{ category: "banner" },isDeleted:false}).lean(),
-    await Store.find({service:{ category: "Mens Clothing" },isDeleted:false}).lean(),
-    await Store.find({service:{ category: "Restaurants", query },isDeleted:false}).lean(),
-    await Store.find({service:{ category: "Bars"}, isDeleted: false }).lean(),
-    await Store.find({service:{ category: "Cannabis"}, isDeleted: false }).lean(),
-    await Store.find({service:{ category: "Shopping" }, isDeleted: false}).lean(),
-    await Store.find({service:{ category: "Beauty & Spas"}, isDeleted: false }).lean(),
-    await Store.find({service:{
-      category: "Arts & Entertainment",
-    }, isDeleted: false}).lean(),
-    await Store.find({service:{ category: "Active Life"}, isDeleted: false }).lean(),
-    await Store.find({service:{ category: "Automotive"}, isDeleted: false }).lean(),
-    await Store.find({service:{ category: "Hotels"}, isDeleted: false }).lean(),
-    await Store.find({ service:{category: " Baby & Kids"}, isDeleted: false }).lean(),
-    await Store.find({service:{
-      category: "Women's Clothing"},
-      isDeleted: false,
-    }).lean(),
-    await Store.find({service:{ category: "Pets"}, isDeleted: false }).lean(),
-    await Store.find({service:{category: "Electronics"}, isDeleted: false }).lean(),
-    await Store.find({service:{
-      category: "Sports & Fitness"},
-      isDeleted: false,
-    }).lean(),
-  ]);
+  // const [
+  //   buffet,
+  //   banner,
+  //   men_clothing,
+  //   resturant,
+  //   bars,
+  //   cannabis,
+  //   shopping,
+  //   beauty_spa,
+  //   art_entertaiment,
+  //   active_life,
+  //   automotive,
+  //   hotels,
+  //   baby_kids,
+  //   women_clothing,
+  //   pets,
+  //   electronics,
+  //   sports_fitness,
+  // ] = await Promise.all([
+  //   await Deal.find({service:{ categoryId : }, isDeleted: false}).lean(),
+  //   await Banner.find({service:{ categoryId:  },isDeleted:false}).lean(),
+  //   await Store.find({service:{ categoryId: },isDeleted:false}).lean(),
+  //   await Store.find({service:{ categoryId: , query },isDeleted:false}).lean(),
+  //   await Store.find({service:{ categoryId: }, isDeleted: false }).lean(),
+  //   await Store.find({service:{ categoryId: }, isDeleted: false }).lean(),
+  //   await Store.find({service:{ categoryId: }, isDeleted: false}).lean(),
+  //   await Store.find({service:{ categoryId: }, isDeleted: false }).lean(),
+  //   await Store.find({service:{
+  //     categoryId: "Arts & Entertainment",
+  //   }, isDeleted: false}).lean(),
+  //   await Store.find({service:{ categoryId: "Active Life"}, isDeleted: false }).lean(),
+  //   await Store.find({service:{ categoryId: "Automotive"}, isDeleted: false }).lean(),
+  //   await Store.find({service:{ categoryId: "Hotels"}, isDeleted: false }).lean(),
+  //   await Store.find({ service:{categoryId: "Baby & Kids"}, isDeleted: false }).lean(),
+  //   await Store.find({service:{
+  //     categoryId: "Women's Clothing"},
+  //     isDeleted: false,
+  //   }).lean(),
+  //   await Store.find({service:{ categoryId: "Pets"}, isDeleted: false }).lean(),
+  //   await Store.find({service:{categoryId: "Electronics"}, isDeleted: false }).lean(),
+  //   await Store.find({service:{
+  //     categoryId: "Sports & Fitness"},
+  //     isDeleted: false,
+  //   }).lean(),
+  // ]);
 
   // bars,
   //   cannabis,
