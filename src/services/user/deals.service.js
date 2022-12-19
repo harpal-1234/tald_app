@@ -33,66 +33,100 @@ const homeData = async (req, res) => {
     },
   };
 
-  const [buffet, banner, men_clothing, resturant, bars, cannabis, shopping, beauty_spa, art_entertaiment, active_life, automotive, hotels,baby_kids,women_clothing,pets,electronics, sports_fitness] =
-    await Promise.all([
-      await Deal.find({ category: "buffet", isDeleted: false }).lean(),
-      await Banner.find({ isDeleted: false }).lean(),
-      await Store.find({ category: "Mens Clothing"}).lean(),
-      await Store.find({ category: "Restaurants", query }).lean(),
-      await Store.find({ category: "Bars", isDeleted: false }).lean(),
-      await Store.find({ category: "Cannabis", isDeleted: false }).lean(),
-      await Store.find({ category: "Shopping", isDeleted: false }).lean(),
-      await Store.find({ category: "Beauty & Spas", isDeleted: false }).lean(),
-      await Store.find({
-        category: "Arts & Entertainment",
-        isDeleted: false,
-      }).lean(),
-      await Store.find({ category: "Active Life", isDeleted: false }).lean(),
-      await Store.find({ category: "Automotive", isDeleted: false }).lean(),
-      await Store.find({ category: "Hotels", isDeleted: false }).lean(),
-      await Store.find({ category: " Baby & Kids", isDeleted: false }).lean(),
-      await Store.find({
-        category: "Women’s Clothing",
-        isDeleted: false,
-      }).lean(),
-      await Store.find({ category: "Pets", isDeleted: false }).lean(),
-      await Store.find({ category: "Electronics", isDeleted: false }).lean(),
-      await Store.find({
-        category: "Sports & Fitness",
-        isDeleted: false,
-      }).lean(),
-    ]);
-
-    bars, 
+  const [
+    buffet,
+    banner,
+    men_clothing,
+    resturant,
+    bars,
     cannabis,
-     shopping, 
-     beauty_spa, 
-     art_entertaiment, 
-     active_life, 
-     automotive,
-      hotels,
-      baby_kids,
-      women_clothing,
-      pets,
-      electronics, 
-      sports_fitness
+    shopping,
+    beauty_spa,
+    art_entertaiment,
+    active_life,
+    automotive,
+    hotels,
+    baby_kids,
+    women_clothing,
+    pets,
+    electronics,
+    sports_fitness,
+  ] = await Promise.all([
+    await Deal.find({service:{ category: "buffet" }, isDeleted: false}).lean(),
+    await Banner.find({service:{ category: "banner" },isDeleted:false}).lean(),
+    await Store.find({service:{ category: "Mens Clothing" },isDeleted:false}).lean(),
+    await Store.find({service:{ category: "Restaurants", query },isDeleted:false}).lean(),
+    await Store.find({service:{ category: "Bars"}, isDeleted: false }).lean(),
+    await Store.find({service:{ category: "Cannabis"}, isDeleted: false }).lean(),
+    await Store.find({service:{ category: "Shopping" }, isDeleted: false}).lean(),
+    await Store.find({service:{ category: "Beauty & Spas"}, isDeleted: false }).lean(),
+    await Store.find({service:{
+      category: "Arts & Entertainment",
+    }, isDeleted: false}).lean(),
+    await Store.find({service:{ category: "Active Life"}, isDeleted: false }).lean(),
+    await Store.find({service:{ category: "Automotive"}, isDeleted: false }).lean(),
+    await Store.find({service:{ category: "Hotels"}, isDeleted: false }).lean(),
+    await Store.find({ service:{category: " Baby & Kids"}, isDeleted: false }).lean(),
+    await Store.find({service:{
+      category: "Women's Clothing"},
+      isDeleted: false,
+    }).lean(),
+    await Store.find({service:{ category: "Pets"}, isDeleted: false }).lean(),
+    await Store.find({service:{category: "Electronics"}, isDeleted: false }).lean(),
+    await Store.find({service:{
+      category: "Sports & Fitness"},
+      isDeleted: false,
+    }).lean(),
+  ]);
+
+  // bars,
+  //   cannabis,
+  //   shopping,
+  //   beauty_spa,
+  //   art_entertaiment,
+  //   active_life,
+  //   automotive,
+  //   hotels,
+  //   baby_kids,
+  //   women_clothing,
+  //   pets,
+  //   electronics,
+  //   sports_fitness;
 
   const buffetDeals = formatDeal(buffet);
   const bannerData = formatBanner(banner);
-  const manClothingData=formatStore(men_clothing)
+  const manClothingData = formatStore(men_clothing);
   const resturantData = formatResturant(resturant);
-  const barData=formatStore(bars);
-  const shoppingData=formatStore(shopping);
-  const beautySpaData=formatStore(beauty_spa);
- 
+  const barData = formatStore(bars);
+  const shoppingData = formatStore(shopping);
+  const beautySpaData = formatStore(beauty_spa);
+  const artEntertaimentData = formatStore(art_entertaiment);
+  const activeLifeData = formatStore(active_life);
+  const automotiveData = formatStore(automotive);
+  const hotelData = formatStore(hotels);
+  const babykidsData = formatStore(baby_kids);
+  const womenClothingData = formatStore(women_clothing);
+  const petsData = formatStore(pets);
+  const electronicsData = formatStore(electronics);
+  const sportsFitnessData = formatStore(sports_fitness);
+
   return {
     buffetDeals,
     bannerData,
+    manClothingData,
     resturantData,
-    spa,
-    clothing,
-    cannabis,
-    footwear,
+    barData,
+    shoppingData,
+    beautySpaData,
+    artEntertaimentData,
+    activeLifeData,
+    automotiveData,
+    hotelData,
+    babykidsData,
+    womenClothingData,
+    petsData,
+    electronicsData,
+    sportsFitnessData,
   };
 };
 
@@ -195,7 +229,7 @@ const storeDeal = async (storeId) => {
   return storeDeal;
 };
 
-const favouriteStore = async (storeId,userId) => {
+const favouriteStore = async (storeId, userId) => {
   const store = await Store.findOne({ _id: storeId, isDeleted: false });
   if (!store) {
     throw new OperationalError(
@@ -203,7 +237,7 @@ const favouriteStore = async (storeId,userId) => {
       ERROR_MESSAGES.STORE_NOT_EXIST
     );
   }
-  const user=await User.findOne({_id:userId,isDeleted:false});
+  const user = await User.findOne({ _id: userId, isDeleted: false });
 
   if (user.favouriteStore.length) {
     user.favouriteStore.map(async (data) => {
@@ -273,31 +307,27 @@ const favouriteStore = async (storeId,userId) => {
 //   }
 // };
 
-const reviewOrder=async(dealId,userId)=>{
-  const deal =await Deal.findOne({_id:dealId,isDeleted:false});
-  if(deal)
-  {
+const reviewOrder = async (dealId, userId) => {
+  const deal = await Deal.findOne({ _id: dealId, isDeleted: false });
+  if (deal) {
     throw new OperationalError(
       STATUS_CODES.NOT_FOUND,
       ERROR_MESSAGES.DEAL_NOT_EXISTS
     );
-
   }
-  const userDeal=await User.findone({_id:userId,isDeleted:false}).lean();
-  const dealData=userDeal.dealPurchaseId.forEach(async(data)=>{
-    if(data.string()===dealId)
-    {
-      return {dealId}
+  const userDeal = await User.findone({ _id: userId, isDeleted: false }).lean();
+  const dealData = userDeal.dealPurchaseId.forEach(async (data) => {
+    if (data.string() === dealId) {
+      return { dealId };
     }
+  });
+  const dealPurchase = await Deal.findOne({
+    _id: dealData,
+    isDeleted: false,
+  }).lean();
 
-  })
-  const dealPurchase=await Deal.findOne({_id:dealData,isDeleted:false}).lean();
-
-  return dealPurchase
-
-
-}
-
+  return dealPurchase;
+};
 
 module.exports = {
   notification,
@@ -307,5 +337,5 @@ module.exports = {
   purchaseDeal,
   storeDeal,
   favouriteStore,
-  reviewOrder
+  reviewOrder,
 };

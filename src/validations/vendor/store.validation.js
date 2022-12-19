@@ -8,7 +8,8 @@ exports.createStore = {
     lat: Joi.number().required(),
     long: Joi.number().required(),
     service: Joi.object().keys({
-     category:Joi.string().valid(...Object.values(DEALS_SERVICE))
+     category:Joi.string().valid(...Object.values(DEALS_SERVICE)),
+     categoryId:Joi.string()
     }),
   }),
 };
@@ -28,7 +29,8 @@ exports.editStoreDetails = {
     lat: Joi.number().required(),
     long: Joi.number().required(),
     service: Joi.object().keys({
-     category:Joi.string().valid(...Object.values(DEALS_SERVICE))
+     category:Joi.string().valid(...Object.values(DEALS_SERVICE)),
+     categoryId:Joi.string()
     }),
   }),
 };
