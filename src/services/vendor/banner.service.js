@@ -16,8 +16,10 @@ const createBanner = async (data, tokenData) => {
     );
   }
   const newBanner = await Banner.create({
-    vendorId: vendor.id,
+    vendor: vendor.id,
+    store:data.storeId,
     image: data.image,
+    service:data.service,
     title: data.title,
     description: data.description,
   });

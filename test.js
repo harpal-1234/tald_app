@@ -71,3 +71,107 @@
 // };
 
 
+
+
+
+
+
+
+
+  
+
+  // const [
+  //   buffet,
+  //   banner,
+  //   men_clothing,
+  //   resturant,
+  //   bars,
+  //   cannabis,
+  //   shopping,
+  //   beauty_spa,
+  //   art_entertaiment,
+  //   active_life,
+  //   automotive,
+  //   hotels,
+  //   baby_kids,
+  //   women_clothing,
+  //   pets,
+  //   electronics,
+  //   sports_fitness,
+  // ] = await Promise.all([
+  //    Deal.find({service:{ categoryId : ""}, isDeleted: false}).lean(),
+  //    Banner.find({service:{ categoryId:  },isDeleted:false}).lean(),
+  //    Store.find({service:{ categoryId: },isDeleted:false}).lean(),
+  //   await Store.find({service:{ categoryId: , query },isDeleted:false}).lean(),
+  //   await Store.find({service:{ categoryId: }, isDeleted: false }).lean(),
+  //   await Store.find({service:{ categoryId: }, isDeleted: false }).lean(),
+  //   await Store.find({service:{ categoryId: }, isDeleted: false}).lean(),
+  //   await Store.find({service:{ categoryId: }, isDeleted: false }).lean(),
+  //   await Store.find({service:{
+  //     categoryId: "Arts & Entertainment",
+  //   }, isDeleted: false}).lean(),
+  //   await Store.find({service:{ categoryId: "Active Life"}, isDeleted: false }).lean(),
+  //   await Store.find({service:{ categoryId: "Automotive"}, isDeleted: false }).lean(),
+  //   await Store.find({service:{ categoryId: "Hotels"}, isDeleted: false }).lean(),
+  //   await Store.find({ service:{categoryId: "Baby & Kids"}, isDeleted: false }).lean(),
+  //   await Store.find({service:{
+  //     categoryId: "Women's Clothing"},
+  //     isDeleted: false,
+  //   }).lean(),
+  //   await Store.find({service:{ categoryId: "Pets"}, isDeleted: false }).lean(),
+  //   await Store.find({service:{categoryId: "Electronics"}, isDeleted: false }).lean(),
+  //   await Store.find({service:{
+  //     categoryId: "Sports & Fitness"},
+  //     isDeleted: false,
+  //   }).lean(),
+  // ]);
+
+  // bars,
+  //   cannabis,
+  //   shopping,
+  //   beauty_spa,
+  //   art_entertaiment,
+  //   active_life,
+  //   automotive,
+  //   hotels,
+  //   baby_kids,
+  //   women_clothing,
+  //   pets,
+  //   electronics,
+  //   sports_fitness;
+
+  // const buffetDeals = formatDeal(buffet);
+  // const bannerData = formatBanner(banner);
+  // const manClothingData = formatStore(men_clothing);
+  // const resturantData = formatResturant(resturant);
+  // const barData = formatStore(bars);
+  // const shoppingData = formatStore(shopping);
+  // const beautySpaData = formatStore(beauty_spa);
+  // const artEntertaimentData = formatStore(art_entertaiment);
+  // const activeLifeData = formatStore(active_life);
+  // const automotiveData = formatStore(automotive);
+  // const hotelData = formatStore(hotels);
+  // const babykidsData = formatStore(baby_kids);
+  // const womenClothingData = formatStore(women_clothing);
+  // const petsData = formatStore(pets);
+  // const electronicsData = formatStore(electronics);
+  // const sportsFitnessData = formatStore(sports_fitness);
+
+//   return {
+//     buffetDeals,
+//     bannerData,
+//     manClothingData,
+//     resturantData,
+//     barData,
+//     shoppingData,
+//     beautySpaData,
+//     artEntertaimentData,
+//     activeLifeData,
+//     automotiveData,
+//     hotelData,
+//     babykidsData,
+//     womenClothingData,
+//     petsData,
+//     electronicsData,
+//     sportsFitnessData,
+//   };

@@ -1,5 +1,13 @@
 const { successResponse } = require("../../utils/response");
-const { User, Token, Admin, Deal, Banner, Store } = require("../../models");
+const {
+  User,
+  Token,
+  Admin,
+  Deal,
+  Banner,
+  Store,
+  Category,
+} = require("../../models");
 const { ApiError } = require("../../utils/universalFunction");
 const {
   joi,
@@ -20,115 +28,90 @@ const {
 } = require("../../utils/commonFunction");
 const io = require("socket.io");
 
-const homeData = async (req, res) => {
 
+const homeData = async (data) => {
   const query = {
     "location.loc": {
       $near: {
         $geometry: {
           type: "Point",
-          coordinates: [req.body.long, req.body.lat],
+          coordinates: [data.long, data.lat],
         },
         $maxDistance: 1000,
       },
     },
   };
 
-  // const [
-  //   buffet,
-  //   banner,
-  //   men_clothing,
-  //   resturant,
-  //   bars,
-  //   cannabis,
-  //   shopping,
-  //   beauty_spa,
-  //   art_entertaiment,
-  //   active_life,
-  //   automotive,
-  //   hotels,
-  //   baby_kids,
-  //   women_clothing,
-  //   pets,
-  //   electronics,
-  //   sports_fitness,
-  // ] = await Promise.all([
-  //   await Deal.find({service:{ categoryId : }, isDeleted: false}).lean(),
-  //   await Banner.find({service:{ categoryId:  },isDeleted:false}).lean(),
-  //   await Store.find({service:{ categoryId: },isDeleted:false}).lean(),
-  //   await Store.find({service:{ categoryId: , query },isDeleted:false}).lean(),
-  //   await Store.find({service:{ categoryId: }, isDeleted: false }).lean(),
-  //   await Store.find({service:{ categoryId: }, isDeleted: false }).lean(),
-  //   await Store.find({service:{ categoryId: }, isDeleted: false}).lean(),
-  //   await Store.find({service:{ categoryId: }, isDeleted: false }).lean(),
-  //   await Store.find({service:{
-  //     categoryId: "Arts & Entertainment",
-  //   }, isDeleted: false}).lean(),
-  //   await Store.find({service:{ categoryId: "Active Life"}, isDeleted: false }).lean(),
-  //   await Store.find({service:{ categoryId: "Automotive"}, isDeleted: false }).lean(),
-  //   await Store.find({service:{ categoryId: "Hotels"}, isDeleted: false }).lean(),
-  //   await Store.find({ service:{categoryId: "Baby & Kids"}, isDeleted: false }).lean(),
-  //   await Store.find({service:{
-  //     categoryId: "Women's Clothing"},
-  //     isDeleted: false,
-  //   }).lean(),
-  //   await Store.find({service:{ categoryId: "Pets"}, isDeleted: false }).lean(),
-  //   await Store.find({service:{categoryId: "Electronics"}, isDeleted: false }).lean(),
-  //   await Store.find({service:{
-  //     categoryId: "Sports & Fitness"},
-  //     isDeleted: false,
-  //   }).lean(),
-  // ]);
+  const categoryData = await Category.find({ isDeleted: false });
 
-  // bars,
-  //   cannabis,
-  //   shopping,
-  //   beauty_spa,
-  //   art_entertaiment,
-  //   active_life,
-  //   automotive,
-  //   hotels,
-  //   baby_kids,
-  //   women_clothing,
-  //   pets,
-  //   electronics,
-  //   sports_fitness;
+  if(query)
+  {
 
-  const buffetDeals = formatDeal(buffet);
-  const bannerData = formatBanner(banner);
-  const manClothingData = formatStore(men_clothing);
-  const resturantData = formatResturant(resturant);
-  const barData = formatStore(bars);
-  const shoppingData = formatStore(shopping);
-  const beautySpaData = formatStore(beauty_spa);
-  const artEntertaimentData = formatStore(art_entertaiment);
-  const activeLifeData = formatStore(active_life);
-  const automotiveData = formatStore(automotive);
-  const hotelData = formatStore(hotels);
-  const babykidsData = formatStore(baby_kids);
-  const womenClothingData = formatStore(women_clothing);
-  const petsData = formatStore(pets);
-  const electronicsData = formatStore(electronics);
-  const sportsFitnessData = formatStore(sports_fitness);
+  const dealData = await Promise.all(
+    categoryData.map(async (data) => {
+      const val = data._id.toString();
+      const type = data.category;
+      const storeData = await Store.find({
+        service: { category: type, categoryId: val },
+        query,
+        isDeleted: false,
+      }).lean();
+      const store = formatStore(storeData);
 
-  return {
-    buffetDeals,
-    bannerData,
-    manClothingData,
-    resturantData,
-    barData,
-    shoppingData,
-    beautySpaData,
-    artEntertaimentData,
-    activeLifeData,
-    automotiveData,
-    hotelData,
-    babykidsData,
-    womenClothingData,
-    petsData,
-    electronicsData,
-    sportsFitnessData,
-  };
+      return { type, store };
+    })
+  );
+  const bannerData = await Promise.all(
+    categoryData.map(async (data) => {
+      const val = data._id.toString();
+      const type = data.category;
+      const bannerValue = await Banner.find({
+        service: { category: type, categoryId: val },
+        isDeleted: false,
+      }).lean();
+      const banner = formatBanner(bannerValue);
+
+      return { category: type, banner };
+    })
+  );
+
+  dealData.push({ type: "Banner", bannerData });
+
+  return dealData;
+  }
+  else{
+
+  const dealData = await Promise.all(
+    categoryData.map(async (data) => {
+      const val = data._id.toString();
+      const type = data.category;
+      const storeData = await Store.find({
+        service: { category: type, categoryId: val },
+        isDeleted: false,
+      }).lean();
+      const store = formatStore(storeData);
+
+      return { type, store };
+    })
+  );
+  const bannerData = await Promise.all(
+    categoryData.map(async (data) => {
+      const val = data._id.toString();
+      const type = data.category;
+      const bannerValue = await Banner.find({
+        service: { category: type, categoryId: val },
+        isDeleted: false,
+      }).lean();
+      const banner = formatBanner(bannerValue);
+
+      return { category: type, banner };
+    })
+  );
+
+  dealData.push({ type: "Banner", bannerData });
+
+  return dealData;
+  }
 };
 
 const getCategoryData = async (req, res) => {

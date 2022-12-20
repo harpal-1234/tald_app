@@ -43,9 +43,32 @@ const signUp = catchAsync(async (req, res) => {
 const userLogin = catchAsync(async (req, res) => {
   const newUser = await userService.userLogin(
     req.body.email,
-    req.body.name,
     req.body.password,
-    req.body.socialId
+  );
+  const data = {
+    name: newUser.name,
+    email: newUser.email,
+  };
+  const token = await tokenService.generateAuthToken(
+    newUser,
+    USER_TYPE.USER,
+    req.body.deviceToken,
+    req.body.deviceType
+  );
+
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data,
+    token
+  );
+});
+
+const userSocialLogin= catchAsync(async (req, res) => {
+  const newUser = await userService.userSocialLogin(
+    req.body
   );
   const data = {
     name: newUser.name,
@@ -156,6 +179,7 @@ const pushNotification = catchAsync(async (req, res) => {
 });
 
 module.exports = {
+  userSocialLogin,
   signUp,
   userLogin,
   userLogout,

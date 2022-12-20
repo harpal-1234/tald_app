@@ -151,7 +151,8 @@ const ERROR_MESSAGES = {
   DEAL_NOT_EXISTS:"Deal not Exists",
   BANNER_NOT_EXISTS:'Banner not exists',
   CATEGORY_ALREADY_EXISTS:'Category Already Exists',
-  CATEGORY_NOT_EXISTS:'Category Not Exists'
+  CATEGORY_NOT_EXISTS:'Category Not Exists',
+  USER_ALREADY_EXIST:'User Already Exists'
 
 };
 
@@ -179,10 +180,10 @@ const socialMedia = {
   TRUE: "true",
   FALSE: "false",
 };
-const socialAuth = {
-  googleId: "googleId",
-  facebookId: "facebookId",
-  appleId: "appleId",
+const SOCIAL_LOGIN = {
+  GOOGLEID: "GoogleId",
+  FACEBOOKID: "FacebookId",
+  APPLEID: "AppleId",
 };
 
 const DELETE_MASSAGES = {
@@ -202,8 +203,6 @@ module.exports = {
   NOTIFICATION_STATUS,
   DEALS_SERVICE,
   DELETE_MASSAGES,
-  socialMedia,
-  socialAuth,
   TOKEN_TYPE,
   USER_TYPE,
   JOI,
@@ -216,6 +215,7 @@ module.exports = {
   ERROR_MESSAGES,
   STATUS_CODES,
   UPDATED_MESSAGES,
+  SOCIAL_LOGIN
 };
 
 

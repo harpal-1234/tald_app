@@ -19,6 +19,12 @@ router.post(
   authController.userLogin
 )
 
+router.post(
+  "/socialLogin",
+  validate(authValidation.userSocialLogin),
+  authController.userSocialLogin
+)
+
 // router.get("/getProfile", auth(USER_TYPE.USER), authController.getProfile);
 
 // router.put(

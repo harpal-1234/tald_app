@@ -1,22 +1,28 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-const {WORK_TYPE, USER_TYPE, JOB_TITLE,PUSH_NOTIFICATION_STATUS,NOTIFICATION_STATUS} = require("../config/appConstants");
+const {
+  WORK_TYPE,
+  USER_TYPE,
+  JOB_TITLE,
+  PUSH_NOTIFICATION_STATUS,
+  NOTIFICATION_STATUS,
+} = require("../config/appConstants");
 // const { address } = require("./commonField.models");
 const { string } = require("joi");
 
 const userSchema = mongoose.Schema(
   {
     // email:{type:String,required:true},
-    name:{ type: String, default: "" },
+    name: { type: String, default: "" },
     password: { type: String, default: "" },
     email: {
       type: String,
       trim: true,
       lowercase: true,
-      sparse:true,
-      default:""
+      sparse: true,
+      default: "",
     },
-    location:{
+    location: {
       address: { type: String, default: "" },
       loc: {
         type: { type: String, default: "Point" },
@@ -25,59 +31,48 @@ const userSchema = mongoose.Schema(
           default: [0, 0],
         },
       },
-    },//logitude and latitude
-    dealPurchaseId:[{ type: mongoose.SchemaTypes.ObjectId, ref: 'deals' }],
-    favouriteStore:[{ type: mongoose.SchemaTypes.ObjectId, ref: 'stores' }],  //passing like storeId 
-    phoneNumber:{ type: String, default: "" },
-    socialId:{
-      googleId:{ type: String,sparse:true},
-      facebookId:{ type: String,sparse:true},
-      appleId:{ type: String,sparse:true},
+    }, //logitude and latitude
+    dealPurchaseId: [{ type: mongoose.SchemaTypes.ObjectId, ref: "deals" }],
+    favouriteStores: [{ type: mongoose.SchemaTypes.ObjectId, ref: "stores" }], //passing like storeId
+    phoneNumber: { type: String, default: "" },
+    socialId: {type: String, default: "" },
+    isPushNotification: { type: Boolean, default: false },
+    notification: {
+      type: String,
+      enum: [...Object.values(NOTIFICATION_STATUS)],
     },
-    isPushNotification:{type: Boolean, default: false },
-    notification:{type:String,enum: [...Object.values(NOTIFICATION_STATUS)]},
     isBlocked: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
-    isVerified:{type: Boolean, default: false},
-  
+    isVerified: { type: Boolean, default: false },
   },
   {
     timestamps: true,
   }
-  );
+);
 
 userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
   const emplyee = await this.findOne({ email, _id: { $ne: excludeUserId } });
   return !!userSchema;
 };
 
-
-
 userSchema.pre("save", async function (next) {
   const user = this;
-  if(user.name)
-  {
-  user.name =
-    user.name.trim()[0].toUpperCase() + user.name.slice(1).toLowerCase();
+  if (user.name) {
+    user.name =
+      user.name.trim()[0].toUpperCase() + user.name.slice(1).toLowerCase();
     if (user.isModified("password")) {
       user.password = await bcrypt.hash(user.password, 8);
     }
   }
- 
+
   next();
 });
 userSchema.methods.isPasswordMatch = async function (password) {
   const user = this;
-  return bcrypt.compare(password,user.password);
- 
+  return bcrypt.compare(password, user.password);
 };
-
 
 const User = mongoose.model("user", userSchema);
 
 module.exports = User;
 
-
-
-
-module.exports = User;

@@ -4,65 +4,29 @@ const {
   JOI,
   USER_TYPE,
   WORK_TYPE,
-  socialAuth,
-  socialMedia,
+  SOCIAL_LOGIN,
   PUSH_NOTIFICATION_STATUS,
 } = require("../../config/appConstants");
 
 exports.login = {
-  body: Joi.object()
-    .keys({
-      socialMedia: Joi.string().valid(...Object.values(socialMedia)),
-    })
-    .when(
-      Joi.object({
-        socialMedia: Joi.string().valid(socialMedia.TRUE),
-      }).unknown(),
-      {
-        
-        then: Joi.object().keys({
-          socialAuth:Joi.string().valid("googleId").required(),
-          socialId: Joi.object({
-            googleId: Joi.string().required(),
-          }),
-          email: Joi.string(),
-          name: Joi.string(),
-        }),
-      },
-      {
-        then: Joi.object().keys({
-          socialAuth:Joi.string().valid("appleId").required(),
-          socialId: Joi.object({
-            appleId: Joi.string(),
-          }),
-          email: Joi.string().required(),
-          name: Joi.string().required(),
-        }),
-      },
-      {    
-  
-        then: Joi.object().keys({
-          socialAuth:Joi.string().valid("facebookId").required(),
-          socialId: Joi.object({
-            facebookId: Joi.string(),
-          }),
-          email: Joi.string().required(),
-          name: Joi.string().required(),
-        }),
-      }
-    )
-    .when(
-      Joi.object({
-        socialMedia: Joi.string().valid(socialMedia.FALSE),
-      }).unknown(),
-      {
-        then: Joi.object().keys({
-          email: Joi.string().required(),
-          password: Joi.string().required(),
-        }),
-      }
-    ),
+  body: Joi.object().keys({
+    email: Joi.string().email().lowercase().trim().required(),
+    password:Joi.string().min(6).required(),
+  })
+   
 };
+
+exports.userSocialLogin = {
+  body: Joi.object().keys({
+    name: Joi.string().optional(),
+    email: Joi.string().email().lowercase().trim().optional(),
+    socialId:Joi.string().required(),
+    socialAuth: Joi.string().valid(...Object.values(SOCIAL_LOGIN)),
+  }),
+};
+
+
+
 
 exports.signUp = {
   body: Joi.object().keys({
