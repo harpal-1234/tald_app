@@ -6,12 +6,15 @@ const {
   WORK_TYPE,
   SOCIAL_LOGIN,
   PUSH_NOTIFICATION_STATUS,
+  DEVICE_TYPE,
 } = require("../../config/appConstants");
 
 exports.login = {
   body: Joi.object().keys({
     email: Joi.string().email().lowercase().trim().required(),
     password:Joi.string().min(6).required(),
+      // deviceToken:Joi.string().required(),
+    // deviceType:Joi.string().valid(...Object.values(DEVICE_TYPE)),
   })
    
 };
@@ -34,6 +37,8 @@ exports.signUp = {
     email: Joi.string().email().lowercase().trim().required(),
     password: JOI.PASSWORD,
     phoneNumber: JOI.PHONENUMBER,
+    // deviceToken:Joi.string().required(),
+    // deviceType:Joi.string().valid(...Object.values(DEVICE_TYPE)),
   }),
 };
 

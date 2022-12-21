@@ -14,9 +14,9 @@ const USER_TYPE = {
 };
 
 const DEVICE_TYPE = {
-  IPHONE: "iPhone",
-  ANDROID: "android",
-  WEB: "web",
+  IOS: "Ios",
+  ANDROID: "Android",
+  WEB: "Web",
 };
 
 const BANNER_STATUS = {
