@@ -153,7 +153,7 @@ const ERROR_MESSAGES = {
   CATEGORY_ALREADY_EXISTS:'Category Already Exists',
   CATEGORY_NOT_EXISTS:'Category Not Exists',
   USER_ALREADY_EXIST:'User Already Exists',
-  CONTACTUS_EMAIL_USER:'Please Enter Register Email'
+  CONTACTUS_EMAIL_USER:'Please enter your registered email'
 
 };
 
