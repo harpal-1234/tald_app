@@ -113,7 +113,8 @@ const SUCCESS_MESSAGES = {
   CATEGORY_DATA:'All Category',
   STORE_DATA:'All Store Data',
   FAVORITE_DATA:'Deal Added To Your Favourites',
-  STORE_DEALS:'Store All Deals'
+  STORE_DEALS:'Store All Deals',
+  PUSH_NOTIFICATION_STATUS:"Push notification status updated"
 };
 
 const UPDATED_MESSAGES = {

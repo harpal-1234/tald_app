@@ -14,6 +14,7 @@ const bcrypt = require("bcryptjs");
 
 const editProfile = async (id, data) => {
   const userEmail = await User.findOne({ email: data.email, isDeleted: false });
+
   if (!userEmail) {
     throw new OperationalError(
       STATUS_CODES.NOT_FOUND,
@@ -27,7 +28,8 @@ const editProfile = async (id, data) => {
       name: data.name,
       email: data.email,
       phoneNumber: data.phoneNumber,
-    },{upsert:false,new:true}
+    },
+    { upsert: false, new: true }
   ).lean();
   return updateUser;
 };
@@ -72,18 +74,27 @@ const contactUs = async (name, email) => {
   return;
 };
 
-const pushNotificationStatus = async (req, res) => {
-  const user = await User.findOne({ id: req.token.user._id });
-  console.log(user.isPushNotification);
+const pushNotificationStatus = async (data) => {
+  const user = await User.findOne({ _id: data, isDeleted: false });
+
   if (!user) {
     throw new OperationalError(
       STATUS_CODES.NOT_FOUND,
       ERROR_MESSAGES.USER_NOT_FOUND
     );
   }
-  console.log(user.isPushNotification);
+
   if (user.isPushNotification) {
-    console.log("working");
+    const notification = await User.findOneAndUpdate(
+      { _id: user.id },
+      {
+        isPushNotification: false,
+      },
+      { new: true }
+    );
+
+    return notification;
+  } else {
     const notification = await User.findOneAndUpdate(
       { _id: user.id },
       {
@@ -91,26 +102,10 @@ const pushNotificationStatus = async (req, res) => {
       },
       { new: true }
     );
-    console.log(notification);
-  
 
     return notification;
   }
-  else{
-  
-    const notification = await User.findOneAndUpdate(
-      { _id: user.id },
-      {
-        isPushNotification: false,
-      },
-      { new: true}
-    );
-  
-
-    return notification;
-  }
-}
-
+};
 
 const userLocation = async (req, res) => {
   const user = await User.findOne({ _id: req.token.user._id });
@@ -136,7 +131,6 @@ const userLocation = async (req, res) => {
   return;
 };
 
-
 const myFavourites = async (req, res) => {
   const user = await User.findOne({
     _id: req.token.user._id,
@@ -148,15 +142,15 @@ const myFavourites = async (req, res) => {
       ERROR_MESSAGES.ACCOUNT_NOT_EXIST
     );
   }
-  const favourite = await User.findOne({ _id: user.id ,isDeleted:false})
-    .populate({ path: "favouriteStore"})
+  const favourite = await User.findOne({ _id: user.id, isDeleted: false })
+    .populate({ path: "favouriteStore" })
     .lean();
-  const count=favourite.favouriteStore.length;
+  const count = favourite.favouriteStore.length;
 
-  return {favourite,count};
+  return { favourite, count };
 };
 
-const dealPurchaseData=async (userId) => {
+const dealPurchaseData = async (userId) => {
   const user = await User.findOne({
     _id: userId,
     isDeleted: false,
@@ -173,7 +167,7 @@ const dealPurchaseData=async (userId) => {
   return purchaseData;
 };
 
-const favouriteStoreDeal=async(req, res) => {
+const favouriteStoreDeal = async (req, res) => {
   const store = await Store.findOne({
     _id: req.query.storeId,
     isDeleted: false,
@@ -184,10 +178,9 @@ const favouriteStoreDeal=async(req, res) => {
       ERROR_MESSAGES.STORE_NOT_EXIST
     );
   }
-  const favourite = await Store.findOne({ _id: store.id ,isDeleted:false})
-    .populate({ path: "deals"})
+  const favourite = await Store.findOne({ _id: store.id, isDeleted: false })
+    .populate({ path: "deals" })
     .lean();
-  
 
   return favourite;
 };
@@ -200,5 +193,5 @@ module.exports = {
   pushNotificationStatus,
   myFavourites,
   dealPurchaseData,
-  favouriteStoreDeal
+  favouriteStoreDeal,
 };

@@ -53,12 +53,12 @@ const userContactUs= catchAsync(async (req, res) => {
 });
 
 const pushNotificationStatus =catchAsync(async(req,res)=>{
-  const notification=await userProfileService.pushNotificationStatus(req,res);
+  const notification=await userProfileService.pushNotificationStatus(req.token.user._id);
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.LOGOUT,
+    SUCCESS_MESSAGES.PUSH_NOTIFICATION_STATUS,
   );
 
 })
