@@ -66,7 +66,7 @@ const contactUs = async (name, email) => {
   if (!user) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.USER_CREDENTIAL
+      ERROR_MESSAGES.CONTACTUS_EMAIL_USER
     );
   }
   return;
