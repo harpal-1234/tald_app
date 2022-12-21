@@ -4,7 +4,7 @@ const { DEALS_SERVICE } = require("../config/appConstants");
 const dealSchema = mongoose.Schema(
   {
     vendor: { type: mongoose.SchemaTypes.ObjectId, ref: "vendors" },
-    storeId: { type: mongoose.SchemaTypes.ObjectId, ref: "stores" },
+    store: { type: mongoose.SchemaTypes.ObjectId, ref: "stores" },
     couponCode: { type: Number, default: "" },
     category: { type: String, enum: [...Object.values(DEALS_SERVICE)] },
     name: { type: String, default: "" },

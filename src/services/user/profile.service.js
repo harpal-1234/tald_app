@@ -13,13 +13,23 @@ const config = require("../../config/config");
 const bcrypt = require("bcryptjs");
 
 const editProfile = async (id, data) => {
-  const userEmail = await User.findOne({ email: data.email, isDeleted: false });
+  const userEmail = await User.findOne({ _id:id, isDeleted: false });
 
   if (!userEmail) {
     throw new OperationalError(
       STATUS_CODES.NOT_FOUND,
       ERROR_MESSAGES.USER_NOT_FOUND
     );
+  }
+
+  const user = await User.findOne({ email:data.email, isDeleted: false });
+  if(user)
+  {
+    throw new OperationalError(
+      STATUS_CODES.NOT_FOUND,
+      ERROR_MESSAGES.EMAIL_ALREADY_EXIST
+    );
+
   }
 
   const updateUser = await User.findByIdAndUpdate(

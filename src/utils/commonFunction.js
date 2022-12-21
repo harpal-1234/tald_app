@@ -22,6 +22,7 @@ const formatUser = (userData) => {
       delete data.socialId;
       delete userData.dealPurchaseId;
       delete userData.favouriteStore;
+      delete userData.favouriteStores
     });
   } else {
     delete userData.__v;
@@ -41,6 +42,7 @@ const formatUser = (userData) => {
     delete userData.socialId;
     delete userData.dealPurchaseId;
     delete userData.favouriteStore;
+    delete userData.favouriteStores
   }
   return userData;
 };

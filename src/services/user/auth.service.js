@@ -68,6 +68,7 @@ const userLogin = async (email,password) => {
 
 const userSocialLogin=async(data)=>{
   const user=await User.findOne({socialId:data.socialId,isDeleted:false});
+
   if(user)
   {
     throw new OperationalError(
@@ -75,7 +76,11 @@ const userSocialLogin=async(data)=>{
       ERROR_MESSAGES.USER_ALREADY_EXIST
     );
   }
-  const newUser=await User.create(data)
+  const newUser=await User.create(data);
+  
+  
+    
+
   return newUser
 }
 
