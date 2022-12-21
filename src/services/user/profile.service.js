@@ -153,9 +153,9 @@ const myFavourites = async (req, res) => {
     );
   }
   const favourite = await User.findOne({ _id: user.id, isDeleted: false })
-    .populate({ path: "favouriteStore" })
+    .populate({ path: "favouriteStores" })
     .lean();
-  const count = favourite.favouriteStore.length;
+  const count = favourite.favouriteStores.length;
 
   return { favourite, count };
 };

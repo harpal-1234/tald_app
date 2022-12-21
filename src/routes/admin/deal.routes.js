@@ -25,6 +25,26 @@ const router = express.Router();
 
   )
 
+  router.delete(
+    "/deleteDeal",
+    auth(USER_TYPE.ADMIN),
+    validate(authValidation.deleteDeal),
+    authController.deleteDeal
+
+  );
+
+
+  router.put(
+    "/editDeal",
+    auth(USER_TYPE.ADMIN),
+    validate(authValidation.editDeal),
+    authController.editDeal
+
+  );
+
+
+  
+
 
   router.get(
     "/getAllCategory",

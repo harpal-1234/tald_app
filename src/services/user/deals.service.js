@@ -223,19 +223,19 @@ const favouriteStore = async (storeId, userId) => {
   }
   const user = await User.findOne({ _id: userId, isDeleted: false });
 
-  if (user.favouriteStore.length) {
-    user.favouriteStore.map(async (data) => {
+  if (user.favouriteStores.length) {
+    user.favouriteStores.map(async (data) => {
       if (data.toString() === storeId) {
         const favourite = await User.updateOne(
           { _id: user.id },
-          { $pull: { favouriteStore: storeId } },
+          { $pull: { favouriteStores: storeId } },
           { new: true }
         );
         return;
       } else {
         const favourite = await User.updateOne(
           { _id: user.id },
-          { $push: { favouriteStore: storeId } },
+          { $push: { favouriteStores: storeId } },
           { new: true }
         );
         return;
@@ -244,7 +244,7 @@ const favouriteStore = async (storeId, userId) => {
   } else {
     const favourite = await User.updateOne(
       { _id: user.id },
-      { $push: { favouriteStore: storeId } },
+      { $push: { favouriteStores: storeId } },
       { new: true }
     );
     return;

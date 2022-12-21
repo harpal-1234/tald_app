@@ -66,8 +66,8 @@ const formatFavourites = (userData) => {
   delete userData.isVerified;
   delete userData.phoneNumber;
   delete userData.dealPurchaseId;
-  if (userData.favouriteStore.length) {
-    userData.favouriteStore.forEach((data) => {
+  if (userData.favouriteStores.length) {
+    userData.favouriteStores.forEach((data) => {
       delete data.__v;
       delete data.password;
       delete data.isBlocked;

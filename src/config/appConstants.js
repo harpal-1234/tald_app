@@ -114,7 +114,8 @@ const SUCCESS_MESSAGES = {
   STORE_DATA:'All Store Data',
   FAVORITE_DATA:'Deal Added To Your Favourites',
   STORE_DEALS:'Store All Deals',
-  PUSH_NOTIFICATION_STATUS:"Push notification status updated"
+  PUSH_NOTIFICATION_STATUS:"Push notification status updated",
+ 
 };
 
 const UPDATED_MESSAGES = {
@@ -126,6 +127,7 @@ const UPDATED_MESSAGES = {
   USER_LOCATION: "Location Updated Successfully",
   NOTIFICATION_EDITED: "Notification Upadted Successfully",
   USER_UPDATED: "User Profile Updated Sucessfully",
+  DEAL_UPDATED:'Deal Updated Successfully'
 };
 
 const ERROR_MESSAGES = {
