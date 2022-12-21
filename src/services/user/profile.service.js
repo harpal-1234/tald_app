@@ -14,10 +14,10 @@ const bcrypt = require("bcryptjs");
 
 const editProfile = async (id, data) => {
   const userEmail = await User.findOne({ email: data.email, isDeleted: false });
-  if (userEmail) {
+  if (!userEmail) {
     throw new OperationalError(
       STATUS_CODES.NOT_FOUND,
-      ERROR_MESSAGES.EMAIL_ALREADY_EXIST
+      ERROR_MESSAGES.USER_NOT_FOUND
     );
   }
 
@@ -74,6 +74,7 @@ const contactUs = async (name, email) => {
 
 const pushNotificationStatus = async (req, res) => {
   const user = await User.findOne({ id: req.token.user._id });
+  console.log(user.isPushNotification);
   if (!user) {
     throw new OperationalError(
       STATUS_CODES.NOT_FOUND,
@@ -81,32 +82,35 @@ const pushNotificationStatus = async (req, res) => {
     );
   }
   console.log(user.isPushNotification);
-  if (user.isPushNotification === false) {
+  if (user.isPushNotification) {
     console.log("working");
     const notification = await User.findOneAndUpdate(
       { _id: user.id },
       {
         isPushNotification: true,
       },
-      { new: true, upsert: false }
+      { new: true }
     );
     console.log(notification);
+  
 
     return notification;
   }
-  if (user.isPushNotification === true) {
-    console.log("working in ehh");
+  else{
+  
     const notification = await User.findOneAndUpdate(
       { _id: user.id },
       {
         isPushNotification: false,
       },
-      { new: true, upsert: false }
+      { new: true}
     );
+  
 
     return notification;
   }
-};
+}
+
 
 const userLocation = async (req, res) => {
   const user = await User.findOne({ _id: req.token.user._id });

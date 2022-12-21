@@ -22,7 +22,8 @@ const signUp = catchAsync(async (req, res) => {
   const data = {
     name: newUser.name,
     email: newUser.email,
-    pushNotification:newUser.isPushNotification
+    pushNotification:newUser.isPushNotification,
+    phoneNumber:newUser.phoneNumber
   };
   const token = await tokenService.generateAuthToken(
     newUser,
@@ -49,7 +50,8 @@ const userLogin = catchAsync(async (req, res) => {
   const data = {
     name: newUser.name,
     email: newUser.email,
-    pushNotification:newUser.isPushNotification
+    pushNotification:newUser.isPushNotification,
+    phoneNumber:newUser.phoneNumber
   };
   const token = await tokenService.generateAuthToken(
     newUser,
