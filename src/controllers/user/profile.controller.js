@@ -71,7 +71,7 @@ const pushNotificationStatus =catchAsync(async(req,res)=>{
 })
 
 const userLocation= catchAsync(async (req, res) => {
-  const location=await userProfileService.userLocation(req,res);
+  const location=await userProfileService.userLocation(req.token.user._id,req.body);
   return successResponse(
     req,
     res,

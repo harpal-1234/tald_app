@@ -115,8 +115,9 @@ const pushNotificationStatus = async (data) => {
   }
 };
 
-const userLocation = async (req, res) => {
-  const user = await User.findOne({ _id: req.token.user._id });
+const userLocation = async (data,userData) => {
+  
+  const user = await User.findOne({ _id:data,isDeleted:false });
   if (!user) {
     throw new OperationalError(
       STATUS_CODES.NOT_FOUND,
@@ -127,9 +128,9 @@ const userLocation = async (req, res) => {
     { _id: user.id },
     {
       location: {
-        address: req.body.address,
+        address: userData.address,
         loc: {
-          coordinates: [req.body.long, req.body.lat],
+          coordinates: [userData.long, userData.lat],
         },
       },
     },

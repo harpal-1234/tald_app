@@ -74,14 +74,13 @@ const userSocialLogin= catchAsync(async (req, res) => {
   const newUser = await userService.userSocialLogin(
     req.body
   );
-  console.log(newUser);
   
   const data = {
     name: newUser.name,
     email: newUser.email,
     pushNotification:newUser.isPushNotification,
   };
-  console.log(data);
+ 
   const token = await tokenService.generateAuthToken(
     newUser,
     USER_TYPE.USER,
