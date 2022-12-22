@@ -27,8 +27,8 @@ const createUser = async (userData) => {
   const user = await User.create(userData);
   return user;
 };
-const userLogin = async (email,password) => {
-  let user = await User.findOne({ email: email ,isDeleted:false});
+const userLogin = async (email, password) => {
+  let user = await User.findOne({ email: email, isDeleted: false });
 
   if (!user) {
     throw new OperationalError(
@@ -66,23 +66,19 @@ const userLogin = async (email,password) => {
   return user;
 };
 
-const userSocialLogin=async(data)=>{
-  const user=await User.findOne({socialId:data.socialId,isDeleted:false});
-
-  if(user)
-  {
-    throw new OperationalError(
-      STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.USER_ALREADY_EXIST
-    );
+const userSocialLogin = async (data) => {
+  const user = await User.findOne({
+    socialId: data.socialId,
+    isDeleted: false,
+  });
+  if (user) {
+    return user;
   }
-  const newUser=await User.create(data);
-  
-  
-    
 
-  return newUser
-}
+  const newUser = await User.create(data);
+
+  return newUser;
+};
 
 const getUserById = async (userId) => {
   const user = await User.findById(userId).lean();
@@ -181,8 +177,6 @@ module.exports = {
   getUserById,
 };
 
-
-
 // if (socialId) {
 //   const newUser = await User.findOne({ email: email });
 
@@ -199,47 +193,47 @@ module.exports = {
 //       name: name,
 //       socialId: socialId,
 //     });
-    // const facebookUser = await User.findOneAndUpdate(
-    //   { $or: [{ socialId: socialId.facebookId }, { email: email }] },
-    //   {
-    //     $set: { socialId: { facebookId: socialId.facebookId } },
-    //     $setOnInsert: {
-    //       email: email,
-    //       name: name,
-    //     },
-    //   },
-    //   { upsert: true, new: true }
-    // );
+// const facebookUser = await User.findOneAndUpdate(
+//   { $or: [{ socialId: socialId.facebookId }, { email: email }] },
+//   {
+//     $set: { socialId: { facebookId: socialId.facebookId } },
+//     $setOnInsert: {
+//       email: email,
+//       name: name,
+//     },
+//   },
+//   { upsert: true, new: true }
+// );
 
-  //   return facebookUser;
-  // }
+//   return facebookUser;
+// }
 
-  // if (Object.keys(socialId).toString() === "googleId") {
-  //   const googleUser = await User.create({
-  //     email: email,
-  //     name: name,
-  //     socialId: socialId,
-  //   });
+// if (Object.keys(socialId).toString() === "googleId") {
+//   const googleUser = await User.create({
+//     email: email,
+//     name: name,
+//     socialId: socialId,
+//   });
 
-  //   return googleUser;
-  // }
-  // if (Object.keys(socialId).toString() === "appleId") {
-  //   const appleUser = await User.create({
-  //     email: email,
-  //     name: name,
-  //     socialId: socialId,
-  //   });
-    // const appleUser = await User.findOneAndUpdate(
-    //   { $or: [{ socialId: socialId.appleId }, { email: email }] },
-    //   {
-    //     $set: { socialId: { appleId: socialId.appleId } },
-    //     $setOnInsert: {
-    //       email: email,
-    //       name: name,
-    //     },
-    //   },
-    //   { upsert: true, new: true }
-    // );
+//   return googleUser;
+// }
+// if (Object.keys(socialId).toString() === "appleId") {
+//   const appleUser = await User.create({
+//     email: email,
+//     name: name,
+//     socialId: socialId,
+//   });
+// const appleUser = await User.findOneAndUpdate(
+//   { $or: [{ socialId: socialId.appleId }, { email: email }] },
+//   {
+//     $set: { socialId: { appleId: socialId.appleId } },
+//     $setOnInsert: {
+//       email: email,
+//       name: name,
+//     },
+//   },
+//   { upsert: true, new: true }
+// );
 
 //     return appleUser;
 //   }
