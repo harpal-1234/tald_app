@@ -21,8 +21,8 @@ exports.login = {
 
 exports.userSocialLogin = {
   body: Joi.object().keys({
-    name: Joi.string().optional(),
-    email: Joi.string().email().lowercase().trim().optional(),
+    name: Joi.string(),
+    email: Joi.string().email().lowercase().trim(),
     socialId:Joi.string().required()
   }),
 };
