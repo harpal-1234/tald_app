@@ -23,13 +23,14 @@ const editProfile = async (id, data) => {
   }
 
   const user = await User.findOne({ email:data.email, isDeleted: false });
-  if(user)
-  {
-    throw new OperationalError(
-      STATUS_CODES.NOT_FOUND,
-      ERROR_MESSAGES.EMAIL_ALREADY_EXIST
-    );
-
+ 
+  if (user) {
+    if (user.email !== userEmail.email) {
+      throw new OperationalError(
+        STATUS_CODES.ACTION_FAILED,
+        ERROR_MESSAGES.EMAIL_ALREADY_EXIST
+      );
+    }
   }
 
   const updateUser = await User.findByIdAndUpdate(
