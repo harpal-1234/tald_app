@@ -13,7 +13,7 @@ const config = require("../../config/config");
 const bcrypt = require("bcryptjs");
 
 const editProfile = async (id, data) => {
-  const userEmail = await User.findOne({ _id:id, isDeleted: false });
+  const userEmail = await User.findOne({ _id: id, isDeleted: false });
 
   if (!userEmail) {
     throw new OperationalError(
@@ -22,8 +22,8 @@ const editProfile = async (id, data) => {
     );
   }
 
-  const user = await User.findOne({ email:data.email, isDeleted: false });
- 
+  const user = await User.findOne({ email: data.email, isDeleted: false });
+
   if (user) {
     if (user.email !== userEmail.email) {
       throw new OperationalError(
@@ -70,11 +70,8 @@ const changePassword = async (userId, oldPassword, newPassword) => {
   return user;
 };
 
-const contactUs = async (name, email) => {
-  const user = await User.findOne({
-    $and: [{ email: email }, { name: name }],
-    isDeleted: false,
-  });
+const contactUs = async (data) => {
+  const user = await User.findOne({ email: data.email, isDeleted: false });
 
   if (!user) {
     throw new OperationalError(

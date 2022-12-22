@@ -41,7 +41,7 @@ const changePassword = catchAsync(async (req, res) => {
 });
 
 const userContactUs= catchAsync(async (req, res) => {
-  const userDetails=await userProfileService.contactUs(req.body.name,req.body.email);
+  const userDetails=await userProfileService.contactUs(req.body);
   const user = await contactUs(req.body.name,req.body.message,req.body.email);
  
   return successResponse(
