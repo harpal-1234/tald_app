@@ -53,12 +53,19 @@ const userContactUs= catchAsync(async (req, res) => {
 });
 
 const pushNotificationStatus =catchAsync(async(req,res)=>{
-  const notification=await userProfileService.pushNotificationStatus(req.token.user._id);
+  const newUser=await userProfileService.pushNotificationStatus(req.token.user._id);
+  const data = {
+    name: newUser.name,
+    email: newUser.email,
+    pushNotification:newUser.isPushNotification,
+    phoneNumber:newUser.phoneNumber
+  };
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.PUSH_NOTIFICATION_STATUS,
+    data
   );
 
 })
