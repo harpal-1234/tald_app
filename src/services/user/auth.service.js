@@ -71,6 +71,7 @@ const userSocialLogin = async (data) => {
     socialId: data.socialId,
     isDeleted: false,
   });
+  console.log(user,"User");
   if (user) {
     return user;
   }
