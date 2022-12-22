@@ -79,7 +79,7 @@ const contactUs = async (data) => {
       ERROR_MESSAGES.CONTACTUS_EMAIL_USER
     );
   }
-  return;
+  return user;
 };
 
 const pushNotificationStatus = async (data) => {
