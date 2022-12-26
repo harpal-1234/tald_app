@@ -44,6 +44,10 @@ const DEALS_SERVICE = {
   MEN_CLOTHING: "Mens Clothing",
 };
 
+const BANNER_TYPE={
+  PROMOTED:'Promoted',
+  CASUAL:'Casual'
+}
 const PUSH_NOTIFICATION_STATUS = {
   ENABLE: "Enable",
   DISABLE: "Disable",
@@ -202,6 +206,7 @@ const DELETE_MASSAGES = {
 };
 
 module.exports = {
+  BANNER_TYPE,
   BANNER_STATUS,
   PUSH_NOTIFICATION_STATUS,
   NOTIFICATION_STATUS,

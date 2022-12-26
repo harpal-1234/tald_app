@@ -34,6 +34,7 @@ const userSchema = mongoose.Schema(
     }, //logitude and latitude
     dealPurchaseId: [{ type: mongoose.SchemaTypes.ObjectId, ref: "deals" }],
     favouriteStores: [{ type: mongoose.SchemaTypes.ObjectId, ref: "stores" }], //passing like storeId
+    recentlyView:[{ type: mongoose.SchemaTypes.ObjectId, ref: "stores" }],
     phoneNumber: { type: String, default: "" },
     socialId: {type: String, default: "" },
     isPushNotification: { type: Boolean, default: false },

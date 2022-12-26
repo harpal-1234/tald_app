@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-const { BANNER_STATUS,DEALS_SERVICE } = require("../config/appConstants");
+const { BANNER_STATUS,DEALS_SERVICE,BANNER_TYPE } = require("../config/appConstants");
 
 const bannerSchema = mongoose.Schema(
   {
@@ -12,7 +12,6 @@ const bannerSchema = mongoose.Schema(
     store: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: "stores",
-      required: true,
     },
     image: { type: String, default: "" },
     service:{
@@ -20,6 +19,12 @@ const bannerSchema = mongoose.Schema(
       categoryId:{type:String}
     },
     title: { type: String, default: "" },
+    stores:[{
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: "stores",
+    
+    }],
+    type:{type:String,enum:[...Object.values(BANNER_TYPE)]},
     // description: { type: String, default: "" },
     webLink: { type: String, default: "" },
     // viewedBy:{type:Array,default:[]},

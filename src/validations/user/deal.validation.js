@@ -37,3 +37,17 @@ exports.favouriteStore = {
   storeId:Joi.string().required(),
   }),
 };
+
+exports.categoryDealData={
+  body:Joi.object().keys({
+    service:Joi.object().keys({
+      categoryId:Joi.string().required(),
+    })
+    }),
+}
+
+exports.recentlyView={
+  body:Joi.object().keys({
+    storeId:Joi.string().required()
+  })
+}

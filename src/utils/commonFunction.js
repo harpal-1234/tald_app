@@ -22,7 +22,8 @@ const formatUser = (userData) => {
       delete data.socialId;
       delete userData.dealPurchaseId;
       delete userData.favouriteStore;
-      delete userData.favouriteStores
+      delete userData.favouriteStores;
+      delete userData.recentlyView
     });
   } else {
     delete userData.__v;
@@ -42,7 +43,8 @@ const formatUser = (userData) => {
     delete userData.socialId;
     delete userData.dealPurchaseId;
     delete userData.favouriteStore;
-    delete userData.favouriteStores
+    delete userData.favouriteStores;
+    delete userData.recentlyView
   }
   return userData;
 };
@@ -84,6 +86,40 @@ const formatFavourites = (userData) => {
       delete data.socialId;
     });
   } else {
+    delete userData.__v;
+    delete userData.password;
+    delete userData.role;
+    delete userData.document;
+    delete userData.isBlocked;
+    delete userData.isDeleted;
+    delete userData.createdAt;
+    delete userData.updatedAt;
+    delete userData.jobTitle;
+    delete userData.__v;
+    delete userData.password;
+    delete userData.location;
+    delete userData.phoneNumber;
+    delete userData.isPushNotification;
+    delete userData.isVerified;
+    delete userData.socialId;
+  }
+  return userData;
+};
+const formatRecentlyView = (userData) => {
+  if(userData.length)
+  {
+    userData.forEach((data) => {
+      delete data.__v;
+      delete data.isBlocked;
+      delete data.isDeleted;
+      delete data.createdAt;
+      delete data.updatedAt;
+      delete data.customerId;
+      delete data.deals;
+      delete data.location
+    });
+  }
+   else {
     delete userData.__v;
     delete userData.password;
     delete userData.role;
@@ -405,4 +441,5 @@ module.exports = {
   formatStoreDeal,
   formatCategory,
   formatStore,
+  formatRecentlyView
 };

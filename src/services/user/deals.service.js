@@ -1,13 +1,5 @@
 const { successResponse } = require("../../utils/response");
-const {
-  User,
-  Token,
-  Admin,
-  Deal,
-  Banner,
-  Store,
-  Category,
-} = require("../../models");
+const { User, Token, Admin, Deal, Banner, Store } = require("../../models");
 const { ApiError } = require("../../utils/universalFunction");
 const {
   joi,
@@ -17,6 +9,7 @@ const {
   ERROR_MESSAGES,
   SUCCESS_MESSAGES,
 } = require("../../config/appConstants");
+const { Category } = require("../../models");
 const { OperationalError } = require("../../utils/errors");
 const config = require("../../config/config");
 const { userLocation } = require("./profile.service");
@@ -25,11 +18,16 @@ const {
   formatDeal,
   formatResturant,
   formatStore,
+  formatCategory,
+  formatUser,
+  recentlyViewFormat,
+  formatRecentlyView,
 } = require("../../utils/commonFunction");
 const io = require("socket.io");
 
-
 const homeData = async (data) => {
+  var recentValue;
+
   const query = {
     "location.loc": {
       $near: {
@@ -42,76 +40,94 @@ const homeData = async (data) => {
     },
   };
 
-  const categoryData = await Category.find({ isDeleted: false });
+  const [
+    banner,
+    category,
+    bannerDown,
+    store,
+    newStore,
+    recentlyView,
+    cannabis,
+  ] = await Promise.all([
+    Banner.find({ type: "Promoted", isDeleted: false }).lean(),
+    Category.find({ isDeleted: false }).lean(),
+    Banner.find({ type: "casual", isDeleted: false }).lean(),
+    Store.find({ isDeleted: false }).lean(),
+    Store.find({ isDeleted: false }).sort({ _id: -1 }).lean(),
+    User.find({ _id: data, isDeleted: false })
+      .populate({ path: "recentlyView" })
+      .lean(),
+    Store.find({ isDeleted: false }).lean(),
+  ]);
 
-  if(query)
-  {
-
-  const dealData = await Promise.all(
-    categoryData.map(async (data) => {
-      const val = data._id.toString();
-      const type = data.category;
-      const storeData = await Store.find({
-        service: { category: type, categoryId: val },
-        query,
-        isDeleted: false,
-      }).lean();
-      const store = formatStore(storeData);
-
-      return { type, store };
-    })
-  );
-  const bannerData = await Promise.all(
-    categoryData.map(async (data) => {
-      const val = data._id.toString();
-      const type = data.category;
-      const bannerValue = await Banner.find({
-        service: { category: type, categoryId: val },
-        isDeleted: false,
-      }).lean();
-      const banner = formatBanner(bannerValue);
-
-      return { category: type, banner };
-    })
-  );
-
-  dealData.push({ type: "Banner", bannerData });
-
-  return dealData;
+  if (recentlyView) {
+    recentValue = recentlyView.flatMap((data) => data.recentlyView);
+  } else {
+    recentValue = recentlyView;
   }
-  else{
 
-  const dealData = await Promise.all(
-    categoryData.map(async (data) => {
-      const val = data._id.toString();
-      const type = data.category;
-      const storeData = await Store.find({
-        service: { category: type, categoryId: val },
+  const bannerData = formatBanner(banner);
+  const categoryData = formatCategory(category);
+  const bannerDownData = formatBanner(bannerDown);
+  const storeData = formatStore(store);
+  const newStoreData = formatStore(newStore);
+  const recentlyViewData = formatRecentlyView(recentValue);
+  const cannabisData = formatStore(cannabis);
+
+  return {
+    bannerData,
+    categoryData,
+    bannerDownData,
+    storeData,
+    newStoreData,
+    recentlyViewData,
+    cannabisData,
+  };
+};
+
+const categoryDealData = async (data,userId) => {
+  var recentValue;
+  const [banner, store, newStore, recentlyView, cannabis] =
+    await Promise.all([
+      Banner.find({
+        "service.categoryId": data.categoryId,
+        type: "Promoted",
         isDeleted: false,
-      }).lean();
-      const store = formatStore(storeData);
-
-      return { type, store };
-    })
-  );
-  const bannerData = await Promise.all(
-    categoryData.map(async (data) => {
-      const val = data._id.toString();
-      const type = data.category;
-      const bannerValue = await Banner.find({
-        service: { category: type, categoryId: val },
+      }).lean(),
+      Store.find({
+        "service.categoryId": data.categoryId,
         isDeleted: false,
-      }).lean();
-      const banner = formatBanner(bannerValue);
+      }).lean(),
+      Store.find({ "service.categoryId": data.categoryId, isDeleted: false })
+        .sort({ _id: -1 })
+        .lean(),
+      User.find({ _id: userId, isDeleted: false }).populate({ path: "recentlyView" }).lean(),
+      Store.find({
+        "service.categoryId": data.categoryId,
+        isDeleted: false,
+      }).lean(),
+    ]);
 
-      return { category: type, banner };
-    })
-  );
 
-  dealData.push({ type: "Banner", bannerData });
+    if (recentlyView) {
+      recentValue = recentlyView.flatMap((data) => data.recentlyView);
+    } else {
+      recentValue = recentlyView;
+    }
 
-  return dealData;
-  }
+  const bannerData = formatBanner(banner);
+  const storeData = formatStore(store);
+  const newStoreData = formatStore(newStore);
+  const recentlyViewData = formatRecentlyView(recentValue);
+  const cannabisData = formatStore(cannabis);
+
+  return {
+    bannerData,
+    storeData,
+    newStoreData,
+    recentlyViewData,
+    cannabisData,
+  };
 };
 
 const getCategoryData = async (req, res) => {
@@ -313,7 +329,36 @@ const reviewOrder = async (dealId, userId) => {
   return dealPurchase;
 };
 
+const recentlyView = async (storeId, userId) => {
+  const store = await Store.findOne({ _id: storeId, isDeleted: false });
+  if (!store) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.STORE_NOT_EXIST
+    );
+  }
+  const userData = await User.findOne({ _id: userId, isDeleted: false });
+
+  if (userData.recentlyView.length < 10) {
+    const user = await User.updateOne(
+      { _id: userId },
+      { $push: { recentlyView: storeId } },
+      { new: true }
+    );
+  }
+  if (userData.recentlyView.length >= 10) {
+    const user = await User.updateOne(
+      { _id: userId },
+      { $pull: { recentlyView: storeId } },
+      { new: true }
+    );
+  }
+  return;
+};
+
 module.exports = {
+  recentlyView,
+  categoryDealData,
   notification,
   homeData,
   getCategoryData,

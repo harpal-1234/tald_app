@@ -175,3 +175,75 @@
 //     electronicsData,
 //     sportsFitnessData,
 //   };
+
+
+// const categoryData = await Category.find({ isDeleted: false });
+
+// if(query)
+// {
+
+// const dealData = await Promise.all(
+//   categoryData.map(async (data) => {
+//     const val = data._id.toString();
+//     const type = data.category;
+//     const storeData = await Store.find({
+//       service: { category: type, categoryId: val },
+//       query,
+//       isDeleted: false,
+//     }).lean();
+//     const store = formatStore(storeData);
+
+//     return { type, store };
+//   })
+// );
+// const bannerData = await Promise.all(
+//   categoryData.map(async (data) => {
+//     const val = data._id.toString();
+//     const type = data.category;
+//     const bannerValue = await Banner.find({
+//       service: { category: type, categoryId: val },
+//       isDeleted: false,
+//     }).lean();
+//     const banner = formatBanner(bannerValue);
+
+//     return { category: type, banner };
+//   })
+// );
+
+// dealData.push({ type: "Banner", bannerData });
+
+// return dealData;
+// }
+// else{
+
+// const dealData = await Promise.all(
+//   categoryData.map(async (data) => {
+//     const val = data._id.toString();
+//     const type = data.category;
+//     const storeData = await Store.find({
+//       service: { category: type, categoryId: val },
+//       isDeleted: false,
+//     }).lean();
+//     const store = formatStore(storeData);
+
+//     return { type, store };
+//   })
+// );
+// const bannerData = await Promise.all(
+//   categoryData.map(async (data) => {
+//     const val = data._id.toString();
+//     const type = data.category;
+//     const bannerValue = await Banner.find({
+//       service: { category: type, categoryId: val },
+//       isDeleted: false,
+//     }).lean();
+//     const banner = formatBanner(bannerValue);
+
+//     return { category: type, banner };
+//   })
+// );
+
+// dealData.push({ type: "Banner", bannerData });
+
+// return dealData;
+// }

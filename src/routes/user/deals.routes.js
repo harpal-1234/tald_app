@@ -41,12 +41,26 @@ router.get(
   authController.storeDeal
 );
 
+router.get(
+  "/categoryDealData",
+  auth(USER_TYPE.USER),
+  validate(authValidation.categoryDealData),
+  authController.categoryDealData
+);
+
 
 router.post(
   "/favourites",
   auth(USER_TYPE.USER),
   validate(authValidation.favouriteStore),
   authController.favouriteStore
+);
+
+router.post(
+  "/storeView",
+  auth(USER_TYPE.USER),
+  validate(authValidation.recentlyView),
+  authController.recentlyView
 );
 
 
