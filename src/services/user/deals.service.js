@@ -51,7 +51,7 @@ const homeData = async (data) => {
   ] = await Promise.all([
     Banner.find({ type: "Promoted", isDeleted: false }).lean(),
     Category.find({ isDeleted: false }).lean(),
-    Banner.find({ type: "casual", isDeleted: false }).lean(),
+    Banner.find({ type: "Casual", isDeleted: false }).lean(),
     Store.find({ isDeleted: false }).lean(),
     Store.find({ isDeleted: false }).sort({ _id: -1 }).lean(),
     User.find({ _id: data, isDeleted: false })

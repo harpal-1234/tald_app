@@ -22,7 +22,9 @@ const createBanner = async (data, tokenData) => {
     service:data.service,
     title: data.title,
     description: data.description,
+    type:data.type
   });
+
   return newBanner;
 };
 
