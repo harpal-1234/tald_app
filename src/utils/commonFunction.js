@@ -392,7 +392,7 @@ const formatCategory = (userData) => {
     delete userData.__v;
     delete userData._id;
     delete userData.vendorId;
-    delete data.password;
+
   }
   return userData;
 };
