@@ -59,6 +59,7 @@ const homeData = async (data) => {
       .lean(),
     Store.find({ isDeleted: false }).lean(),
   ]);
+  console.log(recentlyView);
 
   if (recentlyView) {
     recentValue = recentlyView.flatMap((data) => data.recentlyView);
