@@ -106,6 +106,7 @@ const formatFavourites = (userData) => {
   return userData;
 };
 const formatRecentlyView = (userData) => {
+  console.log(userData);
   if(userData.length)
   {
     userData.forEach((data) => {
