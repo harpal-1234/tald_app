@@ -39,6 +39,8 @@ const homeData = async (data) => {
       },
     },
   };
+  // const valType=await User.find({query});
+  // console.log(valType);
 
   const [
     banner,
@@ -104,7 +106,7 @@ const categoryDealData = async (data,userId) => {
       Store.find({ "service.categoryId": data.categoryId, isDeleted: false })
         .sort({ _id: -1 })
         .lean(),
-      User.find({ _id: userId, isDeleted: false }).populate({ path: "recentlyView" }).lean(),
+      User.find({ _id: userId, isDeleted: false }).populate({ path: "recentlyView"}).lean(),
       Store.find({
         "service.categoryId": data.categoryId,
         isDeleted: false,
@@ -342,17 +344,22 @@ const recentlyView = async (storeId, userId) => {
   }
   const userData = await User.findOne({ _id: userId, isDeleted: false });
 
-  if (userData.recentlyView.length < 10) {
+  if (userData.recentlyView.length < 5) {
     const user = await User.updateOne(
       { _id: userId },
-      { $push: { recentlyView: storeId } },
+      { $push: { recentlyView:{$each :[storeId],$position: 0}}},
       { new: true }
     );
   }
-  if (userData.recentlyView.length >= 10) {
+  if (userData.recentlyView.length >= 5) {
     const user = await User.updateOne(
       { _id: userId },
-      { $pull: { recentlyView: storeId } },
+      { $pull: { recentlyView: userData.recentlyView[userData.recentlyView.length - 1]} },
+      { new: true }
+    );
+    const userValue = await User.updateOne(
+      { _id: userId },
+      { $push: { recentlyView: storeId } },
       { new: true }
     );
   }
