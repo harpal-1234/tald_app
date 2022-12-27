@@ -11,7 +11,7 @@ const { format } = require("morgan");
 const { formatStore } = require("../../utils/commonFunction");
 
 const createStore = catchAsync(async (req, res) => {
-  const newStore = await vendorStoreService.createStore(req, res);
+  const newStore = await vendorStoreService.createStore(req.body,req.token.vendor._id);
   return successResponse(
     req,
     res,

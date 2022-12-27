@@ -1,29 +1,49 @@
-const { User, Store, Vendor, Token } = require("../../models");
+const { User, Store, Vendor, Token, Category } = require("../../models");
 const { STATUS_CODES, ERROR_MESSAGES } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 const { findOne } = require("../../models/token.model");
 // const genrateCatoryId=require("")
 
-const createStore = async (req, res) => {
-  const vendor = await Vendor.findOne({
-    _id: req.token.vendor._id,
+const createStore = async (data, vendorId) => {
+  
+  const category = await Category.findOne({
+    _id: data.service.categoryId,
+    category: data.service.category,
     isDeletd: false,
   });
-  if (!vendor) {
+  if (!category) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.ACCOUNT_NOT_EXIST
+      ERROR_MESSAGES.CATEGORY_NOT_EXISTS
     );
+  }
+  if (data.service.category === "Cannabis") {
+    const store = await Store.create({
+      vendorId: vendorId,
+      service: data.service,
+      storeName: data.storeName,
+      about: data.about,
+      type: data.type,
+      phoneNumber: data.phoneNumber,
+      location: {
+        loc: {
+          address: data.address,
+          coordinates: [data.long, data.lat],
+        },
+      },
+    });
+
+    return store;
   }
 
   const store = await Store.create({
-    vendorId: vendor.id,
-    service: req.body.service,
-    storeName: req.body.storeName,
+    vendorId: vendorId,
+    service: data.service,
+    storeName: data.storeName,
     location: {
       loc: {
-        address: req.body.address,
-        coordinates: [req.body.long, req.body.lat],
+        address: data.address,
+        coordinates: [data.long, data.lat],
       },
     },
   });
@@ -44,14 +64,13 @@ const editStoreDetails = async (data, tokenData) => {
     { _id: data.id },
     {
       storeName: data.storeName,
-      service:data.service,
+      service: data.service,
       location: {
         loc: {
           address: data.address,
           coordinates: [data.long, data.lat],
         },
       },
-     
     },
     { upsert: false }
   );

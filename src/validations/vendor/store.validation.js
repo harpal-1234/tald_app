@@ -11,6 +11,9 @@ exports.createStore = {
      category:Joi.string().valid(...Object.values(DEALS_SERVICE)),
      categoryId:Joi.string()
     }),
+    phoneNumber: JOI.PHONENUMBER.optional(),
+    about: Joi.string().required().optional(),
+    type:Joi.string().required().optional()
   }),
 };
 
@@ -32,5 +35,9 @@ exports.editStoreDetails = {
      category:Joi.string().valid(...Object.values(DEALS_SERVICE)),
      categoryId:Joi.string()
     }),
+    phoneNumber: JOI.PHONENUMBER.optional(),
+    about: Joi.string().required().optional(),
+    type:Joi.string().required().optional()
+
   }),
 };
