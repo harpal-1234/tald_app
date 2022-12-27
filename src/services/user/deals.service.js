@@ -60,13 +60,14 @@ const homeData = async (data) => {
     Store.find({ isDeleted: false }).lean(),
   ]);
  
-  console.log(category)
+  console.log(recentlyView)
 
   if (recentlyView) {
     recentValue = recentlyView.flatMap((data) => data.recentlyView);
   } else {
     recentValue = recentlyView;
   }
+  console.log(recentValue);
 
   const bannerData = formatBanner(banner);
   const categoryData = formatCategory(category);
@@ -75,7 +76,7 @@ const homeData = async (data) => {
   const newStoreData = formatStore(newStore);
   const recentlyViewData = formatRecentlyView(recentValue);
   const cannabisData = formatStore(cannabis);
-
+     console.log(recentlyViewData);
   return {
     bannerData,
     categoryData,

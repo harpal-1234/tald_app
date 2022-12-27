@@ -7,6 +7,8 @@ const {
 const { OperationalError } = require("../../utils/errors");
 
 const createBanner = async (data, tokenData) => {
+  if(data.type==='Promoted')
+  {
   const vendor = await Vendor.findOne({ _id: tokenData, isDeleted: false });
 
   if (!vendor) {
@@ -16,7 +18,6 @@ const createBanner = async (data, tokenData) => {
     );
   }
   const newBanner = await Banner.create({
-    vendor: vendor.id,
     store:data.storeId,
     image: data.image,
     service:data.service,
@@ -26,6 +27,12 @@ const createBanner = async (data, tokenData) => {
   });
 
   return newBanner;
+}
+else if(data.type==='Casual')
+{
+  
+
+}
 };
 
 const bannerRequest = async (data, totkenData) => {
