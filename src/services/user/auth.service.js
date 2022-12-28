@@ -14,7 +14,7 @@ const {
 } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 const config = require("../../config/config");
-const OneSignal = require("@onesignal/node-onesignal");
+
 
 const createUser = async (userData) => {
   const data = await User.findOne({ email: userData.email, isDeleted: false });
@@ -139,34 +139,34 @@ const resetPassword = async (tokenData, newPassword) => {
   return { tokenvalue, adminvalue };
 };
 
-const pushNotification = async (req, res) => {
-  const app_key_provider = {
-    getToken() {
-      return config.onesignal_api_key;
-    },
-  };
-  const configuration = OneSignal.createConfiguration({
-    authMethods: {
-      app_key: {
-        tokenProvider: app_key_provider,
-      },
-    },
-  });
-  const client = new OneSignal.DefaultApi(configuration);
-  const notification = new OneSignal.Notification();
+// const pushNotification = async (req, res) => {
+//   const app_key_provider = {
+//     getToken() {
+//       return config.onesignal_api_key;
+//     },
+//   };
+//   const configuration = OneSignal.createConfiguration({
+//     authMethods: {
+//       app_key: {
+//         tokenProvider: app_key_provider,
+//       },
+//     },
+//   });
+//   const client = new OneSignal.DefaultApi(configuration);
+//   const notification = new OneSignal.Notification();
 
-  notification.app_id = config.onesignal_app_key;
-  notification.included_segments = [req.token.device.token];
-  notification.contents = {
-    en: "Hello OneSignal!",
-  };
-  const { id } = await client.createNotification(notification);
+//   notification.app_id = config.onesignal_app_key;
+//   notification.included_segments = [req.token.device.token];
+//   notification.contents = {
+//     en: "Hello OneSignal!",
+//   };
+//   const { id } = await client.createNotification(notification);
 
-  const response = await client.getNotification(config.onesignal_app_key, id);
-  console.log(response);
+//   const response = await client.getNotification(config.onesignal_app_key, id);
+//   console.log(response);
 
-  return response;
-};
+//   return response;
+// };
 
 module.exports = {
   userSocialLogin,
@@ -174,7 +174,7 @@ module.exports = {
   userLogin,
   userLogout,
   resetPassword,
-  pushNotification,
+  // pushNotification,
   getUserById,
 };
 

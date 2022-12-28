@@ -45,9 +45,3 @@ exports.categoryDealData={
     })
     }),
 }
-
-exports.recentlyView={
-  body:Joi.object().keys({
-    storeId:Joi.string().required()
-  })
-}

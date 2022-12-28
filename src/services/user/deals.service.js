@@ -343,28 +343,65 @@ const recentlyView = async (storeId, userId) => {
     );
   }
   const userData = await User.findOne({ _id: userId, isDeleted: false });
+ 
 
-  if (userData.recentlyView.length < 5) {
+  if(!userData.recentlyView.length)
+  {  
     const user = await User.updateOne(
       { _id: userId },
       { $push: { recentlyView:{$each :[storeId],$position: 0}}},
       { new: true }
     );
   }
-  if (userData.recentlyView.length >= 5) {
+ else if(userData.recentlyView.length<5)
+ {
+   
+  userData.recentlyView.map(async(data)=>{
+    if(data.toString()!==storeId)
+    {
+      const user = await User.updateOne(
+        { _id: userId },
+        { $push: { recentlyView:{$each :[storeId],$position: 0}}},
+        { new: true }
+      );
+      return
+    }
+    if(data.toString()===storeId)
+    {
+      const user = await User.updateOne(
+        { _id: userId },
+        { $pull: { recentlyView:storeId}},
+        { new: true }
+      );
+
+       await User.updateOne(
+        { _id: userId },
+        { $push: { recentlyView:{$each :[storeId],$position: 0}}},
+        { new: true }
+      );
+
+      return
+    }
+    
+  })
+}else if(userData.recentlyView.length>5)
+{
     const user = await User.updateOne(
-      { _id: userId },
-      { $pull: { recentlyView: userData.recentlyView[userData.recentlyView.length - 1]} },
-      { new: true }
-    );
-    const userValue = await User.updateOne(
-      { _id: userId },
-      { $push: { recentlyView: storeId } },
-      { new: true }
-    );
-  }
-  return;
-};
+    { _id: userId },
+    { $pull: { recentlyView: userData.recentlyView[userData.recentlyView.length - 1]} },
+    { new: true }
+  );
+}
+  
+    
+    return
+  
+  };
+  
+
+
+
+
 
 module.exports = {
   recentlyView,
@@ -378,3 +415,71 @@ module.exports = {
   favouriteStore,
   reviewOrder,
 };
+
+
+
+
+
+// userData.recentlyView.map(async(data)=>{
+//   console.log(data,"answer")
+//   if(!data.toString() === storeId)
+//   {
+//     console.log("working")
+//     if (userData.recentlyView.length < 5) {
+//       {
+//     const user = await User.updateOne(
+//       { _id: userId },
+//       { $push: { recentlyView:{$each :[storeId],$position: 0}}},
+//       { new: true }
+//     );
+//     return
+//       }
+//     }
+//   }
+
+// })
+
+// //   if (userData.recentlyView.length < 5) {
+// //   const user = await User.updateOne(
+// //     { _id: userId },
+// //     { $push: { recentlyView:{$each :[storeId],$position: 0}}},
+// //     { new: true }
+// //   );
+// //   return
+// // }
+// //   else{
+// //   if (userData.recentlyView.length < 5) {
+// //     const user = await User.updateOne(
+// //       { _id: userId },
+// //       { $push: { recentlyView:{$each :[storeId],$position: 0}}},
+// //       { new: true }
+// //     );
+
+
+// //   }
+// if (userData.recentlyView.length >= 5) {
+//   const user = await User.updateOne(
+//     { _id: userId },
+//     { $pull: { recentlyView: userData.recentlyView[userData.recentlyView.length - 1]} },
+//     { new: true }
+//   );
+//   userData.recentlyView.map(async(data)=>{
+//     console.log(data,"answer")
+//     if(!data.toString() === storeId)
+//     {
+//       console.log("working")
+//       if (userData.recentlyView.length < 5) {
+//         {
+//       const user = await User.updateOne(
+//         { _id: userId },
+//         { $push: { recentlyView:{$each :[storeId],$position: 0}}},
+//         { new: true }
+//       );
+//       return
+//         }
+//       }
+//     }
+
+//   })
+// }
+// return;

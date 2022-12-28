@@ -20,7 +20,6 @@
   "license": "ISC",
   "dependencies": {
     "@joi/date": "^2.1.0",
-    "@onesignal/node-onesignal": "^1.0.0-beta7",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.1",
     "compression": "^1.7.4",
@@ -29,6 +28,7 @@
     "express": "^4.18.2",
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.6.0",
+    "fcm-node": "^1.6.1",
     "google-distance-matrix": "^1.1.1",
     "handlebars": "^4.7.7",
     "hbs": "^4.2.0",
@@ -44,7 +44,6 @@
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",
     "socket.io": "^4.5.4",
-    "twilio": "^3.83.1",
     "winston": "^3.8.2"
   },
   "devDependencies": {

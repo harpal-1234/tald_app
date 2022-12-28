@@ -30,6 +30,7 @@ const envVarsSchema = Joi.object()
     ADMIN_BASE_URL: Joi.string().description("Admin pannel base url"),
     STRIPE_SECRET_KEY: Joi.string().description("Stripe secret key"),
     STRIPE_PUBLISHABLE_KEY: Joi.string().description("Stripe publishable key"),
+    FCM_SERVER_KEY:Joi.string().description("Fcm Server Key"),
   })
   .unknown();
 
@@ -63,6 +64,7 @@ module.exports = {
   projectName: envVars.PROJECT_NAME,
   onesignal_api_key:envVars.ONESIGNAL_API_KEY,
   onesignal_app_key:envVars.ONESIGNAL_APP_KEY,
+  fcmServerKey:envVars.FCM_SERVER_KEY,
   panelurl: envVars.ADMIN_BASE_URL,
   stripe: {
     publishableKey: envVars.STRIPE_PUBLISHABLE_KEY,

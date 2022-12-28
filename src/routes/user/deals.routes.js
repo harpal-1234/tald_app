@@ -56,12 +56,7 @@ router.post(
   authController.favouriteStore
 );
 
-router.post(
-  "/storeView",
-  auth(USER_TYPE.USER),
-  validate(authValidation.recentlyView),
-  authController.recentlyView
-);
+
 
 
 module.exports=router

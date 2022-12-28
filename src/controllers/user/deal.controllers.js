@@ -71,7 +71,8 @@ const purchaseDeal = catchAsync(async (req, res) => {
 
 const storeDeal= catchAsync(async (req, res) => {
   const data = await dealsService.storeDeal(req.query.storeId);
-  const store=await storeDistance(req.query.storeId,req.query.long,req.query.lat);
+  const user=await dealsService.recentlyView(req.query.storeId,req.token.user._id);
+  // const store=await storeDistance(req.query.storeId,req.query.long,req.query.lat);
   const value=formatStoreDeal(data);
   return successResponse(
     req,
@@ -79,7 +80,7 @@ const storeDeal= catchAsync(async (req, res) => {
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.SUCCESS,
      value,
-     store
+    //  store
   );
 });
 
@@ -93,15 +94,15 @@ const favouriteStore= catchAsync(async (req, res) => {
   );
 });
 
-const  recentlyView= catchAsync(async (req, res) => {
-  const user=await dealsService.recentlyView(req.body.storeId,req.token.user._id);
-  return successResponse(
-    req,
-    res,
-    STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.FAVORITE_DATA
-  );
-});
+// const  recentlyView= catchAsync(async (req, res) => {
+//   const user=await dealsService.recentlyView(req.body.storeId,req.token.user._id);
+//   return successResponse(
+//     req,
+//     res,
+//     STATUS_CODES.SUCCESS,
+//     SUCCESS_MESSAGES.FAVORITE_DATA
+//   );
+// });
 
 module.exports = {
   categoryDealData,
@@ -110,6 +111,5 @@ module.exports = {
   nearestService,
   purchaseDeal,
   storeDeal,
-  favouriteStore,
-  recentlyView
+  favouriteStore
 };
