@@ -30,7 +30,7 @@ const envVarsSchema = Joi.object()
     ADMIN_BASE_URL: Joi.string().description("Admin pannel base url"),
     STRIPE_SECRET_KEY: Joi.string().description("Stripe secret key"),
     STRIPE_PUBLISHABLE_KEY: Joi.string().description("Stripe publishable key"),
-    FCM_SERVER_KEY:Joi.string().description("Fcm Server Key"),
+    // FCM_SERVER_KEY:Joi.string().description("Fcm Server Key"),
   })
   .unknown();
 
