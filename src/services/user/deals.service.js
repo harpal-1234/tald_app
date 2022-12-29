@@ -61,15 +61,12 @@ const homeData = async (data) => {
       .lean(),
     Store.find({ isDeleted: false }).lean(),
   ]);
- 
-
 
   if (recentlyView) {
     recentValue = recentlyView.flatMap((data) => data.recentlyView);
   } else {
     recentValue = recentlyView;
   }
- 
 
   const topBannerData = formatBanner(banner);
   const categoryData = formatCategory(category);
@@ -78,7 +75,7 @@ const homeData = async (data) => {
   const newStoreData = formatStore(newStore);
   const recentlyViewData = formatRecentlyView(recentValue);
   const cannabisData = formatStore(cannabis);
-     
+
   return {
     topBannerData,
     categoryData,
@@ -90,35 +87,35 @@ const homeData = async (data) => {
   };
 };
 
-const categoryDealData = async (data,userId) => {
+const categoryDealData = async (data, userId) => {
   var recentValue;
-  const [banner, store, newStore, recentlyView, cannabis] =
-    await Promise.all([
-      Banner.find({
-        "service.categoryId": data.categoryId,
-        type: "Promoted",
-        isDeleted: false,
-      }).lean(),
-      Store.find({
-        "service.categoryId": data.categoryId,
-        isDeleted: false,
-      }).lean(),
-      Store.find({ "service.categoryId": data.categoryId, isDeleted: false })
-        .sort({ _id: -1 })
-        .lean(),
-      User.find({ _id: userId, isDeleted: false }).populate({ path: "recentlyView"}).lean(),
-      Store.find({
-        "service.categoryId": data.categoryId,
-        isDeleted: false,
-      }).lean(),
-    ]);
+  const [banner, store, newStore, recentlyView, cannabis] = await Promise.all([
+    Banner.find({
+      "service.categoryId": data.categoryId,
+      type: "Promoted",
+      isDeleted: false,
+    }).lean(),
+    Store.find({
+      "service.categoryId": data.categoryId,
+      isDeleted: false,
+    }).lean(),
+    Store.find({ "service.categoryId": data.categoryId, isDeleted: false })
+      .sort({ _id: -1 })
+      .lean(),
+    User.find({ _id: userId, isDeleted: false })
+      .populate({ path: "recentlyView" })
+      .lean(),
+    Store.find({
+      "service.categoryId": data.categoryId,
+      isDeleted: false,
+    }).lean(),
+  ]);
 
-
-    if (recentlyView) {
-      recentValue = recentlyView.flatMap((data) => data.recentlyView);
-    } else {
-      recentValue = recentlyView;
-    }
+  if (recentlyView) {
+    recentValue = recentlyView.flatMap((data) => data.recentlyView);
+  } else {
+    recentValue = recentlyView;
+  }
 
   const bannerData = formatBanner(banner);
   const storeData = formatStore(store);
@@ -343,65 +340,57 @@ const recentlyView = async (storeId, userId) => {
     );
   }
   const userData = await User.findOne({ _id: userId, isDeleted: false });
- 
 
-  if(!userData.recentlyView.length)
-  {  
+  if (!userData.recentlyView.length) {
     const user = await User.updateOne(
       { _id: userId },
-      { $push: { recentlyView:{$each :[storeId],$position: 0}}},
+      { $push: { recentlyView: { $each: [storeId], $position: 0 } } },
+      { new: true }
+    );
+  } else if (userData.recentlyView.length < 5) {
+    userData.recentlyView.map(async (data) => {
+      if (data.toString() !== storeId) {
+        const user = await User.updateOne(
+          { _id: userId },
+          { $push: { recentlyView: { $each: [storeId], $position: 0 } } },
+          { new: true }
+        );
+      }
+    });
+
+    userData.recentlyView.map(async (data) => {
+      if (data.toString() === storeId) {
+        const user = await User.updateOne(
+          { _id: userId },
+          { $pull: { recentlyView: { $in: [storeId] } } },
+          { upsert: false }
+        );
+        const userData = await User.updateOne(
+          { _id: userId },
+          { $push: { recentlyView: { $each: [storeId], $position: 0 } } },
+          { upsert: false }
+        );
+        return;
+      }
+
+      return;
+    });
+
+    return;
+  } else if (userData.recentlyView.length >= 5) {
+    const user = await User.updateOne(
+      { _id: userId },
+      {
+        $pull: {
+          recentlyView: userData.recentlyView[userData.recentlyView.length - 1],
+        },
+      },
       { new: true }
     );
   }
- else if(userData.recentlyView.length<5)
- {
-   
-  userData.recentlyView.map(async(data)=>{
-    if(data.toString()!==storeId)
-    {
-      const user = await User.updateOne(
-        { _id: userId },
-        { $push: { recentlyView:{$each :[storeId],$position: 0}}},
-        { new: true }
-      );
-      return
-    }
-    if(data.toString()===storeId)
-    {
-      const user = await User.updateOne(
-        { _id: userId },
-        { $pull: { recentlyView:storeId}},
-        { new: true }
-      );
 
-       await User.updateOne(
-        { _id: userId },
-        { $push: { recentlyView:{$each :[storeId],$position: 0}}},
-        { new: true }
-      );
-
-      return
-    }
-    
-  })
-}else if(userData.recentlyView.length>5)
-{
-    const user = await User.updateOne(
-    { _id: userId },
-    { $pull: { recentlyView: userData.recentlyView[userData.recentlyView.length - 1]} },
-    { new: true }
-  );
-}
-  
-    
-    return
-  
-  };
-  
-
-
-
-
+  return;
+};
 
 module.exports = {
   recentlyView,
@@ -415,10 +404,6 @@ module.exports = {
   favouriteStore,
   reviewOrder,
 };
-
-
-
-
 
 // userData.recentlyView.map(async(data)=>{
 //   console.log(data,"answer")
@@ -454,7 +439,6 @@ module.exports = {
 // //       { $push: { recentlyView:{$each :[storeId],$position: 0}}},
 // //       { new: true }
 // //     );
-
 
 // //   }
 // if (userData.recentlyView.length >= 5) {

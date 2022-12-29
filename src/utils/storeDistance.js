@@ -10,6 +10,7 @@ const distance = require("google-distance-matrix");
 const config = require("../config/config");
 const FCM = require("fcm-node");
 const serverKey = config.fcmServerKey;
+
 // const fcm = new FCM(serverKey);
 
 // const storeDistance = async (
