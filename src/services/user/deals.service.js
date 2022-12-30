@@ -342,39 +342,59 @@ const recentlyView = async (storeId, userId) => {
   const userData = await User.findOne({ _id: userId, isDeleted: false });
 
   if (!userData.recentlyView.length) {
-    const user = await User.updateOne(
+    const user = await User.findOneAndUpdate(
       { _id: userId },
       { $push: { recentlyView: { $each: [storeId], $position: 0 } } },
-      { new: true }
+      { new: true, upsert: false }
     );
-  } else if (userData.recentlyView.length < 5) {
+  }
+  if (userData.recentlyView.length < 5) {
     userData.recentlyView.map(async (data) => {
       if (data.toString() !== storeId) {
-        const user = await User.updateOne(
+        await User.findOneAndUpdate(
+          { _id: userId },
+          { $pull: { recentlyView: { $in: [storeId] } } },
+          { upsert: false, new: true }
+        );
+
+        const userValue = await User.updateOne(
           { _id: userId },
           { $push: { recentlyView: { $each: [storeId], $position: 0 } } },
           { new: true }
         );
-      }
-    });
-
-    userData.recentlyView.map(async (data) => {
-      if (data.toString() === storeId) {
-        const user = await User.updateOne(
-          { _id: userId },
-          { $pull: { recentlyView: { $in: [storeId] } } },
-          { upsert: false }
-        );
-        const userData = await User.updateOne(
-          { _id: userId },
-          { $push: { recentlyView: { $each: [storeId], $position: 0 } } },
-          { upsert: false }
-        );
         return;
       }
-
       return;
     });
+
+    if (userData.recentlyView.length < 5) {
+      return userData.recentlyView.filter(
+        (item, index) => userData.recentlyView.indexOf(item) === index
+      );
+    }
+
+    // userData.recentlyView.filter(async (data) => {
+    //   if (data.toString() === storeId) {
+    //     console.log("working 23");
+    //     await User.findOneAndUpdate(
+    //       { _id: userId },
+    //       { $pull: { recentlyView: {$in:[storeId]}}} ,
+    //       { upsert: false,new:true }
+    //     );
+
+    //      await User.findOneAndUpdate(
+    //       { _id: userId },
+    //       { $push: { recentlyView: { $each: [storeId], $position: 0 } } },
+    //       { upsert: false,new:true }
+    //     );
+    //     // console.log(userValue,"userValue");
+
+    //     return;
+
+    //   }
+
+    //   return;
+    // });
 
     return;
   } else if (userData.recentlyView.length >= 5) {
