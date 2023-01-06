@@ -4,7 +4,8 @@ const { OperationalError } = require("../../utils/errors");
 const moment = require("moment");
 
 const createDeal = async (data, tokendata) => {
-  const vendor = await Vendor.findOne({ _id: tokendata, isDeleted: false });
+ 
+  const vendor = await Store.findOne({ vendorId: tokendata, isDeleted: false });
   if (!vendor) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
@@ -12,11 +13,14 @@ const createDeal = async (data, tokendata) => {
     );
   }
 
-  const coupon = await Deal.findOne({
-    couponCode: data.couponCode,
+  const deal = await Deal.findOne({
+    dealId: data.dealId,
     isDeleted: false,
   });
-  if (coupon) {
+
+
+
+  if (deal) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
       ERROR_MESSAGES.COUPON_CODE
@@ -24,30 +28,26 @@ const createDeal = async (data, tokendata) => {
   }
   const validFromDate=moment(data.validFrom).format("YYYY-MM-DD");
   const validToDate=moment(data.validTo).format("YYYY-MM-DD");
-   
-  const newCoupon = await Deal.create({
-    vendorId: vendor.id,
-    couponCode: data.couponCode,
-    category: data.category,
-    storeId:data.storeId,
-    name: data.name,
-    worth: data.worth,
+
+  const newDeal = await Deal.create({
+    storeId:vendor.id,
+    dealId: data.dealId,
+    title:data.title,
+    totalPrice: data.totalPrice,
+    discountPrice:data.discountPrice,
+    description: data.description,
+    inclusions:data.inclusions,
+    no_of_person: data.no_of_person,
+    dealDate:data.dealDate,
+    service:vendor.service,
     quantity:data.quantity,
     description: data.description,
     validFrom: moment(validFromDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
     validTo: moment(validToDate+ "Z", "YYYY-MM-DD" + "Z").toDate(),
   });
 
-  if(newCoupon._id && newCoupon.storeId)
-  {
-  const value=await Store.updateOne({ _id: newCoupon.storeId },
-    { $push: { deals: newCoupon._id }},
-    { new:true});
-  }
-    
 
-
-  return newCoupon;
+  return newDeal;
 };
 
 const getAllDeal = async (req, res) => {

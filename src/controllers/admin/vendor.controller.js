@@ -10,7 +10,7 @@ const { catchAsync } = require("../../utils/universalFunction");
 const { successResponse } = require("../../utils/response");
 const {formatVendor}=require("../../utils/commonFunction")
 const createVendor=catchAsync(async(req,res)=>{
-    const vendor=await adminVendorService.createVendor(req.body,req.token.admin._id);
+    const vendor=await adminVendorService.createVendor(req.body);
     return successResponse(
         req,
         res,

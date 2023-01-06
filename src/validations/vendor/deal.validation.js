@@ -4,19 +4,33 @@ const { JOI, DEALS_SERVICE } = require("../../config/appConstants");
 
 exports.create = {
   body: Joi.object().keys({
-    couponCode: Joi.number().required(), 
-    name:Joi.string().required(), 
-    worth: Joi.number().required(), 
+    dealId: Joi.number().required(), 
+    title:Joi.string().required(), 
     description: Joi.string().required(),
-    quantity: Joi.number().required(),  
+    inclusions:Joi.string().required(),
+    // quantity: Joi.number().required(),  
+    totalPrice:Joi.number().required(), 
+    discountPrice:Joi.number().required(), 
     validFrom: Joidate.date().format('YYYY-MM-DD').utc(),
     validTo:Joidate.date().format('YYYY-MM-DD').utc(),
     storeId:Joi.string().required(),
-    category:Joi.string().valid(
-      ...Object.values(DEALS_SERVICE)
+    service:Joi.object().keys({
+      category:Joi.string().valid(
+        ...Object.values(DEALS_SERVICE)
+      ),
+      categoryId:Joi.string().required(),
+    }),
+    dealDate:Joi.array().items(
+      Joi.object().keys({
+        day:Joi.string().required(),
+        startTime:Joi.string().required(),
+        endTime:Joi.string().required(),
+      })
     )
-  }),
-};
+
+    })
+    
+  }
 
 exports.editDeal= {
   body: Joi.object().keys({

@@ -4,8 +4,21 @@ const bcrypt = require("bcryptjs");
 const vendorAdminSchema = mongoose.Schema(
   {
     userName: { type: String },
+    BusinessName:{ type: String },
+    countryCode:{ type: String },
+    phoneNumber:{ type: String },
     email: { type: String, lowercase: true, trim: true, unique: true },
     password: { type: String, required: true },
+    location: {
+      loc: {
+        address: { type: String, default: "" },
+        type: { type: String, default: "Point" },
+        coordinates: {
+          type: [Number],
+          default: [0, 0],
+        },
+      },
+    },
     isBlocked: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
   },

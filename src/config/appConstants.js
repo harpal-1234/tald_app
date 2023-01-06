@@ -62,7 +62,7 @@ const JOI = {
   EMAIL: Joi.string().email().lowercase().trim().required(),
   PASSWORD: Joi.string().min(6).required(),
   PHONENUMBER: Joi.string()
-    .max(10)
+    .max(15)
     .min(10)
     .message("Please enter a valid phone number"),
   LIMIT: Joi.number().default(10),

@@ -8,7 +8,7 @@ const {
 
 const bannerSchema = mongoose.Schema(
   {
-    store: {
+    storeId: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: "stores",
     },
@@ -24,9 +24,11 @@ const bannerSchema = mongoose.Schema(
         ref: "stores",
       },
     ],
+    startDate:{type:Date},
+    endDate:{type:Date},
     type: { type: String, enum: [...Object.values(BANNER_TYPE)] },
     // description: { type: String, default: "" },
-    webLink: { type: String, default: "" },
+    // webLink: { type: String, default: "" },
     // viewedBy:{type:Array,default:[]},
     status: {
       type: String,

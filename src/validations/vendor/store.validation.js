@@ -3,7 +3,8 @@ const { JOI, DEALS_SERVICE } = require("../../config/appConstants");
 
 exports.createStore = {
   body: Joi.object().keys({
-    storeName: Joi.string().required(),
+    businessName: Joi.string().required(),
+    storeImage:Joi.string().required(),
     address: Joi.string().required(),
     lat: Joi.number().required(),
     long: Joi.number().required(),
@@ -11,6 +12,10 @@ exports.createStore = {
      category:Joi.string().valid(...Object.values(DEALS_SERVICE)),
      categoryId:Joi.string()
     }),
+    storeType:Joi.string().required(),
+    email:JOI.EMAIL,
+    description:Joi.string().required(),
+    countryCode:Joi.string().required(),
     phoneNumber: JOI.PHONENUMBER.optional(),
     about: Joi.string().required().optional(),
     type:Joi.string().required().optional()

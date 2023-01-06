@@ -11,7 +11,7 @@ const {
 
 exports.login = {
   body: Joi.object().keys({
-    email: Joi.string().email().lowercase().trim().required(),
+    email: JOI.EMAIL,
     password:Joi.string().min(6).required(),
       // deviceToken:Joi.string().required(),
     // deviceType:Joi.string().valid(...Object.values(DEVICE_TYPE)),

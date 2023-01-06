@@ -14,11 +14,13 @@ const {
   successMessageWithoutData,
   successMessage,
 } = require("../../utils/commonFunction");
+const {createStripeCustomer}=require("../../utils/stripe");
 const dotenv = require("dotenv");
 dotenv.config();
 
 const signUp = catchAsync(async (req, res) => {
   const newUser = await userService.createUser(req.body);
+  const newStripeCustomer=await createStripeCustomer(newUser);
   const data = {
     name: newUser.name,
     email: newUser.email,

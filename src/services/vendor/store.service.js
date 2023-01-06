@@ -2,6 +2,7 @@ const { User, Store, Vendor, Token, Category } = require("../../models");
 const { STATUS_CODES, ERROR_MESSAGES } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 const { findOne } = require("../../models/token.model");
+const moment=require("moment");
 // const genrateCatoryId=require("")
 
 const createStore = async (data, vendorId) => {
@@ -19,11 +20,13 @@ const createStore = async (data, vendorId) => {
   }
   if (data.service.category === "Cannabis") {
     const store = await Store.create({
-      vendorId: vendorId,
+      vendorId: vendorId,                                                
       service: data.service,
       storeName: data.storeName,
       about: data.about,
       type: data.type,
+      startDate:moment(data.startDate  + "Z", "YYYY-MM-DD" + "Z").toDate(),
+      endDate:moment(data.endDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
       phoneNumber: data.phoneNumber,
       location: {
         loc: {
@@ -39,7 +42,12 @@ const createStore = async (data, vendorId) => {
   const store = await Store.create({
     vendorId: vendorId,
     service: data.service,
-    storeName: data.storeName,
+    businessName: data.businessName,
+    storeType:data.storeType,
+    email:data.email,
+    description:data.description,
+    countryCode:data.countryCode,
+    phoneNumber:data.phoneNumber,
     location: {
       loc: {
         address: data.address,
