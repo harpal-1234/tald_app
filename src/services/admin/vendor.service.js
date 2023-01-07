@@ -2,32 +2,32 @@ const { Admin, Vendor } = require("../../models");
 const { STATUS_CODES, ERROR_MESSAGES } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 
-const createVendor = async (data) => {
-  const vendor = await Vendor.findOne({ email: data.email, isDeleted: false });
-  if (vendor) {
-    throw new OperationalError(
-      STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.USER_NOT_FOUND
-    );
-  }
-  const newAdmin = await Vendor.create({
-    userName: data.userName,
-    email: data.email,
-    password:data.password,
-    businessName: data.businessName,
-    location: {
-      loc: {
-        address: data.address,
-        type: "Point",
-        coordinates: [data.long, data.lat],
-      },
-    },
-    phoneNumber: data.phoneNumber,
-    countryCode: data.countryCode,
-  });
+// const createVendor = async (data) => {
+//   const vendor = await Vendor.findOne({ email: data.email, isDeleted: false });
+//   if (vendor) {
+//     throw new OperationalError(
+//       STATUS_CODES.ACTION_FAILED,
+//       ERROR_MESSAGES.USER_NOT_FOUND
+//     );
+//   }
+//   const newAdmin = await Vendor.create({
+//     userName: data.userName,
+//     email: data.email,
+//     password:data.password,
+//     businessName: data.businessName,
+//     location: {
+//       loc: {
+//         address: data.address,
+//         type: "Point",
+//         coordinates: [data.long, data.lat],
+//       },
+//     },
+//     phoneNumber: data.phoneNumber,
+//     countryCode: data.countryCode,
+//   });
 
-  return newAdmin;
-};
+//   return newAdmin;
+// };
 
 const getAllVendor = async (req, res) => {
   let { page, limit, search } = req.query;
@@ -130,7 +130,7 @@ const deleteVendor = async (req, res) => {
 };
 
 module.exports = {
-  createVendor,
+  // createVendor,
   getAllVendor,
   deleteVendor,
   editVendorProfile,

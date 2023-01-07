@@ -10,6 +10,19 @@ const { catchAsync } = require("../../utils/universalFunction");
 const { successResponse } = require("../../utils/response");
 const {formatStore, formatStoreDeal}=require("../../utils/commonFunction")
 
+
+const createStoreDetails=catchAsync(async (req, res) => {
+  const store = await adminStoreService.createStoreDetails(req.body,res);
+  const value=formatStore(store);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.STORE_DATA,
+    value
+  );
+});
+
 const getAllStore = catchAsync(async (req, res) => {
     const store = await adminStoreService.getAllStore(req,res);
     const value=formatStore(store);
@@ -61,5 +74,6 @@ const editStoreDetails= catchAsync(async (req, res) => {
     getAllStore,
     getStoreDeals,
     deleteStore,
-    editStoreDetails
+    editStoreDetails,
+    createStoreDetails
   }

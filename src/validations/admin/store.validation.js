@@ -27,3 +27,21 @@ exports.editStore = {
   }),
 };
 
+exports.createStoreDetails = {
+  body: Joi.object().keys({
+    businessName: Joi.string().required(),
+    address: Joi.string().required(),
+    password: Joi.string().required(),
+    lat: Joi.number().required(),
+    long: Joi.number().required(),
+    service: Joi.object().keys({
+     category:Joi.string().valid(...Object.values(DEALS_SERVICE)),
+     categoryId:Joi.string()
+    }),
+    email:JOI.EMAIL,
+    countryCode:Joi.string().required(),
+    phoneNumber: JOI.PHONENUMBER.optional(),
+    about: Joi.string().required().optional(),
+    type:Joi.string().required().optional()
+  }),
+};

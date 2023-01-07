@@ -7,6 +7,13 @@ const { USER_TYPE, joi } = require("../../config/appConstants");
 
 const router = express.Router();
 
+router.post(
+  "/create",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.createStoreDetails),
+  authController.createStoreDetails
+)
+
 router.get(
   "/getAll",
   auth(USER_TYPE.ADMIN),

@@ -7,6 +7,35 @@ const {
 } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 
+
+const createStoreDetails= async (data) => {
+  console.log(data);
+  const store = await Store.findOne({ email: data.email, isDeleted: false });
+  console.log(store);
+  if (store) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.USER_NOT_FOUND
+    );
+  }
+  const newStore = await Store.create({
+    email: data.email,
+    password:data.password,
+    businessName: data.businessName,
+    location: {
+      loc: {
+        address: data.address,
+        type: "Point",
+        coordinates: [data.long, data.lat],
+      },
+    },
+    phoneNumber: data.phoneNumber,
+    countryCode: data.countryCode,
+  });
+
+  return newStore;
+};
+
 const editStoreDetails = async (data) => {
   const vendor = await Vendor.findOne({ _id: data.vendorId, isDeleted: false });
 
@@ -92,4 +121,5 @@ module.exports = {
   getStoreDeals,
   deleteStore,
   editStoreDetails,
+  createStoreDetails
 };

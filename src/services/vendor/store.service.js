@@ -109,9 +109,9 @@ const deleteStore = async (data, tokendata) => {
   return store;
 };
 
-const getCategoryData = async (req, res) => {
-  const getAllCategory = await Store.find();
-};
+// const getCategoryData = async (req, res) => {
+//   const getAllCategory = await Store.find();
+// };
 
 const vendorStoreName = async (vendorId) => {
   const store = await Store.find({

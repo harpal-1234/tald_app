@@ -9,7 +9,8 @@ const tokenSchema = mongoose.Schema(
   {
     user: { type: mongoose.SchemaTypes.ObjectId, ref: "user" },
     admin: { type: mongoose.SchemaTypes.ObjectId, ref: "admins" },
-    vendor:{ type: mongoose.SchemaTypes.ObjectId, ref: "vendors"},
+    // vendor:{ type: mongoose.SchemaTypes.ObjectId, ref: "vendors"},
+    vendor:{type: mongoose.SchemaTypes.ObjectId, ref: "stores"},
     expires: { type: Date, required: true },
     token: { type: String, unique: true},
     role: { type: String, enum: [...Object.values(USER_TYPE)]  },
