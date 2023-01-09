@@ -1,42 +1,45 @@
-const { Vendor, Banner } = require("../../models");
+const { Vendor, Banner, Store } = require("../../models");
 const {
   DELETE_MASSAGES,
   STATUS_CODES,
   ERROR_MESSAGES,
 } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
+const moment=require('moment');
 
 const createBanner = async (data, tokenData) => {
-  if(data.type==='Promoted')
-  {
-  const vendor = await Vendor.findOne({ _id: tokenData, isDeleted: false });
+  if (data.type === "Promoted") {
+    const vendor = await Banner.findOne({ bannerId: data.bannerId, isDeleted: false });
 
-  if (!vendor) {
-    throw new OperationalError(
-      STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.USER_NOT_FOUND
-    );
+    if (vendor) {
+      throw new OperationalError(
+        STATUS_CODES.ACTION_FAILED,
+        ERROR_MESSAGES.BANNER_ID
+      );
+    }
+    const store=await Store.findOne({_id:tokenData,isDeleted:false});
+   
+    const startDate=moment(data.startDate).format("YYYY-MM-DD");
+  const endDate=moment(data.endDate).format("YYYY-MM-DD");
+
+    const newBanner = await Banner.create({
+      storeId: store.id,
+      image: data.image,
+      service: store.service,
+      title: data.title,
+      bannerId: data.bannerId,
+      type: data.type,
+      startDate: moment(startDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
+    endDate: moment(endDate+ "Z", "YYYY-MM-DD" + "Z").toDate(),
+    });
+
+    return newBanner;
+  } else if (data.type === "Category") {
   }
-  const newBanner = await Banner.create({
-    store:data.storeId,
-    image: data.image,
-    service:data.service,
-    title: data.title,
-    description: data.description,
-    type:data.type
-  });
-
-  return newBanner;
-}
-else if(data.type==='Casual')
-{
-  
-
-}
 };
 
 const bannerRequest = async (data, totkenData) => {
-  const vendor = await Vendor.findOne({ _id: totkenData, isDeleted: false });
+  const vendor = await Store.findOne({ _id: totkenData, isDeleted: false });
   if (!vendor) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,

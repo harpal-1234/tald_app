@@ -5,6 +5,7 @@ const {
   DEALS_SERVICE,
   BANNER_TYPE,
 } = require("../config/appConstants");
+const { number } = require("joi");
 
 const bannerSchema = mongoose.Schema(
   {
@@ -12,6 +13,7 @@ const bannerSchema = mongoose.Schema(
       type: mongoose.SchemaTypes.ObjectId,
       ref: "stores",
     },
+    bannerId:{type:Number},
     image: { type: String, default: "" },
     service: {
       category: { type: String, enum: [...Object.values(DEALS_SERVICE)] },

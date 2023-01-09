@@ -1,12 +1,14 @@
 const Joi = require("joi");
+const Joidate = require('joi').extend(require('@joi/date'));
 const { JOI ,DEALS_SERVICE, BANNER_TYPE} = require("../../config/appConstants");
 
 exports.createBanner = {
   body: Joi.object().keys({
     image: Joi.string().required(),
     title: Joi.string().required(),
-    storeId:Joi.string().required(),
-    description: Joi.string().optional(),
+    bannerId:Joi.number().required(),
+    startDate: Joidate.date().format('YYYY-MM-DD').utc(),
+    endDate:Joidate.date().format('YYYY-MM-DD').utc(),
     service: Joi.object().keys({
       category:Joi.string().valid(...Object.values(DEALS_SERVICE)),
       categoryId:Joi.string()
@@ -42,7 +44,7 @@ exports.getBanner = {
 };
 
 exports.bannerRequest={
-  params: Joi.object().keys({
+  query: Joi.object().keys({
     id: Joi.string().required()
   }),
 

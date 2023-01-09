@@ -36,7 +36,7 @@ const createBanner = catchAsync(async (req, res) => {
   });
 
   const bannerRequest=catchAsync(async(req,res)=>{
-    const banner=await bannerService.bannerRequest(req.params,req.token.vendor._id);
+    const banner=await bannerService.bannerRequest(req.query,req.token.vendor._id);
     return successResponse(
       req,
       res,
