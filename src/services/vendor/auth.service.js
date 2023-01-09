@@ -1,4 +1,4 @@
-const { User, Vendor, Deal, Token } = require("../../models");
+const { User, Vendor, Deal, Token, Store } = require("../../models");
 const bcrypt = require("bcryptjs");
 const {
   STATUS_CODES,
@@ -7,8 +7,10 @@ const {
 } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 
-const adminLogin = async (email, password) => {
-  const admin = await Vendor.findOne({ email: email });
+const vendorLogin = async (email, password) => {
+
+  const admin = await Store.findOne({ email: email });
+
 
   if (!admin) {
     throw new OperationalError(
@@ -26,7 +28,8 @@ const adminLogin = async (email, password) => {
 };
 
 const changePassword = async (adminId, oldPassword, newPassword) => {
-  const admin = await Vendor.findById(adminId);
+ 
+  const admin = await Store.findById(adminId);
   if (!(await admin.isPasswordMatch(oldPassword))) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
@@ -66,7 +69,7 @@ const resetPassword = async (tokenData, newPassword) => {
   let query = tokenData.vendor;
   newPassword = await bcrypt.hash(newPassword, 8);
   if (tokenData.role === USER_TYPE.VENDOR_ADMIN) {
-    const userdata = await Vendor.findOneAndUpdate(
+    const userdata = await Store.findOneAndUpdate(
       { _id: query },
       { $set: { password: newPassword } }
     );
@@ -89,7 +92,7 @@ const resetPassword = async (tokenData, newPassword) => {
 };
 
 module.exports = {
-  adminLogin,
+  vendorLogin,
   changePassword,
   dashBoard,
   adminLogout,

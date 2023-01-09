@@ -60,7 +60,7 @@ const createStore = async (data, vendorId) => {
 };
 
 const editStoreDetails = async (data, tokenData) => {
-  const vendor = await Vendor.findOne({ _id: tokenData.id, isDeleted: false });
+  const vendor = await Store.findOne({ _id: tokenData, isDeleted: false });
   if (!vendor) {
     throw new OperationalError(
       STATUS_CODES.NOT_FOUND,
@@ -69,18 +69,26 @@ const editStoreDetails = async (data, tokenData) => {
   }
 
   const updateStore = await Store.findOneAndUpdate(
-    { _id: data.id },
-    {
-      storeName: data.storeName,
-      service: data.service,
+    { _id: vendor.id },
+    { $set:{
+      category:data.category,
+      storeType:data.storeType,
+      description:data.description,
+      email: data.email,
+      password:data.password,
+      businessName: data.businessName,
       location: {
         loc: {
           address: data.address,
+          type: "Point",
           coordinates: [data.long, data.lat],
         },
       },
+      phoneNumber: data.phoneNumber,
+      countryCode: data.countryCode,
+    }
     },
-    { upsert: false }
+    { upsert: false,new:true }
   );
   return updateStore;
 };
@@ -127,7 +135,24 @@ const vendorStoreName = async (vendorId) => {
   return store;
 };
 
+const getStoreDetails=async(storeId)=>{
+  const store = await Store.find({
+    _id: storeId,
+    isDeleted: false,
+  }).lean();
+  if (!store) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.STORE_NOT_EXIST
+    );
+  }
+  return store;
+
+
+}
+
 module.exports = {
+  getStoreDetails,
   createStore,
   editStoreDetails,
   deleteStore,

@@ -11,7 +11,7 @@ const {
   ERROR_MESSAGES,
   DEVICE_TYPE,
 } = require("../config/appConstants");
-const { Token, Admin, User, Vendor } = require("../models");
+const { Token, Admin, User, Vendor, Store } = require("../models");
 // const { workSeekerProfileService } = require("../services");
 const { OperationalError } = require("../utils/errors");
 const { formatUser } = require("../utils/formatResponse");
@@ -67,6 +67,7 @@ const generateAuthToken = async (user, userType,deviceToken, deviceType) => {
   var tokenId = new ObjectID();
   const accessToken = generateToken({
     // user: user._id,
+
     tokenExpires,
     tokenType: TOKEN_TYPE.ACCESS,
     userType,
@@ -173,7 +174,7 @@ const generateResetPasswordToken = async (email) => {
 };
 
 const generateVendorResetPassword= async (email) => {
-  const user= await Vendor.findOne({ email: email });
+  const user= await Store.findOne({ email: email });
 
   if (!user) {
     throw new OperationalError(

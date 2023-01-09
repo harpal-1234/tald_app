@@ -15,12 +15,14 @@ const { forgotPasswordEmail } = require("../../utils/mailSend");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const adminSignUp = catchAsync(async (req, res) => {
-  const admin = await vendorAdminService.adminSignUp(req.body);
+const vendorLogin = catchAsync(async (req, res) => {
+
+  const admin = await vendorAdminService.vendorLogin(req.body.email,req.body.password);
   const data = {
     Name: admin.userName,
     email: admin.email,
   };
+
   const token = await tokenService.generateAuthToken(
     admin,
     USER_TYPE.VENDOR_ADMIN
@@ -35,28 +37,29 @@ const adminSignUp = catchAsync(async (req, res) => {
   );
 });
 
-const adminLogin = catchAsync(async (req, res) => {
-  let { email, password } = req.body;
-  const admin = await vendorAdminService.adminLogin(email, password);
-  const token = await tokenService.generateAuthToken(
-    admin,
-    USER_TYPE.VENDOR_ADMIN
-  );
-  const user = {
-    Name: admin.userName,
-    email: admin.email,
-  };
-  return successResponse(
-    req,
-    res,
-    STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.DEFAULT,
-    user,
-    token
-  );
-});
+// const adminLogin = catchAsync(async (req, res) => {
+//   let { email, password } = req.body;
+//   const admin = await vendorAdminService.adminLogin(email, password);
+//   const token = await tokenService.generateAuthToken(
+//     admin,
+//     USER_TYPE.VENDOR_ADMIN
+//   );
+//   const user = {
+//     Name: admin.userName,
+//     email: admin.email,
+//   };
+//   return successResponse(
+//     req,
+//     res,
+//     STATUS_CODES.SUCCESS,
+//     SUCCESS_MESSAGES.DEFAULT,
+//     user,
+//     token
+//   );
+// });
 
 const changePassword = catchAsync(async (req, res) => {
+
   await vendorAdminService.changePassword(
     req.token.vendor._id,
     req.body.oldPassword,
@@ -78,6 +81,16 @@ const dashBoard = catchAsync(async (req, res) => {
 
 const adminLogout = catchAsync(async (req, res) => {
   await vendorAdminService.adminLogout(req.token._id);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.LOGOUT
+  );
+});
+
+const getStoreDetails = catchAsync(async (req, res) => {
+ const store= await vendorAdminService.getStoreDetails(req.token._id);
   return successResponse(
     req,
     res,
@@ -152,11 +165,12 @@ const resetForgotPassword = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-  adminLogin,
+  // adminLogin,
   changePassword,
+  getStoreDetails,
   dashBoard,
   adminLogout,
-  adminSignUp,
+  vendorLogin,
   forgotPassword,
   forgotPage,
   resetForgotPassword,

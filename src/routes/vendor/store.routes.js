@@ -7,12 +7,12 @@ const { USER_TYPE } = require("../../config/appConstants");
 
 const router = express.Router();
 
-router.post(
-    "/create",
-    auth(USER_TYPE.VENDOR_ADMIN),
-    validate(storeValidation.createStore),
-    storeController.createStore
-  );
+// router.post(
+//     "/create",
+//     auth(USER_TYPE.VENDOR_ADMIN),
+//     validate(storeValidation.createStore),
+//     storeController.createStore
+//   );
 
   router.delete(
     "/deleteStore",
@@ -27,6 +27,12 @@ router.post(
     storeController.vendorStoreName
   );
 
+  router.get(
+    "/getDetails",
+    auth(USER_TYPE.VENDOR_ADMIN),
+    // validate(storeValidation.getStoreDetails),
+    storeController.getStoreDetails
+  )
 
   router.put(
     "/edit",

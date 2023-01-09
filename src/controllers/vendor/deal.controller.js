@@ -49,7 +49,7 @@ const deleteDeal=catchAsync(async(req,res)=>{
 
   const editDeal=catchAsync(async(req,res)=>{
 
-    const editDeal=await vendorDealsService.editDeal(req.body);
+    const editDeal=await vendorDealsService.editDeal(req.body,req.token.vendor._id);
     return successResponse(
         req,
         res,

@@ -51,15 +51,15 @@ const defaultRoutes = [
     route: adminBannerRoutes,
   },
   {
-    path: "/vendor/banner",
+    path: "/store/banner",
     route: bannerRoutes,
   },
   {
-    path: "/vendor/auth",
+    path: "/store/auth",
     route: vendorAuth,
   },
   {
-    path: "/vendor/deal",
+    path: "/store/deal",
     route: couponRoutes,
   },
   {

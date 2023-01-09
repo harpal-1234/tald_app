@@ -9,7 +9,7 @@ const { OperationalError } = require("../../utils/errors");
 
 
 const createStoreDetails= async (data) => {
-  console.log(data);
+
   const store = await Store.findOne({ email: data.email, isDeleted: false });
   console.log(store);
   if (store) {
@@ -37,7 +37,7 @@ const createStoreDetails= async (data) => {
 };
 
 const editStoreDetails = async (data) => {
-  const vendor = await Vendor.findOne({ _id: data.vendorId, isDeleted: false });
+  const vendor = await Store.findOne({ _id: data.vendorId, isDeleted: false });
 
   if (!vendor) {
     throw new OperationalError(

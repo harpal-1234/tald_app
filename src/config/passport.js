@@ -23,7 +23,7 @@ const jwtVerify = async (payload, done) => {
       token = await Token.findOne({ _id: payload.id, isDeleted: false })
         .populate({ path: "vendor" })
         .lean();
-       
+      
     }
    ;
    

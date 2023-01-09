@@ -15,7 +15,7 @@ router.post(
   );
 
   router.put(
-    "/editDeal",
+    "/edit",
     auth(USER_TYPE.VENDOR_ADMIN),
     validate(dealValidation.editDeal),
     dealController.editDeal
@@ -23,7 +23,7 @@ router.post(
 
 
   router.get(
-    "/getAllDeal",
+    "/getAll",
     auth(USER_TYPE.VENDOR_ADMIN),
     validate(dealValidation.getAllDeal),
     dealController.getAllDeal

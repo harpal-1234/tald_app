@@ -17,7 +17,7 @@ const router = express.Router();
 router.post(
   "/login",
   validate(adminValidation.adminLogin),
-  adminController.adminLogin
+  adminController.vendorLogin
 );
 
 router.put(
@@ -32,6 +32,7 @@ router.post(
   validate(adminValidation.forgotPassword),
   adminController.forgotPassword
 );
+
 
 router
   .route("/resetPassword")

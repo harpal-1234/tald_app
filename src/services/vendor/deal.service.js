@@ -5,7 +5,7 @@ const moment = require("moment");
 
 const createDeal = async (data, tokendata) => {
  
-  const vendor = await Store.findOne({ vendorId: tokendata, isDeleted: false });
+  const vendor = await Store.findOne({ _id: tokendata, isDeleted: false });
   if (!vendor) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
@@ -23,7 +23,7 @@ const createDeal = async (data, tokendata) => {
   if (deal) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.COUPON_CODE
+      ERROR_MESSAGES.DEAL_ID
     );
   }
   const validFromDate=moment(data.validFrom).format("YYYY-MM-DD");
@@ -91,21 +91,25 @@ const getAllDeal = async (req, res) => {
       { upsert: false }
     );
 
-    var dealData = await Deal.find({ isDeleted: false })
+    var dealData = await Deal.find({storeId:req.token.vendor._id, isDeleted: false })
       .skip(skip)
       .limit(limit)
       .sort({ _id: -1 })
       .lean();
      
 
-    let total = await Deal.countDocuments({ isDeleted: false });
+    let total = await Deal.countDocuments({storeId:req.token.vendor._id, isDeleted: false });
 
     return { total, dealData };
   }
 };
 
-const deleteDeal = async (data, tokendata) => {
-  const user = await Vendor.findOne({ _id: tokendata, isDeleted: false });
+// const getAllDeal=async(data)=>{
+
+// }
+
+const deleteDeal = async (data) => {
+  const user = await Deal.findOne({ _id: data.id, isDeleted: false });
   if (!user) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
@@ -122,29 +126,33 @@ const deleteDeal = async (data, tokendata) => {
   return deal;
 };
 
-const editDeal=async(bodyData,res)=>{
-  const deal = await Deal.findOne({ _id: bodyData.id, vendorId:bodyData.vendorId,isDeleted: false });
-  if (!deal) {
+const editDeal=async(data,storeId)=>{
+  console.log(storeId)
+  const vendor = await Store.findOne({ _id: storeId, isDeleted: false });
+  if (!vendor) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
       ERROR_MESSAGES.ACCOUNT_NOT_EXIST
     );
   }
-  const validFromDate=moment(bodyData.validFrom).format("YYYY-MM-DD");
-  const validToDate=moment(bodyData.validTo).format("YYYY-MM-DD");
+  const validFromDate=moment(data.validFrom).format("YYYY-MM-DD");
+  const validToDate=moment(data.validTo).format("YYYY-MM-DD");
   
   
-  const editDeal = await Deal.findOneAndUpdate({_id: bodyData.id},{
-    vendorId: bodyData.vendorId,
-    couponCode: bodyData.couponCode,
-    category: bodyData.category,
-    storeId:bodyData.storeId,
-    name: bodyData.name,
-    worth: bodyData.worth,
+  const editDeal = await Deal.findOneAndUpdate({_id: data.id, storeId:vendor.id,},{
+    dealId: data.dealId,
+    title:data.title,
+    totalPrice: data.totalPrice,
+    discountPrice:data.discountPrice,
+    description: data.description,
+    inclusions:data.inclusions,
+    no_of_person: data.no_of_person,
+    dealDate:data.dealDate,
+    service:vendor.service,
     quantity:data.quantity,
-    description: bodyData.description,
+    description: data.description,
     validFrom: moment(validFromDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
-    validTo: moment(validToDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
+    validTo: moment(validToDate+ "Z", "YYYY-MM-DD" + "Z").toDate(),
   },{upsert:false,new:true});
 
  

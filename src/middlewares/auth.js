@@ -8,6 +8,7 @@ const { AuthFailedError } = require("../utils/errors");
 
 const verifyCallback =
   (req, resolve, reject, role) => async (err, token, info) => {
+  
    
   
   
@@ -121,6 +122,7 @@ const verifyCallback =
   };
 
 const auth = (role) => async (req, res, next) => {
+
     
 
   return new Promise((resolve, reject) => {

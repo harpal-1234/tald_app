@@ -150,7 +150,7 @@ const ERROR_MESSAGES = {
   USER_NOT_FOUND: "User not found",
   SKILL_ALREADY_EXIST: "Skill already exist with this name.",
   WRONG_PASSWORD: "Password is Incorrect",
-  COUPON_CODE: "Please Provide Different Coupon Code",
+  DEAL_ID: "Please provide different deal id",
   COUPON_DATA: "Coupon not exist",
   COUPON_WEBLINK: "Coupon Already exist",
   STORE_NOT_EXIST: "Store not exists",

@@ -10,24 +10,35 @@ const { successResponse } = require("../../utils/response");
 const { format } = require("morgan");
 const { formatStore } = require("../../utils/commonFunction");
 
-const createStore = catchAsync(async (req, res) => {
-  const newStore = await vendorStoreService.createStore(req.body,req.token.vendor._id);
+// const createStore = catchAsync(async (req, res) => {
+//   const newStore = await vendorStoreService.createStore(req.body,req.token.vendor._id);
+//   return successResponse(
+//     req,
+//     res,
+//     STATUS_CODES.SUCCESS,
+//     SUCCESS_MESSAGES.DEFAULT,
+//     newStore
+//   );
+// });
+const getStoreDetails=catchAsync(async(req,res)=>{
+  const store = await vendorStoreService.getStoreDetails(req.token.vendor._id);
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.DEFAULT,
-    newStore
+    store
   );
-});
+})
 
 const editStoreDetails = catchAsync(async (req, res) => {
-  const newStore = await vendorStoreService.editStoreDetails(req, res);
+  const editStore = await vendorStoreService.editStoreDetails(req.body,req.token.vendor._id);
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.DEFAULT
+    SUCCESS_MESSAGES.DEFAULT,
+    editStore
   );
 });
 
@@ -57,7 +68,8 @@ const vendorStoreName=catchAsync(async (req, res) => {
 
 
 module.exports = {
-  createStore,
+  // createStore,
+  getStoreDetails,
   editStoreDetails,
   deleteStore,
   vendorStoreName,
