@@ -8,7 +8,7 @@ const {
 const { catchAsync } = require("../../utils/universalFunction");
 const { successResponse } = require("../../utils/response");
 const { format } = require("morgan");
-const { formatStore } = require("../../utils/commonFunction");
+const { formatStore, formatCategory } = require("../../utils/commonFunction");
 
 // const createStore = catchAsync(async (req, res) => {
 //   const newStore = await vendorStoreService.createStore(req.body,req.token.vendor._id);
@@ -64,7 +64,17 @@ const vendorStoreName=catchAsync(async (req, res) => {
   );
 });
 
-
+const getStoreCategory=catchAsync(async (req, res) => {
+  const store = await vendorStoreService.getStoreCategory(req,res);
+  const value=formatCategory(store)
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.ALL_CATEGORY,
+   value
+  );
+});
 
 
 module.exports = {
@@ -73,4 +83,5 @@ module.exports = {
   editStoreDetails,
   deleteStore,
   vendorStoreName,
+  getStoreCategory
 };

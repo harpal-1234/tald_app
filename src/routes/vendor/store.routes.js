@@ -41,6 +41,13 @@ const router = express.Router();
     storeController.editStoreDetails
   );
 
+  router.get(
+    "/getStoreCatgory",
+    auth(USER_TYPE.VENDOR_ADMIN),
+    storeController.getStoreCategory
+
+  )
+
 
 
   module.exports=router

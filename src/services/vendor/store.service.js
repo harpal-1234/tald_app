@@ -151,10 +151,17 @@ const getStoreDetails=async(storeId)=>{
 
 }
 
+const getStoreCategory=async(req,res)=>{
+  const data=await Category.find({ isDeleted: false }).lean()
+  return data;
+
+}
+
 module.exports = {
   getStoreDetails,
   createStore,
   editStoreDetails,
   deleteStore,
   vendorStoreName,
+  getStoreCategory
 };
