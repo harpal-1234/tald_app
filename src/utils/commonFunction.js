@@ -171,6 +171,12 @@ const formatBanner = (userData) => {
       delete data.createdAt;
       delete data.updatedAt;
       delete data.customerId;
+      delete data.stores;
+      delete data.webLink;
+      delete data.type;
+      delete data.title;
+      delete data.vendor;
+      delete data.service
     });
   } else {
     delete userData.__v;
@@ -410,8 +416,11 @@ const formatStore = (userData) => {
       delete data.dealId;
       delete data.deals;
       delete data.vendorId;
-      delete data.location.loc.coordinates;
-      delete data.location.loc.type;
+      delete data.location;
+      delete data.email;
+      delete data.countryCode;
+      delete data.phoneNumber;
+      delete data.description
     });
   } else {
     delete userData.__v;

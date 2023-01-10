@@ -12,14 +12,12 @@ const {storeDistance}=require("../../utils/storeDistance");
 
 const homeData = catchAsync(async (req, res) => {
   const data = await dealsService.homeData(req.token.user._id);
-  var arr=[];
-  arr=data;
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.SUCCESS,
-    arr
+    data
   );
 });
 const categoryDealData=catchAsync(async (req, res) => {

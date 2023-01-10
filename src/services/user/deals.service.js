@@ -76,15 +76,47 @@ const homeData = async (data) => {
   const recentlyViewData = formatRecentlyView(recentValue);
   const cannabisData = formatStore(cannabis);
 
-  return {
-    topBannerData,
-    categoryData,
-    bannerData,
-    storeData,
-    newStoreData,
-    recentlyViewData,
-    cannabisData,
-  };
+  const arrData = [
+    {
+      title: "Banner",
+      data: topBannerData,
+    },
+    {
+      title: "Categories",
+      data: categoryData,
+    },
+    {
+      title: "Trending Deals",
+      data: bannerData,
+    },
+    {
+      title: "Featured Brands",
+      data: storeData,
+    },
+    {
+      title: "Newly Added",
+      data: newStoreData,
+    },
+    {
+      title: "Recently Viewed",
+      data: recentlyViewData,
+    },
+    {
+      title: "Cannabis",
+      data: cannabisData,
+    },
+  ];
+
+  return arrData;
+  // return {
+  //   topBannerData,
+  //   categoryData,
+  //   bannerData,
+  //   storeData,
+  //   newStoreData,
+  //   recentlyViewData,
+  //   cannabisData,
+  // };
 };
 
 const categoryDealData = async (data, userId) => {

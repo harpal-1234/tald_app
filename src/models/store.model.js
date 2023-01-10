@@ -9,7 +9,7 @@ const storeSchema = mongoose.Schema(
     //   ref: "vendors",
     //   required: true,
     // },
-    storeImage: { type: String, required: true },
+    storeImage: { type: String,default:''},
     email: { type: String, lowercase: true, trim: true, unique: true },
     password: { type: String, required: true },
     businessName: { type: String, default: "" },
