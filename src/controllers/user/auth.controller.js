@@ -20,7 +20,7 @@ dotenv.config();
 
 const signUp = catchAsync(async (req, res) => {
   const newUser = await userService.createUser(req.body);
-  const newStripeCustomer=await createStripeCustomer(newUser);
+  // const newStripeCustomer=await createStripeCustomer(newUser);
   const data = {
     name: newUser.name,
     email: newUser.email,
