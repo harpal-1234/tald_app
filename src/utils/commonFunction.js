@@ -178,6 +178,10 @@ const formatBanner = (userData) => {
       delete data.title;
       delete data.vendor;
       delete data.service
+      delete data.startDate;
+      delete data.endDate
+      delete data.isVerified;
+      delete data.status
     });
   } else {
     delete userData.__v;
@@ -422,6 +426,10 @@ const formatStore = (userData) => {
       delete data.countryCode;
       delete data.phoneNumber;
       delete data.description
+      delete data.service;
+      delete data.storeType;
+      delete data.businessName
+
     });
   } else {
     delete userData.__v;
