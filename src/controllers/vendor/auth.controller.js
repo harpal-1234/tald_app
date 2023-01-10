@@ -19,7 +19,7 @@ const vendorLogin = catchAsync(async (req, res) => {
 
   const admin = await vendorAdminService.vendorLogin(req.body.email,req.body.password);
   const data = {
-    Name: admin.userName,
+    businessName: admin.businessName,
     email: admin.email,
   };
 
