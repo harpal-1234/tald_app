@@ -11,7 +11,7 @@ const { formatDeal,formatStoreDeal } = require("../../utils/commonFunction");
 const {storeDistance}=require("../../utils/storeDistance");
 
 const homeData = catchAsync(async (req, res) => {
-  const data = await dealsService.homeData(req.token.user._id);
+  const data = await dealsService.homeData(req.query,req.token.user._id);
   return successResponse(
     req,
     res,

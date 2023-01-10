@@ -25,7 +25,7 @@ const {
 } = require("../../utils/commonFunction");
 const io = require("socket.io");
 
-const homeData = async (data) => {
+const homeData = async (location,data) => {
   var recentValue;
 
   const query = {
@@ -33,7 +33,7 @@ const homeData = async (data) => {
       $near: {
         $geometry: {
           type: "Point",
-          coordinates: [data.long, data.lat],
+          coordinates: [location.long, location.lat],
         },
         $maxDistance: 1000,
       },
@@ -54,8 +54,8 @@ const homeData = async (data) => {
     Banner.find({ type: "Promoted", isDeleted: false }).lean(),
     Category.find({ isDeleted: false }).lean(),
     Banner.find({ type: "Casual", isDeleted: false }).lean(),
-    Store.find({ isDeleted: false }).sort({ _id: -1 }).lean(),
-    Store.find({ isDeleted: false }).sort({ _id: -1 }).lean(),
+    Store.find({query, isDeleted: false }).sort({ _id: -1 }).lean(),
+    Store.find({query,isDeleted: false }).sort({ _id: -1 }).lean(),
     User.find({ _id: data, isDeleted: false })
       .populate({ path: "recentlyView" })
       .lean(),
