@@ -71,6 +71,7 @@ const editStoreDetails = async (data, tokenData) => {
   const updateStore = await Store.findOneAndUpdate(
     { _id: vendor.id },
     { $set:{
+      storeImage:data.storeImage,
       category:data.category,
       storeType:data.storeType,
       description:data.description,
