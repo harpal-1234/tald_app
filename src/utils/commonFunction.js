@@ -110,14 +110,24 @@ const formatRecentlyView = (userData) => {
   {
     console.log(userData.length);
     userData.forEach((data) => {
-      delete data.__v;
       delete data.isBlocked;
       delete data.isDeleted;
       delete data.createdAt;
       delete data.updatedAt;
       delete data.customerId;
+      delete data.password;
+      delete data.dealId;
       delete data.deals;
-      delete data.location
+      delete data.vendorId;
+      delete data.location;
+      delete data.email;
+      delete data.countryCode;
+      delete data.phoneNumber;
+      delete data.description
+      delete data.service;
+      delete data.storeType;
+      delete data.businessName
+      
     });
   }
    else {
