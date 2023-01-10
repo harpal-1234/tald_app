@@ -72,7 +72,7 @@ const editStoreDetails = async (data, tokenData) => {
     { _id: vendor.id },
     { $set:{
       storeImage:data.storeImage,
-      category:data.category,
+      service:data.service,
       storeType:data.storeType,
       description:data.description,
       email: data.email,
