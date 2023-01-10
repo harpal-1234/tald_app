@@ -172,10 +172,10 @@ const categoryData = async (data, userId) => {
       title: "Recently Viewed",
       data: recentlyViewData,
     },
-    {
-      title: "Cannabis",
-      data: cannabisData,
-    },
+    // {
+    //   title: "Cannabis",
+    //   data: cannabisData,
+    // },
   ];
 
   return arrData
