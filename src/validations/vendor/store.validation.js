@@ -41,7 +41,7 @@ exports.editStoreDetails = {
      categoryId:Joi.string()
     }),
     email:JOI.EMAIL,
-    countryCode:Joi.string().required(),
+    countryCode:Joi.number().required(),
     phoneNumber: JOI.PHONENUMBER.optional(),
     about: Joi.string().required().optional(),
     type:Joi.string().required().optional(),
