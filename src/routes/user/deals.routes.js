@@ -7,7 +7,7 @@ const { USER_TYPE,joi } = require("../../config/appConstants");
 
 const router = express.Router();
 
-router.post(
+router.get(
     "/homeData",
     auth(USER_TYPE.USER),
     // validate(authValidation.signUp),
