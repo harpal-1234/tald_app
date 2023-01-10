@@ -341,42 +341,42 @@ const formatStoreDeal = (userData) => {
   delete userData.isPushNotification;
   delete userData.isVerified;
   delete userData.phoneNumber;
-  if (userData.deals.length) {
-    userData.deals.forEach((data) => {
-      delete data.__v;
-      delete data.storeId;
-      delete data.vendorId;
-      delete data.password;
-      delete data.isBlocked;
-      delete data.isDeleted;
-      delete data.createdAt;
-      delete data.updatedAt;
-      delete data.customerId;
-      delete data.location;
-      delete data.dealId;
-      delete data.phoneNumber;
-      delete data.isPushNotification;
-      delete data.isVerified;
-      delete data.socialId;
-    });
-  } else {
-    delete userData.__v;
-    delete userData.password;
-    delete userData.role;
-    delete userData.document;
-    delete userData.isBlocked;
-    delete userData.isDeleted;
-    delete userData.createdAt;
-    delete userData.updatedAt;
-    delete userData.jobTitle;
-    delete userData.__v;
-    delete userData.password;
-    delete userData.location;
-    delete userData.phoneNumber;
-    delete userData.isPushNotification;
-    delete userData.isVerified;
-    delete userData.socialId;
-  }
+  // if (userData.deals.length) {
+  //   userData.deals.forEach((data) => {
+  //     delete data.__v;
+  //     delete data.storeId;
+  //     delete data.vendorId;
+  //     delete data.password;
+  //     delete data.isBlocked;
+  //     delete data.isDeleted;
+  //     delete data.createdAt;
+  //     delete data.updatedAt;
+  //     delete data.customerId;
+  //     delete data.location;
+  //     delete data.dealId;
+  //     delete data.phoneNumber;
+  //     delete data.isPushNotification;
+  //     delete data.isVerified;
+  //     delete data.socialId;
+  //   });
+  // } else {
+  //   delete userData.__v;
+  //   delete userData.password;
+  //   delete userData.role;
+  //   delete userData.document;
+  //   delete userData.isBlocked;
+  //   delete userData.isDeleted;
+  //   delete userData.createdAt;
+  //   delete userData.updatedAt;
+  //   delete userData.jobTitle;
+  //   delete userData.__v;
+  //   delete userData.password;
+  //   delete userData.location;
+  //   delete userData.phoneNumber;
+  //   delete userData.isPushNotification;
+  //   delete userData.isVerified;
+  //   delete userData.socialId;
+  // }
   return userData;
 };
 

@@ -280,9 +280,9 @@ const storeDeal = async (storeId) => {
       ERROR_MESSAGES.STORE_NOT_EXIST
     );
   }
-  const storeDeal = await Store.findOne({ _id: store.id, isDeleted: false })
-    .populate({ path: "deals" })
-    .lean();
+  const storeDeal = await Store.findOne({ _id: store.id, isDeleted: false });
+    // .populate({ path: "deals" })
+    // .lean();
 
   return storeDeal;
 };
