@@ -20,8 +20,8 @@ const homeData = catchAsync(async (req, res) => {
     data
   );
 });
-const categoryDealData=catchAsync(async (req, res) => {
-  const data = await dealsService.categoryDealData(req.body,req.token.user._id);
+const categoryData=catchAsync(async (req, res) => {
+  const data = await dealsService.categoryData(req.query,req.token.user._id);
 
   return successResponse(
     req,
@@ -103,7 +103,7 @@ const favouriteStore= catchAsync(async (req, res) => {
 // });
 
 module.exports = {
-  categoryDealData,
+  categoryData,
   homeData,
   getCategoryData,
   nearestService,

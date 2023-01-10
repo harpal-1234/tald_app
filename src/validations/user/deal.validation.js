@@ -38,10 +38,11 @@ exports.favouriteStore = {
   }),
 };
 
-exports.categoryDealData={
-  body:Joi.object().keys({
-    service:Joi.object().keys({
+exports.categoryData={
+  query:Joi.object().keys({
+    // service:Joi.object().keys({
+      // category:Joi.string().required(),
       categoryId:Joi.string().required(),
+    // })
     })
-    }),
 }

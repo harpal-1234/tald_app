@@ -42,10 +42,10 @@ router.get(
 );
 
 router.get(
-  "/categoryDealData",
+  "/categoryData",
   auth(USER_TYPE.USER),
-  validate(authValidation.categoryDealData),
-  authController.categoryDealData
+  validate(authValidation.categoryData),
+  authController.categoryData
 );
 
 

@@ -119,7 +119,7 @@ const homeData = async (data) => {
   // };
 };
 
-const categoryDealData = async (data, userId) => {
+const categoryData = async (data, userId) => {
   var recentValue;
   const [banner, store, newStore, recentlyView, cannabis] = await Promise.all([
     Banner.find({
@@ -155,13 +155,37 @@ const categoryDealData = async (data, userId) => {
   const recentlyViewData = formatRecentlyView(recentValue);
   const cannabisData = formatStore(cannabis);
 
-  return {
-    bannerData,
-    storeData,
-    newStoreData,
-    recentlyViewData,
-    cannabisData,
-  };
+  const arrData = [
+    {
+      title: "Trending Deals",
+      data: bannerData,
+    },
+    {
+      title: "Featured Brands",
+      data: storeData,
+    },
+    {
+      title: "Newly Added",
+      data: newStoreData,
+    },
+    {
+      title: "Recently Viewed",
+      data: recentlyViewData,
+    },
+    {
+      title: "Cannabis",
+      data: cannabisData,
+    },
+  ];
+
+  return arrData
+  // return {
+  //   bannerData,
+  //   storeData,
+  //   newStoreData,
+  //   recentlyViewData,
+  //   cannabisData,
+  // };
 };
 
 const getCategoryData = async (req, res) => {
@@ -446,7 +470,7 @@ const recentlyView = async (storeId, userId) => {
 
 module.exports = {
   recentlyView,
-  categoryDealData,
+  categoryData,
   notification,
   homeData,
   getCategoryData,
