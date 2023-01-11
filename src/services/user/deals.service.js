@@ -454,7 +454,7 @@ const recentlyView = async (storeId, userId) => {
 
     return;
   } else if (userData.recentlyView.length >= 5) {
-    const user = await User.updateOne(
+    const user = await User.findOneAndUpdate(
       { _id: userId },
       {
         $pull: {

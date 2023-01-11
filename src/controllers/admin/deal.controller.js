@@ -75,6 +75,18 @@ const editDeal = catchAsync(async (req, res) => {
   );
 });
 
+
+const editCategory = catchAsync(async (req, res) => {
+  const editDeal = await adminDealService.editCategory(req.body);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    UPDATED_MESSAGES.DEAL_UPDATED,
+    editDeal
+  );
+});
+
 module.exports = {
   addCategory,
   deleteCategory,
@@ -82,4 +94,5 @@ module.exports = {
   getAllDeal,
   deleteDeal,
   editDeal,
+  editCategory
 };

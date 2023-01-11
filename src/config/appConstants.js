@@ -46,7 +46,7 @@ const DEALS_SERVICE = {
 
 const BANNER_TYPE={
   PROMOTED:'Promoted',
-  CASUAL:'Casual'
+  CATEGORY:'Category'
 }
 const PUSH_NOTIFICATION_STATUS = {
   ENABLE: "Enable",

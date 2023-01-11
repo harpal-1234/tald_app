@@ -117,11 +117,30 @@ const deleteDeal = async (data) => {
   return deal;
 };
 
+const editCategory=async (data) => {
+  const category = await Category.findOne({ _id:data.categoryId, isDeleted: false });
+  if (!category) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.DEAL_NOT_EXISTS
+    );
+  }
+
+  const deal = await Category.findOneAndUpdate(
+    { _id: category.id },
+    { categoryImage: data.categoryImage },
+    { new: true }
+  );
+
+  return deal;
+};
+
 module.exports = {
   addCategory,
   deleteCategory,
   getAllCategory,
   getAllDeal,
   editDeal,
-  deleteDeal
+  deleteDeal,
+  editCategory
 };

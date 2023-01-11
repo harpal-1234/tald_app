@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 const categorySchema = mongoose.Schema(
   {
     category:{type:String},
+    categoryImage:{type:String},
     isBlocked: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
   },
