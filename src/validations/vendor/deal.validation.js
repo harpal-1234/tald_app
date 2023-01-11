@@ -9,6 +9,7 @@ exports.create = {
     description: Joi.string().required(),
     inclusions:Joi.string().required(),
     // quantity: Joi.number().required(),  
+    no_of_person:Joi.string().required(),
     totalPrice:Joi.number().required(), 
     discountPrice:Joi.number().required(), 
     validFrom: Joidate.date().format('YYYY-MM-DD').utc(),
