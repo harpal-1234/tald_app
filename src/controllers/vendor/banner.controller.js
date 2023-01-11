@@ -7,75 +7,78 @@ const {
 } = require("../../config/appConstants");
 const { catchAsync } = require("../../utils/universalFunction");
 const { successResponse } = require("../../utils/response");
-
+const { formatBanner } = require("../../utils/commonFunction");
 
 const createBanner = catchAsync(async (req, res) => {
+  const banner = await bannerService.createBanner(
+    req.body,
+    req.token.vendor._id
+  );
 
-    const banner = await bannerService.createBanner(req.body,req.token.vendor._id);
-   
-    return successResponse(
-      req,
-      res,
-      STATUS_CODES.SUCCESS,
-      SUCCESS_MESSAGES.DEFAULT,
-      banner
-    );
-  })
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.DEFAULT,
+    banner
+  );
+});
 
+const editBanner = catchAsync(async (req, res) => {
+  const banner = await bannerService.editBanner(req.body);
 
-  const editBanner = catchAsync(async (req, res) => {
-    const banner = await bannerService.editBanner(req.body);
-   
-    return successResponse(
-      req,
-      res,
-      STATUS_CODES.SUCCESS,
-      SUCCESS_MESSAGES.DEFAULT,
-      banner
-    );
-  });
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.DEFAULT,
+    banner
+  );
+});
 
-  const bannerRequest=catchAsync(async(req,res)=>{
-    const banner=await bannerService.bannerRequest(req.query,req.token.vendor._id);
-    return successResponse(
-      req,
-      res,
-      STATUS_CODES.SUCCESS,
-      SUCCESS_MESSAGES.BANNER_REQUEST
-    );
+const bannerRequest = catchAsync(async (req, res) => {
+  const banner = await bannerService.bannerRequest(
+    req.query,
+    req.token.vendor._id
+  );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.BANNER_REQUEST
+  );
+});
 
-  })
+const deleteBanner = catchAsync(async (req, res) => {
+  const banner = await bannerService.deleteBanner(req.query);
 
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    DELETE_MASSAGES.BANNER_DELETED
+  );
+});
 
-  const deleteBanner = catchAsync(async (req, res) => {
-    const banner = await bannerService.deleteBanner(req.query);
-   
-    return successResponse(
-      req,
-      res,
-      STATUS_CODES.SUCCESS,
-      DELETE_MASSAGES.BANNER_DELETED
-    );
-  })
+const getBanner = catchAsync(async (req, res) => {
+  console.log("working");
+  const banner = await bannerService.getBanner(req.query, req.token.vendor._id);
+  const value = formatBanner(banner.bannerData);
 
-  const getBanner = catchAsync(async (req, res) => {
-    console.log("working");
-    const banner = await bannerService.getBanner(req.query,req.token.vendor._id);
-   
-    return successResponse(
-      req,
-      res,
-      STATUS_CODES.SUCCESS,
-      SUCCESS_MESSAGES.DEFAULT,
-      banner.bannerData,
-      banner.total
-    );
-  })
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.DEFAULT,
+    value,
+    banner.total
+  );
+});
 
-  module.exports={
-    createBanner,
-    editBanner,
-    deleteBanner,
-    getBanner,
-    bannerRequest
-  }
+module.exports = {
+  createBanner,
+  editBanner,
+  deleteBanner,
+  getBanner,
+  bannerRequest,
+};
