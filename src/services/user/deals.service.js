@@ -83,7 +83,7 @@ const homeData = async (location,data) => {
     },
     {
       title: "Categories",
-      data: categoryData,
+      data: topBannerData,
     },
     {
       title: "Trending Deals",
