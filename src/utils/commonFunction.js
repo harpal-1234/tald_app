@@ -126,7 +126,6 @@ const formatRecentlyView = (userData) => {
       delete data.description
       delete data.service;
       delete data.storeType;
-      delete data.businessName
       
     });
   }
