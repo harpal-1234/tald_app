@@ -38,3 +38,11 @@ exports.editDeal= {
     )
   }),
 };
+
+
+exports.editCategory = {
+  body: Joi.object().keys({
+    categoryId: Joi.string().required(),
+    categoryImage: Joi.string().required(),
+  }),
+};

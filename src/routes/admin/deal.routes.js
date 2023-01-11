@@ -42,6 +42,14 @@ const router = express.Router();
 
   );
 
+  router.put(
+    "/editCategory",
+    auth(USER_TYPE.ADMIN),
+    validate(authValidation.editCategory),
+    authController.editCategory
+
+  );
+
 
   
 
