@@ -60,7 +60,7 @@ const createBanner = catchAsync(async (req, res) => {
 
   const getBanner = catchAsync(async (req, res) => {
     console.log("working");
-    const banner = await bannerService.getBanner(req.query);
+    const banner = await bannerService.getBanner(req.query,req.token.vendor._id);
    
     return successResponse(
       req,

@@ -96,7 +96,7 @@ const deleteBanner = async (data) => {
   return bannerData;
 };
 
-const getBanner = async (data) => {
+const getBanner = async (data,storeId) => {
   let { page, limit, search } = data;
   let skip = page * limit;
 
@@ -142,14 +142,14 @@ const getBanner = async (data) => {
     //       { upsert:false }
     //     );
 
-    var bannerData = await Banner.find({ storeId:req.token.vendor._id,isDeleted: false})
+    var bannerData = await Banner.find({ storeId:storeId,isDeleted: false})
       .skip(skip)
       .limit(limit)
       .sort({ _id: 1 })
       .lean();
 
     let total = await Banner.countDocuments({
-      storeId:req.token.vendor._id,
+      storeId:storeId,
       isDeleted: false,
       
     });
