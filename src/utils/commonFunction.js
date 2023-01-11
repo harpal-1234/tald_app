@@ -159,6 +159,14 @@ const formatDeal = (userData) => {
       delete data.createdAt;
       delete data.updatedAt;
       delete data.customerId;
+      delete data.service;
+      delete data.isActive;
+      delete data.isPurchase;
+      delete data.dealDate;
+      delete data.no_of_person;
+      delete data.inclusions;
+      delete data.description;
+      delete data.storeId
     });
   } else {
     delete userData.__v;
