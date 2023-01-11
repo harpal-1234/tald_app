@@ -51,7 +51,7 @@ const homeData = async (location,data) => {
     recentlyView,
     cannabis,
   ] = await Promise.all([
-    Banner.find({ type: "Promoted", isDeleted: false }).lean(),
+    Banner.find({ type: "Promoted", isDeleted: false }).sort({ _id: -1 }).lean(),
     Category.find({ isDeleted: false }).lean(),
     Banner.find({ type: "Casual", isDeleted: false }).lean(),
     Store.find({query, isDeleted: false }).sort({ _id: -1 }).lean(),
