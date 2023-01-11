@@ -142,15 +142,16 @@ const getBanner = async (data) => {
     //       { upsert:false }
     //     );
 
-    var bannerData = await Banner.find({ isDeleted: false, status: "accepted" })
+    var bannerData = await Banner.find({ storeId:req.token.vendor._id,isDeleted: false})
       .skip(skip)
       .limit(limit)
       .sort({ _id: 1 })
       .lean();
 
     let total = await Banner.countDocuments({
+      storeId:req.token.vendor._id,
       isDeleted: false,
-      status: "accepted",
+      
     });
 
     return { total, bannerData };
