@@ -31,7 +31,7 @@ exports.deleteStore = {
 
 exports.editStoreDetails = {
   body: Joi.object().keys({
-    businessName: Joi.string().required(),
+    // businessName: Joi.string().required(),
     storeImage:Joi.string().required(),
     address: Joi.string().required(),
     lat: Joi.number().required(),
@@ -40,9 +40,9 @@ exports.editStoreDetails = {
      category:Joi.string().valid(...Object.values(DEALS_SERVICE)),
      categoryId:Joi.string()
     }),
-    email:JOI.EMAIL,
-    countryCode:Joi.string().required(),
-    phoneNumber: JOI.PHONENUMBER.optional(),
+    // email:JOI.EMAIL,
+    // countryCode:Joi.string().required(),
+    // phoneNumber: JOI.PHONENUMBER.optional(),
     about: Joi.string().required().optional(),
     type:Joi.string().required().optional(),
     description:Joi.string().required().optional(),

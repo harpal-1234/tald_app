@@ -75,18 +75,18 @@ const editStoreDetails = async (data, tokenData) => {
       service:data.service,
       storeType:data.storeType,
       description:data.description,
-      email: data.email,
-      password:data.password,
-      businessName: data.businessName,
-      location: {
-        loc: {
-          address: data.address,
-          type: "Point",
-          coordinates: [data.long, data.lat],
-        },
-      },
-      phoneNumber: data.phoneNumber,
-      countryCode: data.countryCode,
+      // email: data.email,
+      // password:data.password,
+      // businessName: data.businessName,
+      // location: {
+      //   loc: {
+      //     address: data.address,
+      //     type: "Point",
+      //     coordinates: [data.long, data.lat],
+      //   },
+      // },
+      // phoneNumber: data.phoneNumber,
+      // countryCode: data.countryCode,
     }
     },
     { upsert: false,new:true }
