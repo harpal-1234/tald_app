@@ -108,7 +108,7 @@ const formatFavourites = (userData) => {
 const formatRecentlyView = (userData) => {
   if(userData.length)
   {
-    console.log(userData.length);
+    
     userData.forEach((data) => {
       delete data.isBlocked;
       delete data.isDeleted;

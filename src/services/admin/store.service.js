@@ -11,7 +11,7 @@ const { OperationalError } = require("../../utils/errors");
 const createStoreDetails= async (data) => {
 
   const store = await Store.findOne({ email: data.email, isDeleted: false });
-  console.log(store);
+
   if (store) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,

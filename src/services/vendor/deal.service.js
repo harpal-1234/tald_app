@@ -127,7 +127,7 @@ const deleteDeal = async (data) => {
 };
 
 const editDeal=async(data,storeId)=>{
-  console.log(storeId)
+
   const vendor = await Store.findOne({ _id: storeId, isDeleted: false });
   if (!vendor) {
     throw new OperationalError(
