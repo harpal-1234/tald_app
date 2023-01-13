@@ -25,6 +25,8 @@ const createStoreDetails=catchAsync(async (req, res) => {
 
 const getAllStore = catchAsync(async (req, res) => {
     const store = await adminStoreService.getAllStore(req,res);
+    console.log(store);
+    
     const value=formatStore(store);
     return successResponse(
       req,
