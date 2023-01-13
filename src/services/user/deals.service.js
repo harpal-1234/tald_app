@@ -59,7 +59,7 @@ const homeData = async (location,data) => {
     User.find({ _id: data, isDeleted: false })
       .populate({ path: "recentlyView" })
       .lean(),
-    Store.find({ isDeleted: false }).lean(),
+    Store.find({"service.category": "Cannabis", isDeleted: false }).lean(),
   ]);
 
   if (recentlyView) {
