@@ -54,8 +54,8 @@ const homeData = async (location,data) => {
     Banner.find({ type: "Promoted", isDeleted: false }).sort({ _id: -1 }).lean(),
     Category.find({ isDeleted: false }).lean(),
     Banner.find({ type: "Casual", isDeleted: false }).lean(),
-    Store.find({query, isDeleted: false }).sort({ _id: -1 }).lean(),
-    Store.find({query,isDeleted: false }).sort({ _id: -1 }).lean(),
+    Store.find({"service.category": {$nin:"Cannabis"},query, isDeleted: false }).sort({ _id: -1 }).lean(),
+    Store.find({"service.category": {$nin:"Cannabis"},query,isDeleted: false }).sort({ _id: -1 }).lean(),
     User.find({ _id: data, isDeleted: false })
       .populate({ path: "recentlyView" })
       .lean(),
