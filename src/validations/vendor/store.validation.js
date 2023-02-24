@@ -18,7 +18,8 @@ exports.createStore = {
     countryCode:Joi.string().required(),
     phoneNumber: JOI.PHONENUMBER.optional(),
     about: Joi.string().required().optional(),
-    type:Joi.string().required().optional()
+    type:Joi.string().required().optional(),
+    // vendorId:Joi.string().required()
   }),
 };
 

@@ -6,7 +6,7 @@ exports.createBanner = {
   body: Joi.object().keys({
     image: Joi.string().required(),
     title: Joi.string().required(),
-    bannerId:Joi.number().required(),
+    bannerId:Joi.string().required(),
     startDate: Joidate.date().format('YYYY-MM-DD').utc(),
     endDate:Joidate.date().format('YYYY-MM-DD').utc(),
     service: Joi.object().keys({
@@ -39,11 +39,13 @@ exports.deleteBanner = {
 
 exports.getBanner = {
   query: Joi.object().keys({
-   id:Joi.string().required(),
+    page: Joi.number().required(),
+    limit: Joi.number().required(),
+    type:Joi.string().required().valid("active","deactive")
   }),
 };
 
-exports.bannerRequest={
+exports.bannerAction={
   query: Joi.object().keys({
     id: Joi.string().required()
   }),

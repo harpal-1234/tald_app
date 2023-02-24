@@ -12,7 +12,7 @@ const { formatDeal}=require("../../utils/commonFunction");
 
 const createDeal=catchAsync(async(req,res)=>{
 
-    const deal=await vendorDealsService.createDeal(req.body,req.token.vendor._id);
+    const deal=await vendorDealsService.createDeal(req.body,req.token.user._id);
     return successResponse(
         req,
         res,
@@ -38,7 +38,7 @@ const getAllDeal=catchAsync(async(req,res)=>{
 
 const deleteDeal=catchAsync(async(req,res)=>{
 
-  const coupon=await vendorDealsService.deleteDeal(req.query,req.token.vendor._id);
+  const coupon=await vendorDealsService.deleteDeal(req.query,req.token.user._id);
   return successResponse(
       req,
       res,
@@ -49,7 +49,7 @@ const deleteDeal=catchAsync(async(req,res)=>{
 
   const editDeal=catchAsync(async(req,res)=>{
 
-    const editDeal=await vendorDealsService.editDeal(req.body,req.token.vendor._id);
+    const editDeal=await vendorDealsService.editDeal(req.body,req.token.user._id);
     return successResponse(
         req,
         res,

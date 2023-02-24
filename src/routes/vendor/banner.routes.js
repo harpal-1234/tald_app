@@ -9,38 +9,38 @@ const router = express.Router();
 
 router.post(
   "/create",
-  auth(USER_TYPE.VENDOR_ADMIN),
+  auth(USER_TYPE.USER),
   validate(bannerValidation.createBanner),
   bannerController.createBanner
 );
 
 router.post(
     "/editBanner",
-    auth(USER_TYPE.VENDOR_ADMIN),
+    auth(USER_TYPE.USER),
     validate(bannerValidation.editBanner),
     bannerController.editBanner
   );
 
   router.get(
     "/getBanner",
-    auth(USER_TYPE.VENDOR_ADMIN),
-    // validate(bannerValidation.getBanner),
+    auth(USER_TYPE.USER),
+    validate(bannerValidation.getBanner),
     bannerController.getBanner
   );
   
 
   router.delete(
     "/deleteBanner",
-    auth(USER_TYPE.VENDOR_ADMIN),
+    auth(USER_TYPE.USER),
     validate(bannerValidation.deleteBanner),
     bannerController.deleteBanner
   );
 
   router.post(
-    "/request",
-    auth(USER_TYPE.VENDOR_ADMIN),
-    validate(bannerValidation.bannerRequest),
-    bannerController.bannerRequest
+    "/bannerAction",
+    auth(USER_TYPE.USER),
+    validate(bannerValidation.bannerAction),
+    bannerController.bannerAction
   );
 
 module.exports=router

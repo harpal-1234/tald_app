@@ -3,9 +3,8 @@ const { STATUS_CODES, ERROR_MESSAGES } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 const moment = require("moment");
 
-const createDeal = async (data, tokendata) => {
- 
-  const vendor = await Store.findOne({ _id: tokendata, isDeleted: false });
+const createDeal = async (data, vendorId) => {
+  const vendor = await Store.findOne({ vendor: vendorId, isDeleted: false });
   if (!vendor) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
@@ -18,40 +17,46 @@ const createDeal = async (data, tokendata) => {
     isDeleted: false,
   });
 
-
-
   if (deal) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
       ERROR_MESSAGES.DEAL_ID
     );
   }
-  const validFromDate=moment(data.validFrom).format("YYYY-MM-DD");
-  const validToDate=moment(data.validTo).format("YYYY-MM-DD");
+  const validFromDate = moment(data.validFrom).format("YYYY-MM-DD");
+  const validToDate = moment(data.validTo).format("YYYY-MM-DD");
 
   const newDeal = await Deal.create({
-    storeId:vendor.id,
+    storeId: vendor._id,
     dealId: data.dealId,
-    title:data.title,
+    vendor: vendorId,
+    images: data.images,
+    title: data.title,
     totalPrice: data.totalPrice,
-    discountPrice:data.discountPrice,
+    discountPrice: data.discountPrice,
     description: data.description,
-    inclusions:data.inclusions,
+    inclusions: data.inclusions,
     no_of_person: data.no_of_person,
-    dealDate:data.dealDate,
-    service:vendor.service,
-    quantity:data.quantity,
+    dealDate: data.dealDate,
+    service: vendor.service,
+    quantity: data.quantity,
     description: data.description,
+    gender: data.gender,
+    location: {
+      loc: {
+        address: data.address,
+        coordinates: [data.long, data.lat],
+      },
+    },
     validFrom: moment(validFromDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
-    validTo: moment(validToDate+ "Z", "YYYY-MM-DD" + "Z").toDate(),
+    validTo: moment(validToDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
   });
-
 
   return newDeal;
 };
 
 const getAllDeal = async (req, res) => {
-  let { page, limit, search } = req.query;
+  let { page, limit, search,type } = req.query;
   let skip = page * limit;
   if (search) {
     const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
@@ -83,6 +88,7 @@ const getAllDeal = async (req, res) => {
 
     return { total, dealData };
   } else {
+    if(type == "active"){
     const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
 
     await Deal.updateMany(
@@ -91,16 +97,47 @@ const getAllDeal = async (req, res) => {
       { upsert: false }
     );
 
-    var dealData = await Deal.find({storeId:req.token.vendor._id, isDeleted: false })
+    var dealData = await Deal.find({
+      vendor: req.token.user._id,status:"activate",
+      isDeleted: false,
+    })
       .skip(skip)
       .limit(limit)
       .sort({ _id: -1 })
       .lean();
-     
 
-    let total = await Deal.countDocuments({storeId:req.token.vendor._id, isDeleted: false });
+    let total = await Deal.countDocuments({
+      vendor: req.token.user._id,status:"activate",
+      isDeleted: false,
+    });
 
     return { total, dealData };
+  }
+  if(type == "deactive"){
+    const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
+
+    await Deal.updateMany(
+      { $and: [{ validTo: { $lte: date } }, { isDeleted: false }] },
+      { $set: { status: "deactivate", isActive: false } },
+      { upsert: false }
+    );
+
+    var dealData = await Deal.find({
+      vendor: req.token.user._id,status:"deactivate",
+      isDeleted: false,
+    })
+      .skip(skip)
+      .limit(limit)
+      .sort({ _id: -1 })
+      .lean();
+
+    let total = await Deal.countDocuments({
+      vendor: req.token.user._id,status:"deactivate",
+      isDeleted: false,
+    });
+
+    return { total, dealData };
+  }
   }
 };
 
@@ -126,45 +163,50 @@ const deleteDeal = async (data) => {
   return deal;
 };
 
-const editDeal=async(data,storeId)=>{
-
-  const vendor = await Store.findOne({ _id: storeId, isDeleted: false });
+const editDeal = async (data, vendorId) => {
+  const vendor = await Store.findOne({ vendor: vendorId, isDeleted: false });
   if (!vendor) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
       ERROR_MESSAGES.ACCOUNT_NOT_EXIST
     );
   }
-  const validFromDate=moment(data.validFrom).format("YYYY-MM-DD");
-  const validToDate=moment(data.validTo).format("YYYY-MM-DD");
-  
-  
-  const editDeal = await Deal.findOneAndUpdate({_id: data.id, storeId:vendor.id,},{
-    dealId: data.dealId,
-    title:data.title,
-    totalPrice: data.totalPrice,
-    discountPrice:data.discountPrice,
-    description: data.description,
-    inclusions:data.inclusions,
-    no_of_person: data.no_of_person,
-    dealDate:data.dealDate,
-    service:vendor.service,
-    quantity:data.quantity,
-    description: data.description,
-    validFrom: moment(validFromDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
-    validTo: moment(validToDate+ "Z", "YYYY-MM-DD" + "Z").toDate(),
-  },{upsert:false,new:true});
+  const validFromDate = moment(data.validFrom).format("YYYY-MM-DD");
+  const validToDate = moment(data.validTo).format("YYYY-MM-DD");
 
- 
+  const editDeal = await Deal.findOneAndUpdate(
+    { _id: data.id, vendor: vendorId },
+    {
+      images: data.images,
+      title: data.title,
+      totalPrice: data.totalPrice,
+      discountPrice: data.discountPrice,
+      description: data.description,
+      inclusions: data.inclusions,
+      no_of_person: data.no_of_person,
+      dealDate: data.dealDate,
+      service: vendor.service,
+      quantity: data.quantity,
+      description: data.description,
+      gender: data.gender,
+      location: {
+        loc: {
+          address: data.address,
+          coordinates: [data.long, data.lat],
+        },
+      },
+      validFrom: moment(validFromDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
+      validTo: moment(validToDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
+    },
+    { upsert: false, new: true }
+  );
 
   return editDeal;
-
-}
+};
 
 module.exports = {
   createDeal,
   getAllDeal,
   deleteDeal,
   editDeal,
- 
 };

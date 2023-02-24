@@ -12,11 +12,11 @@ const dealDate = mongoose.Schema(
 );
 const dealSchema = mongoose.Schema(
   {
+    dealId:{type:String,required:true},
     storeId: { type: mongoose.SchemaTypes.ObjectId, ref: "stores" },
-    dealId: { type: Number, default: "" },
+    vendor: { type: mongoose.SchemaTypes.ObjectId, ref: "vendors" },
     title: { type: String, default: "" },
     category: { type: String, enum: [...Object.values(DEALS_SERVICE)] },
-    // name: { type: String, default: "" },
     totalPrice: { type: Number, default: "" },
     discountPrice: { type: Number, default: "" },
     description: { type: String, default: "" },
@@ -24,6 +24,17 @@ const dealSchema = mongoose.Schema(
     no_of_person: { type: String, default: "" },
     dealDate: [dealDate],
     gender: { type: String },
+    images: [{ image: { type: String, required: true } }],
+    location: {
+      loc: {
+        address: { type: String, default: "" },
+        type: { type: String, default: "Point" },
+        coordinates: {
+          type: [Number],
+          default: [0, 0],
+        },
+      },
+    },
     status: {
       type: String,
       enum: ["activate", "deactivate"],

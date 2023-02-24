@@ -11,9 +11,10 @@ const storeSchema = mongoose.Schema(
     // },
     storeImage: { type: String,default:''},
     email: { type: String, lowercase: true, trim: true, unique: true },
-    password: { type: String, required: true },
     businessName: { type: String, default: "" },
     storeType: { type: String, default: "" },
+    vendor:{type: mongoose.SchemaTypes.ObjectId,
+      ref: "user"},
     service:{
       category:{type: String, enum:[...Object.values(DEALS_SERVICE)]},
       categoryId:{type:String}

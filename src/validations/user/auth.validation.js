@@ -13,17 +13,28 @@ exports.login = {
   body: Joi.object().keys({
     email: JOI.EMAIL,
     password:Joi.string().min(6).required(),
+    type:Joi.string().required().valid("User", "Vendor")
+      // deviceToken:Joi.string().required(),
+    // deviceType:Joi.string().valid(...Object.values(DEVICE_TYPE)),
+  })
+   
+};
+exports.logOut = {
+  body: Joi.object().keys({
+    type:Joi.string().required().valid("User", "Vendor")
       // deviceToken:Joi.string().required(),
     // deviceType:Joi.string().valid(...Object.values(DEVICE_TYPE)),
   })
    
 };
 
+
 exports.userSocialLogin = {
   body: Joi.object().keys({
     name: Joi.string().allow('', null),
     email: Joi.string().email().lowercase().trim().allow('', null),
-    socialId:Joi.string().required()
+    socialId:Joi.string().required(),
+    type:Joi.string().required().valid("User", "Vendor")
   }),
 };
 
@@ -36,6 +47,7 @@ exports.signUp = {
     email: Joi.string().email().lowercase().trim().required(),
     password: JOI.PASSWORD,
     phoneNumber: JOI.PHONENUMBER,
+    type:Joi.string().required().valid("User", "Vendor")
     // deviceToken:Joi.string().required(),
     // deviceType:Joi.string().valid(...Object.values(DEVICE_TYPE)),
   }),

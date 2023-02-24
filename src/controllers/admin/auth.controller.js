@@ -10,7 +10,7 @@ const { successResponse } = require("../../utils/response");
 const adminLogin = catchAsync(async (req, res) => {
   let { email, password } = req.body;
   const admin = await adminService.adminLogin(email, password);
-  const token = await tokenService.generateAuthToken(admin, USER_TYPE.ADMIN);
+  const token = await tokenService.generateAuthToken(admin, USER_TYPE.ADMIN,"");
   return successResponse(
     req,
     res,

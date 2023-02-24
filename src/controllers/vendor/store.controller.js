@@ -10,16 +10,17 @@ const { successResponse } = require("../../utils/response");
 const { format } = require("morgan");
 const { formatStore, formatCategory } = require("../../utils/commonFunction");
 
-// const createStore = catchAsync(async (req, res) => {
-//   const newStore = await vendorStoreService.createStore(req.body,req.token.vendor._id);
-//   return successResponse(
-//     req,
-//     res,
-//     STATUS_CODES.SUCCESS,
-//     SUCCESS_MESSAGES.DEFAULT,
-//     newStore
-//   );
-// });
+const createStore = catchAsync(async (req, res) => {
+  const vendorId = req.token.user._id;
+  const newStore = await vendorStoreService.createStore(req.body,vendorId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.DEFAULT,
+    newStore
+  );
+});
 const getStoreDetails=catchAsync(async(req,res)=>{
   const store = await vendorStoreService.getStoreDetails(req.token.vendor._id);
   return successResponse(
@@ -65,6 +66,7 @@ const vendorStoreName=catchAsync(async (req, res) => {
 });
 
 const getStoreCategory=catchAsync(async (req, res) => {
+ 
   const store = await vendorStoreService.getStoreCategory(req,res);
   const value=formatCategory(store)
   return successResponse(
@@ -75,13 +77,27 @@ const getStoreCategory=catchAsync(async (req, res) => {
    value
   );
 });
+const vendorDashBoard = catchAsync(async(req,res)=>{
+  const vendorId = req.token.user._id
+  const dashboard = vendorStoreService.dashboard(vendorId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    dashboard
+   
+  );
+
+})
 
 
 module.exports = {
-  // createStore,
+  createStore,
   getStoreDetails,
   editStoreDetails,
   deleteStore,
   vendorStoreName,
-  getStoreCategory
+  getStoreCategory,
+  vendorDashBoard
 };

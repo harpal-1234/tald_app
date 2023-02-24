@@ -12,7 +12,7 @@ const { formatBanner } = require("../../utils/commonFunction");
 const createBanner = catchAsync(async (req, res) => {
   const banner = await bannerService.createBanner(
     req.body,
-    req.token.vendor._id
+    req.token.user._id
   );
 
   return successResponse(
@@ -36,16 +36,17 @@ const editBanner = catchAsync(async (req, res) => {
   );
 });
 
-const bannerRequest = catchAsync(async (req, res) => {
-  const banner = await bannerService.bannerRequest(
+const bannerAction = catchAsync(async (req, res) => {
+  const banner = await bannerService.bannerAction(
     req.query,
-    req.token.vendor._id
+    req.token.user._id
   );
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.BANNER_REQUEST
+    SUCCESS_MESSAGES.SUCCESS,
+    banner
   );
 });
 
@@ -61,7 +62,7 @@ const deleteBanner = catchAsync(async (req, res) => {
 });
 
 const getBanner = catchAsync(async (req, res) => {
-  const banner = await bannerService.getBanner(req.query, req.token.vendor._id);
+  const banner = await bannerService.getBanner(req.query, req.token.user._id);
   const value = formatBanner(banner.bannerData);
 
   return successResponse(
@@ -79,5 +80,5 @@ module.exports = {
   editBanner,
   deleteBanner,
   getBanner,
-  bannerRequest,
+  bannerAction,
 };

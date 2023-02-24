@@ -40,6 +40,7 @@ const saveToken = async (data) => {
     device: { type: data.deviceType, token: data.deviceToken },
     role: data.userType,
     token: data.token,
+    type:data.type
   };
 
   if (data.userType === USER_TYPE.VENDOR_ADMIN) {
@@ -61,7 +62,7 @@ const saveToken = async (data) => {
   return tokenDoc;
 };
 
-const generateAuthToken = async (user, userType,deviceToken, deviceType) => {
+const generateAuthToken = async (user, userType,deviceToken, deviceType,type) => {
   const tokenExpires = moment().add(config.jwt.accessExpirationMinutes, "days");
 
   var tokenId = new ObjectID();
@@ -72,6 +73,7 @@ const generateAuthToken = async (user, userType,deviceToken, deviceType) => {
     tokenType: TOKEN_TYPE.ACCESS,
     userType,
     tokenId,
+    type
   });
 
   const data = await saveToken({
@@ -83,6 +85,7 @@ const generateAuthToken = async (user, userType,deviceToken, deviceType) => {
     tokentype: TOKEN_TYPE.ACCESS,
     userType,
     user,
+    type
   });
 
   return {

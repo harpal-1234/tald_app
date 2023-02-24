@@ -9,14 +9,14 @@ const router = express.Router();
 
 router.post(
     "/create",
-    auth(USER_TYPE.VENDOR_ADMIN),
+    auth(USER_TYPE.USER),
     validate(dealValidation.create),
     dealController.createDeal
   );
 
   router.put(
     "/edit",
-    auth(USER_TYPE.VENDOR_ADMIN),
+    auth(USER_TYPE.USER),
     validate(dealValidation.editDeal),
     dealController.editDeal
   );
@@ -24,14 +24,14 @@ router.post(
 
   router.get(
     "/getAll",
-    auth(USER_TYPE.VENDOR_ADMIN),
+    auth(USER_TYPE.USER),
     validate(dealValidation.getAllDeal),
     dealController.getAllDeal
   );
 
   router.delete(
     "/deleteDeal",
-    auth(USER_TYPE.VENDOR_ADMIN),
+    auth(USER_TYPE.USER),
     validate(dealValidation.deleteDeal),
     dealController.deleteDeal
   );

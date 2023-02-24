@@ -27,12 +27,15 @@ const signUp = catchAsync(async (req, res) => {
     pushNotification:newUser.isPushNotification,
     phoneNumber:newUser.phoneNumber
   };
+
   const token = await tokenService.generateAuthToken(
     newUser,
     USER_TYPE.USER,
     req.body.deviceToken,
-    req.body.deviceType
+    req.body.deviceType,
+    req.body.type
   );
+  
 
   return successResponse(
     req,
@@ -42,12 +45,15 @@ const signUp = catchAsync(async (req, res) => {
     data,
     token
   );
+  
+ 
 });
 
 const userLogin = catchAsync(async (req, res) => {
   const newUser = await userService.userLogin(
     req.body.email,
     req.body.password,
+    req.body.type
   );
   const data = {
     name: newUser.name,
@@ -55,12 +61,15 @@ const userLogin = catchAsync(async (req, res) => {
     pushNotification:newUser.isPushNotification,
     phoneNumber:newUser.phoneNumber
   };
+
   const token = await tokenService.generateAuthToken(
     newUser,
     USER_TYPE.USER,
     req.body.deviceToken,
-    req.body.deviceType
+    req.body.deviceType,
+    req.body.type
   );
+  
 
   return successResponse(
     req,
@@ -70,6 +79,8 @@ const userLogin = catchAsync(async (req, res) => {
     data,
     token
   );
+  
+ 
 });
 
 const userSocialLogin= catchAsync(async (req, res) => {
@@ -82,12 +93,14 @@ const userSocialLogin= catchAsync(async (req, res) => {
     email: newUser.email,
     pushNotification:newUser.isPushNotification,
   };
+
  
   const token = await tokenService.generateAuthToken(
     newUser,
     USER_TYPE.USER,
     req.body.deviceToken,
-    req.body.deviceType
+    req.body.deviceType,
+    req.body.type
   );
 
   return successResponse(
@@ -98,10 +111,14 @@ const userSocialLogin= catchAsync(async (req, res) => {
     data,
     token
   );
+  
+
+
+
 });
 
 const userLogout = catchAsync(async (req, res) => {
-  const newUser = await userService.userLogout(req.token._id);
+  const newUser = await userService.userLogout(req.token._id,req.body.type);
 
   return successResponse(
     req,

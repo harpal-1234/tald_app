@@ -1,29 +1,21 @@
 const express = require("express");
-const { validate,validateView } = require("../../middlewares/validate");
+const { validate, validateView } = require("../../middlewares/validate");
 const authValidation = require("../../validations/user/auth.validation");
 const authController = require("../../controllers/user/auth.controller");
 const auth = require("../../middlewares/auth");
-const { USER_TYPE,joi } = require("../../config/appConstants");
+const { USER_TYPE, joi } = require("../../config/appConstants");
 
 const router = express.Router();
 
-router.post(
-    "/signUp",
-    validate(authValidation.signUp),
-    authController.signUp
-  )
+router.post("/signUp", validate(authValidation.signUp), authController.signUp);
 
-router.post(
-  "/login",
-  validate(authValidation.login),
-  authController.userLogin
-)
+router.post("/login", validate(authValidation.login), authController.userLogin);
 
 router.post(
   "/socialLogin",
   validate(authValidation.userSocialLogin),
   authController.userSocialLogin
-)
+);
 
 // router.get("/getProfile", auth(USER_TYPE.USER), authController.getProfile);
 
@@ -60,24 +52,28 @@ router
   .route("/resetPassword")
   .get(authController.forgotPage)
   .post(
-    validateView(validateView(authValidation.forgotPage) ,authValidation.resetForgotPassword),
+    validateView(
+      validateView(authValidation.forgotPage),
+      authValidation.resetForgotPassword
+    ),
     authController.resetForgotPassword
   );
- 
- 
+
 // //----------end------------------//
 
-router.post("/logout", auth(USER_TYPE.USER), authController.userLogout);
-
+router.post(
+  "/logout",
+  auth(USER_TYPE.USER),
+  validate(authValidation.logOut),
+  authController.userLogout
+);
 
 router.get(
   "/pushNotification",
-  auth(USER_TYPE.USER), 
+  auth(USER_TYPE.USER),
   // validate(authValidation.pushNotificationStatus ),
-  authController.pushNotification 
-
-)
-
+  authController.pushNotification
+);
 
 // router.get("/getCustomerList", auth(USER_TYPE.USER), authController.getCustomerList);
 

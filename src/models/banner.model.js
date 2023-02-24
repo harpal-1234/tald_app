@@ -13,7 +13,7 @@ const bannerSchema = mongoose.Schema(
       type: mongoose.SchemaTypes.ObjectId,
       ref: "stores",
     },
-    bannerId:{type:Number},
+    bannerId:{type:String,required:true},
     image: { type: String, default: "" },
     service: {
       category: { type: String, enum: [...Object.values(DEALS_SERVICE)] },
@@ -35,7 +35,12 @@ const bannerSchema = mongoose.Schema(
     status: {
       type: String,
       enum: [...Object.values(BANNER_STATUS)],
-      default: "pending",
+      default: "activate",
+    },
+    expireStatus: {
+      type: String,
+      enum: [...Object.values(BANNER_STATUS)],
+      default: "activate",
     },
     isVerified: { type: Boolean, default: false },
     isBlocked: { type: Boolean, default: false },

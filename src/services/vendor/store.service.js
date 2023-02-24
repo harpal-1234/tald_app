@@ -1,4 +1,4 @@
-const { User, Store, Vendor, Token, Category } = require("../../models");
+const { User, Store, Vendor, Token, Category, Deal } = require("../../models");
 const { STATUS_CODES, ERROR_MESSAGES } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 const { findOne } = require("../../models/token.model");
@@ -6,10 +6,18 @@ const moment=require("moment");
 // const genrateCatoryId=require("")
 
 const createStore = async (data, vendorId) => {
+  console.log(data.service.categoryId)
+
+  const vendor = await User.findOne({_id:vendorId,type:"Vendor",isDeletd:false});
+  if(!vendor){
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.VENDOR_NOT_EXIST
+    )
+  }
   
   const category = await Category.findOne({
     _id: data.service.categoryId,
-    category: data.service.category,
     isDeletd: false,
   });
   if (!category) {
@@ -18,9 +26,9 @@ const createStore = async (data, vendorId) => {
       ERROR_MESSAGES.CATEGORY_NOT_EXISTS
     );
   }
-  if (data.service.category === "Cannabis") {
-    const store = await Store.create({
-      vendorId: vendorId,                                                
+ 
+  if (JSON.stringify(category).includes(data.service.category)) {
+    const store = await Store.create({                                               
       service: data.service,
       storeName: data.storeName,
       about: data.about,
@@ -28,6 +36,7 @@ const createStore = async (data, vendorId) => {
       startDate:moment(data.startDate  + "Z", "YYYY-MM-DD" + "Z").toDate(),
       endDate:moment(data.endDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
       phoneNumber: data.phoneNumber,
+      vendor:vendorId,
       location: {
         loc: {
           address: data.address,
@@ -157,6 +166,18 @@ const getStoreCategory=async(req,res)=>{
   return data;
 
 }
+const dashboard = async(vendorId)=>{
+  const vendor = await User.findOne({_id:vendorId,type:"Vendor",isDeletd:false});
+  if(!vendor){
+     throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.VENDOR_NOT_EXIST
+     )
+  }
+  const deals = await Deal.countDocuments({vendor:vendorId});
+  console.log(deals)
+
+}
 
 module.exports = {
   getStoreDetails,
@@ -164,5 +185,6 @@ module.exports = {
   editStoreDetails,
   deleteStore,
   vendorStoreName,
-  getStoreCategory
+  getStoreCategory,
+  dashboard
 };

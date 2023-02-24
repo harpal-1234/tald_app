@@ -14,6 +14,7 @@ const tokenSchema = mongoose.Schema(
     expires: { type: Date, required: true },
     token: { type: String, unique: true},
     role: { type: String, enum: [...Object.values(USER_TYPE)]  },
+    type:{type:String},
     device: {
       type: {
         type: String,

@@ -20,9 +20,8 @@ const DEVICE_TYPE = {
 };
 
 const BANNER_STATUS = {
-  PENDING: "pending",
-  ACCEPTED: "accepted",
-  REJECTED: "rejected",
+  ACCEPTED: "activate",
+  REJECTED: "deactivate",
 };
 
 const DEALS_SERVICE = {
@@ -44,10 +43,10 @@ const DEALS_SERVICE = {
   MEN_CLOTHING: "Mens Clothing",
 };
 
-const BANNER_TYPE={
-  PROMOTED:'Promoted',
-  CATEGORY:'Category'
-}
+const BANNER_TYPE = {
+  PROMOTED: "Promoted",
+  CATEGORY: "Category",
+};
 const PUSH_NOTIFICATION_STATUS = {
   ENABLE: "Enable",
   DISABLE: "Disable",
@@ -113,14 +112,13 @@ const SUCCESS_MESSAGES = {
   NOTIFICATION_STATUS: "Notification Created Sucessfully",
   NOTIFICATION_DETAILS: "ALl Notification Details",
   FAVOURITES_DEALS: "User Favourite Deal stores",
-  CATEGORY_ADDED:'Category Added Sucessfully',
-  CATEGORY_DATA:'All Category',
-  STORE_DATA:'All Store Data',
-  FAVORITE_DATA:'Deal Added To Your Favourites',
-  STORE_DEALS:'Store All Deals',
-  PUSH_NOTIFICATION_STATUS:"Push notification status updated",
-  ALL_CATEGORY:'All category Details'
- 
+  CATEGORY_ADDED: "Category Added Sucessfully",
+  CATEGORY_DATA: "All Category",
+  STORE_DATA: "All Store Data",
+  FAVORITE_DATA: "Deal Added To Your Favourites",
+  STORE_DEALS: "Store All Deals",
+  PUSH_NOTIFICATION_STATUS: "Push notification status updated",
+  ALL_CATEGORY: "All category Details",
 };
 
 const UPDATED_MESSAGES = {
@@ -132,7 +130,7 @@ const UPDATED_MESSAGES = {
   USER_LOCATION: "Location Updated Successfully",
   NOTIFICATION_EDITED: "Notification Upadted Successfully",
   USER_UPDATED: "User Profile Updated Sucessfully",
-  DEAL_UPDATED:'Deal Updated Successfully'
+  DEAL_UPDATED: "Deal Updated Successfully",
 };
 
 const ERROR_MESSAGES = {
@@ -151,19 +149,19 @@ const ERROR_MESSAGES = {
   USER_NOT_FOUND: "User not found",
   SKILL_ALREADY_EXIST: "Skill already exist with this name.",
   WRONG_PASSWORD: "Password is Incorrect",
-  DEAL_ID: "Please provide different deal id",
-  COUPON_DATA: "Coupon not exist",
+  DEAL_ID: "This deal allready exist",
+  COUPON_DATA: "store not exist",
   COUPON_WEBLINK: "Coupon Already exist",
   STORE_NOT_EXIST: "Store not exists",
   NOTIFICATION_DATA: "Notification Not Exists",
-  DEAL_NOT_EXISTS:"Deal not Exists",
-  BANNER_NOT_EXISTS:'Banner not exists',
-  CATEGORY_ALREADY_EXISTS:'Category Already Exists',
-  CATEGORY_NOT_EXISTS:'Category Not Exists',
-  USER_ALREADY_EXIST:'User Already Exists',
-  CONTACTUS_EMAIL_USER:'Please enter your registered email',
-  BANNER_ID:'Please provide different banner Id'
-
+  DEAL_NOT_EXISTS: "Deal not Exists",
+  BANNER_NOT_EXISTS: "Banner not exists",
+  CATEGORY_ALREADY_EXISTS: "Category Already Exists",
+  CATEGORY_NOT_EXISTS: "Category Not Exists",
+  USER_ALREADY_EXIST: "User Already Exists",
+  CONTACTUS_EMAIL_USER: "Please enter your registered email",
+  BANNER_ID: "Please provide different banner Id",
+  VENDOR_NOT_EXIST: "Vendor does not exist",
 };
 
 const STATUS_CODES = {
@@ -198,13 +196,13 @@ const SOCIAL_LOGIN = {
 
 const DELETE_MASSAGES = {
   USER_DELETED: "User Deleted Successfully",
-  COUPON_DELETED: "Coupon Deleted Successfully",
+  COUPON_DELETED: "Deal Deleted Successfully",
   BANNER_DELETED: "Banner Deleted Successfully",
   STORE_DELETED: "Store Deleted Sucessfully",
   NOTIFICATION_DELETED: "Notification Deleted Successfully",
   ADMIN_DELETED_VENDOR: "Admin Deleted Vendor",
   ADMIN_DELETED_USER: "Admin Deleted User",
-  CATEGORY_DELETED:'Category Deleted Successfully'
+  CATEGORY_DELETED: "Category Deleted Successfully",
 };
 
 module.exports = {
@@ -226,17 +224,15 @@ module.exports = {
   ERROR_MESSAGES,
   STATUS_CODES,
   UPDATED_MESSAGES,
-  SOCIAL_LOGIN
+  SOCIAL_LOGIN,
 };
 
-
-
 // SPA: "spa",
-  // FOOD: "food",
-  // FOOTWEAR: "footwear",
-  // CLOTHING: "clothing",
-  // CANNABIS: "cannabis",
-  // BUFFET: "buffet",
-  // SALON: "salon",
-  // HEATH: "heath",
-  // ACTIVITY: "activity",
+// FOOD: "food",
+// FOOTWEAR: "footwear",
+// CLOTHING: "clothing",
+// CANNABIS: "cannabis",
+// BUFFET: "buffet",
+// SALON: "salon",
+// HEATH: "heath",
+// ACTIVITY: "activity",

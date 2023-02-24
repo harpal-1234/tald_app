@@ -17,7 +17,7 @@ const config = require("../../config/config");
 
 
 const createUser = async (userData) => {
-  const data = await User.findOne({ email: userData.email, isDeleted: false });
+  const data = await User.findOne({ email: userData.email,type:userData.type, isDeleted: false });
   if (data) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
@@ -27,8 +27,8 @@ const createUser = async (userData) => {
   const user = await User.create(userData);
   return user;
 };
-const userLogin = async (email, password) => {
-  let user = await User.findOne({ email: email, isDeleted: false });
+const userLogin = async (email, password,type) => {
+  let user = await User.findOne({$and:[{ email: email,type:type, isDeleted: false }]});
 
   if (!user) {
     throw new OperationalError(
@@ -69,6 +69,7 @@ const userLogin = async (email, password) => {
 const userSocialLogin = async (data) => {
   const user = await User.findOne({
     socialId: data.socialId,
+    type:data.type,
     isDeleted: false,
   });
 
@@ -94,8 +95,8 @@ const getUserById = async (userId) => {
   return user;
 };
 
-const userLogout = async (userId) => {
-  const token = await Token.findOne({ _id: userId, isDeleted: false });
+const userLogout = async (userId,type) => {
+  const token = await Token.findOne({ _id: userId,type:type, isDeleted: false });
 
   if (!token) {
     throw new OperationalError(
