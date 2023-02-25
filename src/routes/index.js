@@ -85,7 +85,7 @@ const defaultRoutes = [
   //   },
 
   {
-    path: "/user",
+    path: "/",
     route: staticRoutes,
   },
 

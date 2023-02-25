@@ -2,20 +2,24 @@ const { User, Store, Vendor, Token, Category, Deal } = require("../../models");
 const { STATUS_CODES, ERROR_MESSAGES } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 const { findOne } = require("../../models/token.model");
-const moment=require("moment");
+const moment = require("moment");
 // const genrateCatoryId=require("")
 
 const createStore = async (data, vendorId) => {
-  console.log(data.service.categoryId)
+  console.log(data.service.categoryId);
 
-  const vendor = await User.findOne({_id:vendorId,type:"Vendor",isDeletd:false});
-  if(!vendor){
+  const vendor = await User.findOne({
+    _id: vendorId,
+    type: "Vendor",
+    isDeletd: false,
+  });
+  if (!vendor) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
       ERROR_MESSAGES.VENDOR_NOT_EXIST
-    )
+    );
   }
-  
+
   const category = await Category.findOne({
     _id: data.service.categoryId,
     isDeletd: false,
@@ -26,17 +30,22 @@ const createStore = async (data, vendorId) => {
       ERROR_MESSAGES.CATEGORY_NOT_EXISTS
     );
   }
- 
+
   if (JSON.stringify(category).includes(data.service.category)) {
-    const store = await Store.create({                                               
+    const store = await Store.create({
       service: data.service,
       storeName: data.storeName,
-      about: data.about,
+      storeImage: data.storeImage,
+      email: data.email,
+      storeType: data.storeType,
+      businessName: data.businessName,
+      description: data.description,
+      countryCode: data.countryCode,
       type: data.type,
-      startDate:moment(data.startDate  + "Z", "YYYY-MM-DD" + "Z").toDate(),
-      endDate:moment(data.endDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
+      // startDate: moment(data.startDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
+      // endDate: moment(data.endDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
       phoneNumber: data.phoneNumber,
-      vendor:vendorId,
+      vendor: vendorId,
       location: {
         loc: {
           address: data.address,
@@ -47,29 +56,10 @@ const createStore = async (data, vendorId) => {
 
     return store;
   }
-
-  const store = await Store.create({
-    vendorId: vendorId,
-    service: data.service,
-    businessName: data.businessName,
-    storeType:data.storeType,
-    email:data.email,
-    description:data.description,
-    countryCode:data.countryCode,
-    phoneNumber:data.phoneNumber,
-    location: {
-      loc: {
-        address: data.address,
-        coordinates: [data.long, data.lat],
-      },
-    },
-  });
-
-  return store;
 };
 
-const editStoreDetails = async (data, tokenData) => {
-  const vendor = await Store.findOne({ _id: tokenData, isDeleted: false });
+const editStoreDetails = async (data, vendorId) => {
+  const vendor = await Store.findOne({ vendor: vendorId, isDeleted: false });
   if (!vendor) {
     throw new OperationalError(
       STATUS_CODES.NOT_FOUND,
@@ -78,33 +68,41 @@ const editStoreDetails = async (data, tokenData) => {
   }
 
   const updateStore = await Store.findOneAndUpdate(
-    { _id: vendor.id },
-    { $set:{
-      storeImage:data.storeImage,
-      service:data.service,
-      storeType:data.storeType,
-      description:data.description,
+    { _id: vendor._id },
+    {
+      service: data.service,
+      storeName: data.storeName,
+      storeImage: data.storeImage,
       email: data.email,
-      password:data.password,
+      storeType: data.storeType,
       businessName: data.businessName,
+      description: data.description,
+      countryCode: data.countryCode,
+      type: data.type,
+      // startDate: moment(data.startDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
+      // endDate: moment(data.endDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
+      phoneNumber: data.phoneNumber,
+      vendor: vendorId,
       location: {
+        address: data.address,
         loc: {
-          address: data.address,
           type: "Point",
           coordinates: [data.long, data.lat],
         },
       },
-      phoneNumber: data.phoneNumber,
-      countryCode: data.countryCode,
-    }
-    },
-    { upsert: false,new:true }
+  },
+
+    { new: true }
   );
   return updateStore;
 };
 
-const deleteStore = async (data, tokendata) => {
-  const vendor = await Vendor.findOne({ _id: tokendata.id, isDeleted: false });
+const deleteStore = async (data, vendorId) => {
+  console.log(vendorId)
+  const vendor = await Vendor.findOne({
+    _id: vendorId,
+    isDeleted: false,
+  });
   if (!vendor) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
@@ -133,7 +131,7 @@ const deleteStore = async (data, tokendata) => {
 
 const vendorStoreName = async (vendorId) => {
   const store = await Store.find({
-    vendorId: vendorId,
+    vendor: vendorId,
     isDeleted: false,
   }).lean();
   if (!store) {
@@ -145,9 +143,9 @@ const vendorStoreName = async (vendorId) => {
   return store;
 };
 
-const getStoreDetails=async(storeId)=>{
+const getStoreDetails = async (vendorId) => {
   const store = await Store.find({
-    _id: storeId,
+    vendor: vendorId,
     isDeleted: false,
   }).lean();
   if (!store) {
@@ -157,27 +155,27 @@ const getStoreDetails=async(storeId)=>{
     );
   }
   return store;
+};
 
-
-}
-
-const getStoreCategory=async(req,res)=>{
-  const data=await Category.find({ isDeleted: false }).lean()
+const getStoreCategory = async (req, res) => {
+  const data = await Category.find({ isDeleted: false }).lean();
   return data;
-
-}
-const dashboard = async(vendorId)=>{
-  const vendor = await User.findOne({_id:vendorId,type:"Vendor",isDeletd:false});
-  if(!vendor){
-     throw new OperationalError(
+};
+const dashboard = async (vendorId) => {
+  const vendor = await User.findOne({
+    _id: vendorId,
+    type: "Vendor",
+    isDeletd: false,
+  });
+  if (!vendor) {
+    throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
       ERROR_MESSAGES.VENDOR_NOT_EXIST
-     )
+    );
   }
-  const deals = await Deal.countDocuments({vendor:vendorId});
-  console.log(deals)
-
-}
+  const deals = await Deal.countDocuments({ vendor: vendorId });
+  console.log(deals);
+};
 
 module.exports = {
   getStoreDetails,
@@ -186,5 +184,5 @@ module.exports = {
   deleteStore,
   vendorStoreName,
   getStoreCategory,
-  dashboard
+  dashboard,
 };

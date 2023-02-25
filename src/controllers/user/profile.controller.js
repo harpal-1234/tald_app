@@ -30,6 +30,7 @@ const changePassword = catchAsync(async (req, res) => {
     req.token.user._id,
     req.body.oldPassword,
     req.body.newPassword,
+  
   );
  
   return successResponse(
@@ -42,7 +43,7 @@ const changePassword = catchAsync(async (req, res) => {
 
 const userContactUs= catchAsync(async (req, res) => {
   const userDetails=await userProfileService.contactUs(req.body);
-  const user = await contactUs(userDetails.name,req.body.message,userDetails.email);
+  const user = await contactUs(userDetails.name,req.body.message,userDetails.email,userDetails.type);
  
   return successResponse(
     req,

@@ -13,7 +13,8 @@ const config = require("../../config/config");
 const bcrypt = require("bcryptjs");
 
 const editProfile = async (id, data) => {
-  const userEmail = await User.findOne({ _id: id, isDeleted: false });
+  if(data.type == "Vendor"){
+  const userEmail = await User.findOne({ _id: id, type:"Vendor",isDeleted: false });
 
   if (!userEmail) {
     throw new OperationalError(
@@ -22,7 +23,7 @@ const editProfile = async (id, data) => {
     );
   }
 
-  const user = await User.findOne({ email: data.email, isDeleted: false });
+  const user = await User.findOne({ email: data.email, type:"Vendor", isDeleted: false });
 
   if (user) {
     if (user.email !== userEmail.email) {
@@ -34,7 +35,7 @@ const editProfile = async (id, data) => {
   }
 
   const updateUser = await User.findByIdAndUpdate(
-    { _id: id },
+    { _id: id , type:"Vendor",isDeleted:false },
     {
       name: data.name,
       email: data.email,
@@ -44,6 +45,40 @@ const editProfile = async (id, data) => {
   ).lean();
   return updateUser;
 };
+if(data.type == "User"){
+  const userEmail = await User.findOne({ _id: id, type:"User",isDeleted: false });
+
+  if (!userEmail) {
+    throw new OperationalError(
+      STATUS_CODES.NOT_FOUND,
+      ERROR_MESSAGES.USER_NOT_FOUND
+    );
+  }
+
+  const user = await User.findOne({ email: data.email, type:"User",isDeleted: false });
+
+  if (user) {
+    if (user.email !== userEmail.email) {
+      throw new OperationalError(
+        STATUS_CODES.ACTION_FAILED,
+        ERROR_MESSAGES.EMAIL_ALREADY_EXIST
+      );
+    }
+  }
+
+  const updateUser = await User.findByIdAndUpdate(
+    { _id: id ,type:"User",isDeleted:false},
+    {
+      name: data.name,
+      email: data.email,
+      phoneNumber: data.phoneNumber,
+    },
+    { upsert: false, new: true }
+  ).lean();
+  return updateUser;
+}
+}
+
 
 const changePassword = async (userId, oldPassword, newPassword) => {
   const user = await User.findById(userId);
@@ -71,7 +106,8 @@ const changePassword = async (userId, oldPassword, newPassword) => {
 };
 
 const contactUs = async (data) => {
-  const user = await User.findOne({ email: data.email, isDeleted: false });
+  if(data.type == "Vendor"){
+  const user = await User.findOne({ email: data.email,type:"Vendor", isDeleted: false });
 
   if (!user) {
     throw new OperationalError(
@@ -80,6 +116,19 @@ const contactUs = async (data) => {
     );
   }
   return user;
+}
+if(data.type == "User"){
+  const user = await User.findOne({ email: data.email, type:"User",isDeleted: false });
+
+  if (!user) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.CONTACTUS_EMAIL_USER
+    );
+  }
+  return user;
+
+}
 };
 
 const pushNotificationStatus = async (data) => {

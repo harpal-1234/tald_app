@@ -22,7 +22,7 @@ const createStore = catchAsync(async (req, res) => {
   );
 });
 const getStoreDetails=catchAsync(async(req,res)=>{
-  const store = await vendorStoreService.getStoreDetails(req.token.vendor._id);
+  const store = await vendorStoreService.getStoreDetails(req.token.user._id);
   return successResponse(
     req,
     res,
@@ -33,7 +33,7 @@ const getStoreDetails=catchAsync(async(req,res)=>{
 })
 
 const editStoreDetails = catchAsync(async (req, res) => {
-  const editStore = await vendorStoreService.editStoreDetails(req.body,req.token.vendor._id);
+  const editStore = await vendorStoreService.editStoreDetails(req.body,req.token.user._id);
   return successResponse(
     req,
     res,
@@ -44,7 +44,8 @@ const editStoreDetails = catchAsync(async (req, res) => {
 });
 
 const deleteStore = catchAsync(async (req, res) => {
-  const store = await vendorStoreService.deleteStore(req, res);
+  console.log(req.token.user._id)
+  const store = await vendorStoreService.deleteStore(req.token.user._id);
   return successResponse(
     req,
     res,
@@ -54,7 +55,7 @@ const deleteStore = catchAsync(async (req, res) => {
 });
 
 const vendorStoreName=catchAsync(async (req, res) => {
-  const store = await vendorStoreService.vendorStoreName(req.token.vendor._id);
+  const store = await vendorStoreService.vendorStoreName(req.token.user._id);
   const value=formatStore(store)
   return successResponse(
     req,

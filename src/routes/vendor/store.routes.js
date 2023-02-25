@@ -16,14 +16,14 @@ router.post(
 
   router.delete(
     "/deleteStore",
-    auth(USER_TYPE.VENDOR_ADMIN),
+    auth(USER_TYPE.USER),
     validate(storeValidation.deleteStore),
     storeController.deleteStore
   );
 
   router.get(
     "/vendorStoreName",
-    auth(USER_TYPE.VENDOR_ADMIN),
+    auth(USER_TYPE.USER),
     storeController.vendorStoreName
   );
   router.get(
@@ -34,14 +34,14 @@ router.post(
 
   router.get(
     "/getDetails",
-    auth(USER_TYPE.VENDOR_ADMIN),
+    auth(USER_TYPE.USER),
     // validate(storeValidation.getStoreDetails),
     storeController.getStoreDetails
   )
 
   router.put(
     "/edit",
-    auth(USER_TYPE.VENDOR_ADMIN),
+    auth(USER_TYPE.USER),
     validate(storeValidation.editStoreDetails),
     storeController.editStoreDetails
   );
