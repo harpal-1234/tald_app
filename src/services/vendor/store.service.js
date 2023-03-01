@@ -46,11 +46,9 @@ const createStore = async (data, vendorId) => {
       // endDate: moment(data.endDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
       phoneNumber: data.phoneNumber,
       vendor: vendorId,
-      location: {
-        loc: {
-          address: data.address,
-          coordinates: [data.long, data.lat],
-        },
+      loc: {
+        address: data.address,
+        coordinates: [data.long, data.lat],
       },
     });
 
@@ -90,7 +88,7 @@ const editStoreDetails = async (data, vendorId) => {
           coordinates: [data.long, data.lat],
         },
       },
-  },
+    },
 
     { new: true }
   );
@@ -98,7 +96,7 @@ const editStoreDetails = async (data, vendorId) => {
 };
 
 const deleteStore = async (data, vendorId) => {
-  console.log(vendorId)
+  console.log(vendorId);
   const vendor = await Vendor.findOne({
     _id: vendorId,
     isDeleted: false,

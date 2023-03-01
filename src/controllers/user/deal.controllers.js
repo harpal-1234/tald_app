@@ -55,6 +55,20 @@ const nearestService = catchAsync(async (req, res) => {
    nearYou
   );
 });
+const storeAndDeals = catchAsync(async(req,res)=>{
+  const {storeId,lat,long}=req.query;
+
+  const data = await dealsService.getStoreAndDeals(storeId,lat,long);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+   
+  );
+
+})
 
 const purchaseDeal = catchAsync(async (req, res) => {
   const data = await dealsService.purchaseDeal(req.token.user._id, req.body.dealId);
@@ -91,6 +105,18 @@ const favouriteStore= catchAsync(async (req, res) => {
     SUCCESS_MESSAGES.FAVORITE_DATA
   );
 });
+const bookNow = catchAsync(async(req,res)=>{
+  const {deals,storeId}=req.body;
+  const userId = req.token.user._id;
+  const order = await dealsService.bookNow(deals,userId,storeId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    order
+  );
+})
 
 // const  recentlyView= catchAsync(async (req, res) => {
 //   const user=await dealsService.recentlyView(req.body.storeId,req.token.user._id);
@@ -109,5 +135,7 @@ module.exports = {
   nearestService,
   purchaseDeal,
   storeDeal,
-  favouriteStore
+  favouriteStore,
+  storeAndDeals,
+  bookNow
 };

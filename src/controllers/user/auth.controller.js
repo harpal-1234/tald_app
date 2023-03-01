@@ -194,12 +194,13 @@ const resetForgotPassword = catchAsync(async (req, res) => {
 });
 
 const pushNotification = catchAsync(async (req, res) => {
-  const notification = await userService.pushNotification(req, res);
+  const userId = req.token.user._id
+  const notification = await userService.pushNotification(userId);
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.LOGOUT,
+    SUCCESS_MESSAGES.SUCCESS,
     notification
   );
 });

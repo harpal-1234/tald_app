@@ -25,86 +25,111 @@ const {
 } = require("../../utils/commonFunction");
 const io = require("socket.io");
 
-const homeData = async (location,data) => {
-  var recentValue;
+const homeData = async (location, data) => {
+  var recentValue = [];
+  // const snapper = await Snapper.find({
+  //   loc: {
+  //     $near: {
+  //       $geometry: {
+  //         type: "Point",
+  //         coordinates: [userBody.longitude, userBody.latitude],
+  //       },
+  //       $maxDistance: 100000,
 
-  const query = {
-    "location.loc": {
-      $near: {
-        $geometry: {
-          type: "Point",
-          coordinates: [location.long, location.lat],
+  //       // $maxDistance:1000
+  //     },
+  //   },
+  // });
+
+  const [stores, featuredStore] = await Promise.all([
+    Store.find({
+      "service.category": { $nin: "Cannabis" },
+      loc: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: [location.long, location.lat],
+          },
+          $maxDistance: 100000,
         },
-        $maxDistance: 1000,
       },
-    },
-  };
-  // const valType=await User.find({query});
-  // console.log(valType);
-
-  const [
-    banner,
-    category,
-    bannerDown,
-    store,
-    newStore,
-    recentlyView,
-    cannabis,
-  ] = await Promise.all([
-    Banner.find({ type: "Promoted", isDeleted: false }).sort({ _id: -1 }).lean(),
-    Category.find({ isDeleted: false }).lean(),
-    Banner.find({ type: "Casual", isDeleted: false }).lean(),
-    Store.find({"service.category": {$nin:"Cannabis"},query, isDeleted: false }).sort({ _id: -1 }).lean(),
-    Store.find({"service.category": {$nin:"Cannabis"},query,isDeleted: false }).sort({ _id: -1 }).lean(),
-    User.find({ _id: data, isDeleted: false })
-      .populate({ path: "recentlyView" })
+      isDeleted: false,
+    })
+      .sort({ _id: -1 })
       .lean(),
-    Store.find({"service.category": "Cannabis", isDeleted: false }).lean(),
+    Store.find({
+      "service.category": { $nin: "Cannabis" },
+      loc: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: [location.long, location.lat],
+          },
+          $maxDistance: 100000,
+        },
+      },
+      isDeleted: false,
+    })
+      .sort({ purchasedCount: -1 })
+      .lean(),
   ]);
 
-  if (recentlyView) {
-    recentValue = recentlyView.flatMap((data) => data.recentlyView);
-  } else {
-    recentValue = recentlyView;
-  }
+  // const valType=await User.find({query});
+  // console.log(valType);
+  //{"service.category": {$nin:"Cannabis"}
+  const [banner, category, recentlyView, cannabis] = await Promise.all([
+    Banner.find({ isDeleted: false }).sort({ _id: -1 }).lean(),
+    Category.find({ isDeleted: false }).lean(),
+    // Store.find({"service.category": {$nin:"Cannabis"},query,isDeleted: false }).sort({ _id: -1 }).lean(),
+    User.findOne({ _id: data, isDeleted: false })
+      .populate({ path: "recentlyView" })
+      .lean(),
+    Store.find({ "service.category": "Cannabis", isDeleted: false }).lean(),
+  ]);
 
-  const topBannerData = formatBanner(banner);
-  const categoryData = formatCategory(category);
-  const bannerData = formatBanner(bannerDown);
-  const storeData = formatStore(store);
-  const newStoreData = formatStore(newStore);
-  const recentlyViewData = formatRecentlyView(recentValue);
-  const cannabisData = formatStore(cannabis);
+  // if (recentlyView) {
+  //   recentValue = recentlyView.flatMap((data) => data.recentlyView);
+  // } else {
+  //   recentValue = recentlyView;
+  // }
+
+  // const topBannerData = formatBanner(banner);
+  // const categoryData = formatCategory(category);
+  // // const bannerData = formatBanner(bannerDown);
+  // const storeData = formatStore(store);
+  // const newStoreData = formatStore(newStore);
+  // const recentlyViewData = formatRecentlyView(recentValue);
+  // const cannabisData = formatStore(cannabis);
 
   const arrData = [
     {
       title: "Banner",
-      data: topBannerData,
+      data: banner,
     },
     {
       title: "Categories",
-      data: categoryData,
+      data: category,
     },
-    {
-      title: "Trending Deals",
-      data: topBannerData,
-    },
+    // {
+    //   title: "Trending Deals",
+    //   data: topBannerData,
+    // },
     {
       title: "Featured Brands",
-      data: storeData,
+      data: featuredStore,
     },
     {
       title: "Newly Added",
-      data: newStoreData,
+      data: stores,
     },
     {
       title: "Recently Viewed",
-      data: recentlyViewData,
+      data: recentlyView.recentlyView,
     },
-    {
-      title: "Cannabis",
-      data: cannabisData,
-    },
+    // {
+    //   title: "Cannabis",
+    //   data: cannabisData,
+    // },
   ];
 
   return arrData;
@@ -124,40 +149,62 @@ const categoryData = async (data, userId) => {
   const [banner, store, newStore, recentlyView, cannabis] = await Promise.all([
     Banner.find({
       "service.categoryId": data.categoryId,
-      type: "Promoted",
       isDeleted: false,
     }).lean(),
     Store.find({
       "service.categoryId": data.categoryId,
+      loc: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: [data.long, data.lat],
+          },
+          $maxDistance: 100000,
+        },
+      },
       isDeleted: false,
-    }).lean(),
-    Store.find({ "service.categoryId": data.categoryId, isDeleted: false })
+    })
+      .sort({ purchasedCount: -1 })
+      .lean(),
+    Store.find({
+      "service.categoryId": data.categoryId,
+      loc: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: [data.long, data.lat],
+          },
+          $maxDistance: 100000,
+        },
+      },
+      isDeleted: false,
+    })
       .sort({ _id: -1 })
       .lean(),
-    User.find({ _id: userId, isDeleted: false })
+    User.findOne({ _id: userId, isDeleted: false })
       .populate({ path: "recentlyView" })
       .lean(),
-    Store.find({
-      "service.categoryId": data.categoryId,
-      isDeleted: false,
-    }).lean(),
+    // Store.find({
+    //   "service.categoryId": data.categoryId,
+    //   isDeleted: false,
+    // }).lean(),
   ]);
 
-  if (recentlyView) {
-    recentValue = recentlyView.flatMap((data) => data.recentlyView);
-  } else {
-    recentValue = recentlyView;
-  }
+  // if (recentlyView) {
+  //   recentValue = recentlyView.flatMap((data) => data.recentlyView);
+  // } else {
+  //   recentValue = recentlyView;
+  // }
 
   const bannerData = formatBanner(banner);
   const storeData = formatStore(store);
   const newStoreData = formatStore(newStore);
-  const recentlyViewData = formatRecentlyView(recentValue);
-  const cannabisData = formatStore(cannabis);
+  // const recentlyViewData = formatRecentlyView(recentValue);
+  // const cannabisData = formatStore(cannabis);
 
   const arrData = [
     {
-      title: "Trending Deals",
+      title: "banners",
       data: bannerData,
     },
     {
@@ -170,7 +217,7 @@ const categoryData = async (data, userId) => {
     },
     {
       title: "Recently Viewed",
-      data: recentlyViewData,
+      data: recentlyView.recentlyView,
     },
     // {
     //   title: "Cannabis",
@@ -178,7 +225,7 @@ const categoryData = async (data, userId) => {
     // },
   ];
 
-  return arrData
+  return arrData;
   // return {
   //   bannerData,
   //   storeData,
@@ -250,7 +297,57 @@ const notification = async (req, res) => {
 //   }
 //   const dealPurachse=await Deal.findOne({_id:req.body.id,is})
 // };
+const getStoreAndDeals = async (storeId, lat, long) => {
+  const store = await Store.findOne({ _id: storeId, isDeleted: false }).lean();
+  const deals = await Deal.find({ storeId: storeId, isDeleted: false });
+  const lon1 = store.loc.coordinates.find((val, index) => {
+    return val;
+  });
+  const lat1 = store.loc.coordinates.find((val, index) => {
+    if (index == 1) {
+      return val;
+    }
+  });
 
+  const lat2 = lat;
+  const lon2 = long;
+
+  // convert coordinates to radians
+  const radlat1 = (Math.PI * lat1) / 180;
+  const radlat2 = (Math.PI * lat2) / 180;
+  const radlon1 = (Math.PI * lon1) / 180;
+  const radlon2 = (Math.PI * lon2) / 180;
+
+  // calculate the difference between the coordinates
+  const dLat = radlat2 - radlat1;
+  const dLon = radlon2 - radlon1;
+
+  // apply the Haversine formula
+  const calculate =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(radlat1) *
+      Math.cos(radlat2) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const formula =
+    2 * Math.atan2(Math.sqrt(calculate), Math.sqrt(1 - calculate));
+  const distance = 6371 * formula; // result is in kilometers
+
+  store.distance = distance;
+  const storeData = formatStore(store);
+
+  const data = [
+    {
+      title: "store",
+      data: storeData,
+    },
+    {
+      title: "deals",
+      data: deals,
+    },
+  ];
+  return data;
+};
 const purchaseDeal = async (userId, dealId) => {
   const deal = await Deal.findOne({
     _id: dealId,
@@ -280,9 +377,12 @@ const storeDeal = async (storeId) => {
       ERROR_MESSAGES.STORE_NOT_EXIST
     );
   }
-  const storeDeal = await Store.findOne({ _id: store.id, isDeleted: false }).lean();
-    // .populate({ path: "deals" })
-    // .lean();
+  const storeDeal = await Store.findOne({
+    _id: store.id,
+    isDeleted: false,
+  }).lean();
+  // .populate({ path: "deals" })
+  // .lean();
 
   return storeDeal;
 };
@@ -467,6 +567,63 @@ const recentlyView = async (storeId, userId) => {
 
   return;
 };
+const bookNow = async (deals, userId, storeId) => {
+  const user = await User.findOne({ _id: userId, isDeleted: false });
+  const check = user.addCard.find((value) => {
+    return value;
+  });
+
+  if (check) {
+    const data = await User.findOneAndUpdate(
+      { _id: userId, isDeleted: false },
+      { $set: { addCard: [] } }
+    );
+  }
+  const value = await Promise.all(
+    deals.map(async (val) => {
+      let data = await User.findOneAndUpdate(
+        { _id: userId },
+        { $push: { addCard: val } },
+        { new: true }
+      );
+      return data;
+    })
+  );
+  const [dealed, store] = await Promise.all([
+    User.findOne({ _id: userId, isDeleted: false }).populate([
+      {
+        path: "addCard.dealId",
+      },
+    ]).lean(),
+    Store.findOne({ _id: storeId ,isDeleted:false}).lean(),
+  ]);
+  let totalAmount = 0;
+  dealed.addCard.forEach((val)=>{
+
+    val.dealId.finalprice = val.dealId.totalPrice-val.dealId.discountPrice;
+    val.dealId.quantity = val.quantity;
+    if(val.quantity <= 2){
+    totalAmount = totalAmount+val.dealId.finalprice*val.quantity
+
+    }else{
+      const quant = val.quantity
+      totalAmount = totalAmount+val.dealId.finalprice*quant
+    }
+  });
+const deal = [];
+dealed.addCard.map((val)=>{
+  deal.push(val.dealId)
+ });
+ const billDetails = {
+  total:totalAmount,
+  tax:totalAmount/100*110-totalAmount,
+  amountPayable:totalAmount+(totalAmount/100*110-totalAmount)
+ }
+ 
+ 
+  
+  return {deal,store,billDetails};
+};
 
 module.exports = {
   recentlyView,
@@ -479,6 +636,8 @@ module.exports = {
   storeDeal,
   favouriteStore,
   reviewOrder,
+  getStoreAndDeals,
+  bookNow,
 };
 
 // userData.recentlyView.map(async(data)=>{

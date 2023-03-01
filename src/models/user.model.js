@@ -39,10 +39,17 @@ const userSchema = mongoose.Schema(
     phoneNumber: { type: String, default: "" },
     socialId: {type: String, default: "" },
     isPushNotification: { type: Boolean, default: false },
-    notification: {
+    isNotification: {
       type: String,
       enum: [...Object.values(NOTIFICATION_STATUS)],
+      default:NOTIFICATION_STATUS.ENABLE
     },
+    addCard:[{
+      dealId: { type: mongoose.SchemaTypes.ObjectId, ref: "deals"},
+      quantity:{type:Number,required:true}
+    }
+
+    ],
     isBlocked: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
     isVerified: { type: Boolean, default: false },

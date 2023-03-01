@@ -27,6 +27,12 @@ router.get(
   validate(authValidation.nearestService),
   authController.nearestService
 )
+router.get(
+  "/storeAndDeals",
+  auth(USER_TYPE.USER),
+  validate(authValidation.storeAndDeals),
+  authController.storeAndDeals
+)
 router.post(
   "/purchase",
   auth(USER_TYPE.USER),
@@ -55,6 +61,13 @@ router.post(
   validate(authValidation.favouriteStore),
   authController.favouriteStore
 );
+router.post(
+  "/bookNow",
+  auth(USER_TYPE.USER),
+  validate(authValidation.bookNow),
+  authController.bookNow
+);
+
 
 
 

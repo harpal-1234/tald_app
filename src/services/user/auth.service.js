@@ -15,9 +15,12 @@ const {
 const { OperationalError } = require("../../utils/errors");
 const config = require("../../config/config");
 
-
 const createUser = async (userData) => {
-  const data = await User.findOne({ email: userData.email,type:userData.type, isDeleted: false });
+  const data = await User.findOne({
+    email: userData.email,
+    type: userData.type,
+    isDeleted: false,
+  });
   if (data) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
@@ -27,8 +30,10 @@ const createUser = async (userData) => {
   const user = await User.create(userData);
   return user;
 };
-const userLogin = async (email, password,type) => {
-  let user = await User.findOne({$and:[{ email: email,type:type, isDeleted: false }]});
+const userLogin = async (email, password, type) => {
+  let user = await User.findOne({
+    $and: [{ email: email, type: type, isDeleted: false }],
+  });
 
   if (!user) {
     throw new OperationalError(
@@ -69,7 +74,7 @@ const userLogin = async (email, password,type) => {
 const userSocialLogin = async (data) => {
   const user = await User.findOne({
     socialId: data.socialId,
-    type:data.type,
+    type: data.type,
     isDeleted: false,
   });
 
@@ -95,8 +100,12 @@ const getUserById = async (userId) => {
   return user;
 };
 
-const userLogout = async (userId,type) => {
-  const token = await Token.findOne({ _id: userId,type:type, isDeleted: false });
+const userLogout = async (userId, type) => {
+  const token = await Token.findOne({
+    _id: userId,
+    type: type,
+    isDeleted: false,
+  });
 
   if (!token) {
     throw new OperationalError(
@@ -140,19 +149,33 @@ const resetPassword = async (tokenData, newPassword) => {
   return { tokenvalue, adminvalue };
 };
 
-// const pushNotification = async (req, res) => {
-//   const app_key_provider = {
-//     getToken() {
-//       return config.onesignal_api_key;
+const pushNotification = async (userId) => {
+  const data = await User.findOne({ _id: userId, isDeleted: false });
+  if (data.isNotification == "Enable") {
+    await User.findOneAndUpdate({_id:userId,isDeleted:false},{
+      isNotification:"Disable"
+    },{new:true});
+    return "Disable"
+  }
+  if (data.isNotification == "Disable") {
+    await User.findOneAndUpdate({_id:userId,isDeleted:false},{
+      isNotification:"Enable"
+    },{new:true});
+  }
+  return "Enable"
+};
+// const app_key_provider = {
+//   getToken() {
+//     return config.onesignal_api_key;
+//   },
+// };
+// const configuration = OneSignal.createConfiguration({
+//   authMethods: {
+//     app_key: {
+//       tokenProvider: app_key_provider,
 //     },
-//   };
-//   const configuration = OneSignal.createConfiguration({
-//     authMethods: {
-//       app_key: {
-//         tokenProvider: app_key_provider,
-//       },
-//     },
-//   });
+//   },
+// });
 //   const client = new OneSignal.DefaultApi(configuration);
 //   const notification = new OneSignal.Notification();
 
@@ -175,7 +198,7 @@ module.exports = {
   userLogin,
   userLogout,
   resetPassword,
-  // pushNotification,
+  pushNotification,
   getUserById,
 };
 

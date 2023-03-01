@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const {DEALS_SERVICE} = require("../config/appConstants");
+const { DEALS_SERVICE } = require("../config/appConstants");
 const bcrypt = require("bcryptjs");
 
 const storeSchema = mongoose.Schema(
@@ -9,34 +9,31 @@ const storeSchema = mongoose.Schema(
     //   ref: "vendors",
     //   required: true,
     // },
-    storeImage: { type: String,default:''},
+    storeImage: { type: String, default: "" },
     email: { type: String, lowercase: true, trim: true, unique: true },
     businessName: { type: String, default: "" },
     storeType: { type: String, default: "" },
-    vendor:{type: mongoose.SchemaTypes.ObjectId,
-      ref: "user"},
-    service:{
-      category:{type: String, enum:[...Object.values(DEALS_SERVICE)]},
-      categoryId:{type:String}
+    vendor: { type: mongoose.SchemaTypes.ObjectId, ref: "user" },
+    service: {
+      category: { type: String, enum: [...Object.values(DEALS_SERVICE)] },
+      categoryId: { type: String },
     },
-    location: {
-      loc: {
-        address: { type: String, default: "" },
-        type: { type: String, default: "Point" },
-        coordinates: {
-          type: [Number],
-          default: [0, 0],
-        },
+
+    loc: {
+      address: { type: String, default: "" },
+      type: { type: String, default: "Point" },
+      coordinates: {
+        type: [Number],
+        default: [0, 0],
       },
     },
-    deals:[{type: mongoose.SchemaTypes.ObjectId,
-      ref: "deals",
-      }],
-    about: { type: String},
-    type:{ type: String},
-    description:{ type: String, default: "" },
-    countryCode:{ type: String, default: "" },
-    phoneNumber:{ type: String},
+    deals: [{ type: mongoose.SchemaTypes.ObjectId, ref: "deals" }],
+    purchasedCount: { type: Number,default:0 },
+    about: { type: String },
+    type: { type: String },
+    description: { type: String, default: "" },
+    countryCode: { type: String, default: "" },
+    phoneNumber: { type: String },
     isBlocked: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
   },
@@ -58,7 +55,7 @@ storeSchema.pre("save", async function (next) {
   next();
 });
 
-storeSchema.index({"location.loc": "2dsphere" });
+storeSchema.index({ loc: "2dsphere" });
 const Store = mongoose.model("stores", storeSchema);
 
 module.exports = Store;

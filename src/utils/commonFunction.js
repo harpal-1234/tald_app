@@ -428,7 +428,7 @@ const formatStore = (userData) => {
       delete data.__v;
       delete data.isBlocked;
       delete data.isDeleted;
-      delete data.createdAt;
+      //delete data.createdAt;
       delete data.updatedAt;
       delete data.customerId;
       delete data.password;
@@ -448,7 +448,8 @@ const formatStore = (userData) => {
     delete userData.__v;
     delete userData.isBlocked;
     delete userData.isDeleted;
-    delete userData.createdAt;
+    delete userData.purchasedCount;
+    delete userData.deals;
     delete userData.updatedAt;
     delete userData.__v;
     delete userData._id;

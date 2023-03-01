@@ -44,7 +44,7 @@ const editStoreDetails = catchAsync(async (req, res) => {
 });
 
 const deleteStore = catchAsync(async (req, res) => {
-  console.log(req.token.user._id)
+
   const store = await vendorStoreService.deleteStore(req.token.user._id);
   return successResponse(
     req,

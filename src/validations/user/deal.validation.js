@@ -17,7 +17,13 @@ exports.nearestService = {
     storeId: Joi.string().required(),
   }),
 };
-
+exports.storeAndDeals = {
+  query: Joi.object().keys({
+    storeId: Joi.string().required(),
+    lat: Joi.number().required(),
+    long: Joi.number().required(),
+  }),
+};
 
 
 exports.storeDeal= {
@@ -37,12 +43,29 @@ exports.favouriteStore = {
   storeId:Joi.string().required(),
   }),
 };
+exports.bookNow = {
+  body: Joi.object().keys({
+    deals: Joi.array()
+      .items(
+        Joi.object()
+          .keys({
+            dealId: Joi.string().required(),
+            quantity:Joi.number().required()
+          })
+          .required()
+      )
+      .required(),
+      storeId:Joi.string().required()
+  }),
+};
 
 exports.categoryData={
   query:Joi.object().keys({
     // service:Joi.object().keys({
       // category:Joi.string().required(),
       categoryId:Joi.string().required(),
+      lat:Joi.number().required(),
+      long:Joi.number().required()
     // })
     })
 }
