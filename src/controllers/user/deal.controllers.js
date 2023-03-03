@@ -142,6 +142,19 @@ const checkOut = catchAsync(async(req,res)=>{
   );
 })
 
+const favoriteStore = catchAsync(async(req,res)=>{
+
+  const userId = req.token.user._id;
+  const store = await dealsService.favoriteStore(userId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    store
+  );
+})
+
 // const  recentlyView= catchAsync(async (req, res) => {
 //   const user=await dealsService.recentlyView(req.body.storeId,req.token.user._id);
 
@@ -157,5 +170,6 @@ module.exports = {
   favouriteStore,
   storeAndDeals,
   bookNow,
-  checkOut
+  checkOut,
+  favoriteStore
 };

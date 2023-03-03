@@ -29,7 +29,14 @@ router.post(
   router.get(
     "/venderDashBoard",
     auth(USER_TYPE.USER),
+    //validate(storeValidation.dashBoard),
     storeController.vendorDashBoard
+  );
+  router.get(
+    "/venderOrders",
+    auth(USER_TYPE.USER),
+    validate(storeValidation.dashBoard),
+    storeController.vendorOrders
   );
 
   router.get(

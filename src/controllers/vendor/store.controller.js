@@ -79,9 +79,10 @@ const getStoreCategory=catchAsync(async (req, res) => {
   );
 });
 const vendorDashBoard = catchAsync(async(req,res)=>{
-  const vendorId = req.token.user._id
+  const vendorId = req.token.user._id;
+  
   const dashboard = await vendorStoreService.dashboard(vendorId);
-  console.log(dashboard)
+
   return successResponse(
     req,
     res,
@@ -92,6 +93,20 @@ const vendorDashBoard = catchAsync(async(req,res)=>{
   );
 
 })
+const vendorOrders = catchAsync(async(req,res)=>{
+
+const userId = req.token.user._id
+const {search,page,limit,startDate,endDate}= req.query;
+  const data =await vendorStoreService.vendorOrder(userId,search,page,limit,startDate,endDate);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+   
+  );
+})
 
 
 module.exports = {
@@ -101,5 +116,6 @@ module.exports = {
   deleteStore,
   vendorStoreName,
   getStoreCategory,
-  vendorDashBoard
+  vendorDashBoard,
+  vendorOrders
 };

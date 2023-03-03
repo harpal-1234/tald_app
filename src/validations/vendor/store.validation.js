@@ -28,6 +28,15 @@ exports.deleteStore = {
     id: Joi.string().required(),
   }),
 };
+exports.dashBoard = {
+  query: Joi.object().keys({
+    page: Joi.number().required(),
+    limit: Joi.number().required(),
+    search:Joi.string().allow(null).allow(''),
+    startDate:Joi.string().allow(null).allow(''),
+    endDate:Joi.string().allow(null).allow(''),
+  }),
+};
 
 exports.editStoreDetails = {
   body: Joi.object().keys({

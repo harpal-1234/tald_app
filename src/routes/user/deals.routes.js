@@ -73,6 +73,12 @@ router.post(
   validate(authValidation.bookNow),
   authController.checkOut
 );
+router.get(
+  "/favoriteStore",
+  auth(USER_TYPE.USER),
+ // validate(authValidation.bookNow),
+  authController.favoriteStore
+);
 
 
 

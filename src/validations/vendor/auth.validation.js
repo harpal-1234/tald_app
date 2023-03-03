@@ -42,5 +42,10 @@ exports.resetForgotPassword = {
     token: Joi.string().required(),
   }),
 };
-
+exports.dashBoard = {
+  query: Joi.object().keys({
+    page: Joi.number().required(),
+    limit: Joi.number().required(),
+  }),
+};
 

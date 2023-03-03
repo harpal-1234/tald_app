@@ -36,42 +36,42 @@ const userSchema = mongoose.Schema(
     dealPurchases: [
       {
         storeId: { type: mongoose.SchemaTypes.ObjectId, ref: "deals" },
-        orderDate:{type:String},
+        orderDate: { type: String },
+        orderTime: { type: String },
         deals: [
           {
             dealId: { type: mongoose.SchemaTypes.ObjectId, ref: "deals" },
             quantity: { type: Number },
-            finalprice:{type:Number}
+            finalprice: { type: Number },
           },
         ],
         PurchasedId: { type: String },
-        billDetails:{
-          total:{type:Number},
-          tax:{type:Number},
-          amountPayable:{type:Number}
-        }
-
+        billDetails: {
+          total: { type: Number },
+          tax: { type: Number },
+          amountPayable: { type: Number },
+        },
       },
     ],
     orders: [
       {
-        userId:{ type: mongoose.SchemaTypes.ObjectId, ref: "user" },
+        userId: { type: mongoose.SchemaTypes.ObjectId, ref: "user" },
         storeId: { type: mongoose.SchemaTypes.ObjectId, ref: "deals" },
-        orderDate:{type:String},
+        orderDate: { type: String },
+        orderTime: { type: String },
         deals: [
           {
             dealId: { type: mongoose.SchemaTypes.ObjectId, ref: "deals" },
             quantity: { type: Number },
-            finalprice:{type:Number}
+            finalprice: { type: Number },
           },
         ],
         PurchasedId: { type: String },
-        billDetails:{
-          total:{type:Number},
-          tax:{type:Number},
-          amountPayable:{type:Number}
-        }
-
+        billDetails: {
+          total: { type: Number },
+          tax: { type: Number },
+          amountPayable: { type: Number },
+        },
       },
     ],
     favouriteStores: [{ type: mongoose.SchemaTypes.ObjectId, ref: "stores" }], //passing like storeId

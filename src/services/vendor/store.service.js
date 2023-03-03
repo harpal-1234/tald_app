@@ -3,6 +3,7 @@ const { STATUS_CODES, ERROR_MESSAGES } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 const { findOne } = require("../../models/token.model");
 const moment = require("moment");
+const { Console } = require("winston/lib/winston/transports");
 // const genrateCatoryId=require("")
 
 const createStore = async (data, vendorId) => {
@@ -159,7 +160,7 @@ const getStoreCategory = async (req, res) => {
   const data = await Category.find({ isDeleted: false }).lean();
   return data;
 };
-const dashboard = async (vendorId) => {
+const dashboard = async (vendorId, page, limit) => {
   const vendor = await User.findOne({
     _id: vendorId,
     type: "Vendor",
@@ -172,10 +173,45 @@ const dashboard = async (vendorId) => {
       ERROR_MESSAGES.VENDOR_NOT_EXIST
     );
   }
-  const [deals,store]= await Promise.all([
+  const [deals, store] = await Promise.all([
     Deal.countDocuments({ vendor: vendorId }),
-    Store.findOne({ vendor: vendorId }),
+    Store.findOne({ vendor: vendorId })
+      .populate({
+        path: "vendor",
+        populate: [
+          {
+            path: "orders.userId",
+            select: ["image", "name"],
+          },
+          {
+            path: "orders.deals.dealId",
+            select: ["totalPrice", "discountPrice"],
+          },
+        ],
+      })
+      .lean(),
   ]);
+
+  store.vendor.orders.forEach((val) => {
+    val.deals.forEach((ele) => {
+      ele.dealId.finalPrice = ele.dealId.totalPrice - ele.dealId.discountPrice;
+    });
+  });
+  const orders = store.vendor.orders
+    .slice(0)
+    .reverse()
+    .map((val) => {
+      return val;
+    });
+  // const lim = page + 1;
+
+  // const skip = page * limit;
+
+  const order = orders.filter((value, index) => {
+    if (index >= 0 && index < 9) {
+      return value;
+    }
+  });
 
   const value = [
     {
@@ -183,17 +219,188 @@ const dashboard = async (vendorId) => {
       data: deals,
     },
     {
-      total:"total deals Purchased",
-      data:store.totalDeals
+      title: "total deals Purchased",
+      data: store.totalDeals,
     },
     {
-      total:"total Revenue",
-      data:store.totalRevenue
-    }
+      title: "total Revenue",
+      data: store.totalRevenue,
+    },
+    {
+      title: "orders",
+      data: order,
+    },
   ];
-  console.log(value)
 
   return value;
+};
+const vendorOrder = async (
+  vendorId,
+  search,
+  page,
+  limit,
+  startDate,
+  endDate
+) => {
+  const vendor = await User.findOne({
+    _id: vendorId,
+    type: "Vendor",
+    isDeletd: false,
+  });
+
+  if (!vendor) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.VENDOR_NOT_EXIST
+    );
+  }
+  const [store] = await Promise.all([
+    Store.findOne({ vendor: vendorId })
+      .populate({
+        path: "vendor",
+        populate: [
+          {
+            path: "orders.userId",
+            select: ["image", "name"],
+          },
+          {
+            path: "orders.deals.dealId",
+            select: ["totalPrice", "discountPrice"],
+          },
+        ],
+      })
+      .lean(),
+  ]);
+
+  store.vendor.orders.forEach((val) => {
+    val.deals.forEach((ele) => {
+      ele.dealId.finalPrice = ele.dealId.totalPrice - ele.dealId.discountPrice;
+    });
+  });
+  const orders = store.vendor.orders
+    .slice(0)
+    .reverse()
+    .map((val) => {
+      return val;
+    });
+  console.log(!search && !startDate);
+
+  if (!search && !startDate && !endDate) {
+    const lim = page + 1;
+
+    const skip = page * limit;
+
+    const order = orders.filter((value, index) => {
+      if (index >= skip && index < limit * lim) {
+        return value;
+      }
+    });
+    const data = [
+      { title: "total Order", data: orders.length },
+      {
+        title: "total Revenue",
+        data: store.totalRevenue,
+      },
+      { title: "orders", data: order },
+    ];
+    return data;
+  }
+
+  else if ((search && startDate && endDate)) {
+    const lim = page + 1;
+
+    const skip = page * limit;
+    const order = orders.filter(
+      (val) =>
+        JSON.stringify(val.userId.name.toLowerCase()).includes(
+          search.toLowerCase()
+        ) ||
+        JSON.stringify(val.PurchasedId.toLowerCase()).includes(
+          search.toLowerCase()
+        )
+    );
+    const sDate = moment(startDate);
+    const eDate = moment(endDate);
+
+    const data1= order.filter((val) => {
+      if (sDate >= moment(val.orderDate) && eDate <= moment(val.orderDate)) {
+        return val;
+      }
+    });
+    const value = data1.filter((value, index) => {
+      if (index >= skip && index < limit * lim) {
+        return value;
+      }
+    });
+    const data = [
+      { title: "total Order", data: data1.length },
+      {
+        title: "total Revenue",
+        data: store.totalRevenue,
+      },
+      { title: "orders", data: value },
+    ];
+
+    return data;
+  }
+   else if (search) {
+    const lim = page + 1;
+
+    const skip = page * limit;
+    const order = orders.filter(
+      (val) =>
+        JSON.stringify(val.userId.name.toLowerCase()).includes(
+          search.toLowerCase()
+        ) ||
+        JSON.stringify(val.PurchasedId.toLowerCase()).includes(
+          search.toLowerCase()
+        )
+    );
+    const value = orders.filter((value, index) => {
+      if (index >= skip && index < limit * lim) {
+        return value;
+      }
+    });
+
+    const data = [
+      { title: "total Order", data: orders.length },
+      {
+        title: "total Revenue",
+        data: store.totalRevenue,
+      },
+      { title: "orders", data: value },
+    ];
+
+    return data;
+  }
+  else if(startDate && endDate){
+    const lim = page + 1;
+
+    const skip = page * limit;
+    const sDate = moment(startDate);
+    const eDate = moment(endDate);
+
+    const data1= orders.filter((val) => {
+      if (sDate >= moment(val.orderDate) && eDate <= moment(val.orderDate)) {
+        return val;
+      }
+    });
+    const value = data1.filter((value, index) => {
+      if (index >= skip && index < limit * lim) {
+        return value;
+      }
+    });
+    const data = [
+      { title: "total Order", data: data1.length },
+      {
+        title: "total Revenue",
+        data: store.totalRevenue,
+      },
+      { title: "orders", data: value },
+    ];
+
+    return data;
+  }
 };
 
 module.exports = {
@@ -204,4 +411,5 @@ module.exports = {
   vendorStoreName,
   getStoreCategory,
   dashboard,
+  vendorOrder,
 };

@@ -2,6 +2,7 @@ const { successResponse } = require("../../utils/response");
 const { User, Token, Admin, Deal, Banner, Store } = require("../../models");
 const { ApiError } = require("../../utils/universalFunction");
 const shortid = require("shortid");
+var moment = require("moment");
 const {
   joi,
   loginType,
@@ -667,9 +668,9 @@ const checkOut = async (deals, userId, storeId) => {
     }
   });
   const deal = [];
- 
+
   dealed.addCard.map((val) => {
-    totalDeals = totalDeals+val.dealId.quantity;
+    totalDeals = totalDeals + val.dealId.quantity;
     deal.push({
       dealId: val.dealId._id,
       quantity: val.dealId.quantity,
@@ -688,17 +689,23 @@ const checkOut = async (deals, userId, storeId) => {
   const purchase = [];
   var currentdate = new Date();
 
+  const date = moment(currentdate).format("YYYY-MM-DD");
+  const val = new Date();
+  const time = moment(val).format("hh:mm:ss");
+
   order.push({
     userId: userId,
     storeId: storeId,
-    orderDate: currentdate,
+    orderDate: date,
+    orderTime: time,
     deals: deal,
     PurchasedId: purchaseId,
     billDetails: billDetails,
   });
   purchase.push({
     storeId: storeId,
-    orderDate: currentdate,
+    orderDate: date,
+    orderTime: time,
     deals: deal,
     PurchasedId: purchaseId,
     billDetails: billDetails,
@@ -714,14 +721,62 @@ const checkOut = async (deals, userId, storeId) => {
     { $push: { orders: order } },
     { new: true }
   );
-  // await User.findOneAndUpdate(
-  //   { _id: userId, isDeleted: false },
-  //   { $set: { addCard: [] } }
-  // );
-  const count = totalDeals+store.totalDeals;
-  const revenue = store.totalRevenue + billDetails.amountPayable
-  const data =await Store.findOneAndUpdate({_id:storeId},{totalDeals:count,totalRevenue:revenue},{new:true});
- 
+  await User.findOneAndUpdate(
+    { _id: userId, isDeleted: false },
+    { $set: { addCard: [] } }
+  );
+  const count = totalDeals + store.totalDeals;
+  const revenue = store.totalRevenue + billDetails.amountPayable;
+  const data = await Store.findOneAndUpdate(
+    { _id: storeId },
+    { totalDeals: count, totalRevenue: revenue },
+    { new: true }
+  );
+};
+const favoriteStore = async (userId) => {
+  const store = await User.findOne({ _id: userId })
+    .populate({
+      path: "favouriteStores",
+      select: ["storeImage", "businessName", "storeType", "service", "loc"],
+    })
+    .lean();
+
+  // const lon1 = store.favouriteStores.map((val) => {
+  //   loc.coordinates.find((val, index) => {
+  //     return val;
+  //   });
+  // });
+  // const lat1 = store.loc.coordinates.find((val, index) => {
+  //   if (index == 1) {
+  //     return val;
+  //   }
+  // });
+
+  // const lat2 = lat;
+  // const lon2 = long;
+
+  // // convert coordinates to radians
+  // const radlat1 = (Math.PI * lat1) / 180;
+  // const radlat2 = (Math.PI * lat2) / 180;
+  // const radlon1 = (Math.PI * lon1) / 180;
+  // const radlon2 = (Math.PI * lon2) / 180;
+
+  // // calculate the difference between the coordinates
+  // const dLat = radlat2 - radlat1;
+  // const dLon = radlon2 - radlon1;
+
+  // // apply the Haversine formula
+  // const calculate =
+  //   Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+  //   Math.cos(radlat1) *
+  //     Math.cos(radlat2) *
+  //     Math.sin(dLon / 2) *
+  //     Math.sin(dLon / 2);
+  // const formula =
+  //   2 * Math.atan2(Math.sqrt(calculate), Math.sqrt(1 - calculate));
+  // const distance = 6371 * formula; // result is in kilometers
+
+  return store;
 };
 
 module.exports = {
@@ -738,6 +793,7 @@ module.exports = {
   getStoreAndDeals,
   bookNow,
   checkOut,
+  favoriteStore,
 };
 
 // userData.recentlyView.map(async(data)=>{
