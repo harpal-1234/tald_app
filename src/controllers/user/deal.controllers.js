@@ -57,8 +57,10 @@ const nearestService = catchAsync(async (req, res) => {
 });
 const storeAndDeals = catchAsync(async(req,res)=>{
   const {storeId,lat,long}=req.query;
+  const userId = req.token.user._id;
 
-  const data = await dealsService.getStoreAndDeals(storeId,lat,long);
+
+  const data = await dealsService.getStoreAndDeals(storeId,lat,long,userId);
   return successResponse(
     req,
     res,
@@ -98,12 +100,22 @@ const storeDeal= catchAsync(async (req, res) => {
 
 const favouriteStore= catchAsync(async (req, res) => {
   const user=await dealsService.favouriteStore(req.body.storeId,req.token.user._id);
+  if(user == true){
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.FAVORITE_DATA
-  );
+    SUCCESS_MESSAGES.FAVORITE_DATA,
+    user
+  );}else{
+    return successResponse(
+      req,
+      res,
+      STATUS_CODES.SUCCESS,
+      SUCCESS_MESSAGES.FAVORITE_DATA_REMOVE,
+      user
+    )
+  }
 });
 const bookNow = catchAsync(async(req,res)=>{
   const {deals,storeId}=req.body;
@@ -116,16 +128,23 @@ const bookNow = catchAsync(async(req,res)=>{
     SUCCESS_MESSAGES.SUCCESS,
     order
   );
+});
+
+const checkOut = catchAsync(async(req,res)=>{
+  const {deals,storeId}=req.body;
+  const userId = req.token.user._id;
+  const order = await dealsService.checkOut(deals,userId,storeId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS
+  );
 })
 
 // const  recentlyView= catchAsync(async (req, res) => {
 //   const user=await dealsService.recentlyView(req.body.storeId,req.token.user._id);
-//   return successResponse(
-//     req,
-//     res,
-//     STATUS_CODES.SUCCESS,
-//     SUCCESS_MESSAGES.FAVORITE_DATA
-//   );
+
 // });
 
 module.exports = {
@@ -137,5 +156,6 @@ module.exports = {
   storeDeal,
   favouriteStore,
   storeAndDeals,
-  bookNow
+  bookNow,
+  checkOut
 };

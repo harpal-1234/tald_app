@@ -165,14 +165,35 @@ const dashboard = async (vendorId) => {
     type: "Vendor",
     isDeletd: false,
   });
+
   if (!vendor) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
       ERROR_MESSAGES.VENDOR_NOT_EXIST
     );
   }
-  const deals = await Deal.countDocuments({ vendor: vendorId });
-  console.log(deals);
+  const [deals,store]= await Promise.all([
+    Deal.countDocuments({ vendor: vendorId }),
+    Store.findOne({ vendor: vendorId }),
+  ]);
+
+  const value = [
+    {
+      title: "deals deals created",
+      data: deals,
+    },
+    {
+      total:"total deals Purchased",
+      data:store.totalDeals
+    },
+    {
+      total:"total Revenue",
+      data:store.totalRevenue
+    }
+  ];
+  console.log(value)
+
+  return value;
 };
 
 module.exports = {

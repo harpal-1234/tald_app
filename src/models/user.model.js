@@ -15,7 +15,7 @@ const userSchema = mongoose.Schema(
     // email:{type:String,required:true},
     name: { type: String, default: "" },
     password: { type: String, default: "" },
-    type:{type:String,required:true},
+    type: { type: String, required: true },
     email: {
       type: String,
       trim: true,
@@ -33,22 +33,62 @@ const userSchema = mongoose.Schema(
         },
       },
     }, //logitude and latitude
-    dealPurchaseId: [{ type: mongoose.SchemaTypes.ObjectId, ref: "deals" }],
+    dealPurchases: [
+      {
+        storeId: { type: mongoose.SchemaTypes.ObjectId, ref: "deals" },
+        orderDate:{type:String},
+        deals: [
+          {
+            dealId: { type: mongoose.SchemaTypes.ObjectId, ref: "deals" },
+            quantity: { type: Number },
+            finalprice:{type:Number}
+          },
+        ],
+        PurchasedId: { type: String },
+        billDetails:{
+          total:{type:Number},
+          tax:{type:Number},
+          amountPayable:{type:Number}
+        }
+
+      },
+    ],
+    orders: [
+      {
+        userId:{ type: mongoose.SchemaTypes.ObjectId, ref: "user" },
+        storeId: { type: mongoose.SchemaTypes.ObjectId, ref: "deals" },
+        orderDate:{type:String},
+        deals: [
+          {
+            dealId: { type: mongoose.SchemaTypes.ObjectId, ref: "deals" },
+            quantity: { type: Number },
+            finalprice:{type:Number}
+          },
+        ],
+        PurchasedId: { type: String },
+        billDetails:{
+          total:{type:Number},
+          tax:{type:Number},
+          amountPayable:{type:Number}
+        }
+
+      },
+    ],
     favouriteStores: [{ type: mongoose.SchemaTypes.ObjectId, ref: "stores" }], //passing like storeId
-    recentlyView:[{ type: mongoose.SchemaTypes.ObjectId, ref: "stores" }],
+    recentlyView: [{ type: mongoose.SchemaTypes.ObjectId, ref: "stores" }],
     phoneNumber: { type: String, default: "" },
-    socialId: {type: String, default: "" },
+    socialId: { type: String, default: "" },
     isPushNotification: { type: Boolean, default: false },
     isNotification: {
       type: String,
       enum: [...Object.values(NOTIFICATION_STATUS)],
-      default:NOTIFICATION_STATUS.ENABLE
+      default: NOTIFICATION_STATUS.ENABLE,
     },
-    addCard:[{
-      dealId: { type: mongoose.SchemaTypes.ObjectId, ref: "deals"},
-      quantity:{type:Number,required:true}
-    }
-
+    addCard: [
+      {
+        dealId: { type: mongoose.SchemaTypes.ObjectId, ref: "deals" },
+        quantity: { type: Number, required: true },
+      },
     ],
     isBlocked: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
@@ -84,4 +124,3 @@ userSchema.methods.isPasswordMatch = async function (password) {
 const User = mongoose.model("user", userSchema);
 
 module.exports = User;
-

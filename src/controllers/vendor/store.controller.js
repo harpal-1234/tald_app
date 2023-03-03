@@ -80,7 +80,8 @@ const getStoreCategory=catchAsync(async (req, res) => {
 });
 const vendorDashBoard = catchAsync(async(req,res)=>{
   const vendorId = req.token.user._id
-  const dashboard = vendorStoreService.dashboard(vendorId);
+  const dashboard = await vendorStoreService.dashboard(vendorId);
+  console.log(dashboard)
   return successResponse(
     req,
     res,

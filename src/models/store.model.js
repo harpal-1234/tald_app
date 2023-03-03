@@ -36,6 +36,8 @@ const storeSchema = mongoose.Schema(
     phoneNumber: { type: String },
     isBlocked: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
+    totalDeals:{type:Number,default:0},
+    totalRevenue:{type:Number,default:0}
   },
   {
     timestamps: true,

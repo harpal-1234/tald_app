@@ -67,6 +67,12 @@ router.post(
   validate(authValidation.bookNow),
   authController.bookNow
 );
+router.post(
+  "/checkOut",
+  auth(USER_TYPE.USER),
+  validate(authValidation.bookNow),
+  authController.checkOut
+);
 
 
 

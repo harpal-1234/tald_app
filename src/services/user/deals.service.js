@@ -1,6 +1,7 @@
 const { successResponse } = require("../../utils/response");
 const { User, Token, Admin, Deal, Banner, Store } = require("../../models");
 const { ApiError } = require("../../utils/universalFunction");
+const shortid = require("shortid");
 const {
   joi,
   loginType,
@@ -24,6 +25,7 @@ const {
   formatRecentlyView,
 } = require("../../utils/commonFunction");
 const io = require("socket.io");
+const { findOneAndUpdate } = require("../../models/token.model");
 
 const homeData = async (location, data) => {
   var recentValue = [];
@@ -297,9 +299,13 @@ const notification = async (req, res) => {
 //   }
 //   const dealPurachse=await Deal.findOne({_id:req.body.id,is})
 // };
-const getStoreAndDeals = async (storeId, lat, long) => {
-  const store = await Store.findOne({ _id: storeId, isDeleted: false }).lean();
-  const deals = await Deal.find({ storeId: storeId, isDeleted: false });
+const getStoreAndDeals = async (storeId, lat, long, userId) => {
+  const [store, deals, user] = await Promise.all([
+    Store.findOne({ _id: storeId, isDeleted: false }).lean(),
+    Deal.find({ storeId: storeId, isDeleted: false }).lean(),
+    User.findOne({ _id: userId, isDeleted: false }).lean(),
+  ]);
+
   const lon1 = store.loc.coordinates.find((val, index) => {
     return val;
   });
@@ -335,7 +341,12 @@ const getStoreAndDeals = async (storeId, lat, long) => {
 
   store.distance = distance;
   const storeData = formatStore(store);
-
+  if (!JSON.stringify(user.recentlyView).includes(storeId)) {
+    await User.findOneAndUpdate(
+      { _id: userId, isDeleted: false },
+      { $push: { recentlyView: storeId } }
+    );
+  }
   const data = [
     {
       title: "store",
@@ -388,40 +399,29 @@ const storeDeal = async (storeId) => {
 };
 
 const favouriteStore = async (storeId, userId) => {
-  const store = await Store.findOne({ _id: storeId, isDeleted: false });
+  const [store, user] = await Promise.all([
+    Store.findOne({ _id: storeId, isDeleted: false }),
+    User.findOne({ _id: userId, isDeleted: false }),
+  ]);
   if (!store) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
       ERROR_MESSAGES.STORE_NOT_EXIST
     );
   }
-  const user = await User.findOne({ _id: userId, isDeleted: false });
 
-  if (user.favouriteStores.length) {
-    user.favouriteStores.map(async (data) => {
-      if (data.toString() === storeId) {
-        const favourite = await User.updateOne(
-          { _id: user.id },
-          { $pull: { favouriteStores: storeId } },
-          { new: true }
-        );
-        return;
-      } else {
-        const favourite = await User.updateOne(
-          { _id: user.id },
-          { $push: { favouriteStores: storeId } },
-          { new: true }
-        );
-        return;
-      }
-    });
-  } else {
-    const favourite = await User.updateOne(
-      { _id: user.id },
-      { $push: { favouriteStores: storeId } },
-      { new: true }
+  if (!JSON.stringify(user.favouriteStores).includes(storeId)) {
+    await User.findOneAndUpdate(
+      { _id: userId },
+      { $push: { favouriteStores: storeId } }
     );
-    return;
+    return true;
+  } else {
+    await User.findOneAndUpdate(
+      { _id: userId },
+      { $pull: { favouriteStores: storeId } }
+    );
+    return false;
   }
 };
 
@@ -590,39 +590,138 @@ const bookNow = async (deals, userId, storeId) => {
     })
   );
   const [dealed, store] = await Promise.all([
-    User.findOne({ _id: userId, isDeleted: false }).populate([
-      {
-        path: "addCard.dealId",
-      },
-    ]).lean(),
-    Store.findOne({ _id: storeId ,isDeleted:false}).lean(),
+    User.findOne({ _id: userId, isDeleted: false })
+      .populate([
+        {
+          path: "addCard.dealId",
+        },
+      ])
+      .lean(),
+    Store.findOne({ _id: storeId, isDeleted: false }).lean(),
   ]);
   let totalAmount = 0;
-  dealed.addCard.forEach((val)=>{
-
-    val.dealId.finalprice = val.dealId.totalPrice-val.dealId.discountPrice;
+  dealed.addCard.forEach((val) => {
+    val.dealId.finalprice = val.dealId.totalPrice - val.dealId.discountPrice;
     val.dealId.quantity = val.quantity;
-    if(val.quantity <= 2){
-    totalAmount = totalAmount+val.dealId.finalprice*val.quantity
-
-    }else{
-      const quant = val.quantity
-      totalAmount = totalAmount+val.dealId.finalprice*quant
+    if (val.quantity <= 2) {
+      totalAmount = totalAmount + val.dealId.finalprice * val.quantity;
+    } else {
+      const quant = val.quantity;
+      totalAmount = totalAmount + val.dealId.finalprice * quant;
     }
   });
-const deal = [];
-dealed.addCard.map((val)=>{
-  deal.push(val.dealId)
- });
- const billDetails = {
-  total:totalAmount,
-  tax:totalAmount/100*110-totalAmount,
-  amountPayable:totalAmount+(totalAmount/100*110-totalAmount)
- }
+  const deal = [];
+  dealed.addCard.map((val) => {
+    deal.push(val.dealId);
+  });
+  const billDetails = {
+    total: totalAmount,
+    tax: (totalAmount / 100) * 110 - totalAmount,
+    amountPayable: totalAmount + ((totalAmount / 100) * 110 - totalAmount),
+  };
+
+  return { deal, store, billDetails };
+};
+const checkOut = async (deals, userId, storeId) => {
+  const user = await User.findOne({ _id: userId, isDeleted: false });
+  // const check = user.addCard.find((value) => {
+  //   return value;
+  // });
+
+  // if (check) {
+  //   const data = await User.findOneAndUpdate(
+  //     { _id: userId, isDeleted: false },
+  //     { $set: { addCard: [] } }
+  //   );
+  // }
+  // const value = await Promise.all(
+  //   deals.map(async (val) => {
+  //     let data = await User.findOneAndUpdate(
+  //       { _id: userId },
+  //       { $push: { addCard: val } },
+  //       { new: true }
+  //     );
+  //     return data;
+  //   })
+  // );
+  let totalDeals = 0;
+  const [dealed, store] = await Promise.all([
+    User.findOne({ _id: userId, isDeleted: false })
+      .populate([
+        {
+          path: "addCard.dealId",
+        },
+      ])
+      .lean(),
+    Store.findOne({ _id: storeId, isDeleted: false }).lean(),
+  ]);
+  let totalAmount = 0;
+  dealed.addCard.forEach((val) => {
+    val.dealId.finalprice = val.dealId.totalPrice - val.dealId.discountPrice;
+    val.dealId.quantity = val.quantity;
+    if (val.quantity <= 2) {
+      totalAmount = totalAmount + val.dealId.finalprice * val.quantity;
+    } else {
+      const quant = val.quantity;
+      totalAmount = totalAmount + val.dealId.finalprice * quant;
+    }
+  });
+  const deal = [];
  
+  dealed.addCard.map((val) => {
+    totalDeals = totalDeals+val.dealId.quantity;
+    deal.push({
+      dealId: val.dealId._id,
+      quantity: val.dealId.quantity,
+      finalPrice: val.dealId.finalprice,
+    });
+  });
+  const billDetails = {
+    total: totalAmount,
+    tax: (totalAmount / 100) * 110 - totalAmount,
+    amountPayable: totalAmount + ((totalAmount / 100) * 110 - totalAmount),
+  };
+  const Id = shortid.generate();
+  const hash = "#";
+  const purchaseId = hash + Id;
+  const order = [];
+  const purchase = [];
+  var currentdate = new Date();
+
+  order.push({
+    userId: userId,
+    storeId: storeId,
+    orderDate: currentdate,
+    deals: deal,
+    PurchasedId: purchaseId,
+    billDetails: billDetails,
+  });
+  purchase.push({
+    storeId: storeId,
+    orderDate: currentdate,
+    deals: deal,
+    PurchasedId: purchaseId,
+    billDetails: billDetails,
+  });
+  await User.findOneAndUpdate(
+    { _id: userId },
+    { $push: { dealPurchases: purchase } },
+    { new: true }
+  );
+
+  await User.findOneAndUpdate(
+    { _id: store.vendor },
+    { $push: { orders: order } },
+    { new: true }
+  );
+  // await User.findOneAndUpdate(
+  //   { _id: userId, isDeleted: false },
+  //   { $set: { addCard: [] } }
+  // );
+  const count = totalDeals+store.totalDeals;
+  const revenue = store.totalRevenue + billDetails.amountPayable
+  const data =await Store.findOneAndUpdate({_id:storeId},{totalDeals:count,totalRevenue:revenue},{new:true});
  
-  
-  return {deal,store,billDetails};
 };
 
 module.exports = {
@@ -638,6 +737,7 @@ module.exports = {
   reviewOrder,
   getStoreAndDeals,
   bookNow,
+  checkOut,
 };
 
 // userData.recentlyView.map(async(data)=>{
