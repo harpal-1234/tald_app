@@ -37,7 +37,12 @@ const storeSchema = mongoose.Schema(
     isBlocked: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
     totalDeals:{type:Number,default:0},
-    totalRevenue:{type:Number,default:0}
+    totalRevenue:{type:Number,default:0},
+    rating:{type:Number,default:0},
+    userRating:[{
+      userId:{ type: mongoose.SchemaTypes.ObjectId, ref: "user" },
+      rating:{type:Number}
+    }]
   },
   {
     timestamps: true,

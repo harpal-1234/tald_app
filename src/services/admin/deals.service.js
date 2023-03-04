@@ -15,6 +15,7 @@ const addCategory = async (categoryName) => {
       ERROR_MESSAGES.CATEGORY_ALREADY_EXISTS
     );
   }
+  // if(cannabisCategoryData.loweCase)
   const addCategory = await Category.create({
     category: categoryName,
   });

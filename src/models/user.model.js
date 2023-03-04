@@ -35,7 +35,7 @@ const userSchema = mongoose.Schema(
     }, //logitude and latitude
     dealPurchases: [
       {
-        storeId: { type: mongoose.SchemaTypes.ObjectId, ref: "deals" },
+        storeId: { type: mongoose.SchemaTypes.ObjectId, ref: "stores" },
         orderDate: { type: String },
         orderTime: { type: String },
         deals: [
@@ -51,12 +51,14 @@ const userSchema = mongoose.Schema(
           tax: { type: Number },
           amountPayable: { type: Number },
         },
+        rating:{type:Number,default:0},
+        isRating:{type:Boolean,default:false}
       },
     ],
     orders: [
       {
         userId: { type: mongoose.SchemaTypes.ObjectId, ref: "user" },
-        storeId: { type: mongoose.SchemaTypes.ObjectId, ref: "deals" },
+        storeId: { type: mongoose.SchemaTypes.ObjectId, ref: "stores" },
         orderDate: { type: String },
         orderTime: { type: String },
         deals: [

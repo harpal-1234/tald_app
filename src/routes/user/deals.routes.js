@@ -33,8 +33,8 @@ router.get(
   validate(authValidation.storeAndDeals),
   authController.storeAndDeals
 )
-router.post(
-  "/purchase",
+router.get(
+  "/purchasedDeals",
   auth(USER_TYPE.USER),
   validate(authValidation.purchaseDeal),
   authController.purchaseDeal
@@ -53,7 +53,12 @@ router.get(
   validate(authValidation.categoryData),
   authController.categoryData
 );
-
+router.get(
+  "/CannabisCategoryData",
+  auth(USER_TYPE.USER),
+  validate(authValidation.categoryCannabisData),
+  authController.getCategoryCannabis
+);
 
 router.post(
   "/favourites",
@@ -76,8 +81,14 @@ router.post(
 router.get(
   "/favoriteStore",
   auth(USER_TYPE.USER),
- // validate(authValidation.bookNow),
+  validate(authValidation.favourite),
   authController.favoriteStore
+);
+router.put(
+  "/rating",
+  auth(USER_TYPE.USER),
+  validate(authValidation.rating),
+  authController.rating
 );
 
 

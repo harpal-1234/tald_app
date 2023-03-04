@@ -31,6 +31,17 @@ const categoryData=catchAsync(async (req, res) => {
     data
   );
 });
+const getCategoryCannabis = catchAsync(async (req, res) => {
+  const data = await dealsService.cannabisCategoryData(req.query,req.token.user._id);
+  // const category = formatDeal(data);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+  );
+});
 
 const getCategoryData = catchAsync(async (req, res) => {
   const data = await dealsService.getCategoryData(req, res);
@@ -73,7 +84,9 @@ const storeAndDeals = catchAsync(async(req,res)=>{
 })
 
 const purchaseDeal = catchAsync(async (req, res) => {
-  const data = await dealsService.purchaseDeal(req.token.user._id, req.body.dealId);
+  const userId = req.token.user._id;
+  const {lat,long,page,limit}= req.query;
+  const data = await dealsService.purchaseDeal(userId,lat,long,page,limit);
   return successResponse(
     req,
     res,
@@ -143,15 +156,29 @@ const checkOut = catchAsync(async(req,res)=>{
 })
 
 const favoriteStore = catchAsync(async(req,res)=>{
+  const {lat,long,page,limit}= req.query;
 
   const userId = req.token.user._id;
-  const store = await dealsService.favoriteStore(userId);
+  const store = await dealsService.favoriteStore(userId,lat,long,page,limit);
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.SUCCESS,
     store
+  );
+})
+
+const rating = catchAsync(async(req,res)=>{
+  const {purchaseId,storeId,rating}=req.query;
+  const userId = req.token.user._id;
+  const rate =  await dealsService.rating(userId,purchaseId,storeId,rating);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    rate
   );
 })
 
@@ -171,5 +198,7 @@ module.exports = {
   storeAndDeals,
   bookNow,
   checkOut,
-  favoriteStore
+  favoriteStore,
+  rating,
+  getCategoryCannabis
 };

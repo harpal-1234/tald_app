@@ -146,6 +146,98 @@ const homeData = async (location, data) => {
   //   cannabisData,
   // };
 };
+const cannabisCategoryData = async (data, userId) => {
+  var recentValue;
+  const catagory = await Category.find({"category":"Cannabis"});
+
+  const [banner, store, newStore, recentlyView, cannabis] = await Promise.all([
+    Banner.find({
+      "service.categoryId": catagory._id,
+      isDeleted: false,
+    }).lean(),
+    Store.find({
+      "service.categoryId": catagory._id,
+      loc: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: [data.long, data.lat],
+          },
+          $maxDistance: 100000,
+        },
+      },
+      isDeleted: false,
+    })
+      .sort({ purchasedCount: -1 })
+      .lean(),
+    Store.find({
+      "service.categoryId": catagory._id,
+      loc: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: [data.long, data.lat],
+          },
+          $maxDistance: 100000,
+        },
+      },
+      isDeleted: false,
+    })
+      .sort({ _id: -1 })
+      .lean(),
+    User.findOne({ _id: userId, isDeleted: false })
+      .populate({ path: "recentlyView" })
+      .lean(),
+    // Store.find({
+    //   "service.categoryId": data.categoryId,
+    //   isDeleted: false,
+    // }).lean(),
+  ]);
+
+  // if (recentlyView) {
+  //   recentValue = recentlyView.flatMap((data) => data.recentlyView);
+  // } else {
+  //   recentValue = recentlyView;
+  // }
+
+  const bannerData = formatBanner(banner);
+  const storeData = formatStore(store);
+  const newStoreData = formatStore(newStore);
+  // const recentlyViewData = formatRecentlyView(recentValue);
+  // const cannabisData = formatStore(cannabis);
+
+  const arrData = [
+    {
+      title: "banners",
+      data: bannerData,
+    },
+    {
+      title: "Featured Brands",
+      data: storeData,
+    },
+    {
+      title: "Newly Added",
+      data: newStoreData,
+    },
+    {
+      title: "Recently Viewed",
+      data: recentlyView.recentlyView,
+    },
+    // {
+    //   title: "Cannabis",
+    //   data: cannabisData,
+    // },
+  ];
+
+  return arrData;
+  return {
+    bannerData,
+    storeData,
+    newStoreData,
+    recentlyViewData,
+    cannabisData,
+  };
+};
 
 const categoryData = async (data, userId) => {
   var recentValue;
@@ -360,25 +452,85 @@ const getStoreAndDeals = async (storeId, lat, long, userId) => {
   ];
   return data;
 };
-const purchaseDeal = async (userId, dealId) => {
-  const deal = await Deal.findOne({
-    _id: dealId,
+const purchaseDeal = async (userId, lat, long, page, limit) => {
+  const deal = await User.findOne({
+    _id: userId,
     isDeleted: false,
-  });
+  })
+    .populate({
+      path: "dealPurchases.storeId",
+      select: [
+        "storeImage",
+        "businessName",
+        "storeType",
+        "service",
+        "loc",
+        "description",
+        "phoneNumber",
+        "countryCode",
+        "rating"
+      ],
+    })
+    .lean();
   if (!deal) {
     throw new OperationalError(
       STATUS_CODES.NOT_FOUND,
       ERROR_MESSAGES.DEAL_NOT_EXISTS
     );
   }
+  const longtitude = deal.dealPurchases.map((val) => {
+    return val.storeId.loc.coordinates.find((val, index) => val);
+  });
 
-  const purchaseDeal = await User.updateOne(
-    { _id: userId },
-    { $push: { dealPurchaseId: dealId } },
-    { new: true }
-  );
+  const latatitude = deal.dealPurchases.map((val) => {
+    return val.storeId.loc.coordinates.find((val, index) => {
+      if (index == 1) {
+        return val;
+      }
+    });
+  });
+  const lon1 = longtitude.find((val) => val);
+  const lat1 = latatitude.find((val) => val);
 
-  return;
+  const lat2 = lat;
+  const lon2 = long;
+
+  // convert coordinates to radians
+  const radlat1 = (Math.PI * lat1) / 180;
+  const radlat2 = (Math.PI * lat2) / 180;
+  const radlon1 = (Math.PI * lon1) / 180;
+  const radlon2 = (Math.PI * lon2) / 180;
+
+  // calculate the difference between the coordinates
+  const dLat = radlat2 - radlat1;
+  const dLon = radlon2 - radlon1;
+
+  // apply the Haversine formula
+  const calculate =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(radlat1) *
+      Math.cos(radlat2) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const formula =
+    2 * Math.atan2(Math.sqrt(calculate), Math.sqrt(1 - calculate));
+  const distance = 6371 * formula; // result is in kilometers
+  console.log(distance);
+
+  deal.dealPurchases.forEach((val) => {
+    val.storeId.distance = distance;
+  });
+  const lim = page + 1;
+
+  const skip = page * limit;
+
+  const Deals = deal.dealPurchases.filter((value, index) => {
+    if (index >= skip && index < limit * lim) {
+      return value;
+    }
+  });
+
+  return Deals;
 };
 
 const storeDeal = async (storeId) => {
@@ -625,6 +777,7 @@ const bookNow = async (deals, userId, storeId) => {
 };
 const checkOut = async (deals, userId, storeId) => {
   const user = await User.findOne({ _id: userId, isDeleted: false });
+
   // const check = user.addCard.find((value) => {
   //   return value;
   // });
@@ -656,6 +809,12 @@ const checkOut = async (deals, userId, storeId) => {
       .lean(),
     Store.findOne({ _id: storeId, isDeleted: false }).lean(),
   ]);
+  if (!store) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.STORE_NOT_EXIST
+    );
+  }
   let totalAmount = 0;
   dealed.addCard.forEach((val) => {
     val.dealId.finalprice = val.dealId.totalPrice - val.dealId.discountPrice;
@@ -729,54 +888,127 @@ const checkOut = async (deals, userId, storeId) => {
   const revenue = store.totalRevenue + billDetails.amountPayable;
   const data = await Store.findOneAndUpdate(
     { _id: storeId },
-    { totalDeals: count, totalRevenue: revenue },
+    {
+      totalDeals: count,
+      totalRevenue: revenue,
+      purchasedCount: store.purchasedCount + 1,
+    },
     { new: true }
   );
 };
-const favoriteStore = async (userId) => {
+const favoriteStore = async (userId, lat, long, page, limit) => {
+  console.log(lat, long);
   const store = await User.findOne({ _id: userId })
     .populate({
       path: "favouriteStores",
-      select: ["storeImage", "businessName", "storeType", "service", "loc"],
+      select: [
+        "storeImage",
+        "businessName",
+        "storeType",
+        "service",
+        "loc",
+        "description",
+        "phoneNumber",
+        "countryCode",
+        "rating"
+      ],
     })
     .lean();
+  if (!store) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.STORE_NOT_EXIST
+    );
+  }
 
-  // const lon1 = store.favouriteStores.map((val) => {
-  //   loc.coordinates.find((val, index) => {
-  //     return val;
-  //   });
-  // });
-  // const lat1 = store.loc.coordinates.find((val, index) => {
-  //   if (index == 1) {
-  //     return val;
-  //   }
-  // });
+  const longtitude = store.favouriteStores.map((val) => {
+    return val.loc.coordinates.find((val, index) => val);
+  });
 
-  // const lat2 = lat;
-  // const lon2 = long;
+  const latatitude = store.favouriteStores.map((val) => {
+    return val.loc.coordinates.find((val, index) => {
+      if (index == 1) {
+        return val;
+      }
+    });
+  });
+  const lon1 = longtitude.find((val) => val);
+  const lat1 = latatitude.find((val) => val);
 
-  // // convert coordinates to radians
-  // const radlat1 = (Math.PI * lat1) / 180;
-  // const radlat2 = (Math.PI * lat2) / 180;
-  // const radlon1 = (Math.PI * lon1) / 180;
-  // const radlon2 = (Math.PI * lon2) / 180;
+  const lat2 = lat;
+  const lon2 = long;
 
-  // // calculate the difference between the coordinates
-  // const dLat = radlat2 - radlat1;
-  // const dLon = radlon2 - radlon1;
+  // convert coordinates to radians
+  const radlat1 = (Math.PI * lat1) / 180;
+  const radlat2 = (Math.PI * lat2) / 180;
+  const radlon1 = (Math.PI * lon1) / 180;
+  const radlon2 = (Math.PI * lon2) / 180;
 
-  // // apply the Haversine formula
-  // const calculate =
-  //   Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-  //   Math.cos(radlat1) *
-  //     Math.cos(radlat2) *
-  //     Math.sin(dLon / 2) *
-  //     Math.sin(dLon / 2);
-  // const formula =
-  //   2 * Math.atan2(Math.sqrt(calculate), Math.sqrt(1 - calculate));
-  // const distance = 6371 * formula; // result is in kilometers
+  // calculate the difference between the coordinates
+  const dLat = radlat2 - radlat1;
+  const dLon = radlon2 - radlon1;
 
-  return store;
+  // apply the Haversine formula
+  const calculate =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(radlat1) *
+      Math.cos(radlat2) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const formula =
+    2 * Math.atan2(Math.sqrt(calculate), Math.sqrt(1 - calculate));
+  const distance = 6371 * formula; // result is in kilometers
+  console.log(distance);
+
+  store.favouriteStores.forEach((val) => {
+    val.distance = distance;
+  });
+  const lim = page + 1;
+
+  const skip = page * limit;
+
+  const order = store.favouriteStores.filter((value, index) => {
+    if (index >= skip && index < limit * lim) {
+      return value;
+    }
+  });
+
+  return order;
+};
+const rating = async (userId, purchaseId, storeId, rating) => {
+  
+
+  const store = await Store.findOne({ _id: storeId, isDeleted: false }).lean();
+  if (!store) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.STORE_NOT_EXIST
+    );
+  }
+  const rate = await Store.findOneAndUpdate(
+    { _id: storeId, isDeleted: false },
+    { $push: { userRating: { userId: userId, rating: rating } } },
+    { new: true }
+  );
+  const user = await User.updateOne(
+    { _id: userId, 'dealPurchases._id': purchaseId },
+    { $set: { 'dealPurchases.$.rating': rating, 'dealPurchases.$.isRating': true } },
+    {new:true}
+  );
+  let count = 0;
+
+  if (rate.userRating) {
+    const value = rate.userRating.map((val) => {
+     
+      count = count + val.rating;
+      
+    });
+    
+    const finalRating = count/rate.userRating.length;
+    await Store.findOneAndUpdate({_id:storeId,isDeleted:false},{rating:finalRating})
+
+    
+  }
 };
 
 module.exports = {
@@ -794,6 +1026,8 @@ module.exports = {
   bookNow,
   checkOut,
   favoriteStore,
+  rating,
+  cannabisCategoryData
 };
 
 // userData.recentlyView.map(async(data)=>{
