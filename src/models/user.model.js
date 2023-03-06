@@ -16,6 +16,7 @@ const userSchema = mongoose.Schema(
     name: { type: String, default: "" },
     password: { type: String, default: "" },
     type: { type: String, required: true },
+    stripeId:{type:String},
     email: {
       type: String,
       trim: true,

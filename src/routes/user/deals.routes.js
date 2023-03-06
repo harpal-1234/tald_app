@@ -75,7 +75,7 @@ router.post(
 router.post(
   "/checkOut",
   auth(USER_TYPE.USER),
-  validate(authValidation.bookNow),
+  validate(authValidation.checkOut),
   authController.checkOut
 );
 router.get(

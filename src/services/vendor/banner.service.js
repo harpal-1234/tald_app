@@ -1,4 +1,4 @@
-const { Vendor, Banner, Store } = require("../../models");
+const { Vendor, Banner, Store, User, Admin } = require("../../models");
 const {
   DELETE_MASSAGES,
   STATUS_CODES,
@@ -7,8 +7,20 @@ const {
 const { OperationalError } = require("../../utils/errors");
 const moment = require("moment");
 const { findOneAndUpdate } = require("../../models/token.model");
+const Stripe = require("stripe");
+const stripe = new Stripe(
+  "sk_test_51MKSEVLBN7xbh0EQH9R2gQi1pon2Do6OQPdXKcAXfqQMWkn7OYwwBb2LRUJFElYeVpVJkkI5Dffgxlj2QjBakBp700a1efzUf0"
+);
+const stripeSerbices = require("../../middlewares/stripe");
 
 const createBanner = async (data, vendorId) => {
+  const customer = await User.findOne({ _id: vendorId, isDeleted: false });
+  const ephemeralKey = await stripeSerbices.stripeServices(customer.stripeId);
+  const paymentIntent = await stripeSerbices.paymentIntent(
+    customer.stripeId,
+    data.amount
+  );
+
   const vendor = await Banner.findOne({
     bannerId: data.bannerId,
     isDeleted: false,
@@ -35,8 +47,16 @@ const createBanner = async (data, vendorId) => {
     startDate: moment(startDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
     endDate: moment(endDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
   });
+  const admin = await Admin.findOne();
 
-  return newBanner;
+  const createOrder = await Admin.findOneAndUpdate(
+    { _id: admin._id },
+    { $push: { orders: {vendor: vendorId,amount:data.amount, bannerId: newBanner._id}  } },
+    { new: true }
+  );
+  console.log(createOrder)
+
+  return { newBanner, ephemeralKey, paymentIntent };
 };
 
 const bannerAction = async (data, vendorId) => {
@@ -53,25 +73,32 @@ const bannerAction = async (data, vendorId) => {
   //   isDeleted: false,
   // });
   let ban = await Banner.findById(data.id).lean();
-  if(ban.status == "activate"){
-    const banner = await Banner.findOneAndUpdate({
-      _id:data.id
-    },{
-     status:"deactivate" 
-    },{
-      new:true
-    })
-    return "deactivate"
-  }else{
-    const banner = await Banner.findOneAndUpdate({
-      _id:data.id
-    },{
-     status:"activate" 
-    },{
-      new:true
-    })
-    return "activate"
-
+  if (ban.status == "activate") {
+    const banner = await Banner.findOneAndUpdate(
+      {
+        _id: data.id,
+      },
+      {
+        status: "deactivate",
+      },
+      {
+        new: true,
+      }
+    );
+    return "deactivate";
+  } else {
+    const banner = await Banner.findOneAndUpdate(
+      {
+        _id: data.id,
+      },
+      {
+        status: "activate",
+      },
+      {
+        new: true,
+      }
+    );
+    return "activate";
   }
   // const banner = await Banner.updateOne(
   //   { _id: data.id },

@@ -428,7 +428,9 @@ const formatStore = (userData) => {
       delete data.__v;
       delete data.isBlocked;
       delete data.isDeleted;
-      //delete data.createdAt;
+      delete data.totalDeals;
+      delete data.totalRevenue;
+      delete data.userRating;
       delete data.updatedAt;
       delete data.customerId;
       delete data.password;

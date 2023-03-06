@@ -213,26 +213,16 @@ const dashboard = async (vendorId, page, limit) => {
     }
   });
 
-  const value = [
-    {
-      title: "deals deals created",
-      data: deals,
-    },
-    {
-      title: "total deals Purchased",
-      data: store.totalDeals,
-    },
-    {
-      title: "total Revenue",
-      data: store.totalRevenue,
-    },
-    {
-      title: "orders",
-      data: order,
-    },
-  ];
+  const value = {
+      totalDeals: deals,
+      totalDealsPurchased: store.totalDeals,
+      totalRevenue:store.totalRevenue,
+      orders:order
 
-  return value;
+    }
+    
+
+  return value
 };
 const vendorOrder = async (
   vendorId,
@@ -295,14 +285,13 @@ const vendorOrder = async (
         return value;
       }
     });
-    const data = [
-      { title: "total Order", data: orders.length },
-      {
-        title: "total Revenue",
-        data: store.totalRevenue,
-      },
-      { title: "orders", data: order },
-    ];
+    const data = {
+      totalOrder: data1.length,
+      totalRevenue:store.totalRevenue,
+      orders:order
+
+    }
+    
     return data;
   }
 
@@ -332,14 +321,13 @@ const vendorOrder = async (
         return value;
       }
     });
-    const data = [
-      { title: "total Order", data: data1.length },
-      {
-        title: "total Revenue",
-        data: store.totalRevenue,
-      },
-      { title: "orders", data: value },
-    ];
+    const data = {
+      totalOrder: data1.length,
+      totalRevenue:store.totalRevenue,
+      orders:order
+
+    }
+    
 
     return data;
   }
@@ -362,14 +350,13 @@ const vendorOrder = async (
       }
     });
 
-    const data = [
-      { title: "total Order", data: orders.length },
-      {
-        title: "total Revenue",
-        data: store.totalRevenue,
-      },
-      { title: "orders", data: value },
-    ];
+    const data = {
+      totalOrder: data1.length,
+      totalRevenue:store.totalRevenue,
+      orders:order
+
+    }
+    
 
     return data;
   }
@@ -390,14 +377,13 @@ const vendorOrder = async (
         return value;
       }
     });
-    const data = [
-      { title: "total Order", data: data1.length },
-      {
-        title: "total Revenue",
-        data: store.totalRevenue,
-      },
-      { title: "orders", data: value },
-    ];
+    const data = {
+      totalOrder: data1.length,
+      totalRevenue:store.totalRevenue,
+      orders:order
+
+    }
+    
 
     return data;
   }

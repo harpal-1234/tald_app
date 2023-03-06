@@ -71,6 +71,25 @@ exports.bookNow = {
       .required(),
     storeId: Joi.string().required(),
   }),
+ 
+};
+exports.checkOut = {
+  body: Joi.object().keys({
+    deals: Joi.array()
+      .items(
+        Joi.object()
+          .keys({
+            dealId: Joi.string().required(),
+            quantity: Joi.number().required(),
+          })
+          .required()
+      )
+      .required(),
+    storeId: Joi.string().required(),
+    amount:Joi.number().required()
+    
+  }),
+ 
 };
 
 exports.categoryData = {

@@ -3,6 +3,10 @@ const bcrypt = require("bcryptjs");
 const { successResponse } = require("../../utils/response");
 const { User, Token, Admin } = require("../../models");
 const { ApiError } = require("../../utils/universalFunction");
+const Stripe = require("stripe");
+const stripe = new Stripe(
+  "sk_test_51MKSEVLBN7xbh0EQH9R2gQi1pon2Do6OQPdXKcAXfqQMWkn7OYwwBb2LRUJFElYeVpVJkkI5Dffgxlj2QjBakBp700a1efzUf0"
+);
 const {
   joi,
   loginType,
@@ -28,6 +32,27 @@ const createUser = async (userData) => {
     );
   }
   const user = await User.create(userData);
+  const customer = await stripe.customers.create({
+    userId: user._id,
+    email: userData.email,
+    name: userData.name,
+    phone: userData.phoneNumber,
+    address: {
+      line1: "510 Townsend St",
+      postal_code: "98140",
+      city: "San Francisco",
+      state: "CA",
+      country: "US",
+    },
+    description: "Payment",
+  });
+  
+  const check = await User.findOneAndUpdate(
+    { _id: user._id },
+    { stripeId: customer.id},
+    { new: true }
+  );
+  console.log(check)
   return user;
 };
 const userLogin = async (email, password, type) => {
@@ -152,17 +177,25 @@ const resetPassword = async (tokenData, newPassword) => {
 const pushNotification = async (userId) => {
   const data = await User.findOne({ _id: userId, isDeleted: false });
   if (data.isNotification == "Enable") {
-    await User.findOneAndUpdate({_id:userId,isDeleted:false},{
-      isNotification:"Disable"
-    },{new:true});
-    return "Disable"
+    await User.findOneAndUpdate(
+      { _id: userId, isDeleted: false },
+      {
+        isNotification: "Disable",
+      },
+      { new: true }
+    );
+    return "Disable";
   }
   if (data.isNotification == "Disable") {
-    await User.findOneAndUpdate({_id:userId,isDeleted:false},{
-      isNotification:"Enable"
-    },{new:true});
+    await User.findOneAndUpdate(
+      { _id: userId, isDeleted: false },
+      {
+        isNotification: "Enable",
+      },
+      { new: true }
+    );
   }
-  return "Enable"
+  return "Enable";
 };
 // const app_key_provider = {
 //   getToken() {

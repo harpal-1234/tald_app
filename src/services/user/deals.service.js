@@ -1,6 +1,7 @@
 const { successResponse } = require("../../utils/response");
 const { User, Token, Admin, Deal, Banner, Store } = require("../../models");
 const { ApiError } = require("../../utils/universalFunction");
+const stripeSerbices = require("../../middlewares/stripe");
 const shortid = require("shortid");
 var moment = require("moment");
 const {
@@ -104,36 +105,13 @@ const homeData = async (location, data) => {
   // const recentlyViewData = formatRecentlyView(recentValue);
   // const cannabisData = formatStore(cannabis);
 
-  const arrData = [
-    {
-      title: "Banner",
-      data: banner,
-    },
-    {
-      title: "Categories",
-      data: category,
-    },
-    // {
-    //   title: "Trending Deals",
-    //   data: topBannerData,
-    // },
-    {
-      title: "Featured Brands",
-      data: featuredStore,
-    },
-    {
-      title: "Newly Added",
-      data: stores,
-    },
-    {
-      title: "Recently Viewed",
-      data: recentlyView.recentlyView,
-    },
-    // {
-    //   title: "Cannabis",
-    //   data: cannabisData,
-    // },
-  ];
+  const arrData = {
+    banners: banner,
+    Categories: category,
+    FeaturedBrands: featuredStore,
+    NewlyAdded: stores,
+    RecentlyViewed: recentlyView.recentlyView,
+  };
 
   return arrData;
   // return {
@@ -148,88 +126,28 @@ const homeData = async (location, data) => {
 };
 const cannabisCategoryData = async (data, userId) => {
   var recentValue;
-  const catagory = await Category.find({"category":"Cannabis"});
+  const catagory = await Category.find({ category: "Cannabis" });
+  const Id = catagory.find((val) => val);
 
-  const [banner, store, newStore, recentlyView, cannabis] = await Promise.all([
-    Banner.find({
-      "service.categoryId": catagory._id,
-      isDeleted: false,
-    }).lean(),
-    Store.find({
-      "service.categoryId": catagory._id,
-      loc: {
-        $near: {
-          $geometry: {
-            type: "Point",
-            coordinates: [data.long, data.lat],
-          },
-          $maxDistance: 100000,
+  const store = await Store.find({
+    "service.categoryId": Id._id,
+    loc: {
+      $near: {
+        $geometry: {
+          type: "Point",
+          coordinates: [data.long, data.lat],
         },
+        $maxDistance: 100000,
       },
-      isDeleted: false,
-    })
-      .sort({ purchasedCount: -1 })
-      .lean(),
-    Store.find({
-      "service.categoryId": catagory._id,
-      loc: {
-        $near: {
-          $geometry: {
-            type: "Point",
-            coordinates: [data.long, data.lat],
-          },
-          $maxDistance: 100000,
-        },
-      },
-      isDeleted: false,
-    })
-      .sort({ _id: -1 })
-      .lean(),
-    User.findOne({ _id: userId, isDeleted: false })
-      .populate({ path: "recentlyView" })
-      .lean(),
-    // Store.find({
-    //   "service.categoryId": data.categoryId,
-    //   isDeleted: false,
-    // }).lean(),
-  ]);
+    },
+    isDeleted: false,
+  }).lean();
 
-  // if (recentlyView) {
-  //   recentValue = recentlyView.flatMap((data) => data.recentlyView);
-  // } else {
-  //   recentValue = recentlyView;
-  // }
+  console.log(store);
 
-  const bannerData = formatBanner(banner);
   const storeData = formatStore(store);
-  const newStoreData = formatStore(newStore);
-  // const recentlyViewData = formatRecentlyView(recentValue);
-  // const cannabisData = formatStore(cannabis);
 
-  const arrData = [
-    {
-      title: "banners",
-      data: bannerData,
-    },
-    {
-      title: "Featured Brands",
-      data: storeData,
-    },
-    {
-      title: "Newly Added",
-      data: newStoreData,
-    },
-    {
-      title: "Recently Viewed",
-      data: recentlyView.recentlyView,
-    },
-    // {
-    //   title: "Cannabis",
-    //   data: cannabisData,
-    // },
-  ];
-
-  return arrData;
+  return storeData;
   return {
     bannerData,
     storeData,
@@ -297,28 +215,12 @@ const categoryData = async (data, userId) => {
   // const recentlyViewData = formatRecentlyView(recentValue);
   // const cannabisData = formatStore(cannabis);
 
-  const arrData = [
-    {
-      title: "banners",
-      data: bannerData,
-    },
-    {
-      title: "Featured Brands",
-      data: storeData,
-    },
-    {
-      title: "Newly Added",
-      data: newStoreData,
-    },
-    {
-      title: "Recently Viewed",
-      data: recentlyView.recentlyView,
-    },
-    // {
-    //   title: "Cannabis",
-    //   data: cannabisData,
-    // },
-  ];
+  const arrData = {
+    banners: bannerData,
+    FeaturedBrands: storeData,
+    NewlyAdded: newStoreData,
+    RecentlyViewed: recentlyView.recentlyView,
+  };
 
   return arrData;
   // return {
@@ -440,16 +342,10 @@ const getStoreAndDeals = async (storeId, lat, long, userId) => {
       { $push: { recentlyView: storeId } }
     );
   }
-  const data = [
-    {
-      title: "store",
-      data: storeData,
-    },
-    {
-      title: "deals",
-      data: deals,
-    },
-  ];
+  const data = {
+    store: storeData,
+    deals: deals,
+  };
   return data;
 };
 const purchaseDeal = async (userId, lat, long, page, limit) => {
@@ -468,7 +364,7 @@ const purchaseDeal = async (userId, lat, long, page, limit) => {
         "description",
         "phoneNumber",
         "countryCode",
-        "rating"
+        "rating",
       ],
     })
     .lean();
@@ -775,9 +671,14 @@ const bookNow = async (deals, userId, storeId) => {
 
   return { deal, store, billDetails };
 };
-const checkOut = async (deals, userId, storeId) => {
+const checkOut = async (deals, userId, storeId,amount) => {
   const user = await User.findOne({ _id: userId, isDeleted: false });
 
+  const ephemeralKey = await stripeSerbices.stripeServices(user.stripeId);
+  const paymentIntent = await stripeSerbices.paymentIntent(
+    customer.stripeId,
+    amount
+  );
   // const check = user.addCard.find((value) => {
   //   return value;
   // });
@@ -895,6 +796,7 @@ const checkOut = async (deals, userId, storeId) => {
     },
     { new: true }
   );
+  return {ephemeralKey,paymentIntent}
 };
 const favoriteStore = async (userId, lat, long, page, limit) => {
   console.log(lat, long);
@@ -910,7 +812,7 @@ const favoriteStore = async (userId, lat, long, page, limit) => {
         "description",
         "phoneNumber",
         "countryCode",
-        "rating"
+        "rating",
       ],
     })
     .lean();
@@ -976,8 +878,6 @@ const favoriteStore = async (userId, lat, long, page, limit) => {
   return order;
 };
 const rating = async (userId, purchaseId, storeId, rating) => {
-  
-
   const store = await Store.findOne({ _id: storeId, isDeleted: false }).lean();
   if (!store) {
     throw new OperationalError(
@@ -991,23 +891,27 @@ const rating = async (userId, purchaseId, storeId, rating) => {
     { new: true }
   );
   const user = await User.updateOne(
-    { _id: userId, 'dealPurchases._id': purchaseId },
-    { $set: { 'dealPurchases.$.rating': rating, 'dealPurchases.$.isRating': true } },
-    {new:true}
+    { _id: userId, "dealPurchases._id": purchaseId },
+    {
+      $set: {
+        "dealPurchases.$.rating": rating,
+        "dealPurchases.$.isRating": true,
+      },
+    },
+    { new: true }
   );
   let count = 0;
 
   if (rate.userRating) {
     const value = rate.userRating.map((val) => {
-     
       count = count + val.rating;
-      
     });
-    
-    const finalRating = count/rate.userRating.length;
-    await Store.findOneAndUpdate({_id:storeId,isDeleted:false},{rating:finalRating})
 
-    
+    const finalRating = count / rate.userRating.length;
+    await Store.findOneAndUpdate(
+      { _id: storeId, isDeleted: false },
+      { rating: finalRating }
+    );
   }
 };
 
@@ -1027,7 +931,7 @@ module.exports = {
   checkOut,
   favoriteStore,
   rating,
-  cannabisCategoryData
+  cannabisCategoryData,
 };
 
 // userData.recentlyView.map(async(data)=>{

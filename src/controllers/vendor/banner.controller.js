@@ -12,7 +12,8 @@ const { formatBanner } = require("../../utils/commonFunction");
 const createBanner = catchAsync(async (req, res) => {
   const banner = await bannerService.createBanner(
     req.body,
-    req.token.user._id
+    req.token.user._id,
+    
   );
 
   return successResponse(
