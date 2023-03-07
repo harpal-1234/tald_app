@@ -5,7 +5,6 @@ const { JOI, DEALS_SERVICE } = require("../../config/appConstants");
 exports.create = {
   body: Joi.object().keys({
     title: Joi.string().required(),
-    dealId:Joi.string().required(),
     images: Joi.array().items(
       Joi.object().keys({
         image: Joi.string().required()

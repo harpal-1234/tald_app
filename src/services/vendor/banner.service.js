@@ -8,6 +8,7 @@ const { OperationalError } = require("../../utils/errors");
 const moment = require("moment");
 const { findOneAndUpdate } = require("../../models/token.model");
 const Stripe = require("stripe");
+const shortid = require("shortid");
 const stripe = new Stripe(
   "sk_test_51MKSEVLBN7xbh0EQH9R2gQi1pon2Do6OQPdXKcAXfqQMWkn7OYwwBb2LRUJFElYeVpVJkkI5Dffgxlj2QjBakBp700a1efzUf0"
 );
@@ -36,13 +37,16 @@ const createBanner = async (data, vendorId) => {
 
   const startDate = moment(data.startDate).format("YYYY-MM-DD");
   const endDate = moment(data.endDate).format("YYYY-MM-DD");
+  const Id = shortid.generate();
+  const hash = "#";
+  const bannerId = hash + Id;
 
   const newBanner = await Banner.create({
     storeId: store._id,
     image: data.image,
     service: store.service,
     title: data.title,
-    bannerId: data.bannerId,
+    bannerId: bannerId,
     type: data.type,
     startDate: moment(startDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
     endDate: moment(endDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
@@ -51,10 +55,23 @@ const createBanner = async (data, vendorId) => {
 
   const createOrder = await Admin.findOneAndUpdate(
     { _id: admin._id },
-    { $push: { orders: {vendor: vendorId,amount:data.amount, bannerId: newBanner._id}  } },
+    {
+      $push: {
+        orders: {
+          vendor: vendorId,
+          amount: data.amount,
+          bannerId: newBanner._id,
+        },
+      },
+    },
     { new: true }
   );
-  console.log(createOrder)
+  const revenue = admin.totalRevanue + data.amount;
+  await Admin.findOneAndUpdate(
+    { _id: admin._id },
+    { totalRevanue: revenue },
+    { new: true }
+  );
 
   return { newBanner, ephemeralKey, paymentIntent };
 };

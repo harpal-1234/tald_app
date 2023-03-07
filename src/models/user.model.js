@@ -93,6 +93,7 @@ const userSchema = mongoose.Schema(
         quantity: { type: Number, required: true },
       },
     ],
+    isVerifyStore:{type:String,default:false},
     isBlocked: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
     isVerified: { type: Boolean, default: false },

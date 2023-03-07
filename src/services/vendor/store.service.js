@@ -52,6 +52,8 @@ const createStore = async (data, vendorId) => {
         coordinates: [data.long, data.lat],
       },
     });
+     
+    await User.findOneAndUpdate({_id:vendorId,isDeleted:false},{isVerifyStore:true})
 
     return store;
   }

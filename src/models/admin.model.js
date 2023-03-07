@@ -13,6 +13,7 @@ const adminSchema = mongoose.Schema(
         bannerId:{type: mongoose.SchemaTypes.ObjectId, ref: "banners"}
       },
     ],
+    totalRevanue:{type:Number,default:0}
   },
   {
     timestamps: true,

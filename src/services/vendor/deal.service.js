@@ -2,7 +2,7 @@ const { Vendor, Deal, Token, User, Store } = require("../../models");
 const { STATUS_CODES, ERROR_MESSAGES } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 const moment = require("moment");
-
+const shortid = require("shortid");
 const createDeal = async (data, vendorId) => {
   const vendor = await Store.findOne({ vendor: vendorId, isDeleted: false });
   if (!vendor) {
@@ -26,9 +26,13 @@ const createDeal = async (data, vendorId) => {
   const validFromDate = moment(data.validFrom).format("YYYY-MM-DD");
   const validToDate = moment(data.validTo).format("YYYY-MM-DD");
 
+  const Id = shortid.generate();
+  const hash = "#";
+  const dealId = hash + Id;
+
   const newDeal = await Deal.create({
     storeId: vendor._id,
-    dealId: data.dealId,
+    dealId: dealId,
     vendor: vendorId,
     images: data.images,
     title: data.title,
@@ -56,7 +60,7 @@ const createDeal = async (data, vendorId) => {
 };
 
 const getAllDeal = async (req, res) => {
-  let { page, limit, search,type } = req.query;
+  let { page, limit, search, type } = req.query;
   let skip = page * limit;
   if (search) {
     const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
@@ -88,56 +92,60 @@ const getAllDeal = async (req, res) => {
 
     return { total, dealData };
   } else {
-    if(type == "active"){
-    const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
+    if (type == "active") {
+      const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
 
-    await Deal.updateMany(
-      { $and: [{ validTo: { $lte: date } }, { isDeleted: false }] },
-      { $set: { status: "deactivate", isActive: false } },
-      { upsert: false }
-    );
+      await Deal.updateMany(
+        { $and: [{ validTo: { $lte: date } }, { isDeleted: false }] },
+        { $set: { status: "deactivate", isActive: false } },
+        { upsert: false }
+      );
 
-    var dealData = await Deal.find({
-      vendor: req.token.user._id,status:"activate",
-      isDeleted: false,
-    })
-      .skip(skip)
-      .limit(limit)
-      .sort({ _id: -1 })
-      .lean();
+      var dealData = await Deal.find({
+        vendor: req.token.user._id,
+        status: "activate",
+        isDeleted: false,
+      })
+        .skip(skip)
+        .limit(limit)
+        .sort({ _id: -1 })
+        .lean();
 
-    let total = await Deal.countDocuments({
-      vendor: req.token.user._id,status:"activate",
-      isDeleted: false,
-    });
+      let total = await Deal.countDocuments({
+        vendor: req.token.user._id,
+        status: "activate",
+        isDeleted: false,
+      });
 
-    return { total, dealData };
-  }
-  if(type == "deactive"){
-    const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
+      return { total, dealData };
+    }
+    if (type == "deactive") {
+      const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
 
-    await Deal.updateMany(
-      { $and: [{ validTo: { $lte: date } }, { isDeleted: false }] },
-      { $set: { status: "deactivate", isActive: false } },
-      { upsert: false }
-    );
+      await Deal.updateMany(
+        { $and: [{ validTo: { $lte: date } }, { isDeleted: false }] },
+        { $set: { status: "deactivate", isActive: false } },
+        { upsert: false }
+      );
 
-    var dealData = await Deal.find({
-      vendor: req.token.user._id,status:"deactivate",
-      isDeleted: false,
-    })
-      .skip(skip)
-      .limit(limit)
-      .sort({ _id: -1 })
-      .lean();
+      var dealData = await Deal.find({
+        vendor: req.token.user._id,
+        status: "deactivate",
+        isDeleted: false,
+      })
+        .skip(skip)
+        .limit(limit)
+        .sort({ _id: -1 })
+        .lean();
 
-    let total = await Deal.countDocuments({
-      vendor: req.token.user._id,status:"deactivate",
-      isDeleted: false,
-    });
+      let total = await Deal.countDocuments({
+        vendor: req.token.user._id,
+        status: "deactivate",
+        isDeleted: false,
+      });
 
-    return { total, dealData };
-  }
+      return { total, dealData };
+    }
   }
 };
 
