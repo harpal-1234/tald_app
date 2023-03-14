@@ -4,7 +4,7 @@ const { DEALS_SERVICE } = require("../config/appConstants");
 
 const dealDate = mongoose.Schema(
   {
-    day: { type: String },
+    id: { type: Number },
     startTime: { type: String },
     endTime: { type: String },
   },

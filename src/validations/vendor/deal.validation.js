@@ -27,7 +27,7 @@ exports.create = {
     }),
     dealDate: Joi.array().items(
       Joi.object().keys({
-        day: Joi.string().required(),
+        id: Joi.number().required(),
         startTime: Joi.string().required(),
         endTime: Joi.string().required(),
       })
