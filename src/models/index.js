@@ -6,6 +6,6 @@ module.exports = {
   Deal: require("./deal.model"),
   Banner: require("./banner.model"),
   Store: require("./store.model"),
-  Notification: require("./notification.model"),
-  Category:require("./category.model")
+  Category:require("./category.model"),
+  Notification:require("./notification")
 };

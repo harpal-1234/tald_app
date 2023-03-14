@@ -10,8 +10,8 @@ exports.create = {
         image: Joi.string().required()
       })
     ),
-    description: Joi.string().required(),
-    inclusions: Joi.string().required(),
+    description: Joi.string().allow(null).allow(""),
+    inclusions: Joi.string().allow(null).allow(""),
     gender: Joi.string().required(),
     no_of_person: Joi.string().required(),
     totalPrice: Joi.number().required(),
@@ -44,8 +44,8 @@ exports.editDeal = {
         image: Joi.string().required()
       })
     ),
-    description: Joi.string().required(),
-    inclusions: Joi.string().required(),
+    description: Joi.string().allow(null).allow(""),
+    inclusions: Joi.string().allow(null).allow(""),
     gender: Joi.string().required(),
     no_of_person: Joi.string().required(),
     totalPrice: Joi.number().required(),

@@ -97,6 +97,14 @@ const userSchema = mongoose.Schema(
     isBlocked: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
     isVerified: { type: Boolean, default: false },
+    notifications: [
+      {
+        notificationId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "notification",
+        },
+      },
+    ],
   },
   {
     timestamps: true,
