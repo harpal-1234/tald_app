@@ -53,8 +53,8 @@ const createStore = async (data, vendorId) => {
       },
     });
      
-    await User.findOneAndUpdate({_id:vendorId,isDeleted:false},{isVerifyStore:true})
-
+    const val = await User.findOneAndUpdate({_id:vendorId,isDeleted:false},{isVerifyStore:true},{new:true})
+     store.isVerifyStore = val.isVerifyStore
     return store;
   }
 };
