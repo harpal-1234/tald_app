@@ -12,17 +12,17 @@ const createDeal = async (data, vendorId) => {
     );
   }
 
-  const deal = await Deal.findOne({
-    dealId: data.dealId,
-    isDeleted: false,
-  });
+  // const deal = await Deal.findOne({
+  //   title: data.title,
+  //   isDeleted: false,
+  // });
 
-  if (deal) {
-    throw new OperationalError(
-      STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.DEAL_ID
-    );
-  }
+  // if (deal) {
+  //   throw new OperationalError(
+  //     STATUS_CODES.ACTION_FAILED,
+  //     ERROR_MESSAGES.DEAL_ID
+  //   );
+  // }
   const validFromDate = moment(data.validFrom).format("YYYY-MM-DD");
   const validToDate = moment(data.validTo).format("YYYY-MM-DD");
 
