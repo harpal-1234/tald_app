@@ -163,6 +163,7 @@ const ERROR_MESSAGES = {
   CONTACTUS_EMAIL_USER: "Please enter your registered email",
   BANNER_ID: "Please provide different banner Id",
   VENDOR_NOT_EXIST: "Vendor does not exist",
+  FCM_ERROR:"fcm error"
 };
 
 const STATUS_CODES = {

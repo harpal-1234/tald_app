@@ -63,8 +63,12 @@ const getAllDeal = async (req, res) => {
   let { page, limit, search, type } = req.query;
   let skip = page * limit;
   if (search) {
-    const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
-
+    const now = new Date();
+    const tomorrow = new Date(now);
+    tomorrow.setDate(now.getDate() - 1);
+    tomorrow.setUTCHours(0, 0, 0, 0);
+    const date = tomorrow.toISOString();
+    console.log(date);
     await Deal.updateMany(
       { $and: [{ validTo: { $lte: date } }, { isDeleted: false }] },
       { $set: { status: "deactivate", isActive: false } },
@@ -93,9 +97,14 @@ const getAllDeal = async (req, res) => {
     return { total, dealData };
   } else {
     if (type == "active") {
-      const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
-      console.log(date)
-
+      const date1 = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
+      console.log(date1);
+      const now = new Date();
+      const tomorrow = new Date(now);
+      tomorrow.setDate(now.getDate() - 1);
+      tomorrow.setUTCHours(0, 0, 0, 0);
+      const date = tomorrow.toISOString();
+      console.log(date);
       await Deal.updateMany(
         { $and: [{ validTo: { $lte: date } }, { isDeleted: false }] },
         { $set: { status: "deactivate", isActive: false } },
@@ -121,8 +130,13 @@ const getAllDeal = async (req, res) => {
       return { total, dealData };
     }
     if (type == "deactive") {
-      const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
-
+      const now = new Date();
+      const tomorrow = new Date(now);
+      tomorrow.setDate(now.getDate() - 1);
+      tomorrow.setUTCHours(0, 0, 0, 0);
+      const date = tomorrow.toISOString();
+      console.log(date);
+  
       await Deal.updateMany(
         { $and: [{ validTo: { $lte: date } }, { isDeleted: false }] },
         { $set: { status: "deactivate", isActive: false } },

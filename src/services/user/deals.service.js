@@ -114,13 +114,16 @@ const homeData = async (location, data) => {
   // const recentlyViewData = formatRecentlyView(recentValue);
   // const cannabisData = formatStore(cannabis);
 
-  const arrData = {
-    banners: banner,
-    Categories: category,
-    FeaturedBrands: featuredStore,
-    NewlyAdded: stores,
-    RecentlyViewed: recentlyView.recentlyView,
-  };
+  const arrData = [
+    {
+      title: "banners",
+      data: banner,
+    },
+    { titile: "categories", data: category },
+    { title: "featuredBrands", data: featuredStore },
+    { title: "newlyAdded", data: stores },
+    { title: "recentlyViewed", data: recentlyView.recentlyView },
+  ];
 
   return arrData;
   // return {
@@ -224,12 +227,21 @@ const categoryData = async (data, userId) => {
   // const recentlyViewData = formatRecentlyView(recentValue);
   // const cannabisData = formatStore(cannabis);
 
-  const arrData = {
-    banners: bannerData,
-    FeaturedBrands: storeData,
-    NewlyAdded: newStoreData,
-    RecentlyViewed: recentlyView.recentlyView,
-  };
+  // const arrData = {
+  //   banners: bannerData,
+  //   FeaturedBrands: storeData,
+  //   NewlyAdded: newStoreData,
+  //   RecentlyViewed: recentlyView.recentlyView,
+  // };
+  const arrData = [
+    {
+      title: "banners",
+      data: bannerData,
+    },
+    { titile: "featuredBrands", data: storeData },
+    { title: "newlyAdded", data: newStoreData },
+    { title: "recentlyViewed", data: recentlyView.recentlyView },
+  ];
 
   return arrData;
   // return {
