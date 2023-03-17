@@ -35,8 +35,8 @@ exports.userSocialLogin = {
     email: Joi.string().email().lowercase().trim().allow('', null),
     socialId:Joi.string().required(),
     type:Joi.string().required().valid("User", "Vendor"),
-    deviceToken:Joi.string().required(),
-    deviceType:Joi.string().valid(...Object.values(DEVICE_TYPE)),
+    // deviceToken:Joi.string().required(),
+    // deviceType:Joi.string().valid(...Object.values(DEVICE_TYPE)),
   }),
 };
 
@@ -50,8 +50,8 @@ exports.signUp = {
     password: JOI.PASSWORD,
     phoneNumber: JOI.PHONENUMBER,
     type:Joi.string().required().valid("User", "Vendor"),
-    deviceToken:Joi.string().required(),
-    deviceType:Joi.string().valid(...Object.values(DEVICE_TYPE)),
+    // deviceToken:Joi.string().required(),
+    // deviceType:Joi.string().valid(...Object.values(DEVICE_TYPE)),
   }),
 };
 
