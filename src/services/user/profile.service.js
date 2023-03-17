@@ -242,7 +242,13 @@ const favouriteStoreDeal = async (req, res) => {
 
   return favourite;
 };
+const notification = async(userId)=>{
+const user = await User.findOne({_id:userId,isDeleted:false}).populate({
+path:"notifications.notificationId"
+});
+return user;
 
+}
 module.exports = {
   editProfile,
   changePassword,
@@ -252,4 +258,5 @@ module.exports = {
   myFavourites,
   dealPurchaseData,
   favouriteStoreDeal,
+  notification
 };

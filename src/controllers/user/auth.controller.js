@@ -60,7 +60,8 @@ const userLogin = catchAsync(async (req, res) => {
     name: newUser.name,
     email: newUser.email,
     pushNotification:newUser.isPushNotification,
-    phoneNumber:newUser.phoneNumber
+    phoneNumber:newUser.phoneNumber,
+    isVerifyStore:newUser.isVerifyStore
   };
 
   const token = await tokenService.generateAuthToken(
@@ -93,6 +94,7 @@ const userSocialLogin= catchAsync(async (req, res) => {
     name: newUser.name,
     email: newUser.email,
     pushNotification:newUser.isPushNotification,
+    isVerifyStore:newUser.isVerifyStore
   };
 
  

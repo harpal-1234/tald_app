@@ -1,21 +1,26 @@
-const { userService,userProfileService } = require("../../services");
+const { userService, userProfileService } = require("../../services");
 const config = require("../../config/config");
 const { catchAsync } = require("../../utils/universalFunction");
 const { successResponse } = require("../../utils/response");
-const {contactUs}=require("../../utils/sendMail");
+const { contactUs } = require("../../utils/sendMail");
 const {
   STATUS_CODES,
   SUCCESS_MESSAGES,
-  USER_TYPE
+  USER_TYPE,
 } = require("../../config/appConstants");
-const { formatUser, formatFavourites, formatPurchase, formatStoreDeal } = require("../../utils/commonFunction");
+const {
+  formatUser,
+  formatFavourites,
+  formatPurchase,
+  formatStoreDeal,
+} = require("../../utils/commonFunction");
 
 const editProfile = catchAsync(async (req, res) => {
   const user = await userProfileService.editProfile(
     req.token.user._id,
     req.body
   );
-  const data=formatUser(user);
+  const data = formatUser(user);
   return successResponse(
     req,
     res,
@@ -29,10 +34,9 @@ const changePassword = catchAsync(async (req, res) => {
   const user = await userProfileService.changePassword(
     req.token.user._id,
     req.body.oldPassword,
-    req.body.newPassword,
-  
+    req.body.newPassword
   );
- 
+
   return successResponse(
     req,
     res,
@@ -41,10 +45,15 @@ const changePassword = catchAsync(async (req, res) => {
   );
 });
 
-const userContactUs= catchAsync(async (req, res) => {
-  const userDetails=await userProfileService.contactUs(req.body);
-  const user = await contactUs(userDetails.name,req.body.message,userDetails.email,userDetails.type);
- 
+const userContactUs = catchAsync(async (req, res) => {
+  const userDetails = await userProfileService.contactUs(req.body);
+  const user = await contactUs(
+    userDetails.name,
+    req.body.message,
+    userDetails.email,
+    userDetails.type
+  );
+
   return successResponse(
     req,
     res,
@@ -53,13 +62,15 @@ const userContactUs= catchAsync(async (req, res) => {
   );
 });
 
-const pushNotificationStatus =catchAsync(async(req,res)=>{
-  const newUser=await userProfileService.pushNotificationStatus(req.token.user._id);
+const pushNotificationStatus = catchAsync(async (req, res) => {
+  const newUser = await userProfileService.pushNotificationStatus(
+    req.token.user._id
+  );
   const data = {
     name: newUser.name,
     email: newUser.email,
-    pushNotification:newUser.isPushNotification,
-    phoneNumber:newUser.phoneNumber
+    pushNotification: newUser.isPushNotification,
+    phoneNumber: newUser.phoneNumber,
   };
   return successResponse(
     req,
@@ -68,11 +79,13 @@ const pushNotificationStatus =catchAsync(async(req,res)=>{
     SUCCESS_MESSAGES.PUSH_NOTIFICATION_STATUS,
     data
   );
+});
 
-})
-
-const userLocation= catchAsync(async (req, res) => {
-  const location=await userProfileService.userLocation(req.token.user._id,req.body);
+const userLocation = catchAsync(async (req, res) => {
+  const location = await userProfileService.userLocation(
+    req.token.user._id,
+    req.body
+  );
   return successResponse(
     req,
     res,
@@ -81,12 +94,10 @@ const userLocation= catchAsync(async (req, res) => {
   );
 });
 
-
-
-const myFavourites= catchAsync(async (req, res) => {
-  const user=await userProfileService.myFavourites(req,res);
-  const value=formatFavourites(user.favourite);
-  const dataCount=user.count;
+const myFavourites = catchAsync(async (req, res) => {
+  const user = await userProfileService.myFavourites(req, res);
+  const value = formatFavourites(user.favourite);
+  const dataCount = user.count;
   return successResponse(
     req,
     res,
@@ -97,10 +108,9 @@ const myFavourites= catchAsync(async (req, res) => {
   );
 });
 
-
-const dealPurchaseData= catchAsync(async (req, res) => {
-  const user=await userProfileService.dealPurchaseData(req.token.user._id);
-  const value=formatPurchase(user);
+const dealPurchaseData = catchAsync(async (req, res) => {
+  const user = await userProfileService.dealPurchaseData(req.token.user._id);
+  const value = formatPurchase(user);
   return successResponse(
     req,
     res,
@@ -110,18 +120,29 @@ const dealPurchaseData= catchAsync(async (req, res) => {
   );
 });
 
-const favouriteStoreDeal= catchAsync(async (req, res) => {
-  const user=await userProfileService.favouriteStoreDeal(req, res);
-  const value=formatStoreDeal(user)
+const favouriteStoreDeal = catchAsync(async (req, res) => {
+  const user = await userProfileService.favouriteStoreDeal(req, res);
+  const value = formatStoreDeal(user);
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.STORE_DEALS,
-   value
+    value
   );
-})
+});
+const notification = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const data = await userProfileService.notification(userId);
 
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.STORE_DEALS,
+    data
+  );
+});
 
 module.exports = {
   editProfile,
@@ -131,5 +152,6 @@ module.exports = {
   pushNotificationStatus,
   myFavourites,
   dealPurchaseData,
-  favouriteStoreDeal
+  favouriteStoreDeal,
+  notification,
 };

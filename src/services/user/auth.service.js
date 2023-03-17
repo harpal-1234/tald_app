@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 // const { tokenService } = require("../../services");
 const { successResponse } = require("../../utils/response");
-const { User, Token, Admin } = require("../../models");
+const { User, Token, Admin ,Store} = require("../../models");
 const { ApiError } = require("../../utils/universalFunction");
 const Stripe = require("stripe");
 const stripe = new Stripe(
@@ -97,11 +97,35 @@ const userLogin = async (email, password, type) => {
 };
 
 const userSocialLogin = async (data) => {
+
+  if(data.type == "Vendor"){
+    const user = await User.findOne({
+      socialId: data.socialId,
+      type: data.type,
+      isDeleted: false,
+    });
+    
+  
+    if (user) {
+      const store = await Store.findOne({vendor:user._id});
+      if(store){
+        user.isVerifyStore = true
+      }else{
+        user.isVerifyStore = false
+      }
+      return user;
+    }
+  
+    const newUser = await User.create(data);
+     newUser.isVerifyStore = false
+    return newUser;
+  }
   const user = await User.findOne({
     socialId: data.socialId,
     type: data.type,
     isDeleted: false,
   });
+  
 
   if (user) {
     return user;

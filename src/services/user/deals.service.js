@@ -1,5 +1,13 @@
 const { successResponse } = require("../../utils/response");
-const { User, Token, Admin, Deal, Banner, Store } = require("../../models");
+const {
+  User,
+  Token,
+  Admin,
+  Deal,
+  Banner,
+  Store,
+  Notification,
+} = require("../../models");
 const { ApiError } = require("../../utils/universalFunction");
 const stripeSerbices = require("../../middlewares/stripe");
 const shortid = require("shortid");
@@ -671,12 +679,12 @@ const bookNow = async (deals, userId, storeId) => {
 
   return { deal, store, billDetails };
 };
-const checkOut = async (deals, userId, storeId,amount) => {
+const checkOut = async (deals, userId, storeId, amount) => {
   const user = await User.findOne({ _id: userId, isDeleted: false });
 
   const ephemeralKey = await stripeSerbices.stripeServices(user.stripeId);
   const paymentIntent = await stripeSerbices.paymentIntent(
-    customer.stripeId,
+    user.stripeId,
     amount
   );
   // const check = user.addCard.find((value) => {
@@ -785,6 +793,28 @@ const checkOut = async (deals, userId, storeId,amount) => {
     { _id: userId, isDeleted: false },
     { $set: { addCard: [] } }
   );
+  await Promise.all(
+  dealed.addCard.map(async(ele) => {
+      const notification = await Notification.create({
+        message: "" + user.name + " order a deal",
+        userId: user._id,
+        type: "createOrder",
+        deal: ele.dealId._id,
+      });
+      await User.findOneAndUpdate(
+        { _id: store.vendor },
+        {
+          $push: {
+            notifications: {
+              $each: [{ notificationId: notification._id }],
+              $position: 0,
+            },
+          },
+        }
+      );
+    })
+  );
+
   const count = totalDeals + store.totalDeals;
   const revenue = store.totalRevenue + billDetails.amountPayable;
   const data = await Store.findOneAndUpdate(
@@ -796,7 +826,7 @@ const checkOut = async (deals, userId, storeId,amount) => {
     },
     { new: true }
   );
-  return {ephemeralKey,paymentIntent}
+  return { ephemeralKey, paymentIntent };
 };
 const favoriteStore = async (userId, lat, long, page, limit) => {
   console.log(lat, long);

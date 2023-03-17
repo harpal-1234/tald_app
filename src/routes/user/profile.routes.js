@@ -71,4 +71,10 @@ router.get(
   validate(authValidation.favouriteStoreDeal),
   authController.favouriteStoreDeal
 );
+router.get(
+  "/getNotification",
+  auth(USER_TYPE.USER),
+  //validate(authValidation.favouriteStoreDeal),
+  authController.notification
+);
 module.exports = router;
