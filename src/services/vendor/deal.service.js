@@ -94,6 +94,7 @@ const getAllDeal = async (req, res) => {
   } else {
     if (type == "active") {
       const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
+      console.log(date)
 
       await Deal.updateMany(
         { $and: [{ validTo: { $lte: date } }, { isDeleted: false }] },

@@ -10,7 +10,7 @@ const notificationSchema = mongoose.Schema(
     },
     type: { type: String, required: true },
     deal: { type: mongoose.Schema.Types.ObjectId, ref: "deals" },
-
+    quantity:{ type: String, required: true },
 
     isDeleted: { type: Boolean, default: false },
     blacklisted: {

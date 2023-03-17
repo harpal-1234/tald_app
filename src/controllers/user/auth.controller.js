@@ -26,7 +26,8 @@ const signUp = catchAsync(async (req, res) => {
     email: newUser.email,
     pushNotification:newUser.isPushNotification,
     phoneNumber:newUser.phoneNumber,
-    isVerifyStore:newUser.isVerifyStore
+    isVerifyStore:newUser.isVerifyStore,
+    type:req.body.type
   };
 
   const token = await tokenService.generateAuthToken(
@@ -36,6 +37,31 @@ const signUp = catchAsync(async (req, res) => {
     req.body.deviceType,
     req.body.type
   );
+  if(req.body.type == "User"){
+    const data = {
+      name: newUser.name,
+      email: newUser.email,
+      pushNotification:newUser.isPushNotification,
+      phoneNumber:newUser.phoneNumber,
+      type:newUser.type
+    };
+  
+    const token = await tokenService.generateAuthToken(
+      newUser,
+      USER_TYPE.USER,
+      req.body.deviceToken,
+      req.body.deviceType,
+      req.body.type
+    );
+    return successResponse(
+      req,
+      res,
+      STATUS_CODES.SUCCESS,
+      SUCCESS_MESSAGES.SUCCESS,
+      data,
+      token
+    );
+  }
   
 
   return successResponse(
@@ -61,7 +87,8 @@ const userLogin = catchAsync(async (req, res) => {
     email: newUser.email,
     pushNotification:newUser.isPushNotification,
     phoneNumber:newUser.phoneNumber,
-    isVerifyStore:newUser.isVerifyStore
+    isVerifyStore:newUser.isVerifyStore,
+    type:newUser.type
   };
 
   const token = await tokenService.generateAuthToken(
@@ -71,7 +98,31 @@ const userLogin = catchAsync(async (req, res) => {
     req.body.deviceType,
     req.body.type
   );
+  if(req.body.type == "User"){
+    const data = {
+      name: newUser.name,
+      email: newUser.email,
+      pushNotification:newUser.isPushNotification,
+      phoneNumber:newUser.phoneNumber,
+      type:newUser.type
+    };
   
+    const token = await tokenService.generateAuthToken(
+      newUser,
+      USER_TYPE.USER,
+      req.body.deviceToken,
+      req.body.deviceType,
+      req.body.type
+    );
+    return successResponse(
+      req,
+      res,
+      STATUS_CODES.SUCCESS,
+      SUCCESS_MESSAGES.SUCCESS,
+      data,
+      token
+    );
+  }
 
   return successResponse(
     req,
@@ -94,7 +145,8 @@ const userSocialLogin= catchAsync(async (req, res) => {
     name: newUser.name,
     email: newUser.email,
     pushNotification:newUser.isPushNotification,
-    isVerifyStore:newUser.isVerifyStore
+    isVerifyStore:newUser.isVerifyStore,
+    type:newUser.type
   };
 
  
@@ -105,6 +157,31 @@ const userSocialLogin= catchAsync(async (req, res) => {
     req.body.deviceType,
     req.body.type
   );
+  if(req.body.type == "User"){
+    const data = {
+      name: newUser.name,
+      email: newUser.email,
+      pushNotification:newUser.isPushNotification,
+      phoneNumber:newUser.phoneNumber,
+      type:newUser.type
+    };
+  
+    const token = await tokenService.generateAuthToken(
+      newUser,
+      USER_TYPE.USER,
+      req.body.deviceToken,
+      req.body.deviceType,
+      req.body.type
+    );
+    return successResponse(
+      req,
+      res,
+      STATUS_CODES.SUCCESS,
+      SUCCESS_MESSAGES.SUCCESS,
+      data,
+      token
+    );
+  }
 
   return successResponse(
     req,

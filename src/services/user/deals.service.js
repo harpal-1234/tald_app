@@ -24,6 +24,7 @@ const { Category } = require("../../models");
 const { OperationalError } = require("../../utils/errors");
 const config = require("../../config/config");
 const { userLocation } = require("./profile.service");
+const notificationServices = require("./../../utils/notification");
 const {
   formatBanner,
   formatDeal,
@@ -794,12 +795,13 @@ const checkOut = async (deals, userId, storeId, amount) => {
     { $set: { addCard: [] } }
   );
   await Promise.all(
-  dealed.addCard.map(async(ele) => {
+    dealed.addCard.map(async (ele) => {
       const notification = await Notification.create({
         message: "" + user.name + " order a deal",
         userId: user._id,
         type: "createOrder",
         deal: ele.dealId._id,
+        quantity: val.dealId.quantity,
       });
       await User.findOneAndUpdate(
         { _id: store.vendor },
@@ -811,6 +813,13 @@ const checkOut = async (deals, userId, storeId, amount) => {
             },
           },
         }
+      );
+      await notificationServices.orderNotification(
+        store.vendor,
+        notification.message,
+        notification.userId,
+        notification.deal,
+        notification.quantity
       );
     })
   );

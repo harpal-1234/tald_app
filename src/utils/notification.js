@@ -1,17 +1,17 @@
-const {}= require("../../apiV1/model");
+//const {}= require("../../apiV1/model");
   const {
     USER_TYPE,
     STATUS_CODES,
     SUCCESS_MESSAGES,
     ERROR_MESSAGES,
-  } = require("../../apiV1/config/appConstants");
-  const { OperationalError } = require("../../apiV1/utils/errors");
+  } = require("../../src/config/appConstants");
+  const { OperationalError } = require("../../src/utils/errors");
   //const { addressFormatter } = require("../../utils/commonfunction");
   //const { findOneAndUpdate, updateMany } = require("../../model/event");
   const FCM = require("fcm-node");
-  const serverKey = process.env.SERVER_KEY;
+  const serverKey = process.env.FCM_SERVER_KEY;
   const fcm = new FCM(serverKey);
-  const { v4: uuidv4 } = require("uuid");
+  ///const { v4: uuidv4 } = require("uuid");
 //   const {
 //     ModelBuildInstance,
 //   } = require("twilio/lib/rest/autopilot/v1/assistant/modelBuild");
@@ -23,36 +23,36 @@ const {}= require("../../apiV1/model");
 //   var apn = require("apn");
   
  
-  console.log(p8file);
+  
   
   const orderNotification = async (
-    userIds,
+    vendorId,
     messages,
-    eventId,
-    announcment
+    userId,
+    dealId,
+    quantity
   ) => {
-    const deviceTokens = await Promise.all(
-      userIds.map(async (Id) => {
-        var dataToken = await Token.find({
-          user: Id,
+  
+       const dataToken = await Token.find({
+          user: vendorId,
           isDeleted: false,
         })
           .distinct("device.token")
           .lean();
         //console.log(dataToken);
-        return dataToken.map((value) => {
-          //  console.log(value);
-          // tokenArray.push(value);
-          return value;
-        });
-      })
-    );
+        // return dataToken.map((value) => {
+        //   //  console.log(value);
+        //   // tokenArray.push(value);
+        //   return value;
+        // });
+      
+    
   
-    const arr1 = deviceTokens.flat();
-    console.log(arr1);
+    // const arr1 = deviceTokens.flat();
+    // console.log(arr1);
   
     var message = {
-      registration_ids: arr1,
+      registration_ids: dataToken,
   
       //collapse_key: 'your_collapse_key',
       priority: "high",

@@ -102,6 +102,8 @@ const userSocialLogin = async (data) => {
     const user = await User.findOne({
       socialId: data.socialId,
       type: data.type,
+      email:data.email,
+      name:data.name,
       isDeleted: false,
     });
     
