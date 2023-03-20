@@ -372,6 +372,7 @@ const getStoreAndDeals = async (storeId, lat, long, userId) => {
   const distance = 6371 * formula; // result is in kilometers
 
   store.distance = distance;
+
   const storeData = formatStore(store);
   if (!JSON.stringify(user.recentlyView).includes(storeId)) {
     await User.findOneAndUpdate(
@@ -385,6 +386,7 @@ const getStoreAndDeals = async (storeId, lat, long, userId) => {
       val.quantity = 0;
     })
   }
+
   if(!JSON.stringify(user.favouriteStores).includes(JSON.stringify(store._id))){
     storeData.isFavourite = false
   }else{

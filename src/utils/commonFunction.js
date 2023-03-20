@@ -454,7 +454,7 @@ const formatStore = (userData) => {
     delete userData.deals;
     delete userData.updatedAt;
     delete userData.__v;
-    delete userData._id;
+    //delete userData._id;
     delete userData.vendorId;
     delete userData.password;
   }
