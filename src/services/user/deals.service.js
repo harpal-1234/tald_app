@@ -385,6 +385,11 @@ const getStoreAndDeals = async (storeId, lat, long, userId) => {
       val.quantity = 0;
     })
   }
+  if(JSON.stringify(user.favouriteStores).includes(store._id)){
+    storeData.isFavourite = true
+  }else{
+    storeData.isFavourite = false
+  }
   const data = {
     store: storeData,
     deals: deals,
