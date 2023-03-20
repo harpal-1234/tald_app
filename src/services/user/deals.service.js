@@ -233,6 +233,22 @@ const categoryData = async (data, userId) => {
   //   NewlyAdded: newStoreData,
   //   RecentlyViewed: recentlyView.recentlyView,
   // };
+  // if (storeData.length < 0) {
+    storeData.forEach((val) => {
+      val.storeId = val._id;
+    });
+  // }
+  if (newStoreData.length > 0) {
+    newStoreData.forEach((val) => {
+      val.storeId = val._id;
+    });
+  }
+ // console.log(recentlyView.recentlyView.length)
+  if (recentlyView.recentlyView.length > 0) {
+    recentlyView.recentlyView.forEach((val) => {
+      val.storeId = val._id;
+    });
+  }
   const arrData = [
     {
       title: "Banners",
@@ -362,6 +378,12 @@ const getStoreAndDeals = async (storeId, lat, long, userId) => {
       { _id: userId, isDeleted: false },
       { $push: { recentlyView: storeId } }
     );
+  }
+
+  if(deals.length > 0){
+    deals.forEach((val)=>{
+      val.quantity = 0;
+    })
   }
   const data = {
     store: storeData,
