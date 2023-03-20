@@ -116,13 +116,13 @@ const homeData = async (location, data) => {
 
   const arrData = [
     {
-      title: "banners",
+      title: "Banners",
       data: banner,
     },
-    { titile: "categories", data: category },
-    { title: "featuredBrands", data: featuredStore },
-    { title: "newlyAdded", data: stores },
-    { title: "recentlyViewed", data: recentlyView.recentlyView },
+    { title: "Categories", data: category },
+    { title: "Featured Brands", data: featuredStore },
+    { title: "Newly Added", data: stores },
+    { title: "Recently Viewed", data: recentlyView.recentlyView },
   ];
 
   return arrData;
@@ -235,12 +235,12 @@ const categoryData = async (data, userId) => {
   // };
   const arrData = [
     {
-      title: "banners",
+      title: "Banners",
       data: bannerData,
     },
-    { titile: "featuredBrands", data: storeData },
-    { title: "newlyAdded", data: newStoreData },
-    { title: "recentlyViewed", data: recentlyView.recentlyView },
+    { title: "Featured Brands", data: storeData },
+    { title: "Newly Added", data: newStoreData },
+    { title: "Recently Viewed", data: recentlyView.recentlyView },
   ];
 
   return arrData;
