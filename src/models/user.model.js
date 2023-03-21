@@ -47,6 +47,7 @@ const userSchema = mongoose.Schema(
           },
         ],
         PurchasedId: { type: String },
+        paymentId:{type:String},
         billDetails: {
           total: { type: Number },
           tax: { type: Number },
@@ -70,6 +71,7 @@ const userSchema = mongoose.Schema(
           },
         ],
         PurchasedId: { type: String },
+        paymentId:{type:String},
         billDetails: {
           total: { type: Number },
           tax: { type: Number },

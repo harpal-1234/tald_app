@@ -144,9 +144,9 @@ const bookNow = catchAsync(async(req,res)=>{
 });
 
 const checkOut = catchAsync(async(req,res)=>{
-  const {deals,storeId,amount}=req.body;
+  const {paymentId,amount}=req.body;
   const userId = req.token.user._id;
-  const order = await dealsService.checkOut(deals,userId,storeId,amount);
+  const order = await dealsService.checkOut(paymentId,userId,amount);
   return successResponse(
     req,
     res,

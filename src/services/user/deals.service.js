@@ -234,16 +234,16 @@ const categoryData = async (data, userId) => {
   //   RecentlyViewed: recentlyView.recentlyView,
   // };
   // if (storeData.length < 0) {
-    storeData.forEach((val) => {
-      val.storeId = val._id;
-    });
+  storeData.forEach((val) => {
+    val.storeId = val._id;
+  });
   // }
   if (newStoreData.length > 0) {
     newStoreData.forEach((val) => {
       val.storeId = val._id;
     });
   }
- // console.log(recentlyView.recentlyView.length)
+  // console.log(recentlyView.recentlyView.length)
   if (recentlyView.recentlyView.length > 0) {
     recentlyView.recentlyView.forEach((val) => {
       val.storeId = val._id;
@@ -381,16 +381,18 @@ const getStoreAndDeals = async (storeId, lat, long, userId) => {
     );
   }
 
-  if(deals.length > 0){
-    deals.forEach((val)=>{
+  if (deals.length > 0) {
+    deals.forEach((val) => {
       val.quantity = 0;
-    })
+    });
   }
 
-  if(!JSON.stringify(user.favouriteStores).includes(JSON.stringify(store._id))){
-    storeData.isFavourite = false
-  }else{
-    storeData.isFavourite = true
+  if (
+    !JSON.stringify(user.favouriteStores).includes(JSON.stringify(store._id))
+  ) {
+    storeData.isFavourite = false;
+  } else {
+    storeData.isFavourite = true;
   }
   const data = {
     store: storeData,
@@ -721,7 +723,7 @@ const bookNow = async (deals, userId, storeId) => {
 
   return { deal, store, billDetails };
 };
-const payment = async (amount,userId)=>{
+const payment = async (amount, userId) => {
   const user = await User.findOne({ _id: userId, isDeleted: false });
 
   const ephemeralKey = await stripeSerbices.stripeServices(user.stripeId);
@@ -729,12 +731,22 @@ const payment = async (amount,userId)=>{
     user.stripeId,
     amount
   );
-  const customer = paymentIntent.customer
-  return { ephemeralKey, paymentIntent,customer };
-}
-const checkOut = async (deals, userId, storeId, amount) => {
+  const customer = paymentIntent.customer;
+  return { ephemeralKey, paymentIntent, customer };
+};
+const checkOut = async (paymentId, userId, amount) => {
   const user = await User.findOne({ _id: userId, isDeleted: false });
-
+  const check = await User.findOne({ _id: userId, isDeleted: false }).populate({
+    path: "addCard.dealId",
+  });
+if(user.addCard == 0){
+  return "Please add items your card"
+}
+  const storeId = check.addCard.find((val) => {
+    //console.log(val)
+    return val.dealId.storeId;
+  });
+  
   // const ephemeralKey = await stripeSerbices.stripeServices(user.stripeId);
   // const paymentIntent = await stripeSerbices.paymentIntent(
   //   user.stripeId,
@@ -769,7 +781,7 @@ const checkOut = async (deals, userId, storeId, amount) => {
         },
       ])
       .lean(),
-    Store.findOne({ _id: storeId, isDeleted: false }).lean(),
+    Store.findOne({ _id: storeId.dealId.storeId, isDeleted: false }).lean(),
   ]);
   if (!store) {
     throw new OperationalError(
@@ -816,19 +828,21 @@ const checkOut = async (deals, userId, storeId, amount) => {
 
   order.push({
     userId: userId,
-    storeId: storeId,
+    storeId:storeId.dealId.storeId,
     orderDate: date,
     orderTime: time,
     deals: deal,
     PurchasedId: purchaseId,
+    paymentId:paymentId,
     billDetails: billDetails,
   });
   purchase.push({
-    storeId: storeId,
+    storeId:storeId.dealId.storeId,
     orderDate: date,
     orderTime: time,
     deals: deal,
     PurchasedId: purchaseId,
+    paymentId:paymentId,
     billDetails: billDetails,
   });
   await User.findOneAndUpdate(
@@ -888,7 +902,7 @@ const checkOut = async (deals, userId, storeId, amount) => {
     },
     { new: true }
   );
-  // return { ephemeralKey, paymentIntent };
+   return order;
 };
 const favoriteStore = async (userId, lat, long, page, limit) => {
   console.log(lat, long);
@@ -1024,7 +1038,7 @@ module.exports = {
   favoriteStore,
   rating,
   cannabisCategoryData,
-  payment
+  payment,
 };
 
 // userData.recentlyView.map(async(data)=>{
