@@ -442,7 +442,7 @@ const formatStore = (userData) => {
       delete data.countryCode;
       delete data.phoneNumber;
       delete data.description
-      delete data.service;
+     // delete data.service;
       delete data.storeType;
 
     });

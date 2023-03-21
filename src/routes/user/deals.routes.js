@@ -10,10 +10,15 @@ const router = express.Router();
 router.get(
     "/homeData",
     auth(USER_TYPE.USER),
-    // validate(authValidation.signUp),
+     validate(authValidation.homeData),
     authController.homeData
   )
-  
+  router.get(
+    "/mapSearch",
+    auth(USER_TYPE.USER),
+    validate(authValidation.mapSearch),
+    authController.mapSearch
+  )
 router.get(
   "/getCategory",
   auth(USER_TYPE.USER),

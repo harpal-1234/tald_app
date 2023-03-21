@@ -54,7 +54,18 @@ const getCategoryData = catchAsync(async (req, res) => {
     category
   );
 });
-
+const mapSearch = catchAsync(async(req,res)=>{
+  const {lat,long,search,filter}=req.query;
+  const userId = req.token.user._id;
+  const store = await dealsService.mapSearch(lat,long,search,filter,userId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    store
+  );
+})
 const nearestService = catchAsync(async (req, res) => {
   const data = await dealsService.nearestService(req, res);
   const nearYou = formatDeal(data);
@@ -214,5 +225,6 @@ module.exports = {
   favoriteStore,
   rating,
   getCategoryCannabis,
-  payment
+  payment,
+  mapSearch
 };

@@ -9,7 +9,7 @@ const {
   Notification,
 } = require("../../models");
 const { ApiError } = require("../../utils/universalFunction");
-const stripeSerbices = require("../../middlewares/stripe");
+const stripeServices = require("../../middlewares/stripe");
 const shortid = require("shortid");
 var moment = require("moment");
 const {
@@ -405,21 +405,35 @@ const purchaseDeal = async (userId, lat, long, page, limit) => {
     _id: userId,
     isDeleted: false,
   })
-    .populate({
-      path: "dealPurchases.storeId",
-      select: [
-        "storeImage",
-        "businessName",
-        "storeType",
-        "service",
-        "loc",
-        "description",
-        "phoneNumber",
-        "countryCode",
-        "rating",
-      ],
-    })
+    .populate([
+      {
+        path: "dealPurchases.storeId",
+        select: [
+          "storeImage",
+          "businessName",
+          "storeType",
+          "service",
+          "loc",
+          "description",
+          "phoneNumber",
+          "countryCode",
+          "rating",
+        ],
+      },
+      {
+        path: "dealPurchases.deals.dealId",
+        select: [
+          "dealId",
+          "title",
+          "totalPrice",
+          "discountPrice",
+          "no_of_person",
+          "service",
+        ],
+      },
+    ])
     .lean();
+  console.log(deal);
   if (!deal) {
     throw new OperationalError(
       STATUS_CODES.NOT_FOUND,
@@ -726,8 +740,8 @@ const bookNow = async (deals, userId, storeId) => {
 const payment = async (amount, userId) => {
   const user = await User.findOne({ _id: userId, isDeleted: false });
 
-  const ephemeralKey = await stripeSerbices.stripeServices(user.stripeId);
-  const paymentIntent = await stripeSerbices.paymentIntent(
+  const ephemeralKey = await stripeServices.stripeServices(user.stripeId);
+  const paymentIntent = await stripeServices.paymentIntent(
     user.stripeId,
     amount
   );
@@ -739,14 +753,14 @@ const checkOut = async (paymentId, userId, amount) => {
   const check = await User.findOne({ _id: userId, isDeleted: false }).populate({
     path: "addCard.dealId",
   });
-if(user.addCard == 0){
-  return "Please add items your card"
-}
+  if (user.addCard == 0) {
+    return "Please add items your card";
+  }
   const storeId = check.addCard.find((val) => {
     //console.log(val)
     return val.dealId.storeId;
   });
-  
+
   // const ephemeralKey = await stripeSerbices.stripeServices(user.stripeId);
   // const paymentIntent = await stripeSerbices.paymentIntent(
   //   user.stripeId,
@@ -828,21 +842,21 @@ if(user.addCard == 0){
 
   order.push({
     userId: userId,
-    storeId:storeId.dealId.storeId,
+    storeId: storeId.dealId.storeId,
     orderDate: date,
     orderTime: time,
     deals: deal,
     PurchasedId: purchaseId,
-    paymentId:paymentId,
+    paymentId: paymentId,
     billDetails: billDetails,
   });
   purchase.push({
-    storeId:storeId.dealId.storeId,
+    storeId: storeId.dealId.storeId,
     orderDate: date,
     orderTime: time,
     deals: deal,
     PurchasedId: purchaseId,
-    paymentId:paymentId,
+    paymentId: paymentId,
     billDetails: billDetails,
   });
   await User.findOneAndUpdate(
@@ -902,7 +916,7 @@ if(user.addCard == 0){
     },
     { new: true }
   );
-   return order;
+  return order;
 };
 const favoriteStore = async (userId, lat, long, page, limit) => {
   console.log(lat, long);
@@ -1020,7 +1034,71 @@ const rating = async (userId, purchaseId, storeId, rating) => {
     );
   }
 };
+const mapSearch = async (lat, long, search, filter, userId) => {
+  if (search) {
+    const store = await Store.find({
+      "service.category": { $nin: "Cannabis" },
+      loc: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: [long, lat],
+          },
+          $maxDistance: 100000,
+        },
+      },
+      $or: [
+        { storeType: { $regex: new RegExp(search, "i") } },
+        { type: { $regex: new RegExp(search, "i") } },
+        { businessName: { $regex: new RegExp(search, "i") } },
+      ],
+      isDeleted: false,
+    })
+      .sort({ _id: -1 })
+      .lean();
+    const storeData = formatStore(store);
+    return storeData;
+  }
+  if (filter) {
+    console.log(filter);
+    const store = await Store.find({
+      "service.category": { $nin: "Cannabis" },
+      loc: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: [long, lat],
+          },
+          $maxDistance: 100000,
+        },
+      },
+      isDeleted: false,
+    })
+      .sort({ _id: -1 })
+      .lean();
+    const storeData = formatStore(store);
+    storeData.map((val) => {});
+    return storeData;
+  }
 
+  const store = await Store.find({
+    "service.category": { $nin: "Cannabis" },
+    loc: {
+      $near: {
+        $geometry: {
+          type: "Point",
+          coordinates: [long, lat],
+        },
+        $maxDistance: 100000,
+      },
+    },
+    isDeleted: false,
+  })
+    .sort({ _id: -1 })
+    .lean();
+  const storeData = formatStore(store);
+  return storeData;
+};
 module.exports = {
   recentlyView,
   categoryData,
@@ -1039,67 +1117,7 @@ module.exports = {
   rating,
   cannabisCategoryData,
   payment,
+  mapSearch,
 };
 
-// userData.recentlyView.map(async(data)=>{
-//   console.log(data,"answer")
-//   if(!data.toString() === storeId)
-//   {
-//     console.log("working")
-//     if (userData.recentlyView.length < 5) {
-//       {
-//     const user = await User.updateOne(
-//       { _id: userId },
-//       { $push: { recentlyView:{$each :[storeId],$position: 0}}},
-//       { new: true }
-//     );
-//     return
-//       }
-//     }
-//   }
-
-// })
-
-// //   if (userData.recentlyView.length < 5) {
-// //   const user = await User.updateOne(
-// //     { _id: userId },
-// //     { $push: { recentlyView:{$each :[storeId],$position: 0}}},
-// //     { new: true }
-// //   );
-// //   return
-// // }
-// //   else{
-// //   if (userData.recentlyView.length < 5) {
-// //     const user = await User.updateOne(
-// //       { _id: userId },
-// //       { $push: { recentlyView:{$each :[storeId],$position: 0}}},
-// //       { new: true }
-// //     );
-
-// //   }
-// if (userData.recentlyView.length >= 5) {
-//   const user = await User.updateOne(
-//     { _id: userId },
-//     { $pull: { recentlyView: userData.recentlyView[userData.recentlyView.length - 1]} },
-//     { new: true }
-//   );
-//   userData.recentlyView.map(async(data)=>{
-//     console.log(data,"answer")
-//     if(!data.toString() === storeId)
-//     {
-//       console.log("working")
-//       if (userData.recentlyView.length < 5) {
-//         {
-//       const user = await User.updateOne(
-//         { _id: userId },
-//         { $push: { recentlyView:{$each :[storeId],$position: 0}}},
-//         { new: true }
-//       );
-//       return
-//         }
-//       }
-//     }
-
-//   })
-// }
 // return;

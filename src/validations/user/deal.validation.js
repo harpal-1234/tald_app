@@ -26,7 +26,20 @@ exports.storeDeal = {
     storeId: Joi.string().required(),
   }),
 };
-
+exports.homeData={
+  query:Joi.object().keys({
+    lat: Joi.number().required(),
+    long: Joi.number().required(),
+  })
+}
+exports.mapSearch={
+  query:Joi.object().keys({
+    lat: Joi.number().required(),
+    long: Joi.number().required(),
+    search:Joi.string().allow("",null).required(),
+    filter:Joi.string().allow("",null).required(),
+  })
+}
 exports.purchaseDeal = {
   query: Joi.object().keys({
     // dealId: Joi.string().required(),
