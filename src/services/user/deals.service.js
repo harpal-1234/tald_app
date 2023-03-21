@@ -371,7 +371,7 @@ const getStoreAndDeals = async (storeId, lat, long, userId) => {
     2 * Math.atan2(Math.sqrt(calculate), Math.sqrt(1 - calculate));
   const distance = 6371 * formula; // result is in kilometers
 
-  store.distance = distance;
+  store.distance = distance.toFixed(1);
 
   const storeData = formatStore(store);
   if (!JSON.stringify(user.recentlyView).includes(storeId)) {
@@ -480,7 +480,7 @@ const purchaseDeal = async (userId, lat, long, page, limit) => {
   console.log(distance);
 
   deal.dealPurchases.forEach((val) => {
-    val.storeId.distance = distance;
+    val.storeId.distance = distance.toFixed(1);
   });
   const lim = page + 1;
 
@@ -983,7 +983,7 @@ const favoriteStore = async (userId, lat, long, page, limit) => {
   console.log(distance);
 
   store.favouriteStores.forEach((val) => {
-    val.distance = distance;
+    val.distance = distance.toFixed(1);
   });
   const lim = page + 1;
 
@@ -1035,6 +1035,74 @@ const rating = async (userId, purchaseId, storeId, rating) => {
   }
 };
 const mapSearch = async (lat, long, search, filter, userId) => {
+  if(search && filter){
+    const store = await Store.find({
+      "service.category": { $nin: "Cannabis" },
+      loc: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: [long, lat],
+          },
+          $maxDistance: 100000,
+        },
+      },
+      $or: [
+        { storeType: { $regex: new RegExp(search, "i") } },
+        { type: { $regex: new RegExp(search, "i") } },
+        { businessName: { $regex: new RegExp(search, "i") } },
+      ],
+      isDeleted: false,
+    })
+      .sort({ _id: -1 })
+      .lean();
+    const storeData = formatStore(store);
+    const data = [];
+    storeData.map((val) => {
+      console.log(JSON.stringify(filter).includes(val.service.categoryId))
+      if(JSON.stringify(filter).includes(val.service.categoryId)){
+           data.push(val)
+      }
+    });
+    data.forEach((val)=>{
+      const lon1 = val.loc.coordinates.find((val, index) => val);
+      const lat1 =  val.loc.coordinates.find((val, index) => {
+        if (index == 1) {
+          return val;
+        }})
+     
+      const lat2 = lat;
+  const lon2 = long;
+
+  // convert coordinates to radians
+  const radlat1 = (Math.PI * lat1) / 180;
+  const radlat2 = (Math.PI * lat2) / 180;
+  const radlon1 = (Math.PI * lon1) / 180;
+  const radlon2 = (Math.PI * lon2) / 180;
+
+  // calculate the difference between the coordinates
+  const dLat = radlat2 - radlat1;
+  const dLon = radlon2 - radlon1;
+
+  // apply the Haversine formula
+  const calculate =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(radlat1) *
+      Math.cos(radlat2) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const formula =
+    2 * Math.atan2(Math.sqrt(calculate), Math.sqrt(1 - calculate));
+  const distance = 6371 * formula; // result is in kilometers
+  console.log(distance);
+  val.distance = distance.toFixed(1),
+  val.address=val.loc.address,
+  val.coordinates=val.loc.coordinates
+  delete val.loc
+    })
+   
+    return data;
+  }
   if (search) {
     const store = await Store.find({
       "service.category": { $nin: "Cannabis" },
@@ -1057,6 +1125,42 @@ const mapSearch = async (lat, long, search, filter, userId) => {
       .sort({ _id: -1 })
       .lean();
     const storeData = formatStore(store);
+    storeData.forEach((val)=>{
+      const lon1 = val.loc.coordinates.find((val, index) => val);
+      const lat1 =  val.loc.coordinates.find((val, index) => {
+        if (index == 1) {
+          return val;
+        }})
+      
+      const lat2 = lat;
+  const lon2 = long;
+
+  // convert coordinates to radians
+  const radlat1 = (Math.PI * lat1) / 180;
+  const radlat2 = (Math.PI * lat2) / 180;
+  const radlon1 = (Math.PI * lon1) / 180;
+  const radlon2 = (Math.PI * lon2) / 180;
+
+  // calculate the difference between the coordinates
+  const dLat = radlat2 - radlat1;
+  const dLon = radlon2 - radlon1;
+
+  // apply the Haversine formula
+  const calculate =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(radlat1) *
+      Math.cos(radlat2) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const formula =
+    2 * Math.atan2(Math.sqrt(calculate), Math.sqrt(1 - calculate));
+  const distance = 6371 * formula; // result is in kilometers
+  console.log(distance);
+  val.distance = distance.toFixed(1),
+  val.address=val.loc.address,
+  val.coordinates=val.loc.coordinates
+  delete val.loc
+    })
     return storeData;
   }
   if (filter) {
@@ -1077,8 +1181,51 @@ const mapSearch = async (lat, long, search, filter, userId) => {
       .sort({ _id: -1 })
       .lean();
     const storeData = formatStore(store);
-    storeData.map((val) => {});
-    return storeData;
+    const data = [];
+    storeData.map((val) => {
+      console.log(JSON.stringify(filter).includes(val.service.categoryId))
+      if(JSON.stringify(filter).includes(val.service.categoryId)){
+           data.push(val)
+      }
+    });
+    data.forEach((val)=>{
+      const lon1 = val.loc.coordinates.find((val, index) => val);
+      const lat1 =  val.loc.coordinates.find((val, index) => {
+        if (index == 1) {
+          return val;
+        }})
+      
+      const lat2 = lat;
+  const lon2 = long;
+
+  // convert coordinates to radians
+  const radlat1 = (Math.PI * lat1) / 180;
+  const radlat2 = (Math.PI * lat2) / 180;
+  const radlon1 = (Math.PI * lon1) / 180;
+  const radlon2 = (Math.PI * lon2) / 180;
+
+  // calculate the difference between the coordinates
+  const dLat = radlat2 - radlat1;
+  const dLon = radlon2 - radlon1;
+
+  // apply the Haversine formula
+  const calculate =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(radlat1) *
+      Math.cos(radlat2) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const formula =
+    2 * Math.atan2(Math.sqrt(calculate), Math.sqrt(1 - calculate));
+  const distance = 6371 * formula; // result is in kilometers
+  console.log(distance);
+  val.distance = distance.toFixed(1),
+  val.address=val.loc.address,
+  val.coordinates=val.loc.coordinates
+  delete val.loc
+    })
+    
+    return data;
   }
 
   const store = await Store.find({
@@ -1097,6 +1244,42 @@ const mapSearch = async (lat, long, search, filter, userId) => {
     .sort({ _id: -1 })
     .lean();
   const storeData = formatStore(store);
+  storeData.forEach((val)=>{
+    const lon1 = val.loc.coordinates.find((val, index) => val);
+    const lat1 =  val.loc.coordinates.find((val, index) => {
+      if (index == 1) {
+        return val;
+      }})
+ 
+    const lat2 = lat;
+const lon2 = long;
+
+// convert coordinates to radians
+const radlat1 = (Math.PI * lat1) / 180;
+const radlat2 = (Math.PI * lat2) / 180;
+const radlon1 = (Math.PI * lon1) / 180;
+const radlon2 = (Math.PI * lon2) / 180;
+
+// calculate the difference between the coordinates
+const dLat = radlat2 - radlat1;
+const dLon = radlon2 - radlon1;
+
+// apply the Haversine formula
+const calculate =
+  Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+  Math.cos(radlat1) *
+    Math.cos(radlat2) *
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2);
+const formula =
+  2 * Math.atan2(Math.sqrt(calculate), Math.sqrt(1 - calculate));
+const distance = 6371 * formula; // result is in kilometers
+console.log(distance);
+val.distance = distance.toFixed(1),
+val.address=val.loc.address,
+val.coordinates=val.loc.coordinates
+delete val.loc
+  })
   return storeData;
 };
 module.exports = {
