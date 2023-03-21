@@ -835,6 +835,7 @@ const checkOut = async (deals, userId, storeId, amount) => {
     { _id: userId, isDeleted: false },
     { $set: { addCard: [] } }
   );
+
   await Promise.all(
     dealed.addCard.map(async (ele) => {
       const notification = await Notification.create({
@@ -842,7 +843,7 @@ const checkOut = async (deals, userId, storeId, amount) => {
         userId: user._id,
         type: "createOrder",
         deal: ele.dealId._id,
-        quantity: val.dealId.quantity,
+        quantity: ele.dealId.quantity,
       });
       await User.findOneAndUpdate(
         { _id: store.vendor },
@@ -855,13 +856,13 @@ const checkOut = async (deals, userId, storeId, amount) => {
           },
         }
       );
-      await notificationServices.orderNotification(
-        store.vendor,
-        notification.message,
-        notification.userId,
-        notification.deal,
-        notification.quantity
-      );
+      // await notificationServices.orderNotification(
+      //   store.vendor,
+      //   notification.message,
+      //   notification.userId,
+      //   notification.deal,
+      //   notification.quantity
+      // );
     })
   );
 
