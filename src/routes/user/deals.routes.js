@@ -78,6 +78,13 @@ router.post(
   validate(authValidation.checkOut),
   authController.checkOut
 );
+router.post(
+  "/payment",
+  auth(USER_TYPE.USER),
+  validate(authValidation.payment),
+  authController.payment
+);
+
 router.get(
   "/favoriteStore",
   auth(USER_TYPE.USER),

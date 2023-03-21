@@ -91,7 +91,24 @@ exports.checkOut = {
   }),
  
 };
-
+exports.payment = {
+  body: Joi.object().keys({
+    // deals: Joi.array()
+    //   .items(
+    //     Joi.object()
+    //       .keys({
+    //         dealId: Joi.string().required(),
+    //         quantity: Joi.number().required(),
+    //       })
+    //       .required()
+    //   )
+    //   .required(),
+    // storeId: Joi.string().required(),
+    amount:Joi.number().required()
+    
+  }),
+ 
+};
 exports.categoryData = {
   query: Joi.object().keys({
     // service:Joi.object().keys({

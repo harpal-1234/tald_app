@@ -721,7 +721,7 @@ const bookNow = async (deals, userId, storeId) => {
 
   return { deal, store, billDetails };
 };
-const checkOut = async (deals, userId, storeId, amount) => {
+const payment = async (amount,userId)=>{
   const user = await User.findOne({ _id: userId, isDeleted: false });
 
   const ephemeralKey = await stripeSerbices.stripeServices(user.stripeId);
@@ -729,7 +729,18 @@ const checkOut = async (deals, userId, storeId, amount) => {
     user.stripeId,
     amount
   );
-  // const check = user.addCard.find((value) => {
+  const customer = paymentIntent.customer
+  return { ephemeralKey, paymentIntent,customer };
+}
+const checkOut = async (deals, userId, storeId, amount) => {
+  const user = await User.findOne({ _id: userId, isDeleted: false });
+
+  // const ephemeralKey = await stripeSerbices.stripeServices(user.stripeId);
+  // const paymentIntent = await stripeSerbices.paymentIntent(
+  //   user.stripeId,
+  //   amount
+  // );
+  // // const check = user.addCard.find((value) => {
   //   return value;
   // });
 
@@ -877,7 +888,7 @@ const checkOut = async (deals, userId, storeId, amount) => {
     },
     { new: true }
   );
-  return { ephemeralKey, paymentIntent };
+  // return { ephemeralKey, paymentIntent };
 };
 const favoriteStore = async (userId, lat, long, page, limit) => {
   console.log(lat, long);
@@ -1013,6 +1024,7 @@ module.exports = {
   favoriteStore,
   rating,
   cannabisCategoryData,
+  payment
 };
 
 // userData.recentlyView.map(async(data)=>{

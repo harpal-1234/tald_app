@@ -155,6 +155,18 @@ const checkOut = catchAsync(async(req,res)=>{
     order
   );
 })
+const payment = catchAsync(async(req,res)=>{
+  const {amount}=req.body;
+  const userId = req.token.user._id;
+  const order = await dealsService.payment(amount,userId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    order
+  );
+})
 
 const favoriteStore = catchAsync(async(req,res)=>{
   const {lat,long,page,limit}= req.query;
@@ -201,5 +213,6 @@ module.exports = {
   checkOut,
   favoriteStore,
   rating,
-  getCategoryCannabis
+  getCategoryCannabis,
+  payment
 };
