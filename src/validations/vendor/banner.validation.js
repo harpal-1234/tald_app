@@ -9,6 +9,7 @@ exports.createBanner = {
     startDate: Joidate.date().format('YYYY-MM-DD').utc(),
     endDate:Joidate.date().format('YYYY-MM-DD').utc(),
     amount:Joi.number().required(),
+    paymentId:Joi.string().required(),
     service: Joi.object().keys({
       category:Joi.string().valid(...Object.values(DEALS_SERVICE)),
       categoryId:Joi.string()

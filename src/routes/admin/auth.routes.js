@@ -23,5 +23,10 @@ router.put(
 );
 
 router.post("/logout", auth(USER_TYPE.ADMIN), authController.adminLogout);
-
+router.get(
+  "/getDashboard",
+  auth(USER_TYPE.ADMIN),
+ // validate(authValidation.changePassword),
+  authController.dashBoard
+);
 module.exports = router;

@@ -1,7 +1,7 @@
-const { Admin, Vendor } = require("../../models");
+const { Admin, Vendor ,User} = require("../../models");
 const { STATUS_CODES, ERROR_MESSAGES } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
-
+const { formatUser } = require("../../utils/commonFunction");
 // const createVendor = async (data) => {
 //   const vendor = await Vendor.findOne({ email: data.email, isDeleted: false });
 //   if (vendor) {
@@ -29,15 +29,39 @@ const { OperationalError } = require("../../utils/errors");
 //   return newAdmin;
 // };
 
-const getAllVendor = async (req, res) => {
-  let { page, limit, search } = req.query;
+const getAllVendor = async (page, limit, search, startDate, endDate ) => {
   let skip = page * limit;
+  if (startDate && endDate) {
+    const dateObject = new Date(startDate);
+    const startdate = dateObject.toISOString();
+
+    const dateObject1 = new Date(endDate);
+    const enddate = dateObject1.toISOString();
+
+    const value = await  User.find({
+      isDeleted: false,
+      type: "Vendor",
+      createdAt: { $gte: startdate, $lte: enddate },
+    }) .skip(skip)
+    .limit(limit)
+    .sort({ _id: -1 })
+    .lean();
+    let total = await User.countDocuments({
+      isDeleted: false,
+      type: "Vendor",
+      createdAt: { $gte: startdate, $lte: enddate },
+    });
+    const Vendors = formatUser(value)
+    return {Vendors,total};
+    return {users,total};
+  }
   if (search) {
-    let vednorData = await Vendor.find({
+    let value = await User.find({
       $or: [
         { email: { $regex: new RegExp(search, "i") } },
         { name: { $regex: new RegExp(search, "i") } },
       ],
+      type: "Vendor",
       isDeleted: false,
     })
       .skip(skip)
@@ -45,25 +69,29 @@ const getAllVendor = async (req, res) => {
       .sort({ _id: -1 })
       .lean();
 
-    let total = await Vendor.countDocuments({
+    let total = await User.countDocuments({
       $or: [
-        { couponCode: { $regex: new RegExp(search, "i") } },
+        { email: { $regex: new RegExp(search, "i") } },
         { name: { $regex: new RegExp(search, "i") } },
       ],
+      type: "Vendor",
       isDeleted: false,
-    });
-
-    return { total, vednorData };
+    }).skip(skip)
+    .limit(limit)
+    .sort({ _id: -1 })
+    .lean();
+    const Vendors = formatUser(value)
+    return { Vendors, total };
   } else {
-    var vendorData = await Vendor.find({ isDeleted: false })
+    var value = await User.find({ type: "Vendor", isDeleted: false })
       .skip(skip)
       .limit(limit)
       .sort({ _id: -1 })
       .lean();
 
-    let total = await Vendor.countDocuments({ isDeleted: false });
-
-    return { total, vendorData };
+    let total = await User.countDocuments({ isDeleted: false,type:"Vendor" });
+    const Vendors = formatUser(value)
+    return {Vendors, total };
   }
 };
 

@@ -21,14 +21,16 @@ const createVendor=catchAsync(async(req,res)=>{
 
 
 const getAllVendor=catchAsync(async(req,res)=>{
-  const vendor=await adminVendorService.getAllVendor(req,res);
-  const value=formatVendor(vendor.vendorData);
+  let { page, limit, search, startDate, endDate } = req.query;
+  const vendor=await adminVendorService.getAllVendor(page, limit, search, startDate, endDate );
+ 
   return successResponse(
       req,
       res,
       STATUS_CODES.SUCCESS,
-      SUCCESS_MESSAGES.VENDOR_ADMIN,
-      value
+      SUCCESS_MESSAGES.SUCCESS,
+      vendor.Vendors,
+      vendor.total
       )
 })
 

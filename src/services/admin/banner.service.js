@@ -36,9 +36,85 @@ const deleteBanner = async (req, res) => {
   );
   return deleteBanner;
 };
+const getAllBanners= async(page, limit, search, startDate, endDate)=>{
+  const skip = page * limit ;
+  if (search) {
+    // const store = await Store.findOne({ vendor: vendorId });
+    // if (!store) {
+    //   throw new OperationalError(
+    //     STATUS_CODES.ACTION_FAILED,
+    //     ERROR_MESSAGES.COUPON_DATA
+    //   );
+    // }
+    const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
+
+    await Banner.updateMany(
+      { $and: [{ endDate: { $lte: date } }, { isDeleted: false }] },
+      { $set: { expireStatus: "deactivate", isActive: false } },
+      { upsert: false }
+    );
+
+    var bannerData = await Banner.find({
+      $or: [
+        { bannerId: { $regex: new RegExp(search, "i") } },
+        { title: { $regex: new RegExp(search, "i") } },
+        { type: { $regex: new RegExp(search, "i") } },
+      ],
+      isDeleted: false,
+    })
+      .skip(skip)
+      .limit(limit)
+      .sort({ _id: 1 })
+      .lean();
+
+    let total = await Banner.countDocuments({
+      // storeId: store._id,
+      expireStatus: "activate",
+      isDeleted: false,
+    });
+
+    return { total, bannerData };
+  }
+
+  if (startDate && endDate) {
+    // const store = await Store.findOne({ vendor: vendorId });
+    // if (!store) {
+    //   throw new OperationalError(
+    //     STATUS_CODES.ACTION_FAILED,
+    //     ERROR_MESSAGES.COUPON_DATA
+    //   );
+    // }
+    const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
+
+    await Banner.updateMany(
+      { $and: [{ endDate: { $lte: date } }, { isDeleted: false }] },
+      { $set: { expireStatus: "deactivate", isActive: false } },
+      { upsert: false }
+    );
+
+    var bannerData = await Banner.find({
+     
+      isDeleted: false,
+    })
+      .skip(skip)
+      .limit(limit)
+      .sort({ _id: 1 })
+      .lean();
+
+    let total = await Banner.countDocuments({
+      // storeId: store._id,
+      // expireStatus: "deactivate",
+      isDeleted: false,
+    });
+
+    return { total, bannerData };
+  }
+
+}
 
 module.exports = {
   bannerAction,
   bannerRequest,
   deleteBanner,
+  getAllBanners
 };

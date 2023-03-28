@@ -31,6 +31,18 @@ const bannerRequest=catchAsync(async(req,res)=>{
         )
 
 });
+const getAllBanners=catchAsync(async(req,res)=>{
+    let { page, limit, search, startDate, endDate } = req.query;
+    const banners=await adminBannerService.getBanners(page, limit, search, startDate, endDate);
+    return successResponse(
+        req,
+        res,
+        STATUS_CODES.SUCCESS,
+        SUCCESS_MESSAGES.BANNER_DATA,
+        banners
+        )
+
+});
 
 const deleteBanner=catchAsync(async(req,res)=>{
     const bannerRequest=await adminBannerService.deleteBanner(req,res);
@@ -46,5 +58,6 @@ const deleteBanner=catchAsync(async(req,res)=>{
 module.exports={
     bannerAction,
     bannerRequest,
-    deleteBanner
+    deleteBanner,
+    getAllBanners
 }

@@ -1,4 +1,4 @@
-const { Admin, Token, Banner } = require("../../models");
+const { Admin, Token, Banner,User } = require("../../models");
 const { STATUS_CODES, ERROR_MESSAGES } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 
@@ -34,13 +34,25 @@ const changePassword = async (adminId, oldPassword, newPassword) => {
   return admin;
 };
 
-const dashBoard = async (req, res) => {
-  const bannerRequest = await Banner.findByIdAndUpdate(
-    { $and: [{ _id: req.body.id }, { status: "pending" }] },
-    { status:req.body.status },
-    { new: true }
-  );
-  return bannerRequest
+const dashBoard = async (adminId) => {
+  console.log(adminId)
+  const admin = await Admin.findOne();
+  console.log(admin)
+  const totalUser = await User.countDocuments({
+    type: "User",
+    isDeleted: false,
+  });
+  const totalVendor = await User.countDocuments({
+    type: "Vendor",
+    isDeleted: false,
+  });
+  const data = [
+    { title: "Total Banners", data: admin.orders.length },
+    { title: "Total Revanue", data: admin.totalRevanue },
+    { title: "Total Users", data: totalUser },
+    { title: "Total Vendors", data: totalVendor },
+  ];
+  return data;
 };
 
 const adminLogout = async (tokenId) => {
@@ -57,8 +69,6 @@ const adminLogout = async (tokenId) => {
   });
   return updatedToken;
 };
-
-
 
 module.exports = {
   adminLogin,

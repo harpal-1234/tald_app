@@ -12,9 +12,11 @@ exports.createUser = {
 
 exports.getAllUser = {
   query: Joi.object().keys({
-    limit: Joi.string().optional(),
-    page: Joi.string().optional(),
-    skip: Joi.string().optional(),
+    limit: Joi.number().required(),
+    page: Joi.number().required(),
+    search: Joi.string().allow(null,""),
+    startDate:Joi.string().allow(null,""),
+    endDate:Joi.string().allow(null,""),
   }),
 };
 

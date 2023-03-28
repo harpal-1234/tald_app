@@ -1,7 +1,8 @@
 const { Admin, User } = require("../../models");
 const { STATUS_CODES, ERROR_MESSAGES } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
-
+const moment = require("moment");
+const { formatUser } = require("../../utils/commonFunction");
 const createUser = async (data) => {
   const user = await User.findOne({ email: data.email, isDeleted: false });
   if (user) {
@@ -14,15 +15,39 @@ const createUser = async (data) => {
   return newUser;
 };
 
-const getAllUser= async (req, res) => {
-  let { page, limit, search } = req.query;
+const getAllUser = async (page, limit, search, startDate, endDate) => {
   let skip = page * limit;
+  if (startDate && endDate) {
+    const dateObject = new Date(startDate);
+    const startdate = dateObject.toISOString();
+
+    const dateObject1 = new Date(endDate);
+    const enddate = dateObject1.toISOString();
+
+    const value = await  User.find({
+      isDeleted: false,
+      type: "User",
+      createdAt: { $gte: startdate, $lte: enddate },
+    }) .skip(skip)
+    .limit(limit)
+    .sort({ _id: -1 })
+    .lean();
+    let total = await User.countDocuments({
+      isDeleted: false,
+      type: "User",
+      createdAt: { $gte: startdate, $lte: enddate },
+    });
+    const users = formatUser(value)
+    return {users,total};
+    return {users,total};
+  }
   if (search) {
-    let userData = await User.find({
+    let value = await User.find({
       $or: [
         { email: { $regex: new RegExp(search, "i") } },
         { name: { $regex: new RegExp(search, "i") } },
       ],
+      type: "User",
       isDeleted: false,
     })
       .skip(skip)
@@ -35,20 +60,24 @@ const getAllUser= async (req, res) => {
         { email: { $regex: new RegExp(search, "i") } },
         { name: { $regex: new RegExp(search, "i") } },
       ],
+      type: "User",
       isDeleted: false,
-    });
-
-    return { total, userData };
+    }).skip(skip)
+    .limit(limit)
+    .sort({ _id: -1 })
+    .lean();
+    const users = formatUser(value)
+    return { users, total };
   } else {
-    var userData = await User.find({ isDeleted: false })
+    var value = await User.find({ type: "User", isDeleted: false })
       .skip(skip)
       .limit(limit)
       .sort({ _id: -1 })
       .lean();
 
-    let total = await User.countDocuments({ isDeleted: false });
-
-    return { total, userData };
+    let total = await User.countDocuments({ isDeleted: false ,type:"User"});
+    const users = formatUser(value)
+    return {users, total };
   }
 };
 

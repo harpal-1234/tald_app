@@ -30,12 +30,14 @@ const changePassword = catchAsync(async (req, res) => {
 });
 
 const dashBoard = catchAsync(async (req, res) => {
-  const data = await adminService.dashBoard(req,res);
+  const  adminId = req.token._id;
+
+  const data = await adminService.dashBoard(adminId);
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.DEFAULT,
+    SUCCESS_MESSAGES.SUCCESS,
     data
   );
 });

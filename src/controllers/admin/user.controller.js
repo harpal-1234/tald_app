@@ -24,14 +24,22 @@ const createUser = catchAsync(async (req, res) => {
 });
 
 const getAllUser = catchAsync(async (req, res) => {
-  const user = await adminUserService.getAllUser(req, res);
-  const value = formatUser(user.userData);
+  let { page, limit, search, startDate, endDate } = req.query;
+  const user = await adminUserService.getAllUser(
+    page,
+    limit,
+    search,
+    startDate,
+    endDate
+  )
+  
+
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.ALL_USER,
-    value,
+    user.users,
     user.total
   );
 });

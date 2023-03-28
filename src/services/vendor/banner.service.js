@@ -15,8 +15,8 @@ const stripe = new Stripe(
 const stripeSerbices = require("../../middlewares/stripe");
 
 const createBanner = async (data, vendorId) => {
-  const customer = await User.findOne({ _id: vendorId,
-     isDeleted: false });
+  
+  const customer = await User.findOne({ _id: vendorId, isDeleted: false });
   // const ephemeralKey = await stripeSerbices.stripeServices(customer.stripeId);
   // const paymentIntent = await stripeSerbices.paymentIntent(
   //   customer.stripeId,
@@ -41,7 +41,7 @@ const createBanner = async (data, vendorId) => {
   const Id = shortid.generate();
   const hash = "#";
   const bannerId = hash + Id;
-
+  const voucher = shortid.generate();
   const newBanner = await Banner.create({
     storeId: store._id,
     image: data.image,
@@ -51,6 +51,9 @@ const createBanner = async (data, vendorId) => {
     type: data.type,
     startDate: moment(startDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
     endDate: moment(endDate + "Z", "YYYY-MM-DD" + "Z").toDate(),
+    amount: data.amount,
+    voucherId: voucher,
+    paymentId: data.paymentId,
   });
   const admin = await Admin.findOne();
 
@@ -62,6 +65,7 @@ const createBanner = async (data, vendorId) => {
           vendor: vendorId,
           amount: data.amount,
           bannerId: newBanner._id,
+          paymentId: data.paymentId,
         },
       },
     },
@@ -74,7 +78,7 @@ const createBanner = async (data, vendorId) => {
     { new: true }
   );
 
-  return newBanner
+  return newBanner;
 };
 
 const bannerAction = async (data, vendorId) => {

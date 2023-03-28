@@ -10,7 +10,8 @@ const adminSchema = mongoose.Schema(
       {
         vendor: { type: mongoose.SchemaTypes.ObjectId, ref: "user" },
         amount: {type:String},
-        bannerId:{type: mongoose.SchemaTypes.ObjectId, ref: "banners"}
+        bannerId:{type: mongoose.SchemaTypes.ObjectId, ref: "banners"},
+        paymentId:{type:String}
       },
     ],
     totalRevanue:{type:Number,default:0}
