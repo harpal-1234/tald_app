@@ -15,12 +15,13 @@ const stripe = new Stripe(
 const stripeSerbices = require("../../middlewares/stripe");
 
 const createBanner = async (data, vendorId) => {
-  const customer = await User.findOne({ _id: vendorId, isDeleted: false });
-  const ephemeralKey = await stripeSerbices.stripeServices(customer.stripeId);
-  const paymentIntent = await stripeSerbices.paymentIntent(
-    customer.stripeId,
-    data.amount
-  );
+  const customer = await User.findOne({ _id: vendorId,
+     isDeleted: false });
+  // const ephemeralKey = await stripeSerbices.stripeServices(customer.stripeId);
+  // const paymentIntent = await stripeSerbices.paymentIntent(
+  //   customer.stripeId,
+  //   data.amount
+  // );
 
   const vendor = await Banner.findOne({
     bannerId: data.bannerId,
@@ -73,7 +74,7 @@ const createBanner = async (data, vendorId) => {
     { new: true }
   );
 
-  return { newBanner, ephemeralKey, paymentIntent };
+  return newBanner
 };
 
 const bannerAction = async (data, vendorId) => {
