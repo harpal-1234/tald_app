@@ -18,7 +18,12 @@ router.get(
   validate(authValidation.getAllVendor),
   authController.getAllVendor
 );
-
+router.get(
+  "/vendorDeals",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.getVendorDetails),
+  authController.vendorDetails
+);
 router.put(
   "/editProfile",
   auth(USER_TYPE.ADMIN),
@@ -31,5 +36,11 @@ router.delete(
   auth(USER_TYPE.ADMIN),
   validate(authValidation.deleteVendor),
   authController.deleteVendor
+);
+router.put(
+  "/block",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.deleteVendor),
+  authController.blockVendor
 );
 module.exports = router;

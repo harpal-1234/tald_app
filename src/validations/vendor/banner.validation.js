@@ -6,6 +6,7 @@ exports.createBanner = {
   body: Joi.object().keys({
     image: Joi.string().required(),
     title: Joi.string().required(),
+    plan: Joi.string().required(),
     startDate: Joidate.date().format('YYYY-MM-DD').utc(),
     endDate:Joidate.date().format('YYYY-MM-DD').utc(),
     amount:Joi.number().required(),

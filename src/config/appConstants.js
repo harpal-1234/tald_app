@@ -205,6 +205,7 @@ const DELETE_MASSAGES = {
   ADMIN_DELETED_VENDOR: "Admin Deleted Vendor",
   ADMIN_DELETED_USER: "Admin Deleted User",
   CATEGORY_DELETED: "Category Deleted Successfully",
+  VENDOR_BLOCK:"Vendor Blocked successfully"
 };
 
 module.exports = {

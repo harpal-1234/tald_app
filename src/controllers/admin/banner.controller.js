@@ -9,12 +9,13 @@ const { catchAsync } = require("../../utils/universalFunction");
 const { successResponse } = require("../../utils/response");
 
 const bannerAction=catchAsync(async(req,res)=>{
-    const bannerAction=await adminBannerService.bannerAction(req,res);
+    const {bannerId} = req.query
+    const bannerAction=await adminBannerService.bannerAction(bannerId);
     return successResponse(
         req,
         res,
         STATUS_CODES.SUCCESS,
-        SUCCESS_MESSAGES.BANNER_STATUS,
+        SUCCESS_MESSAGES.SUCCESS,
         bannerAction
         )
 
@@ -33,7 +34,7 @@ const bannerRequest=catchAsync(async(req,res)=>{
 });
 const getAllBanners=catchAsync(async(req,res)=>{
     let { page, limit, search, startDate, endDate } = req.query;
-    const banners=await adminBannerService.getBanners(page, limit, search, startDate, endDate);
+    const banners=await adminBannerService.getAllBanners(page, limit, search, startDate, endDate);
     return successResponse(
         req,
         res,
@@ -54,10 +55,22 @@ const deleteBanner=catchAsync(async(req,res)=>{
         )
 
 });
+const payment=catchAsync(async(req,res)=>{
+    let { page, limit, search, startDate, endDate } = req.query;
+    const banners=await adminBannerService.payment(page, limit, search, startDate, endDate);
+    return successResponse(
+        req,
+        res,
+        STATUS_CODES.SUCCESS,
+        SUCCESS_MESSAGES.BANNER_DATA,
+        banners
+        )
 
+});
 module.exports={
     bannerAction,
     bannerRequest,
     deleteBanner,
-    getAllBanners
+    getAllBanners,
+    payment
 }

@@ -10,7 +10,16 @@ exports.getAllVendor = {
     endDate:Joi.string().allow(null,""),
   }),
 };
-
+exports.getVendorDetails = {
+  query: Joi.object().keys({
+    limit: Joi.number().required(),
+    page: Joi.number().required(),
+    search: Joi.string().allow(null,""),
+    vendorId:Joi.string().required(),
+    type:Joi.string().valid("all","active").allow(null,"")
+    
+  }),
+};
 exports.deleteVendor = {
   query: Joi.object().keys({
     id: Joi.string().optional(),

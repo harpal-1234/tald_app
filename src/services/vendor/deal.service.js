@@ -68,7 +68,7 @@ const getAllDeal = async (req, res) => {
     tomorrow.setDate(now.getDate() - 1);
     tomorrow.setUTCHours(0, 0, 0, 0);
     const date = tomorrow.toISOString();
-    console.log(date);
+    
     await Deal.updateMany(
       { $and: [{ validTo: { $lte: date } }, { isDeleted: false }] },
       { $set: { status: "deactivate", isActive: false } },
@@ -136,7 +136,7 @@ const getAllDeal = async (req, res) => {
       tomorrow.setUTCHours(0, 0, 0, 0);
       const date = tomorrow.toISOString();
       console.log(date);
-  
+
       await Deal.updateMany(
         { $and: [{ validTo: { $lte: date } }, { isDeleted: false }] },
         { $set: { status: "deactivate", isActive: false } },
@@ -223,7 +223,7 @@ const editDeal = async (data, vendorId) => {
     },
     { upsert: false, new: true }
   );
-
+  s;
   return editDeal;
 };
 

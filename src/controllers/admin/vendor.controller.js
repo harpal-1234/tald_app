@@ -33,7 +33,18 @@ const getAllVendor=catchAsync(async(req,res)=>{
       vendor.total
       )
 })
-
+const vendorDetails=catchAsync(async(req,res)=>{
+  let { page, limit, search, type, vendorId } = req.query;
+  const vendor=await adminVendorService.vendorDeals( page, limit, search, type, vendorId );
+ 
+  return successResponse(
+      req,
+      res,
+      STATUS_CODES.SUCCESS,
+      SUCCESS_MESSAGES.SUCCESS,
+      vendor
+      )
+})
 const deleteVendor=catchAsync(async(req,res)=>{
   const vendor=await adminVendorService.deleteVendor(req,res);
   return successResponse(
@@ -44,7 +55,15 @@ const deleteVendor=catchAsync(async(req,res)=>{
       )
 });
 
-
+const blockVendor=catchAsync(async(req,res)=>{
+  const vendor=await adminVendorService.blockVendor(req,res);
+  return successResponse(
+      req,
+      res,
+      STATUS_CODES.SUCCESS,
+      DELETE_MASSAGES.VENDOR_BLOCK,
+      )
+});
 const editVendorProfile=catchAsync(async(req,res)=>{
   const vendor=await adminVendorService.editVendorProfile(req,res);
   return successResponse(
@@ -58,5 +77,7 @@ module.exports={
     createVendor,
     getAllVendor,
     deleteVendor,
-    editVendorProfile
+    editVendorProfile,
+    blockVendor,
+    vendorDetails
 }

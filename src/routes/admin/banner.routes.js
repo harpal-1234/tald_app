@@ -9,11 +9,17 @@ const { USER_TYPE,joi } = require("../../config/appConstants");
 const router = express.Router();
 
 router.get(
-    "/request",
+    "/getBanners",
     auth(USER_TYPE.ADMIN),
-    authController.bannerRequest
+    validate(authValidation.getBanners),
+    authController.getAllBanners
   );
-
+  router.get(
+    "/payment",
+    auth(USER_TYPE.ADMIN),
+    validate(authValidation.payment),
+    authController.payment
+  );
   router.post(
     "/action",
     auth(USER_TYPE.ADMIN),

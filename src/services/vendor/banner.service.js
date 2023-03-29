@@ -54,6 +54,7 @@ const createBanner = async (data, vendorId) => {
     amount: data.amount,
     voucherId: voucher,
     paymentId: data.paymentId,
+    plan:data.plan
   });
   const admin = await Admin.findOne();
 
@@ -228,14 +229,8 @@ const getBanner = async (data, vendorId) => {
   //       { $set:{status: "deactivate", isActive:false} },
   //       { upsert:false }
   //     );
-  if (data.type == "active") {
-    const store = await Store.findOne({ vendor: vendorId });
-    if (!store) {
-      throw new OperationalError(
-        STATUS_CODES.ACTION_FAILED,
-        ERROR_MESSAGES.COUPON_DATA
-      );
-    }
+  if (search) {
+    
     const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
 
     await Banner.updateMany(
@@ -245,8 +240,12 @@ const getBanner = async (data, vendorId) => {
     );
 
     var bannerData = await Banner.find({
-      storeId: store._id,
-      expireStatus: "activate",
+      $or: [
+              { title: { $regex: new RegExp(search, "i") } },
+              { type: { $regex: new RegExp(search, "i") } },
+              //   { lastName: { $regex: new RegExp(search,"i") }, },
+              //   { fullName: { $regex: new RegExp(search,"i") }, },
+            ],
       isDeleted: false,
     })
       .skip(skip)
@@ -255,22 +254,20 @@ const getBanner = async (data, vendorId) => {
       .lean();
 
     let total = await Banner.countDocuments({
-      storeId: store._id,
-      expireStatus: "activate",
-      isDeleted: false,
+      $or: [
+        { title: { $regex: new RegExp(search, "i") } },
+        { type: { $regex: new RegExp(search, "i") } },
+        //   { lastName: { $regex: new RegExp(search,"i") }, },
+        //   { fullName: { $regex: new RegExp(search,"i") }, },
+      ],
+isDeleted: false,
     });
 
     return { total, bannerData };
   }
 
-  if (data.type == "deactive") {
-    const store = await Store.findOne({ vendor: vendorId });
-    if (!store) {
-      throw new OperationalError(
-        STATUS_CODES.ACTION_FAILED,
-        ERROR_MESSAGES.COUPON_DATA
-      );
-    }
+  if (startDate && endDate) {
+    
     const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
 
     await Banner.updateMany(
@@ -280,8 +277,8 @@ const getBanner = async (data, vendorId) => {
     );
 
     var bannerData = await Banner.find({
-      storeId: store._id,
-      expireStatus: "deactivate",
+      startDate: { $gte: startDate },
+      endDate: { $lte: endDate },
       isDeleted: false,
     })
       .skip(skip)
@@ -290,14 +287,37 @@ const getBanner = async (data, vendorId) => {
       .lean();
 
     let total = await Banner.countDocuments({
-      storeId: store._id,
-      expireStatus: "deactivate",
+      startDate: { $gte: startDate },
+      endDate: { $lte: endDate },
+      isDeleted: false,
+    });
+
+    return { total, bannerData };
+  }else{
+    const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
+
+    await Banner.updateMany(
+      { $and: [{ endDate: { $lte: date } }, { isDeleted: false }] },
+      { $set: { expireStatus: "deactivate", isActive: false } },
+      { upsert: false }
+    );
+
+    var bannerData = await Banner.find({
+      isDeleted: false,
+    })
+      .skip(skip)
+      .limit(limit)
+      .sort({ _id: 1 })
+      .lean();
+
+    let total = await Banner.countDocuments({
       isDeleted: false,
     });
 
     return { total, bannerData };
   }
-};
+  }
+
 
 module.exports = {
   createBanner,

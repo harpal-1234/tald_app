@@ -1,7 +1,8 @@
-const { Admin, Vendor ,User} = require("../../models");
+const { Admin, Vendor ,User,Deal} = require("../../models");
 const { STATUS_CODES, ERROR_MESSAGES } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 const { formatUser } = require("../../utils/commonFunction");
+const moment = require("moment")
 // const createVendor = async (data) => {
 //   const vendor = await Vendor.findOne({ email: data.email, isDeleted: false });
 //   if (vendor) {
@@ -133,7 +134,7 @@ const editVendorProfile = async (req, res) => {
 };
 
 const deleteVendor = async (req, res) => {
-  const vendorData = await Vendor.findOne({
+  const vendorData = await User.findOne({
     _id: req.query.id,
     isDeleted: false,
   });
@@ -145,7 +146,7 @@ const deleteVendor = async (req, res) => {
     );
   }
 
-  const vendor = await Vendor.findOneAndUpdate(
+  const vendor = await User.findOneAndUpdate(
     { _id: req.query.id },
     {
       isDeleted: true,
@@ -156,10 +157,183 @@ const deleteVendor = async (req, res) => {
   );
   return;
 };
+const blockVendor = async (req, res) => {
+  const vendorData = await User.findOne({
+    _id: req.query.id,
+    isDeleted: false,
+  });
 
+  if (!vendorData) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.USER_NOT_FOUND
+    );
+  }
+
+  const vendor = await User.findOneAndUpdate(
+    { _id: req.query.id },
+    {
+      isBlocked: true,
+    },
+    {
+      upsert: false,
+    }
+  );
+  return;
+};
+const vendorDeals = async( page, limit, search, type, vendorId)=>{
+  
+  let skip = page * limit;
+  if (search && type == "all") {
+    const date1 = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
+      console.log(date1);
+      const now = new Date();
+      const tomorrow = new Date(now);
+      tomorrow.setDate(now.getDate() - 1);
+      tomorrow.setUTCHours(0, 0, 0, 0);
+      const date = tomorrow.toISOString();
+    var deal = await Deal.findOne({
+      vendor: vendorId,
+      isDeleted: false,
+    }).populate({
+      path:"storeId",
+      select:["purchasedCount"]
+    })
+    if(!deal){
+      throw new OperationalError(
+        STATUS_CODES.ACTION_FAILED,
+        ERROR_MESSAGES.DEAL_NOT_EXISTS
+      );
+    }
+   const totalDealsPurchesed = deal.storeId.purchasedCount;
+    await Deal.updateMany(
+      { $and: [{ dealId: { $lte: date } }, { isDeleted: false }] },
+      { $set: { title: "deactivate", isActive: false } },
+      { upsert: false }
+    );
+    let dealData = await Deal.find({
+      vendor:vendorId,
+      $or: [
+        { dealId: { $regex: new RegExp(search, "i") } },
+        { title: { $regex: new RegExp(search, "i") } },
+      ],
+      isDeleted: false,
+    })
+      .skip(skip)
+      .limit(limit)
+      .sort({ _id: -1 })
+      .lean();
+
+    let total = await Deal.countDocuments({
+      vendor:vendorId,
+      $or: [
+        { couponCode: { $regex: new RegExp(search, "i") } },
+        { name: { $regex: new RegExp(search, "i") } },
+      ],
+      isDeleted: false,
+    });
+
+    return { totalDealsPurchesed,total, dealData };
+  } 
+  
+    if (search && type == "active") {
+      const date1 = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
+      console.log(date1);
+      const now = new Date();
+      const tomorrow = new Date(now);
+      tomorrow.setDate(now.getDate() - 1);
+      tomorrow.setUTCHours(0, 0, 0, 0);
+      const date = tomorrow.toISOString();
+      var deal = await Deal.findOne({
+        vendor:vendorId,
+        isDeleted: false,
+      }).populate({
+        path:"storeId",
+        select:["purchasedCount"]
+      })
+      if(!deal){
+        throw new OperationalError(
+          STATUS_CODES.ACTION_FAILED,
+          ERROR_MESSAGES.DEAL_NOT_EXISTS
+        );
+      }
+     const totalDealsPurchesed = deal.storeId.purchasedCount;
+      await Deal.updateMany(
+        { $and: [{ validTo: { $lte: date } }, { isDeleted: false }] },
+        { $set: { status: "deactivate", isActive: false } },
+        { upsert: false }
+      );
+
+      var dealData = await Deal.find({
+        vendor: vendorId,
+        status: "activate",
+        isDeleted: false,
+      })
+        .skip(skip)
+        .limit(limit)
+        .sort({ _id: -1 })
+        .lean();
+
+      let total = await Deal.countDocuments({
+        vendor: vendorId,
+        status: "activate",
+        isDeleted: false,
+      });
+
+      return { totalDealsPurchesed,total, dealData };
+    }
+   else {
+      const now = new Date();
+      const tomorrow = new Date(now);
+      tomorrow.setDate(now.getDate() - 1);
+      tomorrow.setUTCHours(0, 0, 0, 0);
+      const date = tomorrow.toISOString();
+  
+      var deal = await Deal.findOne({
+        vendor: vendorId,
+        isDeleted: false,
+      }).populate({
+        path:"storeId",
+        select:["purchasedCount"]
+      });
+      if(!deal){
+        throw new OperationalError(
+          STATUS_CODES.ACTION_FAILED,
+          ERROR_MESSAGES.DEAL_NOT_EXISTS
+        );
+      }
+     const totalDealsPurchesed = deal.storeId.purchasedCount;
+      await Deal.updateMany(
+        { $and: [{ validTo: { $lte: date } }, { isDeleted: false }] },
+        { $set: { status: "deactivate", isActive: false } },
+        { upsert: false }
+      );
+
+      var dealData = await Deal.find({
+        vendor: vendorId,
+        isDeleted: false,
+      })
+        .skip(skip)
+        .limit(limit)
+        .sort({ _id: -1 })
+        .lean();
+
+      let total = await Deal.countDocuments({
+        vendor:vendorId,
+        isDeleted: false,
+      });
+
+      return { totalDealsPurchesed,total, dealData };
+    }
+
+    
+  
+}
 module.exports = {
   // createVendor,
   getAllVendor,
   deleteVendor,
   editVendorProfile,
+  blockVendor,
+  vendorDeals
 };
