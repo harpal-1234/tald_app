@@ -19,8 +19,8 @@ const formatUser = (userData) => {
       // data.activeDeals = 2;
       delete data.__v;
       delete data.password;
-      delete data.isBlocked;
-      delete data.isDeleted;
+      //delete data.isBlocked;
+      //delete data.isDeleted;
       delete data.createdAt;
       delete data.updatedAt;
       delete data.customerId;

@@ -61,7 +61,8 @@ const blockVendor=catchAsync(async(req,res)=>{
       req,
       res,
       STATUS_CODES.SUCCESS,
-      DELETE_MASSAGES.VENDOR_BLOCK,
+      SUCCESS_MESSAGES.SUCCESS,
+      vendor
       )
 });
 const editVendorProfile=catchAsync(async(req,res)=>{

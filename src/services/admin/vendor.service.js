@@ -207,17 +207,24 @@ const blockVendor = async (req, res) => {
       ERROR_MESSAGES.USER_NOT_FOUND
     );
   }
-
+if(vendorData.isBlocked ==false){
   const vendor = await User.findOneAndUpdate(
     { _id: req.query.id },
     {
       isBlocked: true,
-    },
-    {
-      upsert: false,
     }
   );
-  return;
+  return "Vendor Blocked successfully"
+}
+if(vendorData.isBlocked ==true){
+  const vendor = await User.findOneAndUpdate(
+    { _id: req.query.id },
+    {
+      isBlocked: false,
+    }
+  );
+  return "Vendor unBlocked successfully"
+}
 };
 const vendorDeals = async (page, limit, search, type, vendorId) => {
   let skip = page * limit;
