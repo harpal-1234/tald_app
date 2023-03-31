@@ -47,10 +47,10 @@ const dashBoard = async (adminId) => {
     isDeleted: false,
   });
   const data = [
-    { title: "Total Banners", data: admin.orders.length },
-    { title: "Total Revanue", data: admin.totalRevanue },
-    { title: "Total Users", data: totalUser },
-    { title: "Total Vendors", data: totalVendor },
+    { title1: "Total Banners", data1: admin.orders.length },
+    { title2: "Total Revanue", data2: admin.totalRevanue },
+    { title3: "Total Users", data3: totalUser },
+    { title4: "Total Vendors", data4: totalVendor },
   ];
   return data;
 };
