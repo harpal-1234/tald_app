@@ -100,8 +100,8 @@ const editDeal=async(bodyData)=>{
 
 };
 
-const deleteDeal = async (data) => {
-  const dealData = await Deal.findOne({ _id:data.dealId, isDeleted: false });
+const deleteDeal = async (dealId) => {
+  const dealData = await Deal.findOne({ _id:dealId, isDeleted: false });
   if (!dealData) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
@@ -117,7 +117,32 @@ const deleteDeal = async (data) => {
 
   return deal;
 };
+const dealAction = async (dealId) => {
+  const dealData = await Deal.findOne({ _id:dealId, isDeleted: false });
+  if (!dealData) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.DEAL_NOT_EXISTS
+    );
+  }
+if(dealData.isActive == true){
+  const deal = await Deal.findOneAndUpdate(
+    { _id: dealData.id },
+    { isActive: false ,status:"deactivate"},
+    { new: true }
+  );
+  return "deactivate"
+}
 
+if(dealData.isActive == false){
+  const deal = await Deal.findOneAndUpdate(
+    { _id: dealData.id },
+    { isActive: true ,status:"activate"},
+    { new: true }
+  );
+  return "activate"
+}
+};
 const editCategory=async (data) => {
   const category = await Category.findOne({ _id:data.categoryId, isDeleted: false });
   if (!category) {
@@ -143,5 +168,6 @@ module.exports = {
   getAllDeal,
   editDeal,
   deleteDeal,
-  editCategory
+  editCategory,
+  dealAction
 };

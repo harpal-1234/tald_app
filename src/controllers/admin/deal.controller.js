@@ -55,7 +55,8 @@ const getAllDeal = catchAsync(async (req, res) => {
 });
 
 const deleteDeal = catchAsync(async (req, res) => {
-  const coupon = await adminDealService.deleteDeal(req.query);
+  const {dealId}= req.query;
+  const coupon = await adminDealService.deleteDeal(dealId);
   return successResponse(
     req,
     res,
@@ -63,7 +64,16 @@ const deleteDeal = catchAsync(async (req, res) => {
     DELETE_MASSAGES.COUPON_DELETED
   );
 });
-
+const DealAction = catchAsync(async (req, res) => {
+  const {dealId}= req.query;
+  const coupon = await adminDealService.dealAction(dealId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    coupon
+  );
+});
 const editDeal = catchAsync(async (req, res) => {
   const editDeal = await adminDealService.editDeal(req.body);
   return successResponse(
@@ -94,5 +104,6 @@ module.exports = {
   getAllDeal,
   deleteDeal,
   editDeal,
-  editCategory
+  editCategory,
+  DealAction
 };

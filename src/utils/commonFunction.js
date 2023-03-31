@@ -1,3 +1,6 @@
+const {Deal }= require("../models/index")
+
+
 const successMessage = (code, data) => {
   return { statusCode: code, message: "success", data };
 };
@@ -7,7 +10,13 @@ const successMessageWithoutData = (code, message) => {
 };
 const formatUser = (userData) => {
   if (userData.length) {
-    userData.forEach((data) => {
+    userData.forEach(async(data) => {
+      // const count = await Deal.countDocuments({
+      //   vendor: data._id,
+      //   isActive: true,
+      //   isDeleted: false,
+      // }).lean();
+      // data.activeDeals = 2;
       delete data.__v;
       delete data.password;
       delete data.isBlocked;
@@ -23,7 +32,7 @@ const formatUser = (userData) => {
       delete userData.dealPurchaseId;
       delete userData.favouriteStore;
       delete userData.favouriteStores;
-      delete userData.recentlyView
+      delete userData.recentlyView;
     });
   } else {
     delete userData.__v;
@@ -107,7 +116,7 @@ const formatFavourites = (userData) => {
 };
 const formatBanner1 = (userData) => {
   if (userData.length) {
-    userData.forEach((data) => {
+    userData.forEach(async(data) => {
       delete data.__v;
       delete data.stores;
       delete data.startDate;
@@ -125,6 +134,7 @@ const formatBanner1 = (userData) => {
       // delete data.isVerified;
       // delete data.socialId;
     });
+   
   } else {
     delete userData.__v;
     delete userData.password;

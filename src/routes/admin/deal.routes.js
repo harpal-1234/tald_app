@@ -32,7 +32,13 @@ const router = express.Router();
     authController.deleteDeal
 
   );
+  router.put(
+    "/action",
+    auth(USER_TYPE.ADMIN),
+    validate(authValidation.deleteDeal),
+    authController.DealAction
 
+  );
 
   router.put(
     "/editDeal",
