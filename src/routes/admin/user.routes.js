@@ -27,7 +27,12 @@ router.put(
   validate(authValidation.editUserProfile),
   authController.editUserProfile
 );
-
+router.put(
+  "/userAction",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.userAction),
+  authController.userAction
+);
 router.delete(
   "/delete",
   auth(USER_TYPE.ADMIN),

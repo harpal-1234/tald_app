@@ -33,3 +33,9 @@ exports.editUserProfile = {
     name: Joi.string().required(),
   }),
 };
+exports.userAction = {
+  body: Joi.object().keys({
+    userId: Joi.string().required(),
+    
+  }),
+};

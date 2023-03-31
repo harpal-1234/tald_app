@@ -63,9 +63,21 @@ const editUserProfile = catchAsync(async (req, res) => {
     UPDATED_MESSAGES.USER_UPDATED
   );
 });
+const userAction = catchAsync(async (req, res) => {
+  const {userId}= req.query;
+  const user = await adminUserService.userAction(userId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    user
+  );
+});
 module.exports = {
   createUser,
   getAllUser,
   deleteUser,
   editUserProfile,
+  userAction
 };

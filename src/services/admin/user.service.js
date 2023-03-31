@@ -118,6 +118,17 @@ const editUserProfile = async (req, res) => {
   );
   return;
 };
+const userAction = async(userId)=>{
+  const check = await User.findOne({_id:userId,isDeleted:false});
+  if(check.isBlocked == false){
+    const user = await User.findOneAndUpdate({_id:userId,isDeleted:false},{isBlocked:true});
+    return "User Blocked sucessfully "
+  }
+  if(check.isBlocked == true){
+    const user = await User.findOneAndUpdate({_id:userId,isDeleted:false},{isBlocked:false});
+    return "User unBlocked sucessfully "
+  }
+}
 
 const deleteUser = async (req, res) => {
   const userData = await User.findOne({
@@ -149,4 +160,6 @@ module.exports = {
   getAllUser,
   deleteUser,
   editUserProfile,
+  userAction
+
 };
