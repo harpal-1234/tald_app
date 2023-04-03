@@ -74,10 +74,22 @@ const userAction = catchAsync(async (req, res) => {
     user
   );
 });
+const userOrderDetails = catchAsync(async (req, res) => {
+  const {userId}= req.query;
+  const user = await adminUserService.userOrderDetails(userId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    user
+  );
+});
 module.exports = {
   createUser,
   getAllUser,
   deleteUser,
   editUserProfile,
-  userAction
+  userAction,
+  userOrderDetails
 };

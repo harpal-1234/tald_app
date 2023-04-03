@@ -34,7 +34,7 @@ exports.editUserProfile = {
   }),
 };
 exports.userAction = {
-  body: Joi.object().keys({
+  query: Joi.object().keys({
     userId: Joi.string().required(),
     
   }),

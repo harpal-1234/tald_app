@@ -23,17 +23,17 @@ const createBanner = async (data, vendorId) => {
   //   data.amount
   // );
 
-  const vendor = await Banner.findOne({
-    bannerId: data.bannerId,
-    isDeleted: false,
-  });
+  // const vendor = await Banner.findOne({
+  //   bannerId: data.bannerId,
+  //   isDeleted: false,
+  // });
 
-  if (vendor) {
-    throw new OperationalError(
-      STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.BANNER_ID
-    );
-  }
+  // if (vendor) {
+  //   throw new OperationalError(
+  //     STATUS_CODES.ACTION_FAILED,
+  //     ERROR_MESSAGES.BANNER_ID
+  //   );
+  // }
   const store = await Store.findOne({ vendor: vendorId, isDeleted: false });
 
   const startDate = moment(data.startDate).format("YYYY-MM-DD");

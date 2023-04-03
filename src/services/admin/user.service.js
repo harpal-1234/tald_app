@@ -120,6 +120,12 @@ const editUserProfile = async (req, res) => {
 };
 const userAction = async(userId)=>{
   const check = await User.findOne({_id:userId,isDeleted:false});
+  if(!check){
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.EMAIL_ALREADY_EXIST
+    );
+  }
   if(check.isBlocked == false){
     const user = await User.findOneAndUpdate({_id:userId,isDeleted:false},{isBlocked:true});
     return "User Blocked sucessfully "
@@ -129,7 +135,29 @@ const userAction = async(userId)=>{
     return "User unBlocked sucessfully "
   }
 }
-
+const userOrderDetails = async(userId)=>{
+  const check = await User.findOne({_id:userId,isDeleted:false})
+  if(!check){
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.EMAIL_ALREADY_EXIST
+    );
+  };
+  const orders = await User.findOne({_id:userId,isDeleted:false}).populate([{
+    path:"dealPurchases.deals.dealId",
+    select:["service","dealId","title","totalPrice","discountPrice","description","inclusions","no_of_person"]
+  
+  },{
+    path:"dealPurchases.storeId",
+    select:["vendor"],
+    populate:{
+      path:"vendor",
+      select:"name"
+    }
+  }]).lean();
+  const users = formatUser(orders)
+  return users;
+}
 const deleteUser = async (req, res) => {
   const userData = await User.findOne({
     _id: req.query.id,
@@ -160,6 +188,7 @@ module.exports = {
   getAllUser,
   deleteUser,
   editUserProfile,
-  userAction
+  userAction,
+  userOrderDetails
 
 };

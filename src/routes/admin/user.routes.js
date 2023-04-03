@@ -33,6 +33,12 @@ router.put(
   validate(authValidation.userAction),
   authController.userAction
 );
+router.get(
+  "/orderDetail",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.userAction),
+  authController.userOrderDetails
+);
 router.delete(
   "/delete",
   auth(USER_TYPE.ADMIN),
