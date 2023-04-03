@@ -29,10 +29,11 @@ const formatUser = (userData) => {
       delete data.isPushNotification;
       delete data.isVerified;
       delete data.socialId;
-      delete userData.dealPurchaseId;
-      delete userData.favouriteStore;
-      delete userData.favouriteStores;
-      delete userData.recentlyView;
+      delete data.dealPurchaseId;
+      delete data.favouriteStore;
+      delete data.favouriteStores;
+      delete data.recentlyView;
+      delete data.orders;
     });
   } else {
     delete userData.__v;
@@ -53,7 +54,8 @@ const formatUser = (userData) => {
     delete userData.dealPurchaseId;
     delete userData.favouriteStore;
     delete userData.favouriteStores;
-    delete userData.recentlyView
+    delete userData.recentlyView;
+    delete userData.orders;
   }
   return userData;
 };

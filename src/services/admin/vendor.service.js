@@ -1,4 +1,4 @@
-const { Admin, Vendor, User, Deal } = require("../../models");
+const { Admin, Vendor, User, Deal, Store } = require("../../models");
 const { STATUS_CODES, ERROR_MESSAGES } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 const { formatUser } = require("../../utils/commonFunction");
@@ -66,7 +66,14 @@ const getAllVendor = async (page, limit, search, startDate, endDate) => {
       arr.push(val)
       //console.log(val)
     }));
+  
     const Vendors = await formatUser(arr);
+
+    Vendors.forEach(async(val)=>{
+      const store = await Store.findOne({vendor:val._id,isDeleted:false}).lean();
+      val.image = store.storeImage;
+      val.category= store.service.category
+    })
 
     return { Vendors, total };
     return { users, total };
@@ -109,6 +116,11 @@ const getAllVendor = async (page, limit, search, startDate, endDate) => {
          //console.log(val)
        }));
        const Vendors = await formatUser(arr);
+       Vendors.forEach(async(val)=>{
+        const store = await Store.findOne({vendor:val._id,isDeleted:false}).lean();
+        val.image = store.storeImage;
+        val.category= store.service.category
+      })
     return { Vendors, total };
   } else {
     var value = await User.find({ type: "Vendor", isDeleted: false })
@@ -125,11 +137,17 @@ const getAllVendor = async (page, limit, search, startDate, endDate) => {
          isActive: true,
          isDeleted: false,
        }).lean();
+       const store = await Store.findOne({vendor:val._id,isDeleted:false}).lean();
+       if(store){
+        val.image = store.storeImage;
+        val.category= store.service.category
+        }  
        val.activeDeals = count;
        arr.push(val)
        //console.log(val)
      }));
      const Vendors = await formatUser(arr);
+
     return { Vendors, total };
   }
 };
