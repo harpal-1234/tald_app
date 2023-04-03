@@ -262,7 +262,7 @@ const vendorDeals = async (page, limit, search, type, vendorId) => {
       select: ["purchasedCount"],
     });
     if (!deal) {
-      return  "Deals does not exist "
+      return 
     }
     const totalDealsPurchesed = deal.storeId.purchasedCount;
     await Deal.updateMany(
@@ -311,7 +311,7 @@ const vendorDeals = async (page, limit, search, type, vendorId) => {
       select: ["purchasedCount"],
     });
     if (!deal) {
-      return  "Deals does not exist "
+      return  
     }
     const totalDealsPurchesed = deal.storeId.purchasedCount;
     await Deal.updateMany(
@@ -352,7 +352,7 @@ const vendorDeals = async (page, limit, search, type, vendorId) => {
       select: ["purchasedCount"],
     });
     if (!deal) {
-      return  "Deals does not exist "
+      return 
     }
     const totalDealsPurchesed = deal.storeId.purchasedCount;
     await Deal.updateMany(

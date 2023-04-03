@@ -433,7 +433,7 @@ const purchaseDeal = async (userId, lat, long, page, limit) => {
       },
     ])
     .lean();
-  console.log(deal);
+
   if (!deal) {
     throw new OperationalError(
       STATUS_CODES.NOT_FOUND,
