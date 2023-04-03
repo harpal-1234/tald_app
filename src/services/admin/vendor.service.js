@@ -262,10 +262,7 @@ const vendorDeals = async (page, limit, search, type, vendorId) => {
       select: ["purchasedCount"],
     });
     if (!deal) {
-      throw new OperationalError(
-        STATUS_CODES.ACTION_FAILED,
-        ERROR_MESSAGES.DEAL_NOT_EXISTS
-      );
+      return  "Deals does not exist "
     }
     const totalDealsPurchesed = deal.storeId.purchasedCount;
     await Deal.updateMany(
@@ -314,10 +311,7 @@ const vendorDeals = async (page, limit, search, type, vendorId) => {
       select: ["purchasedCount"],
     });
     if (!deal) {
-      throw new OperationalError(
-        STATUS_CODES.ACTION_FAILED,
-        ERROR_MESSAGES.DEAL_NOT_EXISTS
-      );
+      return  "Deals does not exist "
     }
     const totalDealsPurchesed = deal.storeId.purchasedCount;
     await Deal.updateMany(
@@ -358,10 +352,7 @@ const vendorDeals = async (page, limit, search, type, vendorId) => {
       select: ["purchasedCount"],
     });
     if (!deal) {
-      throw new OperationalError(
-        STATUS_CODES.ACTION_FAILED,
-        ERROR_MESSAGES.DEAL_NOT_EXISTS
-      );
+      return  "Deals does not exist "
     }
     const totalDealsPurchesed = deal.storeId.purchasedCount;
     await Deal.updateMany(
