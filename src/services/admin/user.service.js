@@ -164,9 +164,9 @@ const userOrderDetails = async(userId,page,limit)=>{
       return value;
     }
   });
-  const users = formatUser(order)
-   const total = orders.length
-  return {users,total};
+  const users = formatUser(orders)
+   const total = order.length;
+  return {users,order,total};
 }
 const deleteUser = async (req, res) => {
   const userData = await User.findOne({
