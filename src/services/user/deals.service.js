@@ -907,6 +907,7 @@ const checkOut = async (paymentId, userId, amount) => {
 
   const count = totalDeals + store.totalDeals;
   const revenue = store.totalRevenue + billDetails.amountPayable;
+  console.log(count,revenue)
   const data = await Store.findOneAndUpdate(
     { _id: storeId },
     {
@@ -916,6 +917,7 @@ const checkOut = async (paymentId, userId, amount) => {
     },
     { new: true }
   );
+  console.log(data)
   return order;
 };
 const favoriteStore = async (userId, lat, long, page, limit) => {
