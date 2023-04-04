@@ -131,7 +131,7 @@ if(dealData.isActive == true){
     { isActive: false ,status:"deactivate"},
     { new: true }
   );
-  return "deactivate"
+  return "disabled successfully"
 }
 
 if(dealData.isActive == false){
@@ -140,7 +140,7 @@ if(dealData.isActive == false){
     { isActive: true ,status:"activate"},
     { new: true }
   );
-  return "activate"
+  return "enabled successfully"
 }
 };
 const editCategory=async (data) => {
