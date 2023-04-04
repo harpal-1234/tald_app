@@ -158,15 +158,15 @@ const userOrderDetails = async(userId,page,limit)=>{
   const lim = page + 1;
 
   const skip = page * limit;
-// console.log(orders)
-//   const order = orders.filter((value, index) => {
-//     if (index >= skip && index < limit * lim) {
-//       return value;
-//     }
-//   });
+//console.log(orders)
+  const order = orders.dealPurchases.filter((value, index) => {
+    if (index >= skip && index < limit * lim) {
+      return value;
+    }
+  });
   const users = formatUser(orders)
-  // const total = orders.length
-  return users;
+   const total = orders.length
+  return {users,total};
 }
 const deleteUser = async (req, res) => {
   const userData = await User.findOne({
