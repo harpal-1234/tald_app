@@ -20,7 +20,7 @@ router.get(
     validate(authValidation.payment),
     authController.payment
   );
-  router.post(
+  router.put(
     "/action",
     auth(USER_TYPE.ADMIN),
     validate(authValidation.bannerRequest),

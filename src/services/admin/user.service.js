@@ -140,7 +140,7 @@ const userOrderDetails = async(userId)=>{
   if(!check){
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.EMAIL_ALREADY_EXIST
+      ERROR_MESSAGES.ORDER_NOT_FOUND
     );
   };
   const orders = await User.findOne({_id:userId,isDeleted:false}).populate([{

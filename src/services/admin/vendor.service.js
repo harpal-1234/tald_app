@@ -245,6 +245,7 @@ if(vendorData.isBlocked ==true){
 }
 };
 const vendorDeals = async (page, limit, search, type, vendorId) => {
+  
   let skip = page * limit;
   if (search && type == "all") {
     const date1 = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
@@ -262,7 +263,11 @@ const vendorDeals = async (page, limit, search, type, vendorId) => {
       select: ["purchasedCount"],
     });
     if (!deal) {
-      return 
+      const totalDealsPurchesed = 0;
+      const total = 0;
+      const dealData = [];
+
+      return { totalDealsPurchesed, total, dealData };
     }
     const totalDealsPurchesed = deal.storeId.purchasedCount;
     await Deal.updateMany(
@@ -311,7 +316,11 @@ const vendorDeals = async (page, limit, search, type, vendorId) => {
       select: ["purchasedCount"],
     });
     if (!deal) {
-      return  
+      const totalDealsPurchesed = 0;
+      const total = 0;
+      const dealData = [];
+
+      return { totalDealsPurchesed, total, dealData };
     }
     const totalDealsPurchesed = deal.storeId.purchasedCount;
     await Deal.updateMany(
@@ -337,7 +346,8 @@ const vendorDeals = async (page, limit, search, type, vendorId) => {
     });
 
     return { totalDealsPurchesed, total, dealData };
-  } else {
+  } 
+  if(type == "all") {
     const now = new Date();
     const tomorrow = new Date(now);
     tomorrow.setDate(now.getDate() - 1);
@@ -352,7 +362,11 @@ const vendorDeals = async (page, limit, search, type, vendorId) => {
       select: ["purchasedCount"],
     });
     if (!deal) {
-      return 
+      const totalDealsPurchesed = 0;
+      const total = 0;
+      const dealData = [];
+
+      return { totalDealsPurchesed, total, dealData };
     }
     const totalDealsPurchesed = deal.storeId.purchasedCount;
     await Deal.updateMany(
@@ -363,6 +377,51 @@ const vendorDeals = async (page, limit, search, type, vendorId) => {
 
     var dealData = await Deal.find({
       vendor: vendorId,
+      isDeleted: false,
+    })
+      .skip(skip)
+      .limit(limit)
+      .sort({ _id: -1 })
+      .lean();
+
+    let total = await Deal.countDocuments({
+      vendor: vendorId,
+      isDeleted: false,
+    });
+
+    return { totalDealsPurchesed, total, dealData };
+  }
+  if(type == "active"){
+    const now = new Date();
+    const tomorrow = new Date(now);
+    tomorrow.setDate(now.getDate() - 1);
+    tomorrow.setUTCHours(0, 0, 0, 0);
+    const date = tomorrow.toISOString();
+
+    var deal = await Deal.findOne({
+      vendor: vendorId,
+      isDeleted: false,
+    }).populate({
+      path: "storeId",
+      select: ["purchasedCount"],
+    });
+    if (!deal) {
+      const totalDealsPurchesed = 0;
+      const total = 0;
+      const dealData = [];
+
+      return { totalDealsPurchesed, total, dealData };
+    }
+    const totalDealsPurchesed = deal.storeId.purchasedCount;
+    await Deal.updateMany(
+      { $and: [{ validTo: { $lte: date } }, { isDeleted: false }] },
+      { $set: { status: "deactivate", isActive: false } },
+      { upsert: false }
+    );
+
+    var dealData = await Deal.find({
+      vendor: vendorId,
+      status: "activate",
       isDeleted: false,
     })
       .skip(skip)
