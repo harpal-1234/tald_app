@@ -910,7 +910,7 @@ const checkOut = async (paymentId, userId, amount) => {
   const revenue = store.totalRevenue + billDetails.amountPayable;
   console.log(count,revenue)
   const data = await Store.findOneAndUpdate(
-    { _id: storeId.storeId },
+    { _id: storeId.dealId.storeId },
     {
       totalDeals: count,
       totalRevenue: revenue,
