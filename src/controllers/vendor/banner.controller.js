@@ -64,7 +64,9 @@ const deleteBanner = catchAsync(async (req, res) => {
 
 const getBanner = catchAsync(async (req, res) => {
   const banner = await bannerService.getBanner(req.query, req.token.user._id);
-  const value = formatBanner(banner.bannerData);
+  console.log(banner)
+  if(banner.bannerData.length>0){
+  const value = formatBanner(banner.bannerData)
 
   return successResponse(
     req,
@@ -73,7 +75,17 @@ const getBanner = catchAsync(async (req, res) => {
     SUCCESS_MESSAGES.DEFAULT,
     value,
     banner.total
-  );
+  );}else{
+const value = [];
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.DEFAULT,
+    value,
+    banner.total
+  )
+  }
 });
 
 module.exports = {

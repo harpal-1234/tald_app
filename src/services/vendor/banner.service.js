@@ -288,13 +288,13 @@ const getBanner = async (data) => {
 
     let total = await Banner.countDocuments({
       isDeleted: false,
-      expireStatus:"deactivate",
-      status:"deactivate"
+      expireStatus:"activate",
+      status:"activate"
     });
 
     return { total, bannerData };
   }
-  if (type == "deactivate") {
+  if (type == "deactive") {
     
     const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
 
