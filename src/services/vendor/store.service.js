@@ -266,7 +266,7 @@ const vendorOrder = async (
 
   store.vendor.orders.forEach((val) => {
     val.deals.forEach((ele) => {
-      ele.dealId.finalPrice = ele.dealId.totalPrice - ele.dealId.discountPrice;
+      ele.dealId.finalPrice =  ele.dealId.discountPrice;
     });
   });
   const orders = store.vendor.orders
@@ -288,7 +288,7 @@ const vendorOrder = async (
       }
     });
     const data = {
-      totalOrder: data1.length,
+      totalOrder: orders.length,
       totalRevenue:store.totalRevenue,
       orders:order
 
