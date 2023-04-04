@@ -760,7 +760,7 @@ const checkOut = async (paymentId, userId, amount) => {
     //console.log(val)
     return val.dealId.storeId;
   });
-  console.log(storeId)
+ 
 
   // const ephemeralKey = await stripeSerbices.stripeServices(user.stripeId);
   // const paymentIntent = await stripeSerbices.paymentIntent(
@@ -910,7 +910,7 @@ const checkOut = async (paymentId, userId, amount) => {
   const revenue = store.totalRevenue + billDetails.amountPayable;
   console.log(count,revenue)
   const data = await Store.findOneAndUpdate(
-    { _id: storeId },
+    { _id: storeId.storeId },
     {
       totalDeals: count,
       totalRevenue: revenue,
