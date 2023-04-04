@@ -127,7 +127,7 @@ const dealAction = async (dealId) => {
   }
 if(dealData.isActive == true){
   const deal = await Deal.findOneAndUpdate(
-    { _id: dealData.id },
+    { _id: dealId },
     { isActive: false ,status:"deactivate"},
     { new: true }
   );
@@ -136,7 +136,7 @@ if(dealData.isActive == true){
 
 if(dealData.isActive == false){
   const deal = await Deal.findOneAndUpdate(
-    { _id: dealData.id },
+    { _id: dealId },
     { isActive: true ,status:"activate"},
     { new: true }
   );
