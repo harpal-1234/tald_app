@@ -257,7 +257,7 @@ const vendorOrder = async (
           },
           {
             path: "orders.deals.dealId",
-            select: ["totalPrice", "discountPrice"],
+            select: ["totalPrice", "discountPrice","title","no_of_person"],
           },
         ],
       })
@@ -324,9 +324,9 @@ const vendorOrder = async (
       }
     });
     const data = {
-      totalOrder: data1.length,
+      totalOrder: orders.length,
       totalRevenue:store.totalRevenue,
-      orders:order
+      orders:value
 
     }
     
@@ -346,7 +346,7 @@ const vendorOrder = async (
           search.toLowerCase()
         )
     );
-    const value = orders.filter((value, index) => {
+    const value = order.filter((value, index) => {
       if (index >= skip && index < limit * lim) {
         return value;
       }
@@ -355,7 +355,7 @@ const vendorOrder = async (
     const data = {
       totalOrder: orders.length,
       totalRevenue:store.totalRevenue,
-      orders:order
+      orders:value
 
     }
     
@@ -380,9 +380,9 @@ const vendorOrder = async (
       }
     });
     const data = {
-      totalOrder: data1.length,
+      totalOrder: orders.length,
       totalRevenue:store.totalRevenue,
-      orders:order
+      orders:value
 
     }
     
