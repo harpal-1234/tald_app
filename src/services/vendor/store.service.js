@@ -353,7 +353,7 @@ const vendorOrder = async (
     });
 
     const data = {
-      totalOrder: data1.length,
+      totalOrder: orders.length,
       totalRevenue:store.totalRevenue,
       orders:order
 
