@@ -136,12 +136,13 @@ if(dealData.isActive == true){
 }
 
 if(dealData.isActive == false){
-  console.log(deal)
+
   const deal = await Deal.findOneAndUpdate(
     { _id: dealId },
     { isActive: true ,status:"activate"},
     { new: true }
   );
+  console.log(deal)
   return "enabled successfully"
 }
 };
