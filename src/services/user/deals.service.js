@@ -760,6 +760,7 @@ const checkOut = async (paymentId, userId, amount) => {
     //console.log(val)
     return val.dealId.storeId;
   });
+  console.log(storeId)
 
   // const ephemeralKey = await stripeSerbices.stripeServices(user.stripeId);
   // const paymentIntent = await stripeSerbices.paymentIntent(
