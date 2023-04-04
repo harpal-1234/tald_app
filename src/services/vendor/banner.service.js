@@ -184,8 +184,8 @@ const deleteBanner = async (data) => {
   return bannerData;
 };
 
-const getBanner = async (data, vendorId) => {
-  let { page, limit, search } = data;
+const getBanner = async (data) => {
+  let { page, limit, type } = data;
   let skip = page * limit;
 
   // if (search) {
@@ -229,7 +229,44 @@ const getBanner = async (data, vendorId) => {
   //       { $set:{status: "deactivate", isActive:false} },
   //       { upsert:false }
   //     );
-  if (search) {
+//   if (search) {
+    
+//     const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
+
+//     await Banner.updateMany(
+//       { $and: [{ endDate: { $lte: date } }, { isDeleted: false }] },
+//       { $set: { expireStatus: "deactivate", isActive: false } },
+//       { upsert: false }
+//     );
+
+//     var bannerData = await Banner.find({
+//       $or: [
+//               { title: { $regex: new RegExp(search, "i") } },
+//               { type: { $regex: new RegExp(search, "i") } },
+//               //   { lastName: { $regex: new RegExp(search,"i") }, },
+//               //   { fullName: { $regex: new RegExp(search,"i") }, },
+//             ],
+//       isDeleted: false,
+//     })
+//       .skip(skip)
+//       .limit(limit)
+//       .sort({ _id: 1 })
+//       .lean();
+
+//     let total = await Banner.countDocuments({
+//       $or: [
+//         { title: { $regex: new RegExp(search, "i") } },
+//         { type: { $regex: new RegExp(search, "i") } },
+//         //   { lastName: { $regex: new RegExp(search,"i") }, },
+//         //   { fullName: { $regex: new RegExp(search,"i") }, },
+//       ],
+// isDeleted: false,
+//     });
+
+//     return { total, bannerData };
+//   }
+
+  if (type == "active") {
     
     const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
 
@@ -240,13 +277,9 @@ const getBanner = async (data, vendorId) => {
     );
 
     var bannerData = await Banner.find({
-      $or: [
-              { title: { $regex: new RegExp(search, "i") } },
-              { type: { $regex: new RegExp(search, "i") } },
-              //   { lastName: { $regex: new RegExp(search,"i") }, },
-              //   { fullName: { $regex: new RegExp(search,"i") }, },
-            ],
       isDeleted: false,
+      expireStatus:"activate",
+      status:"activate"
     })
       .skip(skip)
       .limit(limit)
@@ -254,19 +287,14 @@ const getBanner = async (data, vendorId) => {
       .lean();
 
     let total = await Banner.countDocuments({
-      $or: [
-        { title: { $regex: new RegExp(search, "i") } },
-        { type: { $regex: new RegExp(search, "i") } },
-        //   { lastName: { $regex: new RegExp(search,"i") }, },
-        //   { fullName: { $regex: new RegExp(search,"i") }, },
-      ],
-isDeleted: false,
+      isDeleted: false,
+      expireStatus:"deactivate",
+      status:"deactivate"
     });
 
     return { total, bannerData };
   }
-
-  if (startDate && endDate) {
+  if (type == "deactivate") {
     
     const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
 
@@ -277,33 +305,9 @@ isDeleted: false,
     );
 
     var bannerData = await Banner.find({
-      startDate: { $gte: startDate },
-      endDate: { $lte: endDate },
       isDeleted: false,
-    })
-      .skip(skip)
-      .limit(limit)
-      .sort({ _id: 1 })
-      .lean();
-
-    let total = await Banner.countDocuments({
-      startDate: { $gte: startDate },
-      endDate: { $lte: endDate },
-      isDeleted: false,
-    });
-
-    return { total, bannerData };
-  }else{
-    const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
-
-    await Banner.updateMany(
-      { $and: [{ endDate: { $lte: date } }, { isDeleted: false }] },
-      { $set: { expireStatus: "deactivate", isActive: false } },
-      { upsert: false }
-    );
-
-    var bannerData = await Banner.find({
-      isDeleted: false,
+      expireStatus:"deactivate",
+      status:"deactivate"
     })
       .skip(skip)
       .limit(limit)
@@ -312,10 +316,37 @@ isDeleted: false,
 
     let total = await Banner.countDocuments({
       isDeleted: false,
+      expireStatus:"deactivate",
+      status:"deactivate"
     });
 
     return { total, bannerData };
   }
+  
+  
+  // else{
+  //   const date = moment("Z", "YYYY-MM-DD" + "Z").toISOString();
+
+  //   await Banner.updateMany(
+  //     { $and: [{ endDate: { $lte: date } }, { isDeleted: false }] },
+  //     { $set: { expireStatus: "deactivate", isActive: false } },
+  //     { upsert: false }
+  //   );
+
+  //   var bannerData = await Banner.find({
+  //     isDeleted: false,
+  //   })
+  //     .skip(skip)
+  //     .limit(limit)
+  //     .sort({ _id: 1 })
+  //     .lean();
+
+  //   let total = await Banner.countDocuments({
+  //     isDeleted: false,
+  //   });
+
+  //   return { total, bannerData };
+  // }
   }
 
 
