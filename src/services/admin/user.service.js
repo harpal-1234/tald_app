@@ -158,13 +158,13 @@ const userOrderDetails = async(userId,page,limit)=>{
   const lim = page + 1;
 
   const skip = page * limit;
-
-  const order = orders.filter((value, index) => {
-    if (index >= skip && index < limit * lim) {
-      return value;
-    }
-  });
-  const users = formatUser(order)
+// console.log(orders)
+//   const order = orders.filter((value, index) => {
+//     if (index >= skip && index < limit * lim) {
+//       return value;
+//     }
+//   });
+  const users = formatUser(orders)
   const total = orders.length
   return {users,total};
 }
