@@ -135,7 +135,7 @@ const userAction = async(userId)=>{
     return "User unBlocked sucessfully "
   }
 }
-const userOrderDetails = async(userId)=>{
+const userOrderDetails = async(userId,page,limit)=>{
   const check = await User.findOne({_id:userId,isDeleted:false})
   if(!check){
     throw new OperationalError(
@@ -155,8 +155,18 @@ const userOrderDetails = async(userId)=>{
       select:"name"
     }
   }]).lean();
-  const users = formatUser(orders)
-  return users;
+  const lim = page + 1;
+
+  const skip = page * limit;
+
+  const order = orders.filter((value, index) => {
+    if (index >= skip && index < limit * lim) {
+      return value;
+    }
+  });
+  const users = formatUser(order)
+  const total = orders.length
+  return {users,total};
 }
 const deleteUser = async (req, res) => {
   const userData = await User.findOne({

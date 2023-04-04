@@ -12,7 +12,7 @@ exports.createStore = {
       category: Joi.string().valid(...Object.values(DEALS_SERVICE)),
       categoryId: Joi.string(),
     }),
-    storeType: Joi.string().required(),
+    website: Joi.string().required(),
     email: JOI.EMAIL,
     description: Joi.string().required(),
     countryCode: Joi.string().required(),

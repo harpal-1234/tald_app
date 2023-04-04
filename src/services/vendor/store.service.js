@@ -38,7 +38,7 @@ const createStore = async (data, vendorId) => {
       storeName: data.storeName,
       storeImage: data.storeImage,
       email: data.email,
-      storeType: data.storeType,
+      website: data.website,
       businessName: data.businessName,
       description: data.description,
       countryCode: data.countryCode,
