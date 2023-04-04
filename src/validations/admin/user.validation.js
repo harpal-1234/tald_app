@@ -36,6 +36,7 @@ exports.editUserProfile = {
 exports.userAction = {
   query: Joi.object().keys({
     userId: Joi.string().required(),
-    
+    limit: Joi.number().required(),
+    page: Joi.number().required(),
   }),
 };

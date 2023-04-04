@@ -75,8 +75,8 @@ const userAction = catchAsync(async (req, res) => {
   );
 });
 const userOrderDetails = catchAsync(async (req, res) => {
-  const {userId}= req.query;
-  const user = await adminUserService.userOrderDetails(userId);
+  const {userId,page,limit}= req.query;
+  const user = await adminUserService.userOrderDetails(userId,page,limit);
   return successResponse(
     req,
     res,
