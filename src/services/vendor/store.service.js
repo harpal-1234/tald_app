@@ -314,7 +314,7 @@ const vendorOrder = async (
     const eDate = moment(endDate);
 
     const data1= order.filter((val) => {
-      if (sDate >= moment(val.orderDate) && eDate <= moment(val.orderDate)) {
+      if (eDate >= moment(val.orderDate) && sDate <= moment(val.orderDate)) {
         return val;
       }
     });
@@ -370,7 +370,7 @@ const vendorOrder = async (
     const eDate = moment(endDate);
 
     const data1= orders.filter((val) => {
-      if (sDate >= moment(val.orderDate) && eDate <= moment(val.orderDate)) {
+      if (eDate >= moment(val.orderDate) && sDate <= moment(val.orderDate)) {
         return val;
       }
     });
