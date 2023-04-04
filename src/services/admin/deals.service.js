@@ -131,10 +131,12 @@ if(dealData.isActive == true){
     { isActive: false ,status:"deactivate"},
     { new: true }
   );
+  console.log(deal)
   return "disabled successfully"
 }
 
 if(dealData.isActive == false){
+  console.log(deal)
   const deal = await Deal.findOneAndUpdate(
     { _id: dealId },
     { isActive: true ,status:"activate"},
