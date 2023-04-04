@@ -164,7 +164,7 @@ const userOrderDetails = async(userId,page,limit)=>{
       return value;
     }
   });
-  const users = formatUser(orders)
+  const users = formatUser(order)
    const total = orders.length
   return {users,total};
 }
