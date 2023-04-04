@@ -187,7 +187,7 @@ const dashboard = async (vendorId, page, limit) => {
           },
           {
             path: "orders.deals.dealId",
-            select: ["totalPrice", "discountPrice"],
+            select: ["totalPrice", "discountPrice","title","no_of_person"],
           },
         ],
       })
@@ -196,7 +196,7 @@ const dashboard = async (vendorId, page, limit) => {
 
   store.vendor.orders.forEach((val) => {
     val.deals.forEach((ele) => {
-      ele.dealId.finalPrice = ele.dealId.totalPrice - ele.dealId.discountPrice;
+      ele.dealId.finalPrice = ele.dealId.discountPrice;
     });
   });
   const orders = store.vendor.orders

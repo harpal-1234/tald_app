@@ -716,7 +716,7 @@ const bookNow = async (deals, userId, storeId) => {
   ]);
   let totalAmount = 0;
   dealed.addCard.forEach((val) => {
-    val.dealId.finalprice = val.dealId.totalPrice - val.dealId.discountPrice;
+    val.dealId.finalprice = val.dealId.discountPrice;
     val.dealId.quantity = val.quantity;
     if (val.quantity <= 2) {
       totalAmount = totalAmount + val.dealId.finalprice * val.quantity;
@@ -806,7 +806,7 @@ const checkOut = async (paymentId, userId, amount) => {
   }
   let totalAmount = 0;
   dealed.addCard.forEach((val) => {
-    val.dealId.finalprice = val.dealId.totalPrice - val.dealId.discountPrice;
+    val.dealId.finalprice = val.dealId.discountPrice;
     val.dealId.quantity = val.quantity;
     if (val.quantity <= 2) {
       totalAmount = totalAmount + val.dealId.finalprice * val.quantity;
