@@ -30,7 +30,7 @@ const bannerAction = async (bannerId) => {
   if (check.status == "deactivate") {
     const bannerRequest = await Banner.findOneAndUpdate(
       {_id:bannerId},
-      { status: "activate",expireStatus:"activate",isBlocked:true},
+      { status: "activate",expireStatus:"activate",isBlocked:false},
       { new: true }
     );
     return "activate";
