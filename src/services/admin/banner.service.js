@@ -22,7 +22,7 @@ const bannerAction = async (bannerId) => {
   if (check.status == "activate") {
     const bannerRequest = await Banner.findOneAndUpdate(
       {_id:bannerId},
-      { status: "deactivate" ,expireStatus:"deactivate"},
+      { status: "deactivate",expireStatus:"deactivate",isBlocked:true},
       { new: true }
     );
     return "deactivate";
@@ -30,7 +30,7 @@ const bannerAction = async (bannerId) => {
   if (check.status == "deactivate") {
     const bannerRequest = await Banner.findOneAndUpdate(
       {_id:bannerId},
-      { status: "activate" ,expireStatus:"activate"},
+      { status: "activate",expireStatus:"activate",isBlocked:true},
       { new: true }
     );
     return "activate";
