@@ -33,9 +33,9 @@ const getUser = catchAsync(async (req, res) => {
   );
 });
 const filter = catchAsync(async (req, res) => {
-  const { distance,minAge,maxAge } = req.query;
+  const { distance, minAge, maxAge } = req.query;
   const userId = req.token.user._id;
-  const users = await appServices.filter(distance,minAge,maxAge,userId);
+  const users = await appServices.filter(distance, minAge, maxAge, userId);
   return successResponse(
     req,
     res,
@@ -48,7 +48,7 @@ const filter = catchAsync(async (req, res) => {
 const seeDistance = catchAsync(async (req, res) => {
   const { type } = req.query;
   const userId = req.token.user._id;
-  const users = await appServices.seeDistance(type,userId);
+  const users = await appServices.seeDistance(type, userId);
   return successResponse(
     req,
     res,
@@ -59,9 +59,9 @@ const seeDistance = catchAsync(async (req, res) => {
   );
 });
 const likeAndDislike = catchAsync(async (req, res) => {
-  const { type,id } = req.query;
+  const { type, id } = req.query;
   const userId = req.token.user._id;
-  const users = await appServices.likeAndDislike(type,id,userId);
+  const users = await appServices.likeAndDislike(type, id, userId);
   return successResponse(
     req,
     res,
@@ -72,9 +72,9 @@ const likeAndDislike = catchAsync(async (req, res) => {
   );
 });
 const notification = catchAsync(async (req, res) => {
-  const {page,limit} = req.query;
+  const { page, limit } = req.query;
   const userId = req.token.user._id;
-  const data = await appServices.notification(page,limit,userId);
+  const data = await appServices.notification(page, limit, userId);
   return successResponse(
     req,
     res,
@@ -85,9 +85,9 @@ const notification = catchAsync(async (req, res) => {
   );
 });
 const conversation = catchAsync(async (req, res) => {
-  const {page,limit} = req.query;
+  const { page, limit } = req.query;
   const userId = req.token.user._id;
-  const data = await appServices.conversation(page,limit,userId);
+  const data = await appServices.conversation(page, limit, userId);
   return successResponse(
     req,
     res,
@@ -103,5 +103,5 @@ module.exports = {
   seeDistance,
   likeAndDislike,
   notification,
-  conversation
+  conversation,
 };
