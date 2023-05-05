@@ -1,5 +1,4 @@
-const {Deal }= require("../models/index")
-
+const { Deal } = require("../models");
 
 const successMessage = (code, data) => {
   return { statusCode: code, message: "success", data };
@@ -10,7 +9,7 @@ const successMessageWithoutData = (code, message) => {
 };
 const formatUser = (userData) => {
   if (userData.length) {
-    userData.forEach(async(data) => {
+    userData.forEach(async (data) => {
       // const count = await Deal.countDocuments({
       //   vendor: data._id,
       //   isActive: true,
@@ -34,7 +33,7 @@ const formatUser = (userData) => {
       delete data.favouriteStores;
       delete data.recentlyView;
       delete data.orders;
-      delete data.dealPurchases
+      delete data.dealPurchases;
     });
   } else {
     delete userData.__v;
@@ -57,7 +56,7 @@ const formatUser = (userData) => {
     delete userData.favouriteStores;
     delete userData.recentlyView;
     delete userData.orders;
-    delete userData.dealPurchases
+    delete userData.dealPurchases;
   }
   return userData;
 };
@@ -120,13 +119,13 @@ const formatFavourites = (userData) => {
 };
 const formatBanner1 = (userData) => {
   if (userData.length) {
-    userData.forEach(async(data) => {
+    userData.forEach(async (data) => {
       delete data.__v;
       delete data.stores;
       delete data.startDate;
       delete data.endDate;
       data.name = data.storeId.vendor.name;
-      delete data.storeId
+      delete data.storeId;
       // delete data.createdAt;
       // delete data.updatedAt;
       // delete data.customerId;
@@ -138,7 +137,6 @@ const formatBanner1 = (userData) => {
       // delete data.isVerified;
       // delete data.socialId;
     });
-   
   } else {
     delete userData.__v;
     delete userData.password;
@@ -160,9 +158,7 @@ const formatBanner1 = (userData) => {
   return userData;
 };
 const formatRecentlyView = (userData) => {
-  if(userData.length)
-  {
-    
+  if (userData.length) {
     userData.forEach((data) => {
       delete data.isBlocked;
       delete data.isDeleted;
@@ -177,13 +173,11 @@ const formatRecentlyView = (userData) => {
       delete data.email;
       delete data.countryCode;
       delete data.phoneNumber;
-      delete data.description
+      delete data.description;
       delete data.service;
       delete data.storeType;
-      
     });
-  }
-   else {
+  } else {
     delete userData.__v;
     delete userData.password;
     delete userData.role;
@@ -220,7 +214,7 @@ const formatDeal = (userData) => {
       delete data.no_of_person;
       delete data.inclusions;
       delete data.description;
-      delete data.storeId
+      delete data.storeId;
     });
   } else {
     delete userData.__v;
@@ -248,7 +242,7 @@ const formatBanner = (userData) => {
       delete data.type;
       delete data.title;
       delete data.vendor;
-      delete data.service
+      delete data.service;
       delete data.isVerified;
     });
   } else {
@@ -471,7 +465,6 @@ const formatCategory = (userData) => {
     delete userData.__v;
     delete userData._id;
     delete userData.vendorId;
-
   }
   return userData;
 };
@@ -495,10 +488,9 @@ const formatStore = (userData) => {
       delete data.email;
       delete data.countryCode;
       delete data.phoneNumber;
-      delete data.description
-     // delete data.service;
+      delete data.description;
+      // delete data.service;
       delete data.storeType;
-
     });
   } else {
     delete userData.__v;
@@ -530,5 +522,5 @@ module.exports = {
   formatCategory,
   formatStore,
   formatRecentlyView,
-  formatBanner1
+  formatBanner1,
 };

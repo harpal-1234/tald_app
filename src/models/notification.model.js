@@ -1,3 +1,4 @@
+const { string } = require("joi");
 const mongoose = require("mongoose");
 const { TOKEN_TYPE, USER_TYPE } = require("../config/appConstants");
 
@@ -9,9 +10,6 @@ const notificationSchema = mongoose.Schema(
       ref: "user",
     },
     type: { type: String, required: true },
-    deal: { type: mongoose.Schema.Types.ObjectId, ref: "deals" },
-    quantity:{ type: String, required: true },
-
     isDeleted: { type: Boolean, default: false },
     blacklisted: {
       type: Boolean,

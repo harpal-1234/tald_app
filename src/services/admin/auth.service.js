@@ -1,4 +1,4 @@
-const { Admin, Token, Banner,User } = require("../../models");
+const { Admin, Token, Banner, User } = require("../../models");
 const { STATUS_CODES, ERROR_MESSAGES } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 
@@ -35,9 +35,9 @@ const changePassword = async (adminId, oldPassword, newPassword) => {
 };
 
 const dashBoard = async (adminId) => {
-  console.log(adminId)
+  console.log(adminId);
   const admin = await Admin.findOne();
-  console.log(admin)
+  console.log(admin);
   const totalUser = await User.countDocuments({
     type: "User",
     isDeleted: false,

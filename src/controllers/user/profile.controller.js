@@ -6,6 +6,7 @@ const { contactUs } = require("../../utils/sendMail");
 const {
   STATUS_CODES,
   SUCCESS_MESSAGES,
+  DELETE_MASSAGES,
   USER_TYPE,
 } = require("../../config/appConstants");
 const {
@@ -46,12 +47,13 @@ const changePassword = catchAsync(async (req, res) => {
 });
 
 const userContactUs = catchAsync(async (req, res) => {
-  const userDetails = await userProfileService.contactUs(req.body);
+  const userId = req.token.user._id;
+  const userDetails = await userProfileService.contactUs(userId);
+
   const user = await contactUs(
     userDetails.name,
     req.body.message,
-    userDetails.email,
-    userDetails.type
+    userDetails.phoneNumber
   );
 
   return successResponse(
@@ -62,25 +64,19 @@ const userContactUs = catchAsync(async (req, res) => {
   );
 });
 
-const pushNotificationStatus = catchAsync(async (req, res) => {
-  const newUser = await userProfileService.pushNotificationStatus(
-    req.token.user._id
-  );
-  const data = {
-    name: newUser.name,
-    email: newUser.email,
-    pushNotification: newUser.isPushNotification,
-    phoneNumber: newUser.phoneNumber,
-  };
-  return successResponse(
-    req,
-    res,
-    STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.PUSH_NOTIFICATION_STATUS,
-    data
-  );
-});
+const deleteProfile = catchAsync(async(req,res)=>{
+  const userId = req.token.user._id;
+  const user = await userProfileService.deleteUser(userId);
+  if(user){
+    return successResponse(
+      req,
+      res,
+      STATUS_CODES.SUCCESS,
+      DELETE_MASSAGES.USER_DELETED
+    );
+  }
 
+})
 const userLocation = catchAsync(async (req, res) => {
   const location = await userProfileService.userLocation(
     req.token.user._id,
@@ -94,64 +90,11 @@ const userLocation = catchAsync(async (req, res) => {
   );
 });
 
-const myFavourites = catchAsync(async (req, res) => {
-  const user = await userProfileService.myFavourites(req, res);
-  const value = formatFavourites(user.favourite);
-  const dataCount = user.count;
-  return successResponse(
-    req,
-    res,
-    STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.FAVOURITES_DEALS,
-    value,
-    dataCount
-  );
-});
-
-const dealPurchaseData = catchAsync(async (req, res) => {
-  const user = await userProfileService.dealPurchaseData(req.token.user._id);
-  const value = formatPurchase(user);
-  return successResponse(
-    req,
-    res,
-    STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.FAVOURITES_DEALS,
-    value
-  );
-});
-
-const favouriteStoreDeal = catchAsync(async (req, res) => {
-  const user = await userProfileService.favouriteStoreDeal(req, res);
-  const value = formatStoreDeal(user);
-  return successResponse(
-    req,
-    res,
-    STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.STORE_DEALS,
-    value
-  );
-});
-const notification = catchAsync(async (req, res) => {
-  const userId = req.token.user._id;
-  const data = await userProfileService.notification(userId);
-
-  return successResponse(
-    req,
-    res,
-    STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.STORE_DEALS,
-    data
-  );
-});
-
 module.exports = {
   editProfile,
   changePassword,
   userContactUs,
   userLocation,
-  pushNotificationStatus,
-  myFavourites,
-  dealPurchaseData,
-  favouriteStoreDeal,
-  notification,
+  deleteProfile
+
 };

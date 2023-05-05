@@ -2,19 +2,18 @@ const mongoose = require("mongoose");
 const {
   TOKEN_TYPE,
   USER_TYPE,
-  DEVICE_TYPE
+  DEVICE_TYPE,
 } = require("../config/appConstants");
 
 const tokenSchema = mongoose.Schema(
   {
     user: { type: mongoose.SchemaTypes.ObjectId, ref: "user" },
     admin: { type: mongoose.SchemaTypes.ObjectId, ref: "admins" },
-    // vendor:{ type: mongoose.SchemaTypes.ObjectId, ref: "vendors"},
-    vendor:{type: mongoose.SchemaTypes.ObjectId, ref: "stores"},
     expires: { type: Date, required: true },
-    token: { type: String, unique: true},
-    role: { type: String, enum: [...Object.values(USER_TYPE)]  },
-    type:{type:String},
+    token: { type: String, unique: true },
+    role: { type: String, enum: [...Object.values(USER_TYPE)] },
+    otp: { code: { type: String }, expiresAt: { type: Date } },
+    phoneNumber:{type:String},
     device: {
       type: {
         type: String,

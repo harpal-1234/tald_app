@@ -7,8 +7,24 @@ const { USER_TYPE, joi } = require("../../config/appConstants");
 
 const router = express.Router();
 
-router.post("/signUp", validate(authValidation.signUp), authController.signUp);
+router.post(
+  "/signUp",
+  auth(USER_TYPE.USER),
+  validate(authValidation.signUp),
+  authController.signUp
+);
 
+router.post(
+  "/sendOtp",
+  validate(authValidation.sendOtp),
+  authController.sendOtp
+);
+router.put(
+  "/verifyOtp",
+  auth(USER_TYPE.USER),
+  validate(authValidation.verifyOtp),
+  authController.verifyOtp
+);
 router.post("/login", validate(authValidation.login), authController.userLogin);
 
 router.post(
@@ -64,7 +80,7 @@ router
 router.post(
   "/logout",
   auth(USER_TYPE.USER),
-  validate(authValidation.logOut),
+  //validate(authValidation.logOut),
   authController.userLogout
 );
 

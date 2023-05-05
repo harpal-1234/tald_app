@@ -1,7 +1,7 @@
 {
-  "name": "pushhy_app",
+  "name": "magentas_app",
   "version": "1.0.0",
-  "description": "API's of pushhy_app ",
+  "description": "API's of magentas_app ",
   "main": "index.js",
   "scripts": {
     "test": "nodemon index.js",
@@ -16,7 +16,7 @@
     "Mongodb",
     "nodejs"
   ],
-  "author": "tarun <tarunkaushal255@gmail.com>",
+  "author": "tarun <harpaljodha1998@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "@joi/date": "^2.1.0",
@@ -46,6 +46,7 @@
     "shortid": "^2.2.16",
     "socket.io": "^4.5.4",
     "stripe": "^11.13.0",
+    "twilio": "^4.10.0",
     "winston": "^3.8.2"
   },
   "devDependencies": {

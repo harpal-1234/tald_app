@@ -1,4 +1,4 @@
-const {  Admin } = require("../models");
+const { Admin } = require("../models");
 const { USER_TYPE } = require("../config/appConstants");
 const Run = async () => {
   /*-------------------------------------------------------------------------------
@@ -7,7 +7,7 @@ const Run = async () => {
   let password = "$2a$08$8QBeUqrXcf334kMMrDS1euP5nbn00MZpP5Yi4PBucI9MIdASz8qDC";
 
   let adminDetails = {
-    email: "admin@test.com",
+    email: "magent@test.com",
     $setOnInsert: { password },
   };
   CreateAdmin(adminDetails);

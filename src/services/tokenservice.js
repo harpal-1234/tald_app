@@ -25,6 +25,7 @@ const generateToken = (data, secret = config.jwt.secret) => {
     type: data.tokenType,
     id: data.tokenId,
     role: data.userType,
+    
   };
 
   return jwt.sign(payload, secret);
@@ -37,32 +38,35 @@ const saveToken = async (data) => {
     expires: data.tokenExpires.toDate(),
     type: data.tokenType,
     _id: data.tokenId,
-    device: { type: data.deviceType, token: data.deviceToken },
+    //device: { type: data.deviceType, token: data.deviceToken },
     role: data.userType,
     token: data.token,
-    type:data.type
+    otp:data.otp,
+    phoneNumber:data.phoneNumber
   };
 
-  if (data.userType === USER_TYPE.VENDOR_ADMIN) {
-    dataToBesaved.vendor = data.user._id;
-  }
+  
   if (data.userType === USER_TYPE.ADMIN) {
     dataToBesaved.admin = data.user._id;
   }
   if (data.userType === USER_TYPE.USER) {
-    // console.log(data.user._id,"daaataaa")
-    // data.userType == USER_TYPE.USER
-    // ? (dataToBesaved = data.user._id)
-    //: (dataToBesaved = data.user._id);
     dataToBesaved.user = data.user._id;
   }
 
   const tokenDoc = await Token.create(dataToBesaved);
-  // console.log(tokenDoc);
+   
   return tokenDoc;
 };
 
-const generateAuthToken = async (user, userType,deviceToken, deviceType,type) => {
+const generateAuthToken = async (
+  user,
+  otp,
+  userType,
+  phoneNumber
+ // deviceToken,
+  //deviceType,
+) => {
+
   const tokenExpires = moment().add(config.jwt.accessExpirationMinutes, "days");
 
   var tokenId = new ObjectID();
@@ -73,19 +77,19 @@ const generateAuthToken = async (user, userType,deviceToken, deviceType,type) =>
     tokenType: TOKEN_TYPE.ACCESS,
     userType,
     tokenId,
-    type
   });
 
   const data = await saveToken({
     token: accessToken,
     tokenExpires,
     tokenId,
-    deviceToken,
-    deviceType,
+    // deviceToken,
+    // deviceType,
     tokentype: TOKEN_TYPE.ACCESS,
     userType,
     user,
-    type
+    otp,
+    phoneNumber
   });
 
   return {
@@ -114,7 +118,7 @@ const refreshAuth = async (user, userType, tokenId) => {
 
 const logout = async (tokenId) => {
   const token = await Token.findOne({ _id: tokenId, isDeleted: false });
-  console.log(token);
+  
 
   if (!token) {
     throw new OperationalError(
@@ -176,8 +180,8 @@ const generateResetPasswordToken = async (email) => {
   return { resetPasswordToken };
 };
 
-const generateVendorResetPassword= async (email) => {
-  const user= await Store.findOne({ email: email });
+const generateVendorResetPassword = async (email) => {
+  const user = await Store.findOne({ email: email });
 
   if (!user) {
     throw new OperationalError(

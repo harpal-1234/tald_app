@@ -28,11 +28,6 @@ router.post(
   authController.userContactUs
 );
 
-router.post(
-  "/pushNotificationStatus",
-  auth(USER_TYPE.USER),
-  authController.pushNotificationStatus
-);
 
 router.post(
   "/userLocation",
@@ -40,41 +35,10 @@ router.post(
   // validate(authValidation.userLocation),
   authController.userLocation
 );
-
-router.post(
-  "/userLocation",
+router.delete(
+  "/delete",
   auth(USER_TYPE.USER),
   // validate(authValidation.userLocation),
-  authController.userLocation
-);
-
-
-
-router.get(
-  "/myFavourites",
-  auth(USER_TYPE.USER),
-  // validate(authValidation.userLocation),
-  authController.myFavourites
-);
-
-
-router.get(
-  "/purchaseData",
-  auth(USER_TYPE.USER),
-  // validate(authValidation.userLocation),
-  authController.dealPurchaseData
-);
-
-router.get(
-  "/favouriteStoreDeal",
-  auth(USER_TYPE.USER),
-  validate(authValidation.favouriteStoreDeal),
-  authController.favouriteStoreDeal
-);
-router.get(
-  "/getNotification",
-  auth(USER_TYPE.USER),
-  //validate(authValidation.favouriteStoreDeal),
-  authController.notification
+  authController.deleteProfile
 );
 module.exports = router;

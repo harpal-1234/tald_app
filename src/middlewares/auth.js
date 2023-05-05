@@ -9,9 +9,6 @@ const { AuthFailedError } = require("../utils/errors");
 const verifyCallback =
   (req, resolve, reject, role) => async (err, token, info) => {
   
-   
-  
-  
     if (err || info || !token) {
       return reject(new AuthFailedError());
     }
@@ -29,9 +26,6 @@ const verifyCallback =
       return reject(new AuthFailedError());
     }
     if (token.role === USER_TYPE.USER && !token.user) {
-      return reject(new AuthFailedError());
-    }
-    if (token.role === USER_TYPE.VENDOR_ADMIN && !token.vendor) {
       return reject(new AuthFailedError());
     }
     // if (token.role === USER_TYPE.WORK_SEEKER && !token.user.workSeeker) {
@@ -122,8 +116,7 @@ const verifyCallback =
   };
 
 const auth = (role) => async (req, res, next) => {
-
-    
+ 
 
   return new Promise((resolve, reject) => {
      

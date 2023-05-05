@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 // const { tokenService } = require("../../services");
 const { successResponse } = require("../../utils/response");
-const { User, Token, Admin ,Store} = require("../../models");
+const { User, Token, Admin, Store } = require("../../models");
 const { ApiError } = require("../../utils/universalFunction");
 const Stripe = require("stripe");
 const stripe = new Stripe(
@@ -19,51 +19,172 @@ const {
 const { OperationalError } = require("../../utils/errors");
 const config = require("../../config/config");
 
-const createUser = async (userData) => {
+const createUser = async (userData, userId) => {
   const data = await User.findOne({
-    email: userData.email,
-    type: userData.type,
+    _id: userId,
     isDeleted: false,
   });
-  if (data) {
+  const birthDate = new Date(userData.dateOfBirth);
+  const currentDate = new Date();
+  var yearDiff = currentDate.getFullYear() - birthDate.getFullYear();
+  if (
+    currentDate.getMonth() < birthDate.getMonth() ||
+    (currentDate.getMonth() === birthDate.getMonth() &&
+      currentDate.getDate() < birthDate.getDate())
+  ) {
+    yearDiff--;
+  }
+  if (data.socialId) {
+    const user = await User.findOneAndUpdate(
+      { _id: userId },
+      {
+        name: userData.name,
+        images: userData.images,
+        phoneNumber: userData.phoneNumber,
+        profession: userData.profession,
+        bio: userData.bio,
+        pronoun: userData.pronoun,
+        politicalViews: userData.politicalViews,
+        sign: userData.sign,
+        genderIdentity: userData.genderIdentity,
+        prefrences: userData.prefrences,
+        lifeStyles: userData.lifeStyles,
+        drugUsages: userData.drugUsages,
+        hobbiesAndInterests: userData.hobbiesAndInterests,
+        pets: userData.pets,
+        dateOfBirth: userData.dateOfBirth,
+        age: yearDiff,
+        lookingFor: userData.lookingFor,
+        address:userData.address,
+        $set: {
+          location: { type: "Point", coordinates: [userData.long, userData.lat] },
+        },
+        isVerify: true,
+      },
+      { new: true }
+    );
+    return user;
+  }
+  console.log(data.phoneNumber, userData.phoneNumber);
+  if (data.phoneNumber !== userData.phoneNumber) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.EMAIL_ALREADY_EXIST
+      ERROR_MESSAGES.PHONE_NOT_MATCH
     );
   }
-  const user = await User.create(userData);
-  const customer = await stripe.customers.create({
-    userId: user._id,
-    email: userData.email,
-    name: userData.name,
-    phone: userData.phoneNumber,
-    address: {
-      line1: "510 Townsend St",
-      postal_code: "98140",
-      city: "San Francisco",
-      state: "CA",
-      country: "US",
+  console.log(userData.long, userData.lat);
+  const user = await User.findOneAndUpdate(
+    { _id: userId },
+    {
+      name: userData.name,
+      images: userData.images,
+      phoneNumber: userData.phoneNumber,
+      profession: userData.profession,
+      bio: userData.bio,
+      pronoun: userData.pronoun,
+      politicalViews: userData.politicalViews,
+      sign: userData.sign,
+      genderIdentity: userData.genderIdentity,
+      prefrences: userData.prefrences,
+      lifeStyles: userData.lifeStyles,
+      drugUsages: userData.drugUsages,
+      hobbiesAndInterests: userData.hobbiesAndInterests,
+      pets: userData.pets,
+      dateOfBirth: userData.dateOfBirth,
+      age: yearDiff,
+      lookingFor: userData.lookingFor,
+      address:userData.address,
+      $set: {
+        location: { type: "Point", coordinates: [userData.long, userData.lat] },
+      },
+      isVerify: true,
     },
-    description: "Payment",
-  });
-  
-  const check = await User.findOneAndUpdate(
-    { _id: user._id },
-    { stripeId: customer.id},
     { new: true }
   );
-  console.log(check)
+  // const check = await User.findOneAndUpdate(
+  //   { _id: user._id },
+  //   { stripeId: customer.id },
+  //   { new: true }
+  // );
+  // console.log(check);
+  // console.log(user);
   return user;
 };
-const userLogin = async (email, password, type) => {
-  let user = await User.findOne({
-    $and: [{ email: email, type: type, isDeleted: false }],
+const createUserNumber = async (phoneNumber) => {
+  const check = await User.findOne({
+    phoneNumber: phoneNumber,
+    isDeleted: false,
+    isVerify: true,
+  });
+  console.log(check);
+  if (!check) {
+    const user = await User.create({ phoneNumber: phoneNumber });
+    return user;
+  } else {
+    return check;
+  }
+};
+const verifyOtp = async (otp, tokenId, userId) => {
+  const user = await User.findOne({ _id: userId, isDeleted: false });
+  if (!user) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.USER_NOT_FOUND
+    );
+  }
+  let currentTime = new Date();
+  const token = await Token.findOne({ _id: tokenId });
+
+  // console.log(token.otp.expiresAt,currentTime)
+  if (token.otp.expiresAt < currentTime) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.OTP_EXPIRE
+    );
+  }
+  if (token.phoneNumber && token.otp.code == otp) {
+    const user = await User.findOne({ _id: userId, isDeleted: false });
+    const tokenVerify = await Token.findOneAndUpdate(
+      { _id: tokenId },
+      { "otp.code": "", phoneNumber: "", isDeleted: true, isBlocked: true }
+    );
+    return user;
+  }
+
+  if (token.otp.code == otp) {
+    const userVerify = await User.findOneAndUpdate(
+      { _id: userId },
+      { isVerify: true },
+      { new: true }
+    );
+    const tokenVerify = await Token.findOneAndUpdate(
+      { _id: tokenId },
+      { "otp.code": "" }
+    );
+
+    return { userVerify, tokenVerify };
+  } else {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.VERIFY_UNMATCH
+    );
+  }
+};
+const userLogin = async (phoneNumber) => {
+  // let user = await User.findOne({
+  //   email: email,
+  //   isDeleted: false,
+  // });
+  const user = await findOne({
+    phoneNumber: phoneNumber,
+    isVerify: true,
+    isDeleted: true,
   });
 
   if (!user) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.EMAIL_NOT_FOUND
+      ERROR_MESSAGES.PHONE_NOT_EXIST
     );
     // throw new ApiError(
     //   ERROR_MESSAGES.EMAIL_NOT_FIND
@@ -86,48 +207,21 @@ const userLogin = async (email, password, type) => {
     );
   }
 
-  if (!(await user.isPasswordMatch(password))) {
-    throw new OperationalError(
-      STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.WRONG_PASSWORD
-    );
-  }
+  // if (!(await user.isPasswordMatch(password))) {
+  //   throw new OperationalError(
+  //     STATUS_CODES.ACTION_FAILED,
+  //     ERROR_MESSAGES.WRONG_PASSWORD
+  //   );
+  // }
 
   return user;
 };
 
 const userSocialLogin = async (data) => {
-
-  if(data.type == "Vendor"){
-    const user = await User.findOne({
-      socialId: data.socialId,
-      type: data.type,
-      email:data.email,
-      name:data.name,
-      isDeleted: false,
-    });
-    
-  
-    if (user) {
-      const store = await Store.findOne({vendor:user._id});
-      if(store){
-        user.isVerifyStore = true
-      }else{
-        user.isVerifyStore = false
-      }
-      return user;
-    }
-  
-    const newUser = await User.create(data);
-     newUser.isVerifyStore = false
-    return newUser;
-  }
   const user = await User.findOne({
     socialId: data.socialId,
-    type: data.type,
     isDeleted: false,
   });
-  
 
   if (user) {
     return user;
@@ -259,6 +353,8 @@ module.exports = {
   resetPassword,
   pushNotification,
   getUserById,
+  createUserNumber,
+  verifyOtp,
 };
 
 // if (socialId) {

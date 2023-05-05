@@ -54,10 +54,9 @@ const createPaymentSheet = async (customer, body) => {
   } catch (err) {
     console.log(err);
   }
-}
- 
+};
 
 module.exports = {
   createStripeCustomer,
-  createPaymentSheet
+  createPaymentSheet,
 };

@@ -11,74 +11,55 @@ const {
 const { OperationalError } = require("../../utils/errors");
 const config = require("../../config/config");
 const bcrypt = require("bcryptjs");
+const { findOneAndUpdate } = require("../../models/token.model");
 
-const editProfile = async (id, data) => {
-  if(data.type == "Vendor"){
-  const userEmail = await User.findOne({ _id: id, type:"Vendor",isDeleted: false });
+const editProfile = async (id, userData) => {
+  const user = await User.findOne({
+    _id: id,
+    isDeleted: false,
+  });
 
-  if (!userEmail) {
+  if (!user) {
     throw new OperationalError(
       STATUS_CODES.NOT_FOUND,
       ERROR_MESSAGES.USER_NOT_FOUND
     );
   }
-
-  const user = await User.findOne({ email: data.email, type:"Vendor", isDeleted: false });
-
-  if (user) {
-    if (user.email !== userEmail.email) {
-      throw new OperationalError(
-        STATUS_CODES.ACTION_FAILED,
-        ERROR_MESSAGES.EMAIL_ALREADY_EXIST
-      );
-    }
-  }
-
+  const birthDate = new Date(userData.dateOfBirth);
+const currentDate = new Date();
+var yearDiff = currentDate.getFullYear() - birthDate.getFullYear();
+if (currentDate.getMonth() < birthDate.getMonth() || (currentDate.getMonth() === birthDate.getMonth() && currentDate.getDate() < birthDate.getDate())) {
+  yearDiff--;
+}
   const updateUser = await User.findByIdAndUpdate(
-    { _id: id , type:"Vendor",isDeleted:false },
+    { _id: id, isDeleted: false },
     {
-      name: data.name,
-      email: data.email,
-      phoneNumber: data.phoneNumber,
+      name: userData.name,
+      images: userData.images,
+      // phoneNumber: userData.phoneNumber,
+      profession: userData.profession,
+      bio: userData.bio,
+      pronoun: userData.pronoun,
+      politicalViews: userData.politicalViews,
+      sign: userData.sign,
+      genderIdentity: userData.genderIdentity,
+      prefrences: userData.prefrences,
+      lifeStyles: userData.lifeStyles,
+      drugUsages: userData.drugUsages,
+      hobbiesAndInterests: userData.hobbiesAndInterests,
+      pets: userData.pets,
+      dateOfBirth:userData.dateOfBirth,
+      age:yearDiff,
+      lookingFor: userData.lookingFor,
+      loc: {
+        address: userData.address,
+        coordinates: [userData.long, userData.lat],
+      },
     },
     { upsert: false, new: true }
   ).lean();
   return updateUser;
 };
-if(data.type == "User"){
-  const userEmail = await User.findOne({ _id: id, type:"User",isDeleted: false });
-
-  if (!userEmail) {
-    throw new OperationalError(
-      STATUS_CODES.NOT_FOUND,
-      ERROR_MESSAGES.USER_NOT_FOUND
-    );
-  }
-
-  const user = await User.findOne({ email: data.email, type:"User",isDeleted: false });
-
-  if (user) {
-    if (user.email !== userEmail.email) {
-      throw new OperationalError(
-        STATUS_CODES.ACTION_FAILED,
-        ERROR_MESSAGES.EMAIL_ALREADY_EXIST
-      );
-    }
-  }
-
-  const updateUser = await User.findByIdAndUpdate(
-    { _id: id ,type:"User",isDeleted:false},
-    {
-      name: data.name,
-      email: data.email,
-      phoneNumber: data.phoneNumber,
-    },
-    { upsert: false, new: true }
-  ).lean();
-  return updateUser;
-}
-}
-
 
 const changePassword = async (userId, oldPassword, newPassword) => {
   const user = await User.findById(userId);
@@ -105,9 +86,11 @@ const changePassword = async (userId, oldPassword, newPassword) => {
   return user;
 };
 
-const contactUs = async (data) => {
-  if(data.type == "Vendor"){
-  const user = await User.findOne({ email: data.email,type:"Vendor", isDeleted: false });
+const contactUs = async (userId) => {
+  const user = await User.findOne({
+    _id: userId,
+    isDeleted: false,
+  });
 
   if (!user) {
     throw new OperationalError(
@@ -116,19 +99,6 @@ const contactUs = async (data) => {
     );
   }
   return user;
-}
-if(data.type == "User"){
-  const user = await User.findOne({ email: data.email, type:"User",isDeleted: false });
-
-  if (!user) {
-    throw new OperationalError(
-      STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.CONTACTUS_EMAIL_USER
-    );
-  }
-  return user;
-
-}
 };
 
 const pushNotificationStatus = async (data) => {
@@ -163,10 +133,16 @@ const pushNotificationStatus = async (data) => {
     return notification;
   }
 };
-
-const userLocation = async (data,userData) => {
-  
-  const user = await User.findOne({ _id:data,isDeleted:false });
+const deleteUser = async (userId) => {
+  const user = await User.findOneAndUpdate(
+    { _id: userId, isDeleted: false },
+    { isDeleted: true },
+    { new: true }
+  );
+  return user;
+};
+const userLocation = async (data, userData) => {
+  const user = await User.findOne({ _id: data, isDeleted: false });
   if (!user) {
     throw new OperationalError(
       STATUS_CODES.NOT_FOUND,
@@ -242,13 +218,12 @@ const favouriteStoreDeal = async (req, res) => {
 
   return favourite;
 };
-const notification = async(userId)=>{
-const user = await User.findOne({_id:userId,isDeleted:false}).populate({
-path:"notifications.notificationId"
-});
-return user;
-
-}
+const notification = async (userId) => {
+  const user = await User.findOne({ _id: userId, isDeleted: false }).populate({
+    path: "notifications.notificationId",
+  });
+  return user;
+};
 module.exports = {
   editProfile,
   changePassword,
@@ -258,5 +233,6 @@ module.exports = {
   myFavourites,
   dealPurchaseData,
   favouriteStoreDeal,
-  notification
+  notification,
+  deleteUser,
 };

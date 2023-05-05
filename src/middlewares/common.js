@@ -6,11 +6,11 @@ const { errorResponse } = require("../utils/response");
 const { ERROR_MESSAGES, STATUS_CODES } = require("../config/appConstants");
 
 const errorHandler = (error, req, res, next) => {
+  console.log(error);
   return errorResponse(error, req, res);
 };
 
 const routeNotFoundHandler = (req, res, next) => {
- 
   return errorResponse(
     new NotFoundError(STATUS_CODES.NOT_FOUND, ERROR_MESSAGES.NOT_FOUND),
     req,

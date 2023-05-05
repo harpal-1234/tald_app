@@ -14,191 +14,155 @@ const {
   successMessageWithoutData,
   successMessage,
 } = require("../../utils/commonFunction");
-const {createStripeCustomer}=require("../../utils/stripe");
+const { createStripeCustomer } = require("../../utils/stripe");
 const dotenv = require("dotenv");
+//const otpServices = require("../../utils/otp")
 dotenv.config();
 
 const signUp = catchAsync(async (req, res) => {
-  const newUser = await userService.createUser(req.body);
+  const userId = req.token.user._id;
+  const newUser = await userService.createUser(req.body, userId);
   // const newStripeCustomer=await createStripeCustomer(newUser);
   const data = {
     name: newUser.name,
-    email: newUser.email,
-    pushNotification:newUser.isPushNotification,
-    phoneNumber:newUser.phoneNumber,
-    isVerifyStore:newUser.isVerifyStore,
-    type:req.body.type
+    pushNotification: newUser.isPushNotification,
+    phoneNumber: newUser.phoneNumber,
+    isVerify: newUser.isVerify,
   };
 
   const token = await tokenService.generateAuthToken(
     newUser,
+    " ",
     USER_TYPE.USER,
-    req.body.deviceToken,
-    req.body.deviceType,
-    req.body.type
+    data.phoneNumber
   );
-  if(req.body.type == "User"){
-    const data = {
-      name: newUser.name,
-      email: newUser.email,
-      pushNotification:newUser.isPushNotification,
-      phoneNumber:newUser.phoneNumber,
-      type:newUser.type
-    };
-  
-    const token = await tokenService.generateAuthToken(
-      newUser,
-      USER_TYPE.USER,
-      req.body.deviceToken,
-      req.body.deviceType,
-      req.body.type
-    );
-    return successResponse(
-      req,
-      res,
-      STATUS_CODES.SUCCESS,
-      SUCCESS_MESSAGES.SUCCESS,
-      data,
-      token
-    );
-  }
-  
 
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.SUCCESS,
-    data,
+    newUser,
     token
   );
-  
- 
 });
+const sendOtp = catchAsync(async (req, res) => {
+  const { phoneNumber } = req.body;
 
+  //const otp = await otpServices.otp(phoneNumber);
+
+  let otpExpires = new Date();
+  otpExpires.setSeconds(otpExpires.getSeconds() + 240);
+  otp = { code: "0000", expiresAt: "" };
+  // otp.code = 0000;
+  otp.expiresAt = otpExpires;
+  const user = await userService.createUserNumber(phoneNumber);
+  const token = await tokenService.generateAuthToken(
+    user,
+    otp,
+    USER_TYPE.USER,
+    phoneNumber
+  );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SEND_OTP,
+    token
+    //user.phoneNumber
+  );
+});
+const verifyOtp = catchAsync(async (req, res) => {
+  const { otp } = req.query;
+  const tokenId = req.token._id;
+  const userId = req.token.user._id;
+  const data = await userService.verifyOtp(otp, tokenId, userId);
+console.log(data)
+  if (data) {
+    const val = {
+      phoneNumber: data.phoneNumber,
+      _id: data._id,
+      isVerify: data.isVerify,
+    };
+    const token = await tokenService.generateAuthToken(
+      data,
+      otp,
+      USER_TYPE.USER,
+      val.phoneNumber
+    );
+    return successResponse(
+      req,
+      res,
+      STATUS_CODES.SUCCESS,
+      SUCCESS_MESSAGES.SUCCESS,
+      val,
+      token
+
+      //user.phoneNumber
+    );
+  }
+});
 const userLogin = catchAsync(async (req, res) => {
-  const newUser = await userService.userLogin(
-    req.body.email,
-    req.body.password,
-    req.body.type
-  );
-  const data = {
-    name: newUser.name,
-    email: newUser.email,
-    pushNotification:newUser.isPushNotification,
-    phoneNumber:newUser.phoneNumber,
-    isVerifyStore:newUser.isVerifyStore,
-    type:newUser.type
-  };
+  // const newUser = await userService.userLogin(
+  //   req.body.email,
+  //   req.body.password,
+  //   req.body.type
+  // );
+  const { phoneNumber } = req.body;
+  const user = await userService.userLogin(phoneNumber);
+  //const otp = await otpServices.otp(phoneNumber);
+
+  let otpExpires = new Date();
+  otpExpires.setSeconds(otpExpires.getSeconds() + 240);
+  otp = { code: "0000", expiresAt: "" };
+  // otp.code = 0000;
+  otp.expiresAt = otpExpires;
 
   const token = await tokenService.generateAuthToken(
-    newUser,
+    user,
+    otp,
     USER_TYPE.USER,
-    req.body.deviceToken,
-    req.body.deviceType,
-    req.body.type
+    phoneNumber
   );
-  if(req.body.type == "User"){
-    const data = {
-      name: newUser.name,
-      email: newUser.email,
-      pushNotification:newUser.isPushNotification,
-      phoneNumber:newUser.phoneNumber,
-      type:newUser.type
-    };
-  
-    const token = await tokenService.generateAuthToken(
-      newUser,
-      USER_TYPE.USER,
-      req.body.deviceToken,
-      req.body.deviceType,
-      req.body.type
-    );
-    return successResponse(
-      req,
-      res,
-      STATUS_CODES.SUCCESS,
-      SUCCESS_MESSAGES.SUCCESS,
-      data,
-      token
-    );
-  }
-
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.SUCCESS,
-    data,
+    SUCCESS_MESSAGES.SEND_OTP,
     token
+    //user.phoneNumber
   );
-  
- 
 });
 
-const userSocialLogin= catchAsync(async (req, res) => {
-  const newUser = await userService.userSocialLogin(
-    req.body
-  );
-  
-  const data = {
-    name: newUser.name,
-    email: newUser.email,
-    pushNotification:newUser.isPushNotification,
-    isVerifyStore:newUser.isVerifyStore,
-    type:newUser.type
-  };
-
- 
+const userSocialLogin = catchAsync(async (req, res) => {
+  const newUser = await userService.userSocialLogin(req.body);
   const token = await tokenService.generateAuthToken(
     newUser,
+    "",
     USER_TYPE.USER,
-    req.body.deviceToken,
-    req.body.deviceType,
-    req.body.type
+    // req.body.deviceToken,
+    // req.body.deviceType
   );
-  if(req.body.type == "User"){
-    const data = {
-      name: newUser.name,
-      email: newUser.email,
-      pushNotification:newUser.isPushNotification,
-      phoneNumber:newUser.phoneNumber,
-      type:newUser.type
-    };
-  
-    const token = await tokenService.generateAuthToken(
-      newUser,
-      USER_TYPE.USER,
-      req.body.deviceToken,
-      req.body.deviceType,
-      req.body.type
-    );
-    return successResponse(
-      req,
-      res,
-      STATUS_CODES.SUCCESS,
-      SUCCESS_MESSAGES.SUCCESS,
-      data,
-      token
-    );
-  }
+
+  const data = {
+    name: newUser.name,
+    email: newUser.isVerify,
+    pushNotification: newUser.isPushNotification,
+    phoneNumber: newUser.phoneNumber,
+  };
 
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.SUCCESS,
-    data,
+    newUser,
     token
   );
-  
-
-
-
 });
 
 const userLogout = catchAsync(async (req, res) => {
-  const newUser = await userService.userLogout(req.token._id,req.body.type);
+  const newUser = await userService.userLogout(req.token._id, req.body.type);
 
   return successResponse(
     req,
@@ -274,7 +238,7 @@ const resetForgotPassword = catchAsync(async (req, res) => {
 });
 
 const pushNotification = catchAsync(async (req, res) => {
-  const userId = req.token.user._id
+  const userId = req.token.user._id;
   const notification = await userService.pushNotification(userId);
   return successResponse(
     req,
@@ -294,4 +258,6 @@ module.exports = {
   forgotPage,
   resetForgotPassword,
   pushNotification,
+  sendOtp,
+  verifyOtp,
 };

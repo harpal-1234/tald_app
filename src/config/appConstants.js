@@ -18,7 +18,13 @@ const DEVICE_TYPE = {
   ANDROID: "Android",
   WEB: "Web",
 };
-
+const MESSAGE_TYPE = {
+  TEXT: "text",
+  IMAGE: "image",
+  GIF: "gif",
+  VIDEO: "video",
+  EMPTY:""
+};
 const BANNER_STATUS = {
   ACCEPTED: "activate",
   REJECTED: "deactivate",
@@ -56,7 +62,196 @@ const NOTIFICATION_STATUS = {
   ENABLE: "Enable",
   DISABLE: "Disable",
 };
+const PRONOUN = {
+  SHE_HER_HERS: "She/Her/Hers",
+  HE_HIM_HIS: "He/Him/His",
+  THEY_THEM_THEIR: "They/Them/Their",
+  ZE_ZIR_ZIRS: "Ze/Zir/Zirs",
+  ZE_HIR_HIRS: "Ze/Hir/Hirs",
+};
+const VALIDPRONOUN = [
+  "She/Her/Hers",
+  "He/Him/His",
+  "They/Them/Their",
+  "Ze/Zir/Zirs",
+  "Ze/Hir/Hirs",
+];
+const GENDER = {
+  GAY: "Gay",
+  LESBIAN: "Lesbian",
+  STRAIGHT: "Straight",
+  BISEXUAL: "Bisexual",
+  ASEXUAL: "Asexual",
+  TRANSGENDER: "Transgender",
+  NONBINARY: "Nonbinary",
+  GYNESEXUAL_GYNEPHILIC: "Nonbinary",
+  PANSEXUAL: "Pansexual",
+  QUESTIONING: "Questioning",
+  AROMANTIC: "Aromantic",
+  ANDROSEXUAL_ANDROPHILIC: "Androsexual/Androphilic",
+};
+const VALID_GENDER = [
+  "Gay",
+  "Lesbian",
+  "Straight",
+  "Bisexual",
+  "Asexual",
+  "Transgender",
+  "Nonbinary",
+  "Nonbinary",
+  "Pansexual",
+  "Questioning",
+  "Aromantic",
+  "Androsexual/Androphilic",
+];
+const PETS = {
+  DOGS: "Dogs",
+  CATS: "Cats",
+  BIRDS: "Birds",
+  REPTILES: "Reptiles",
+  OTHER_PETS: "Other Pets",
+  LOVE_ANIMAL: "Love Animals, But No Pets",
+  NOT_ANIMAL: "Not an Animal Person",
+  TONS_OF_ANIMALS: "Tons of Animals",
+  PREFER_NOT_TO_SAY: "Prefer Not to Say",
+};
+const VALID_PETS = [
+  "Dogs",
+  "Cats",
+  "Birds",
+  "Reptiles",
+  "Other Pets",
+  "Love Animals, But No Pets",
+  "Not an Animal Person",
+  "Tons of Animals",
+  "Prefer Not to Say",
+];
+const HOBBIES_AND_INTRESTS = {
+  HOMEBODY: "Homebody",
+  TRAVELLING: "Travelling",
+  FITNESS: "Fitness",
+  YOGA: "Yoga",
+  THEATRE: "Theatre",
+  MOVIE: "Movie",
+  DANCING: "Dancing",
+  CRAFT: "Craft",
+  ETC: "ETC",
+};
+const VALID_HOBBIES_AND_INTRESTS = [
+  "Homebody",
+  "Travelling",
+  "Fitness",
+  "Yoga",
+  "Theatre",
+  " Movie",
+  " Dancing ",
+  "Craft",
+  "ETC",
+];
+const POLITICALS_VIEWS = {
+  LIBERAL: "Liberal",
+  CONSERVATIVE: "Conservative",
+  MIDDLE_OF_THE_ROAD: "Middle of the Road",
+  CJOOSE_NOT_TO_ANSWER: "Choose Not to  Answer",
+};
+const VALID_POLITICALS_VIEWS = [
+  "Liberal",
+  "Conservative",
+  "Middle of the Road",
+  "Choose Not to  Answer",
+];
+const LOOKIN_FOR = {
+  SOMETHINGCASUAL: "SomethingCasual",
+  LONGTERMRELATIONSHIP: "LongTermRelationship",
+  MARRIAGE: "Marriage",
+  FRIENDSHIP: "Friendship",
+  DONTKNOWYET: "Don’tKnowYet",
+};
+const VALID_LOOKIN_FOR = [
+  "SomethingCasual",
+  "LongTermRelationship",
+  "Marriage",
+  "Friendship",
+  "Don’tKnowYet",
+];
+const DRUGS = {
+  MARIJUANA_NOT_THE_HARD_STUFF: "Marijuana,not the hard stuff",
+  SOMETIMES: "Sometimes",
+  IN_THE_PAST: "In the past",
+  PREFER_NOT_TO_SAY: "Prefer not to say",
+};
+const VALID_DRUGS = [
+  "Marijuana,not the hard stuff",
+  "Sometimes",
+  "In the past",
+  "Prefer not to say",
+];
+const LIFE_STYLE = {
+  SMOKER: "Smoker",
+  NON_SMOKER: "Non-Smoker",
+  SOCIAL_SMOKER: "Social Smoker",
+  SOCIAL_DRINKER: "Social Drinker",
+  DRINK_ALCHOHAL_DAILY: "Drink Alchohal daily",
+  PREFER_NOT_TO_SAY: "Prefer not to say",
+};
+const VALID_LIFE_STYLE = [
+  "Smoker",
+  "Non-Smoker",
+  "Social Smoker",
+  "Social Drinker",
+  "Drink Alchohal daily",
+  "Prefer not to say",
+];
+const PREFERANCES = {
+  MALE: "Male",
+  FEMALE: "Female",
+  TRANSMALE: "TransMale",
+  TRANSFEMALE: "TransFemale",
+  BISEXUAL: "Bisexual",
+  NON_BINARY: "Non-binary",
+  OPENTOALL: "OpentoAll",
+};
+const VALID_PREFERANCES = [
+  "Male",
+  "Female",
+  "TransMale",
+  "TransFemale",
+  "Bisexual",
+  "Non-binary",
+  "OpentoAll",
+];
+const SIGN = {
+  CAPRICON: "Capricon",
+  AQUARIUS: "Aquarius",
+  PISCES: "Pisces",
+  ARICS: "Arics",
+  TAURUS: "Taurus",
+  GEMINI: "Gemini",
+  CANCER: "Cancer",
+  LEO: "Leo",
+  VIRGO: "Virgo",
+  LIBRA: "Libra",
+  SCORPIO: "Scorpio",
+  SAGITTARIUS: "Sagittarius",
+  PREFER_NOT_TO_SAY: "Prefer Not to Say",
+};
+const VALID_SIGN = [
+  "Capricon",
+  "Aquarius",
+  "Pisces",
+  "Arics",
+  "Taurus",
+  "Gemini",
+  "Cancer",
+  "Leo",
+  "Virgo",
+  "Libra",
+  "Scorpio",
+  "Sagittarius",
+  "Prefer Not to Say"
 
+
+]
 const JOI = {
   EMAIL: Joi.string().email().lowercase().trim().required(),
   PASSWORD: Joi.string().min(6).required(),
@@ -83,7 +278,10 @@ const WORK_LOCATION = {
   REMOTE: "remote",
   WORk_LOCATION: "work",
 };
-
+const DISTANCE ={
+  KM:"Km",
+  MILES:"Miles"
+}
 const ASSIGNMENT_STATUS = {
   DRAFT: "draft",
   PROPOSED: "proposed",
@@ -120,6 +318,7 @@ const SUCCESS_MESSAGES = {
   STORE_DEALS: "Store All Deals",
   PUSH_NOTIFICATION_STATUS: "Push notification status updated",
   ALL_CATEGORY: "All category Details",
+  SEND_OTP: "Otp sent on your phoneNumber sucessfully",
 };
 
 const UPDATED_MESSAGES = {
@@ -163,8 +362,13 @@ const ERROR_MESSAGES = {
   CONTACTUS_EMAIL_USER: "Please enter your registered email",
   BANNER_ID: "Please provide different banner Id",
   VENDOR_NOT_EXIST: "Vendor does not exist",
-  FCM_ERROR:"fcm error",
-  ORDER_NOT_FOUND:"Order not found"
+  FCM_ERROR: "fcm error",
+  ORDER_NOT_FOUND: "Order not found",
+  OTP_EXPIRE: "This verification code has expired. please try again",
+  VERIFY_UNMATCH: "This verify code dose not match .please try again",
+  PHONE_ALREADY_EXIST: "This phoneNumber allready exist",
+  PHONE_NOT_MATCH: "This phone does not match ",
+  PHONE_NOT_EXIST:"This phone number not exist please signUp"
 };
 
 const STATUS_CODES = {
@@ -206,15 +410,12 @@ const DELETE_MASSAGES = {
   ADMIN_DELETED_VENDOR: "Admin Deleted Vendor",
   ADMIN_DELETED_USER: "Admin Deleted User",
   CATEGORY_DELETED: "Category Deleted Successfully",
-  VENDOR_BLOCK:"Vendor Blocked successfully"
+  VENDOR_BLOCK: "Vendor Blocked successfully",
 };
 
 module.exports = {
-  BANNER_TYPE,
-  BANNER_STATUS,
   PUSH_NOTIFICATION_STATUS,
   NOTIFICATION_STATUS,
-  DEALS_SERVICE,
   DELETE_MASSAGES,
   TOKEN_TYPE,
   USER_TYPE,
@@ -229,6 +430,28 @@ module.exports = {
   STATUS_CODES,
   UPDATED_MESSAGES,
   SOCIAL_LOGIN,
+  PRONOUN,
+  GENDER,
+  PETS,
+  HOBBIES_AND_INTRESTS,
+  POLITICALS_VIEWS,
+  LOOKIN_FOR,
+  DRUGS,
+  LIFE_STYLE,
+  PREFERANCES,
+  SIGN,
+  VALIDPRONOUN,
+  VALID_GENDER,
+  VALID_PETS,
+  VALID_HOBBIES_AND_INTRESTS,
+  VALID_POLITICALS_VIEWS,
+  VALID_LOOKIN_FOR,
+  VALID_DRUGS,
+  VALID_LIFE_STYLE,
+  VALID_PREFERANCES,
+  VALID_SIGN,
+  DISTANCE,
+  MESSAGE_TYPE
 };
 
 // SPA: "spa",
