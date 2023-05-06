@@ -4,4 +4,5 @@ module.exports = {
   Admin: require("./admin.model"),
   Notification: require("./notification.model"),
   Conversation: require("./conversation"),
+  Group:require("./group")
 };
