@@ -1,4 +1,4 @@
-const { Admin, Token, Banner, User } = require("../../models");
+const { Admin, Token, Banner, User, Group } = require("../../models");
 const { STATUS_CODES, ERROR_MESSAGES } = require("../../config/appConstants");
 const { OperationalError } = require("../../utils/errors");
 
@@ -69,10 +69,22 @@ const adminLogout = async (tokenId) => {
   });
   return updatedToken;
 };
-
+const createGroup = async (data) => {
+  const group = await Group.create(data);
+  return group;
+};
+const getGroup = async () => {
+  const group = await Group.find({ isDeleted: false }).lean();
+  group.forEach((val) => {
+    val.totalMemeber = val.groupMember.length;
+  });
+  return group;
+};
 module.exports = {
   adminLogin,
   changePassword,
   dashBoard,
   adminLogout,
+  createGroup,
+  getGroup,
 };

@@ -29,4 +29,16 @@ router.get(
  // validate(authValidation.changePassword),
   authController.dashBoard
 );
+router.post(
+  "/createGroup",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.createGroup),
+  authController.createGroup
+);
+router.get(
+  "/getGroup",
+  auth(USER_TYPE.ADMIN),
+  //validate(authValidation.createGroup),
+  authController.getGroup
+);
 module.exports = router;

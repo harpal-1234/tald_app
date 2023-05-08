@@ -16,3 +16,10 @@ exports.changePassword = {
     newPassword: JOI.PASSWORD,
   }),
 };
+exports.createGroup = {
+  body: Joi.object().keys({
+    groupName: Joi.string().required(),
+    text: Joi.string().required(),
+    image:Joi.string().required()
+  }),
+};

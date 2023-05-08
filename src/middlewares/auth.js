@@ -8,7 +8,6 @@ const { AuthFailedError } = require("../utils/errors");
 
 const verifyCallback =
   (req, resolve, reject, role) => async (err, token, info) => {
-  
     if (err || info || !token) {
       return reject(new AuthFailedError());
     }
@@ -109,17 +108,14 @@ const verifyCallback =
         );
       }
     }
-   
+
     req.token = token;
-    
+
     return resolve();
   };
 
 const auth = (role) => async (req, res, next) => {
- 
-
   return new Promise((resolve, reject) => {
-     
     passport.authenticate(
       "jwt",
       { session: false },

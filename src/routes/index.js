@@ -12,7 +12,7 @@ const router = express.Router();
 
 const defaultRoutes = [
   {
-    path: "/admin/auth",
+    path: "/admin",
     route: adminAuth,
   },
   // {

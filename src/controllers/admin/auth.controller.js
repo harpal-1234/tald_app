@@ -12,8 +12,9 @@ const adminLogin = catchAsync(async (req, res) => {
   const admin = await adminService.adminLogin(email, password);
   const token = await tokenService.generateAuthToken(
     admin,
+    "",
     USER_TYPE.ADMIN,
-    ""
+    
   );
   return successResponse(
     req,
@@ -61,14 +62,25 @@ const createGroup = catchAsync(async (req, res) => {
     req,
     res,
     STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.SUCCESS
+    SUCCESS_MESSAGES.SUCCESS,
+    group
   );
 });
-
+const getGroup = catchAsync(async (req, res) => {
+  const group = await adminService.getGroup();
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    group
+  );
+});
 module.exports = {
   adminLogin,
   changePassword,
   dashBoard,
   adminLogout,
-  createGroup
+  createGroup,
+  getGroup
 };

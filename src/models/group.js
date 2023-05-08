@@ -7,7 +7,7 @@ const groupSchema = mongoose.Schema(
     groupName: { type: String, required: true },
     groupMember: [{ type: mongoose.Schema.Types.ObjectId }],
     text: { type: String, required: true },
-
+    image:{type:String,required:true},
     isDeleted: { type: Boolean, default: false },
     blacklisted: {
       type: Boolean,
