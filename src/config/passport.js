@@ -18,22 +18,23 @@ const jwtVerify = async (payload, done) => {
 
     let token = {};
 
-    if (payload.role === USER_TYPE.VENDOR_ADMIN) {
-      token = await Token.findOne({ _id: payload.id, isDeleted: false })
-        .populate({ path: "vendor" })
-        .lean();
-    }
+    // if (payload.role === USER_TYPE.VENDOR_ADMIN) {
+    //   token = await Token.findOne({ _id: payload.id, isDeleted: false })
+    //     .populate({ path: "vendor" })
+    //     .lean();
+    // }
+    console.log(payload);
     if (payload.role === USER_TYPE.ADMIN) {
       token = await Token.findOne({ _id: payload.id, isDeleted: false })
         .populate({ path: "admin" })
         .lean();
     }
     if (payload.role === USER_TYPE.USER) {
-      token = await Token.findOne({ _id: payload.id, isDeleted: false })
-       // console.log(token.user, token.role)
+      token = await Token.findOne({ _id: payload.id, isDeleted: false });
+      // console.log(token.user, token.role)
       formatUserDB(token.user, token.role);
     }
-
+    console.log(token);
     if (!token) {
       return done(null, false);
     }

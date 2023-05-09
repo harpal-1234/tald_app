@@ -76,11 +76,23 @@ const getGroup = catchAsync(async (req, res) => {
     group
   );
 });
+const getUser = catchAsync(async (req, res) => {
+  const {page,limit,search}=req.query
+  const user = await adminService.getUser(page,limit,search);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    user
+  );
+});
 module.exports = {
   adminLogin,
   changePassword,
   dashBoard,
   adminLogout,
   createGroup,
-  getGroup
+  getGroup,
+  getUser
 };

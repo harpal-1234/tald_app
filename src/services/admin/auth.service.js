@@ -80,6 +80,45 @@ const getGroup = async () => {
   });
   return group;
 };
+const getUser = async (page, limit, search) => {
+  const skip = page * limit;
+  if (search) {
+    const users = await User.find({
+      isDeleted: false,
+      $or: [
+        { name: { $regex: new RegExp(search, "i") } },
+        { phoneNumber: { $regex: new RegExp(search, "i") } },
+        { profession: { $regex: new RegExp(search, "i") } },
+      ],
+    })
+      .lean()
+      .skip(skip)
+      .limit(limit);
+      const total = await User.countDocuments({
+        isDeleted: false,
+        $or: [
+          { name: { $regex: new RegExp(search, "i") } },
+          { phoneNumber: { $regex: new RegExp(search, "i") } },
+          { profession: { $regex: new RegExp(search, "i") } },
+        ],
+      })
+        .lean()
+        .skip(skip)
+        .limit(limit);
+      return{users,total}
+  }
+  const users = await User.find({ isDeleted: false })
+    .lean()
+    .skip(skip)
+    .limit(limit);
+    const total = await User.countDocuments({ isDeleted: false })
+    .lean()
+    .skip(skip)
+    .limit(limit);
+
+
+    return{users,total}
+};
 module.exports = {
   adminLogin,
   changePassword,
@@ -87,4 +126,5 @@ module.exports = {
   adminLogout,
   createGroup,
   getGroup,
+  getUser,
 };

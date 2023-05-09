@@ -368,7 +368,8 @@ const ERROR_MESSAGES = {
   VERIFY_UNMATCH: "This verify code dose not match .please try again",
   PHONE_ALREADY_EXIST: "This phoneNumber allready exist",
   PHONE_NOT_MATCH: "This phone does not match ",
-  PHONE_NOT_EXIST:"This phone number not exist please signUp"
+  PHONE_NOT_EXIST:"This phone number not exist please signUp",
+  DOES_NOT_EXIST:"Data does not exist"
 };
 
 const STATUS_CODES = {

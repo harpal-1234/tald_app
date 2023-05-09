@@ -8,8 +8,6 @@ exports.adminLogin = {
   }),
 };
 
-
-
 exports.changePassword = {
   body: Joi.object().keys({
     oldPassword: JOI.PASSWORD,
@@ -20,6 +18,13 @@ exports.createGroup = {
   body: Joi.object().keys({
     groupName: Joi.string().required(),
     text: Joi.string().required(),
-    image:Joi.string().required()
+    image: Joi.string().required(),
+  }),
+};
+exports.getUser = {
+  query: Joi.object().keys({
+    page: Joi.number().required(),
+    limit: Joi.number().required(),
+    search: Joi.string().required().allow(null, ""),
   }),
 };

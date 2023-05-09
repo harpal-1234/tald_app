@@ -41,4 +41,10 @@ router.get(
   //validate(authValidation.createGroup),
   authController.getGroup
 );
+router.get(
+  "/getUser",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.getUser),
+  authController.getUser
+);
 module.exports = router;

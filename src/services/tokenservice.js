@@ -54,6 +54,7 @@ const saveToken = async (data) => {
   }
 
   const tokenDoc = await Token.create(dataToBesaved);
+ 
    
   return tokenDoc;
 };
