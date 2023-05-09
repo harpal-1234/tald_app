@@ -220,6 +220,12 @@ const VALID_PREFERANCES = [
   "Non-binary",
   "OpentoAll",
 ];
+const PLANS={
+  FREEMIUM:"Freemium",
+  SILVER:"Silver",
+  GOLD:"Gold",
+  PLATINUM:"Platinum"
+}
 const SIGN = {
   CAPRICON: "Capricon",
   AQUARIUS: "Aquarius",
@@ -452,7 +458,8 @@ module.exports = {
   VALID_PREFERANCES,
   VALID_SIGN,
   DISTANCE,
-  MESSAGE_TYPE
+  MESSAGE_TYPE,
+  PLANS
 };
 
 // SPA: "spa",

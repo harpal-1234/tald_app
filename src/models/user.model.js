@@ -18,6 +18,7 @@ const {
   DEVICE_TYPE,
   POLITICALS_VIEWS,
   NOTIFICATION_STATUS,
+  PLANS,
 } = require("../config/appConstants");
 // const { address } = require("./commonField.models");
 const { string } = require("joi");
@@ -79,6 +80,16 @@ const userSchema = mongoose.Schema(
     isVerify: { type: Boolean, default: false },
     isBlocked: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
+    packages: {
+      type: String,
+      enum: [...Object.values(PLANS)],
+      default: PLANS.FREEMIUM,
+    },
+    packages: { type: Date },
+    gifts: { type: Number, default: 0 },
+    giftDate: { type: Date },
+    profileBoast: { type: Boolean, default: false },
+    boastDate: { type: Date },
     notifications: [
       {
         notificationId: {

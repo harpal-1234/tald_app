@@ -102,9 +102,7 @@ const getUser = async (page, limit, search) => {
           { profession: { $regex: new RegExp(search, "i") } },
         ],
       })
-        .lean()
-        .skip(skip)
-        .limit(limit);
+        .lean();
       return{users,total}
   }
   const users = await User.find({ isDeleted: false })
@@ -112,9 +110,7 @@ const getUser = async (page, limit, search) => {
     .skip(skip)
     .limit(limit);
     const total = await User.countDocuments({ isDeleted: false })
-    .lean()
-    .skip(skip)
-    .limit(limit);
+    .lean();
 
 
     return{users,total}
