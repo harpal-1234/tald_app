@@ -23,7 +23,7 @@ const MESSAGE_TYPE = {
   IMAGE: "image",
   GIF: "gif",
   VIDEO: "video",
-  EMPTY:""
+  EMPTY: "",
 };
 const BANNER_STATUS = {
   ACCEPTED: "activate",
@@ -57,7 +57,11 @@ const PUSH_NOTIFICATION_STATUS = {
   ENABLE: "Enable",
   DISABLE: "Disable",
 };
-
+const PLAN = {
+  WEEKLY: "Weekly",
+  MONTHLY: "Monthly",
+  ANUALY: "Anualy",
+};
 const NOTIFICATION_STATUS = {
   ENABLE: "Enable",
   DISABLE: "Disable",
@@ -220,12 +224,12 @@ const VALID_PREFERANCES = [
   "Non-binary",
   "OpentoAll",
 ];
-const PLANS={
-  FREEMIUM:"Freemium",
-  SILVER:"Silver",
-  GOLD:"Gold",
-  PLATINUM:"Platinum"
-}
+const PLANS = {
+  FREEMIUM: "Freemium",
+  SILVER: "Silver",
+  GOLD: "Gold",
+  PLATINUM: "Platinum",
+};
 const SIGN = {
   CAPRICON: "Capricon",
   AQUARIUS: "Aquarius",
@@ -254,10 +258,8 @@ const VALID_SIGN = [
   "Libra",
   "Scorpio",
   "Sagittarius",
-  "Prefer Not to Say"
-
-
-]
+  "Prefer Not to Say",
+];
 const JOI = {
   EMAIL: Joi.string().email().lowercase().trim().required(),
   PASSWORD: Joi.string().min(6).required(),
@@ -284,10 +286,10 @@ const WORK_LOCATION = {
   REMOTE: "remote",
   WORk_LOCATION: "work",
 };
-const DISTANCE ={
-  KM:"Km",
-  MILES:"Miles"
-}
+const DISTANCE = {
+  KM: "Km",
+  MILES: "Miles",
+};
 const ASSIGNMENT_STATUS = {
   DRAFT: "draft",
   PROPOSED: "proposed",
@@ -374,8 +376,9 @@ const ERROR_MESSAGES = {
   VERIFY_UNMATCH: "This verify code dose not match .please try again",
   PHONE_ALREADY_EXIST: "This phoneNumber allready exist",
   PHONE_NOT_MATCH: "This phone does not match ",
-  PHONE_NOT_EXIST:"This phone number not exist please signUp",
-  DOES_NOT_EXIST:"Data does not exist"
+  PHONE_NOT_EXIST: "This phone number not exist please signUp",
+  DOES_NOT_EXIST: "Data does not exist",
+  LIMIT: "You have exhausted your daily limit for swiping",
 };
 
 const STATUS_CODES = {
@@ -459,7 +462,8 @@ module.exports = {
   VALID_SIGN,
   DISTANCE,
   MESSAGE_TYPE,
-  PLANS
+  PLANS,
+  PLAN
 };
 
 // SPA: "spa",

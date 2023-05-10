@@ -29,13 +29,12 @@ const getUsers = async (userId, lat, long) => {
     ? ((measuring = "Km"), (distance = user.distance * 1000))
     : ((measuring = "Miles"), (distance = user.distance * 1600));
 
-  // if (user.seeDistance == "Km") {
-  //   distance = user.distance * 1000;
-  //   measuring = "Km";
-  // } else {
-  //   distance = user.distance * 1600;
-  //   measuring = "Miles";
-  // }
+  //     const currentDate = new Date();
+  //     const nextWeekDate = new Date(currentDate.getTime() + 28 * 24 * 60 * 60 * 1000);
+  //      const packageDate = nextWeekDate.toISOString();
+
+  // console.log(packageDate)
+
   if (!lat && !long) {
     const long = user.location.coordinates[0];
     const lat = user.location.coordinates[1];
@@ -67,7 +66,9 @@ const getUsers = async (userId, lat, long) => {
         },
       },
       isDeleted: false,
-    }).lean();
+    })
+      .lean()
+      .sort({ isBosted: 1 });
     users.forEach(async (element) => {
       const long = user.location.coordinates[0];
       const lat = user.location.coordinates[1];
@@ -82,6 +83,43 @@ const getUsers = async (userId, lat, long) => {
       );
       element.distance = distance;
     });
+    const count = user.swipeCount - 10;
+    await User.findOneAndUpdate(
+      { _id: userId, isDeleted: false },
+      { swipeCount: count },
+      { new: true }
+    );
+    const date = new Date();
+    console.log(date);
+    if (user.swipeDate <= date) {
+      const currentDate = new Date();
+      currentDate.setDate(currentDate.getDate() + 1);
+      const tomorrowISOString = currentDate.toISOString();
+      if (user.packages == "Freemium") {
+        const date = await User.findOneAndUpdate(
+          { _id: userId, isDeleted: false },
+          { swipeDate: tomorrowISOString, swipeCount: 60 }
+        );
+      }
+      if (user.packages == "Silver") {
+        const date = await User.findOneAndUpdate(
+          { _id: userId, isDeleted: false },
+          { swipeDate: tomorrowISOString, swipeCount: 210 }
+        );
+      }
+      if (user.packages == "Gold") {
+        const date = await User.findOneAndUpdate(
+          { _id: userId, isDeleted: false },
+          { swipeDate: tomorrowISOString, swipeCount: 510 }
+        );
+      }
+      if (user.packages == "Platinum") {
+        const date = await User.findOneAndUpdate(
+          { _id: userId, isDeleted: false },
+          { swipeDate: tomorrowISOString, swipeCount: 5000000000000000 }
+        );
+      }
+    }
     return users;
   }
 
@@ -113,7 +151,7 @@ const getUsers = async (userId, lat, long) => {
       },
     },
     isDeleted: false,
-  });
+  }).lean();
   users.forEach(async (element) => {
     const lon1 = element.location.coordinates[0];
     const lat1 = element.location.coordinates[1];
@@ -126,6 +164,36 @@ const getUsers = async (userId, lat, long) => {
     );
     element.distance = distance;
   });
+  const date = new Date();
+  if (user.swipeDate <= date) {
+    const currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() + 1);
+    const tomorrowISOString = currentDate.toISOString();
+    if (user.packages == "Freemium") {
+      const date = await User.findOneAndUpdate(
+        { _id: userId, isDeleted: false },
+        { swipeDate: tomorrowISOString, swipeCount: 60 }
+      );
+    }
+    if (user.packages == "Silver") {
+      const date = await User.findOneAndUpdate(
+        { _id: userId, isDeleted: false },
+        { swipeDate: tomorrowISOString, swipeCount: 210 }
+      );
+    }
+    if (user.packages == "Gold") {
+      const date = await User.findOneAndUpdate(
+        { _id: userId, isDeleted: false },
+        { swipeDate: tomorrowISOString, swipeCount: 510 }
+      );
+    }
+    if (user.packages == "Platinum") {
+      const date = await User.findOneAndUpdate(
+        { _id: userId, isDeleted: false },
+        { swipeDate: tomorrowISOString, swipeCount: 5000000000000000 }
+      );
+    }
+  }
   return users;
 };
 const filter = async (distance, minAge, maxAge, userId) => {
@@ -160,8 +228,15 @@ const likeAndDislike = async (type, id, userId) => {
       ERROR_MESSAGES.USER_NOT_FOUND
     );
   }
+
   if (type == "Like") {
     const user = await User.findOne({ _id: userId, isDeleted: false });
+    if (user.swipeCount <= 0) {
+      throw new OperationalError(
+        STATUS_CODES.TOO_MANY_REQUESTS,
+        ERROR_MESSAGES.LIMIT
+      );
+    }
     if (JSON.stringify(user.likes).includes(id)) {
       await User.findOneAndUpdate(
         { _id: userId, isDeleted: false },
@@ -267,8 +342,6 @@ const notification = async (page, limit, Id) => {
 };
 const conversation = async (page, limit, userId) => {
   const skip = page * limit;
-  // const user = await User.findOne({_id:userId,isDeleted:false});
-  // console.log(user)
   const data = await Conversation.find({
     $or: [{ sender: userId }, { receiver: userId }],
     isDeleted: false,
@@ -295,6 +368,51 @@ const conversation = async (page, limit, userId) => {
     return [];
   }
 };
+const checkOut = async (userId, packageType, packageAmount, plan) => {
+  const user = await User.findOne({ _id: userId, isDeleted: false }).lean();
+  if (user.isTrail == true) {
+    const todayDate = new Date();
+    const nextThreeDayDate = new Date(
+      todayDate.getTime() + 3 * 24 * 60 * 60 * 1000
+    );
+    const threeDayDate = nextThreeDayDate.toISOString();
+
+    var packageDate;
+    if (plan == "Weekly") {
+      const currentDate = new Date();
+      const nextWeekDate = new Date(
+        currentDate.getTime() + 7 * 24 * 60 * 60 * 1000
+      );
+      packageDate = nextWeekDate.toISOString();
+    }
+    if (plan == "Monthly") {
+      const currentDate = new Date();
+      const nextWeekDate = new Date(
+        currentDate.getTime() + 28 * 24 * 60 * 60 * 1000
+      );
+      packageDate = nextWeekDate.toISOString();
+    }
+    if (plan == "Annualy") {
+      const currentDate = new Date();
+      const nextWeekDate = new Date(
+        currentDate.getTime() + 365 * 24 * 60 * 60 * 1000
+      );
+      packageDate = nextWeekDate.toISOString();
+    }
+    // console.log(formattedDate);
+    const data = await User.findOneAndUpdate(
+      { _id: userId, isDeleted: false },
+      {
+        trailDate: threeDayDate,
+        packageDate: packageDate,
+        packages: packageType,
+        packageAmount: packageAmount,
+        plan: plan,
+      },
+      { new: true }
+    );
+  }
+};
 module.exports = {
   getUsers,
   filter,
@@ -302,4 +420,5 @@ module.exports = {
   likeAndDislike,
   notification,
   conversation,
+  checkOut,
 };

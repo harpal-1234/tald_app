@@ -19,6 +19,7 @@ const {
   POLITICALS_VIEWS,
   NOTIFICATION_STATUS,
   PLANS,
+  PLAN,
 } = require("../config/appConstants");
 // const { address } = require("./commonField.models");
 const { string } = require("joi");
@@ -85,11 +86,15 @@ const userSchema = mongoose.Schema(
       enum: [...Object.values(PLANS)],
       default: PLANS.FREEMIUM,
     },
-    packages: { type: Date },
+    packageDate: { type: Date },
+    packageAmount: { type: Number },
+    plan:{type:String,enum: [...Object.values(PLAN)],},
+    trailDate:{type:String},
     gifts: { type: Number, default: 0 },
     giftDate: { type: Date },
-    profileBoast: { type: Boolean, default: false },
     boastDate: { type: Date },
+    swipeCount: { type: Number, default: 60 },
+    swipeDate: { type: Date },
     notifications: [
       {
         notificationId: {
@@ -98,6 +103,9 @@ const userSchema = mongoose.Schema(
         },
       },
     ],
+    isTrail:{type:Boolean,default:true},
+    isBoasted:{type:Boolean,default:false},
+    isPayment:{type:Boolean,default:false}
   },
   {
     timestamps: true,
