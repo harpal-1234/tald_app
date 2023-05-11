@@ -64,6 +64,7 @@ const userSchema = mongoose.Schema(
     sendRequests: [{ type: mongoose.SchemaTypes.ObjectId, ref: "user" }],
     matches: [{ type: mongoose.SchemaTypes.ObjectId, ref: "user" }],
     dislikes: [{ type: mongoose.SchemaTypes.ObjectId, ref: "user" }],
+    rewind: [{ type: mongoose.SchemaTypes.ObjectId, ref: "user" }],
     socialId: { type: String },
     isNotification: {
       type: String,
@@ -88,13 +89,13 @@ const userSchema = mongoose.Schema(
     },
     packageDate: { type: Date },
     packageAmount: { type: Number },
-    plan:{type:String,enum: [...Object.values(PLAN)],},
-    trailDate:{type:String},
+    plan: { type: String, enum: [...Object.values(PLAN)] },
+    trailDate: { type: String },
     gifts: { type: Number, default: 0 },
     giftDate: { type: Date },
     boastDate: { type: Date },
     swipeCount: { type: Number, default: 60 },
-    swipeDate: { type: Date },
+    swipeDate: { type: Date,default:"" },
     notifications: [
       {
         notificationId: {
@@ -103,9 +104,10 @@ const userSchema = mongoose.Schema(
         },
       },
     ],
-    isTrail:{type:Boolean,default:true},
-    isBoasted:{type:Boolean,default:false},
-    isPayment:{type:Boolean,default:false}
+    isTrail: { type: Boolean, default: true },
+    isActiveTrail:{type:Boolean,default:false},
+    isBoasted: { type: Boolean, default: false },
+    isPayment: { type: Boolean, default: false },
   },
   {
     timestamps: true,

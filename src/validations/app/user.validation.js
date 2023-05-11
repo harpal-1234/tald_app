@@ -33,3 +33,10 @@ exports.notifications = {
     limit : Joi.number().required(),
   })
 };
+exports.checkOut = {
+  body: Joi.object().keys({
+    packageType : Joi.string().required().valid("Silver","Gold","Platinum"),
+    packageAmount : Joi.string().required().allow(null,""),
+    plan:Joi.string().required().valid("Weekly","Monthly","Anualy")
+  })
+};

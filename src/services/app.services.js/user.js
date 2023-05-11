@@ -91,7 +91,7 @@ const getUsers = async (userId, lat, long) => {
     );
     const date = new Date();
     console.log(date);
-    if (user.swipeDate <= date) {
+    if (user.swipeDate <= date || !user.swipeDate) {
       const currentDate = new Date();
       currentDate.setDate(currentDate.getDate() + 1);
       const tomorrowISOString = currentDate.toISOString();
@@ -119,6 +119,13 @@ const getUsers = async (userId, lat, long) => {
           { swipeDate: tomorrowISOString, swipeCount: 5000000000000000 }
         );
       }
+      const data = await User.findOne({ _id: userId, isDeleted: false });
+      const swipeCount = data.swipeCount - 10;
+      await User.findOneAndUpdate(
+        { _id: userId, isDeleted: false },
+        { swipeCount: swipeCount },
+        { new: true }
+      );
     }
     return users;
   }
@@ -165,7 +172,7 @@ const getUsers = async (userId, lat, long) => {
     element.distance = distance;
   });
   const date = new Date();
-  if (user.swipeDate <= date) {
+  if (user.swipeDate <= date || !user.swipeDate) {
     const currentDate = new Date();
     currentDate.setDate(currentDate.getDate() + 1);
     const tomorrowISOString = currentDate.toISOString();
@@ -193,7 +200,15 @@ const getUsers = async (userId, lat, long) => {
         { swipeDate: tomorrowISOString, swipeCount: 5000000000000000 }
       );
     }
+    const data = await User.findOne({ _id: userId, isDeleted: false });
+    const swipeCount = data.swipeCount - 10;
+    await User.findOneAndUpdate(
+      { _id: userId, isDeleted: false },
+      { swipeCount: swipeCount },
+      { new: true }
+    );
   }
+
   return users;
 };
 const filter = async (distance, minAge, maxAge, userId) => {
@@ -311,7 +326,7 @@ const likeAndDislike = async (type, id, userId) => {
   if (type == "Dislike") {
     await User.findOneAndUpdate(
       { _id: userId, isDeleted: false },
-      { $push: { dislikes: id } },
+      { $push: { dislikes: id, rewind: { $each: [id], $position: 0 } } },
       { new: true }
     );
     // await User.findOneAndUpdate(
@@ -371,12 +386,50 @@ const conversation = async (page, limit, userId) => {
 const checkOut = async (userId, packageType, packageAmount, plan) => {
   const user = await User.findOne({ _id: userId, isDeleted: false }).lean();
   if (user.isTrail == true) {
-    const todayDate = new Date();
-    const nextThreeDayDate = new Date(
-      todayDate.getTime() + 3 * 24 * 60 * 60 * 1000
-    );
-    const threeDayDate = nextThreeDayDate.toISOString();
-
+    const date = new Date();
+    if (user.isActiveTrail == false) {
+      const currentDate = new Date();
+      const tomorrowDate = new Date(
+        currentDate.getTime() + 1 * 24 * 60 * 60 * 1000
+      );
+      const swipeDate = tomorrowDate.toISOString();
+      var count;
+      if (packageType == "Silver") {
+        count = 210;
+      }
+      if (packageType == "Gold") {
+        count = 510;
+      }
+      if (packageType == "Platinum") {
+        count = 5000000000000000;
+      }
+      const todayDate = new Date();
+      const nextThreeDayDate = new Date(
+        todayDate.getTime() + 3 * 24 * 60 * 60 * 1000
+      );
+      const threeDayDate = nextThreeDayDate.toISOString();
+      await User.findOneAndUpdate(
+        { _id: userId, isDeleted: false },
+        {
+          trailDate: threeDayDate,
+          //packageDate: packageDate,
+          packages: packageType,
+          swipeCount: count,
+          swipeDate: swipeDate,
+          // packageAmount: packageAmount,
+          isActiveTrail: true,
+          plan: plan,
+        },
+        { new: true }
+      );
+    }
+    if (user.trailDate < date) {
+      await User.findOneAndUpdate(
+        { _id: userId, isDeleted: false },
+        { isTrail: false }
+      );
+    }
+  } else {
     var packageDate;
     if (plan == "Weekly") {
       const currentDate = new Date();
@@ -400,10 +453,13 @@ const checkOut = async (userId, packageType, packageAmount, plan) => {
       packageDate = nextWeekDate.toISOString();
     }
     // console.log(formattedDate);
+    const currentDate = new Date();
+    const tomorrowDate = new Date(
+      currentDate.getTime() + 7 * 24 * 60 * 60 * 1000
+    );
     const data = await User.findOneAndUpdate(
       { _id: userId, isDeleted: false },
       {
-        trailDate: threeDayDate,
         packageDate: packageDate,
         packages: packageType,
         packageAmount: packageAmount,
@@ -411,6 +467,13 @@ const checkOut = async (userId, packageType, packageAmount, plan) => {
       },
       { new: true }
     );
+  }
+};
+const rewind = async (userId, page, limit) => {
+  const skip = page * limit;
+  const user = await User.findOne({ _id: userId, isDeleted: false });
+  if(user.packages == "Silver" || user.packages == "Gold"){
+    
   }
 };
 module.exports = {
@@ -421,4 +484,5 @@ module.exports = {
   notification,
   conversation,
   checkOut,
+  rewind
 };

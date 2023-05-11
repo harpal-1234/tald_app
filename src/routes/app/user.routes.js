@@ -43,4 +43,10 @@ router.get(
   validate(userValidation.notifications),
   userController.conversation
 );
+router.post(
+  "/checkout",
+  auth(USER_TYPE.USER),
+  validate(userValidation.checkOut),
+  userController.checkOut
+);
 module.exports = router;

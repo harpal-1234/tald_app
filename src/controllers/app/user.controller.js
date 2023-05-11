@@ -97,6 +97,37 @@ const conversation = catchAsync(async (req, res) => {
     //user.phoneNumber
   );
 });
+const checkOut = catchAsync(async (req, res) => {
+  const { packageType, packageAmount, plan } = req.body;
+  const userId = req.token.user._id;
+  const data = await appServices.checkOut(
+    userId,
+    packageType,
+    packageAmount,
+    plan
+  );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+    //user.phoneNumber
+  );
+});
+const rewind = catchAsync(async (req, res) => {
+  const { page, limit } = req.body;
+  const userId = req.token.user._id;
+  const data = await appServices.rewind(userId, page, limit);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+    //user.phoneNumber
+  );
+});
 module.exports = {
   getUser,
   filter,
@@ -104,4 +135,6 @@ module.exports = {
   likeAndDislike,
   notification,
   conversation,
+  checkOut,
+  rewind,
 };
