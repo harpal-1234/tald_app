@@ -40,3 +40,9 @@ exports.checkOut = {
     plan:Joi.string().required().valid("Weekly","Monthly","Anualy")
   })
 };
+exports.rewind = {
+  query: Joi.object().keys({
+    page : Joi.number().required(),
+    limit : Joi.number().required(),
+  })
+};

@@ -49,4 +49,10 @@ router.post(
   validate(userValidation.checkOut),
   userController.checkOut
 );
+router.get(
+  "/rewind",
+  auth(USER_TYPE.USER),
+  validate(userValidation.rewind),
+  userController.rewind
+);
 module.exports = router;

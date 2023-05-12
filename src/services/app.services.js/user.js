@@ -90,7 +90,7 @@ const getUsers = async (userId, lat, long) => {
       { new: true }
     );
     const date = new Date();
-    console.log(date);
+
     if (user.swipeDate <= date || !user.swipeDate) {
       const currentDate = new Date();
       currentDate.setDate(currentDate.getDate() + 1);
@@ -126,6 +126,31 @@ const getUsers = async (userId, lat, long) => {
         { swipeCount: swipeCount },
         { new: true }
       );
+    }
+    if (user.boastDate < date) {
+      const val = await User.findOneAndUpdate(
+        { _id: userId, isDeleted: false },
+        { isBoasted: false }
+      );
+    }
+    if (user.giftDate < date) {
+      const currentDate1 = new Date();
+      const nextWeekDate = new Date(
+        currentDate1.getTime() + 7 * 24 * 60 * 60 * 1000
+      );
+      const giftDate = nextWeekDate.toISOString();
+      if (user.packages == "Silver" || user.packages == "Gold") {
+        const val = await User.findOneAndUpdate(
+          { _id: userId, isDeleted: false },
+          { giftDate: giftDate, gifts: user.packages == "Silvre" ? 3 : 5 }
+        );
+      }
+      if (user.packages == "Platinum") {
+        const val = await User.findOneAndUpdate(
+          { _id: userId, isDeleted: false },
+          { giftDate: giftDate, gifts: 15 }
+        );
+      }
     }
     return users;
   }
@@ -208,7 +233,31 @@ const getUsers = async (userId, lat, long) => {
       { new: true }
     );
   }
-
+  if (user.boastDate < date) {
+    const val = await User.findOneAndUpdate(
+      { _id: userId, isDeleted: false },
+      { isBoasted: false }
+    );
+  }
+  if (user.giftDate < date) {
+    const currentDate1 = new Date();
+    const nextWeekDate = new Date(
+      currentDate1.getTime() + 7 * 24 * 60 * 60 * 1000
+    );
+    const giftDate = nextWeekDate.toISOString();
+    if (user.packages == "Silver" || user.packages == "Gold") {
+      const val = await User.findOneAndUpdate(
+        { _id: userId, isDeleted: false },
+        { giftDate: giftDate, gifts: user.packages == "Silvre" ? 3 : 5 }
+      );
+    }
+    if (user.packages == "Platinum") {
+      const val = await User.findOneAndUpdate(
+        { _id: userId, isDeleted: false },
+        { giftDate: giftDate, gifts: 15 }
+      );
+    }
+  }
   return users;
 };
 const filter = async (distance, minAge, maxAge, userId) => {
@@ -431,6 +480,38 @@ const checkOut = async (userId, packageType, packageAmount, plan) => {
     }
   } else {
     var packageDate;
+    var boastDate;
+    var count;
+    const currentDate1 = new Date();
+    const nextWeekDate = new Date(
+      currentDate1.getTime() + 7 * 24 * 60 * 60 * 1000
+    );
+    const giftDate = nextWeekDate.toISOString();
+    if (packageType == "Gold" || packageType == "Platinum") {
+      const currentDate = new Date();
+      const twoDayAgo = new Date(
+        currentDate.getTime() + 2 * 24 * 60 * 60 * 1000
+      );
+      const fiveDayAgo = new Date(
+        currentDate.getTime() + 5 * 24 * 60 * 60 * 1000
+      );
+      boastDate =
+        packageType == "Gold"
+          ? twoDayAgo.toISOString()
+          : fiveDayAgo.toISOString();
+    }
+    if (packageType == "Silver") {
+      giftCount = 3;
+      count = 210;
+    }
+    if (packageType == "Gold") {
+      giftCount = 5;
+      count = 510;
+    }
+    if (packageType == "Platinum") {
+      giftCount = 15;
+      count = 50000000000000;
+    }
     if (plan == "Weekly") {
       const currentDate = new Date();
       const nextWeekDate = new Date(
@@ -440,23 +521,24 @@ const checkOut = async (userId, packageType, packageAmount, plan) => {
     }
     if (plan == "Monthly") {
       const currentDate = new Date();
-      const nextWeekDate = new Date(
+      const nextMonthDate = new Date(
         currentDate.getTime() + 28 * 24 * 60 * 60 * 1000
       );
-      packageDate = nextWeekDate.toISOString();
+      packageDate = nextMonthDate.toISOString();
     }
     if (plan == "Annualy") {
       const currentDate = new Date();
-      const nextWeekDate = new Date(
+      const nextYearDate = new Date(
         currentDate.getTime() + 365 * 24 * 60 * 60 * 1000
       );
-      packageDate = nextWeekDate.toISOString();
+      packageDate = nextYearDate.toISOString();
     }
     // console.log(formattedDate);
     const currentDate = new Date();
     const tomorrowDate = new Date(
-      currentDate.getTime() + 7 * 24 * 60 * 60 * 1000
+      currentDate.getTime() + 1 * 24 * 60 * 60 * 1000
     );
+    const swipeDate = tomorrowDate.toISOString();
     const data = await User.findOneAndUpdate(
       { _id: userId, isDeleted: false },
       {
@@ -464,6 +546,12 @@ const checkOut = async (userId, packageType, packageAmount, plan) => {
         packages: packageType,
         packageAmount: packageAmount,
         plan: plan,
+        isBoasted: !boastDate ? false : true,
+        boastDate: boastDate,
+        swipeCount: count,
+        giftCount: giftCount,
+        giftDate: giftDate,
+        swipeDate: swipeDate,
       },
       { new: true }
     );
@@ -471,9 +559,24 @@ const checkOut = async (userId, packageType, packageAmount, plan) => {
 };
 const rewind = async (userId, page, limit) => {
   const skip = page * limit;
-  const user = await User.findOne({ _id: userId, isDeleted: false });
-  if(user.packages == "Silver" || user.packages == "Gold"){
-    
+  const check = await User.findOne({ _id: userId, isDeleted: false });
+  const user = await User.findOne(
+    { _id: userId, isDeleted: false },
+    { rewind: { $slice: [skip, limit] } }
+  )
+    .populate({ path: "rewind" })
+    .lean();
+  if (
+    check.packages == "Silver" ||
+    check.packages == "Gold" ||
+    check.packages == "Platinum"
+  ) {
+    return user.rewind;
+  } else {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.UPGRATE
+    );
   }
 };
 module.exports = {
@@ -484,5 +587,5 @@ module.exports = {
   notification,
   conversation,
   checkOut,
-  rewind
+  rewind,
 };

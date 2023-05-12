@@ -116,7 +116,7 @@ const checkOut = catchAsync(async (req, res) => {
   );
 });
 const rewind = catchAsync(async (req, res) => {
-  const { page, limit } = req.body;
+  const { page, limit } = req.query;
   const userId = req.token.user._id;
   const data = await appServices.rewind(userId, page, limit);
   return successResponse(
