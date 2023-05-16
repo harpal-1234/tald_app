@@ -36,7 +36,7 @@ router.post(
 router.get(
   "/getGroup",
   auth(USER_TYPE.ADMIN),
-  //validate(authValidation.createGroup),
+  validate(authValidation.getGroup),
   authController.getGroup
 );
 router.get(

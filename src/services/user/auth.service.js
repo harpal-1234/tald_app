@@ -317,6 +317,10 @@ const pushNotification = async (userId) => {
   }
   return "Enable";
 };
+const publickKey = async(publickKey,userId)=>{
+  const user = await User.findOne({_id:userId,isDeleted:false});
+
+}
 // const app_key_provider = {
 //   getToken() {
 //     return config.onesignal_api_key;
@@ -355,6 +359,7 @@ module.exports = {
   getUserById,
   createUserNumber,
   verifyOtp,
+  publickKey
 };
 
 // if (socialId) {

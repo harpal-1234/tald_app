@@ -95,7 +95,7 @@ const userSchema = mongoose.Schema(
     giftDate: { type: Date },
     boastDate: { type: Date },
     swipeCount: { type: Number, default: 60 },
-    swipeDate: { type: Date,default:"" },
+    swipeDate: { type: Date, default: "" },
     notifications: [
       {
         notificationId: {
@@ -104,8 +104,9 @@ const userSchema = mongoose.Schema(
         },
       },
     ],
+
     isTrail: { type: Boolean, default: true },
-    isActiveTrail:{type:Boolean,default:false},
+    isActiveTrail: { type: Boolean, default: false },
     isBoasted: { type: Boolean, default: false },
     isPayment: { type: Boolean, default: false },
   },

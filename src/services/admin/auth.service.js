@@ -36,9 +36,9 @@ const changePassword = async (adminId, oldPassword, newPassword) => {
 
 const dashBoard = async (adminId) => {
   const users = await User.countDocuments({ isDeleted: false });
-  const groups = await Group.countDocuments({isDeleted:false});
+  const groups = await Group.countDocuments({ isDeleted: false });
   const revenue = 0;
-  return {users,groups,revenue}
+  return { users, groups, revenue };
 };
 
 const adminLogout = async (tokenId) => {
@@ -59,12 +59,42 @@ const createGroup = async (data) => {
   const group = await Group.create(data);
   return group;
 };
-const getGroup = async () => {
-  const group = await Group.find({ isDeleted: false }).lean();
+const getGroup = async (page,limit,search) => {
+  const skip = page * limit
+  if (search) {
+    const group = await Group.find({
+      isDeleted: false,
+      $or: [
+        { groupName: { $regex: new RegExp(search, "i") } },
+        // { phoneNumber: { $regex: new RegExp(search, "i") } },
+        // { profession: { $regex: new RegExp(search, "i") } },
+      ],
+    })
+      .lean()
+      .skip(skip)
+      .limit(limit);
+    const totalGroups = await Group.countDocuments({
+      isDeleted: false,
+      $or: [
+        { groupName: { $regex: new RegExp(search, "i") } },
+        // { phoneNumber: { $regex: new RegExp(search, "i") } },
+        // { profession: { $regex: new RegExp(search, "i") } },
+      ],
+    });
+    group.forEach((val) => {
+      val.totalMemeber = val.groupMember.length;
+    });
+    return { group, totalGroups };
+  }
+  const group = await Group.find({ isDeleted: false })
+    .lean()
+    .skip(skip)
+    .limit(limit);
+  const totalGroups = await Group.countDocuments({ isDeleted: false });
   group.forEach((val) => {
     val.totalMemeber = val.groupMember.length;
   });
-  return group;
+  return { group, totalGroups };
 };
 const getUser = async (page, limit, search) => {
   const skip = page * limit;

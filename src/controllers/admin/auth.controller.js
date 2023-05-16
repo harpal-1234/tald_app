@@ -13,8 +13,7 @@ const adminLogin = catchAsync(async (req, res) => {
   const token = await tokenService.generateAuthToken(
     admin,
     "",
-    USER_TYPE.ADMIN,
-    
+    USER_TYPE.ADMIN
   );
   return successResponse(
     req,
@@ -67,7 +66,8 @@ const createGroup = catchAsync(async (req, res) => {
   );
 });
 const getGroup = catchAsync(async (req, res) => {
-  const group = await adminService.getGroup();
+  const { page, limit, search } = req.query;
+  const group = await adminService.getGroup(page, limit, search);
   return successResponse(
     req,
     res,
@@ -77,8 +77,8 @@ const getGroup = catchAsync(async (req, res) => {
   );
 });
 const getUser = catchAsync(async (req, res) => {
-  const {page,limit,search}=req.query
-  const user = await adminService.getUser(page,limit,search);
+  const { page, limit, search } = req.query;
+  const user = await adminService.getUser(page, limit, search);
   return successResponse(
     req,
     res,
@@ -88,7 +88,7 @@ const getUser = catchAsync(async (req, res) => {
   );
 });
 const userAction = catchAsync(async (req, res) => {
-  const {userId}=req.body
+  const { userId } = req.body;
   const user = await adminService.userActions(userId);
   return successResponse(
     req,
@@ -99,7 +99,7 @@ const userAction = catchAsync(async (req, res) => {
   );
 });
 const userDelete = catchAsync(async (req, res) => {
-  const {userId}=req.body
+  const { userId } = req.body;
   const user = await adminService.userDelete(userId);
   return successResponse(
     req,
@@ -110,7 +110,7 @@ const userDelete = catchAsync(async (req, res) => {
   );
 });
 const deleteGroup = catchAsync(async (req, res) => {
-  const {groupId}=req.body
+  const { groupId } = req.body;
   const user = await adminService.groupDelete(groupId);
   return successResponse(
     req,
@@ -121,7 +121,7 @@ const deleteGroup = catchAsync(async (req, res) => {
   );
 });
 const dashboard = catchAsync(async (req, res) => {
- // const {groupId}=req.body
+  // const {groupId}=req.body
   const user = await adminService.dashBoard();
   return successResponse(
     req,
@@ -142,5 +142,5 @@ module.exports = {
   userAction,
   userDelete,
   deleteGroup,
-  dashboard
+  dashboard,
 };

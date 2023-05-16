@@ -21,6 +21,13 @@ exports.createGroup = {
     image: Joi.string().required(),
   }),
 };
+exports.getGroup = {
+  query: Joi.object().keys({
+    page: Joi.number().required(),
+    limit: Joi.number().required(),
+    search: Joi.string().required().allow(null, ""),
+  }),
+};
 exports.getUser = {
   query: Joi.object().keys({
     page: Joi.number().required(),
