@@ -379,7 +379,8 @@ const ERROR_MESSAGES = {
   PHONE_NOT_EXIST: "This phone number not exist please signUp",
   DOES_NOT_EXIST: "Data does not exist",
   LIMIT: "You have exhausted your daily limit for swiping",
-  UPGRATE:"Please upgrate your account"
+  UPGRATE: "Please upgrate your account",
+  GROUP_NOT_EXIST: "This group does not exist",
 };
 
 const STATUS_CODES = {
@@ -464,7 +465,7 @@ module.exports = {
   DISTANCE,
   MESSAGE_TYPE,
   PLANS,
-  PLAN
+  PLAN,
 };
 
 // SPA: "spa",

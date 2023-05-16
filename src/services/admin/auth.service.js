@@ -35,24 +35,10 @@ const changePassword = async (adminId, oldPassword, newPassword) => {
 };
 
 const dashBoard = async (adminId) => {
-  console.log(adminId);
-  const admin = await Admin.findOne();
-  console.log(admin);
-  const totalUser = await User.countDocuments({
-    type: "User",
-    isDeleted: false,
-  });
-  const totalVendor = await User.countDocuments({
-    type: "Vendor",
-    isDeleted: false,
-  });
-  const data = [
-    { title1: "Total Banners", data1: admin.orders.length },
-    { title2: "Total Revanue", data2: admin.totalRevanue },
-    { title3: "Total Users", data3: totalUser },
-    { title4: "Total Vendors", data4: totalVendor },
-  ];
-  return data;
+  const users = await User.countDocuments({ isDeleted: false });
+  const groups = await Group.countDocuments({isDeleted:false});
+  const revenue = 0;
+  return {users,groups,revenue}
 };
 
 const adminLogout = async (tokenId) => {
@@ -94,26 +80,75 @@ const getUser = async (page, limit, search) => {
       .lean()
       .skip(skip)
       .limit(limit);
-      const total = await User.countDocuments({
-        isDeleted: false,
-        $or: [
-          { name: { $regex: new RegExp(search, "i") } },
-          { phoneNumber: { $regex: new RegExp(search, "i") } },
-          { profession: { $regex: new RegExp(search, "i") } },
-        ],
-      })
-        .lean();
-      return{users,total}
+    const total = await User.countDocuments({
+      isDeleted: false,
+      $or: [
+        { name: { $regex: new RegExp(search, "i") } },
+        { phoneNumber: { $regex: new RegExp(search, "i") } },
+        { profession: { $regex: new RegExp(search, "i") } },
+      ],
+    }).lean();
+    return { users, total };
   }
   const users = await User.find({ isDeleted: false })
     .lean()
     .skip(skip)
     .limit(limit);
-    const total = await User.countDocuments({ isDeleted: false })
-    .lean();
+  const total = await User.countDocuments({ isDeleted: false }).lean();
 
+  return { users, total };
+};
+const userActions = async (userId) => {
+  const check = await User.findOne({ _id: userId, isDeleted: false });
+  if (!check) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.USER_NOT_FOUND
+    );
+  }
+  if (check.isBlocked) {
+    const user = await User.findOneAndUpdate(
+      { _id: userId },
+      { isBlocked: false }
+    );
+    return "User unBlocked successfully";
+  } else {
+    const user = await User.findOneAndUpdate(
+      { _id: userId },
+      { isBlocked: true }
+    );
+    return "User Blocked successfully";
+  }
+};
+const userDelete = async (userId) => {
+  const check = await User.findOne({ _id: userId, isDeleted: false });
+  if (!check) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.USER_NOT_FOUND
+    );
+  }
 
-    return{users,total}
+  const user = await User.findOneAndUpdate(
+    { _id: userId },
+    { isDeleted: true }
+  );
+  return "User deleted successfully";
+};
+const groupDelete = async (groupId) => {
+  const check = await Group.findOne({ _id: groupId, isDeleted: false });
+  if (!check) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.GROUP_NOT_EXIST
+    );
+  }
+
+  const user = await Group.findOneAndUpdate(
+    { _id: groupId },
+    { isDeleted: true }
+  );
+  return "Group deleted successfully";
 };
 module.exports = {
   adminLogin,
@@ -123,4 +158,7 @@ module.exports = {
   createGroup,
   getGroup,
   getUser,
+  userActions,
+  userDelete,
+  groupDelete,
 };

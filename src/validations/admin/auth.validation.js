@@ -28,3 +28,13 @@ exports.getUser = {
     search: Joi.string().required().allow(null, ""),
   }),
 };
+exports.userAction = {
+  body: Joi.object().keys({
+    userId: Joi.string().required(),
+  }),
+};
+exports.deleteGroup = {
+  body: Joi.object().keys({
+    groupId: Joi.string().required(),
+  }),
+};

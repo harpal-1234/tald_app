@@ -87,6 +87,50 @@ const getUser = catchAsync(async (req, res) => {
     user
   );
 });
+const userAction = catchAsync(async (req, res) => {
+  const {userId}=req.body
+  const user = await adminService.userActions(userId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    user
+  );
+});
+const userDelete = catchAsync(async (req, res) => {
+  const {userId}=req.body
+  const user = await adminService.userDelete(userId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    user
+  );
+});
+const deleteGroup = catchAsync(async (req, res) => {
+  const {groupId}=req.body
+  const user = await adminService.groupDelete(groupId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    user
+  );
+});
+const dashboard = catchAsync(async (req, res) => {
+ // const {groupId}=req.body
+  const user = await adminService.dashBoard();
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    user
+  );
+});
 module.exports = {
   adminLogin,
   changePassword,
@@ -94,5 +138,9 @@ module.exports = {
   adminLogout,
   createGroup,
   getGroup,
-  getUser
+  getUser,
+  userAction,
+  userDelete,
+  deleteGroup,
+  dashboard
 };

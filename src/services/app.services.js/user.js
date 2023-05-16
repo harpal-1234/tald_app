@@ -169,7 +169,7 @@ const getUsers = async (userId, lat, long) => {
     pets: { $in: user.pets },
     lifeStyles: { $in: user.lifeStyles },
     drugUsages: { $in: user.drugUsages },
-    hobbiesAndInterests: { $in: user.hobbiesAndInterests },
+    hobbiesAndInterests: { $in: user.hobbiesAndInterests }, 
     lookingFor: { $in: user.lookingFor },
     location: {
       $near: {
