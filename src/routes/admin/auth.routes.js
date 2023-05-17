@@ -69,4 +69,10 @@ router.get(
   //validate(authValidation.deleteGroup),
   authController.dashBoard
 );
+router.get(
+  "/allUser",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.allUser),
+  authController.allUser
+);
 module.exports = router;

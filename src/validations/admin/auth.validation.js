@@ -35,6 +35,11 @@ exports.getUser = {
     search: Joi.string().required().allow(null, ""),
   }),
 };
+exports.allUser = {
+  query: Joi.object().keys({
+    search: Joi.string().required().allow(null, ""),
+  }),
+};
 exports.userAction = {
   body: Joi.object().keys({
     userId: Joi.string().required(),

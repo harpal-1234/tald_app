@@ -87,6 +87,17 @@ const getUser = catchAsync(async (req, res) => {
     user
   );
 });
+const allUser = catchAsync(async (req, res) => {
+  const {search} = req.query;
+  const user = await adminService.allUser(search);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    user
+  );
+});
 const userAction = catchAsync(async (req, res) => {
   const { userId } = req.body;
   const user = await adminService.userActions(userId);
@@ -143,4 +154,5 @@ module.exports = {
   userDelete,
   deleteGroup,
   dashboard,
+  allUser
 };

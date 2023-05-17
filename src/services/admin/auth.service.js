@@ -128,6 +128,33 @@ const getUser = async (page, limit, search) => {
 
   return { users, total };
 };
+const allUser = async (search) => {
+  if (search) {
+    const users = await User.find({
+      isDeleted: false,
+      $or: [
+        { name: { $regex: new RegExp(search, "i") } },
+        { phoneNumber: { $regex: new RegExp(search, "i") } },
+        { profession: { $regex: new RegExp(search, "i") } },
+      ],
+    })
+      .lean()
+    const total = await User.countDocuments({
+      isDeleted: false,
+      $or: [
+        { name: { $regex: new RegExp(search, "i") } },
+        { phoneNumber: { $regex: new RegExp(search, "i") } },
+        { profession: { $regex: new RegExp(search, "i") } },
+      ],
+    }).lean();
+    return { users, total };
+  }
+  const users = await User.find({ isDeleted: false })
+    .lean()
+  const total = await User.countDocuments({ isDeleted: false }).lean();
+
+  return { users, total };
+};
 const userActions = async (userId) => {
   const check = await User.findOne({ _id: userId, isDeleted: false });
   if (!check) {
@@ -191,4 +218,5 @@ module.exports = {
   userActions,
   userDelete,
   groupDelete,
+  allUser
 };
