@@ -128,6 +128,28 @@ const rewind = catchAsync(async (req, res) => {
     //user.phoneNumber
   );
 });
+const check = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const data = await appServices.checkApp(userId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS
+  );
+});
+const oneUser = catchAsync(async (req, res) => {
+  const { userId } = req.query;
+  const Id = req.token.user._id;
+  const data = await appServices.oneUser(userId, Id);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+  );
+});
 module.exports = {
   getUser,
   filter,
@@ -137,4 +159,6 @@ module.exports = {
   conversation,
   checkOut,
   rewind,
+  check,
+  oneUser,
 };

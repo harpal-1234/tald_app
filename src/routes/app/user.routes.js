@@ -55,4 +55,16 @@ router.get(
   validate(userValidation.rewind),
   userController.rewind
 );
+router.post(
+  "/check",
+  auth(USER_TYPE.USER),
+  //validate(userValidation.checkOut),
+  userController.check
+);
+router.get(
+  "/viewUser",
+  auth(USER_TYPE.USER),
+  validate(userValidation.oneUser),
+  userController.oneUser
+);
 module.exports = router;

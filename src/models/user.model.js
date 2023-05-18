@@ -104,7 +104,11 @@ const userSchema = mongoose.Schema(
         },
       },
     ],
-
+    viewProfile: [
+      {
+        user: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+      },
+    ],
     isTrail: { type: Boolean, default: true },
     isActiveTrail: { type: Boolean, default: false },
     isBoasted: { type: Boolean, default: false },

@@ -58,7 +58,7 @@ const verifyCallback =
         return reject(
           new AuthFailedError(
             ERROR_MESSAGES.ACCOUNT_DELETED,
-            STATUS_CODES.ACTION_FAILED
+            STATUS_CODES.AUTH_FAILED
           )
         );
       }
@@ -66,7 +66,7 @@ const verifyCallback =
         return reject(
           new AuthFailedError(
             ERROR_MESSAGES.ACCOUNT_BLOCKED,
-            STATUS_CODES.ACTION_FAILED
+            STATUS_CODES.AUTH_FAILED
           )
         );
       }
@@ -77,7 +77,7 @@ const verifyCallback =
         return reject(
           new AuthFailedError(
             ERROR_MESSAGES.ACCOUNT_DELETED,
-            STATUS_CODES.ACTION_FAILED
+            STATUS_CODES.AUTH_FAILED
           )
         );
       }
@@ -85,7 +85,7 @@ const verifyCallback =
         return reject(
           new AuthFailedError(
             ERROR_MESSAGES.ACCOUNT_BLOCKED,
-            STATUS_CODES.ACTION_FAILED
+            STATUS_CODES.AUTH_FAILED
           )
         );
       }

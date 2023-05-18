@@ -59,8 +59,8 @@ const createGroup = async (data) => {
   const group = await Group.create(data);
   return group;
 };
-const getGroup = async (page,limit,search) => {
-  const skip = page * limit
+const getGroup = async (page, limit, search) => {
+  const skip = page * limit;
   if (search) {
     const group = await Group.find({
       isDeleted: false,
@@ -109,7 +109,8 @@ const getUser = async (page, limit, search) => {
     })
       .lean()
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
+      .sort({ _id: -1 });
     const total = await User.countDocuments({
       isDeleted: false,
       $or: [
@@ -117,14 +118,19 @@ const getUser = async (page, limit, search) => {
         { phoneNumber: { $regex: new RegExp(search, "i") } },
         { profession: { $regex: new RegExp(search, "i") } },
       ],
-    }).lean();
+    })
+      .lean()
+      .sort({ _id: -1 });
     return { users, total };
   }
   const users = await User.find({ isDeleted: false })
     .lean()
     .skip(skip)
-    .limit(limit);
-  const total = await User.countDocuments({ isDeleted: false }).lean();
+    .limit(limit)
+    .sort({ _id: -1 });
+  const total = await User.countDocuments({ isDeleted: false })
+    .lean()
+    .sort({ _id: -1 });
 
   return { users, total };
 };
@@ -139,6 +145,7 @@ const allUser = async (search) => {
       ],
     })
       .lean()
+      .sort({ _id: -1 });
     const total = await User.countDocuments({
       isDeleted: false,
       $or: [
@@ -146,12 +153,15 @@ const allUser = async (search) => {
         { phoneNumber: { $regex: new RegExp(search, "i") } },
         { profession: { $regex: new RegExp(search, "i") } },
       ],
-    }).lean();
+    })
+      .lean()
+      .sort({ _id: -1 });
     return { users, total };
   }
-  const users = await User.find({ isDeleted: false })
+  const users = await User.find({ isDeleted: false }).lean().sort({ _id: -1 });
+  const total = await User.countDocuments({ isDeleted: false })
     .lean()
-  const total = await User.countDocuments({ isDeleted: false }).lean();
+    .sort({ _id: -1 });
 
   return { users, total };
 };
@@ -218,5 +228,5 @@ module.exports = {
   userActions,
   userDelete,
   groupDelete,
-  allUser
+  allUser,
 };
