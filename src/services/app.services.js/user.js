@@ -577,6 +577,25 @@ const oneUser = async (userId, Id) => {
 
   return check;
 };
+const viewedProfile = async (page,limit,userId) => {
+  const skip = page * limit;
+  const check = await User.findOne({_id:userId,isDeleted:false}).lean();
+
+  const users = await User.findOne(
+    { _id: userId, isDeleted: false },
+    { notifications: { $slice: [skip, limit] } }
+  ).populate({
+    path: "viewProfile.user",
+  });
+ if(check.packages == "Gold" || check.packages == "Platinum"){
+  return users
+ }else{
+  throw new OperationalError(
+    STATUS_CODES.ACTION_FAILED,
+    ERROR_MESSAGES.UPGRATE
+  )
+ }
+};
 module.exports = {
   getUsers,
   filter,
@@ -588,4 +607,5 @@ module.exports = {
   rewind,
   checkApp,
   oneUser,
+  viewedProfile,
 };

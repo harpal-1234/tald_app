@@ -50,3 +50,9 @@ exports.oneUser = {
     userId: Joi.string().required(),
   }),
 };
+exports.profile = {
+  query: Joi.object().keys({
+    page: Joi.number().required(),
+    limit: Joi.number().required(),
+  }),
+};

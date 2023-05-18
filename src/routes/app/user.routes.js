@@ -67,4 +67,10 @@ router.get(
   validate(userValidation.oneUser),
   userController.oneUser
 );
+router.get(
+  "/viewedProfile",
+  auth(USER_TYPE.USER),
+  validate(userValidation.profile),
+  userController.viewedProfile
+);
 module.exports = router;

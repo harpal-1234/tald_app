@@ -150,6 +150,18 @@ const oneUser = catchAsync(async (req, res) => {
     data
   );
 });
+const viewedProfile = catchAsync(async (req, res) => {
+  const { page, limit } = req.query;
+  const Id = req.token.user._id;
+  const data = await appServices.viewedProfile(page, limit, Id);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+  );
+});
 module.exports = {
   getUser,
   filter,
@@ -161,4 +173,5 @@ module.exports = {
   rewind,
   check,
   oneUser,
+  viewedProfile
 };

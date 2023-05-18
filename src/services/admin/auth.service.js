@@ -217,6 +217,7 @@ const groupDelete = async (groupId) => {
   );
   return "Group deleted successfully";
 };
+
 module.exports = {
   adminLogin,
   changePassword,
