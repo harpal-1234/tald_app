@@ -48,7 +48,6 @@ const getUsers = async (userId, lat, long) => {
       politicalViews: user.politicalViews,
       sign: user.sign,
       age: { $gte: user.minAge, $lte: user.maxAge },
-      //sendRequests:{$nin:user.sendRequests},,
       prefrences: { $in: user.prefrences },
       pets: { $in: user.pets },
       lifeStyles: { $in: user.lifeStyles },
@@ -318,6 +317,15 @@ const notification = async (page, limit, Id) => {
 
   return data.notifications;
 };
+const oneNotification = async (Id) => {
+  const data = await Notification.findByIdAndUpdate(
+    { _id: Id, isDeleted: false },
+    { isSeen: true },
+    { new: true }
+  );
+
+  return data;
+};
 const conversation = async (page, limit, userId) => {
   const skip = page * limit;
   const data = await Conversation.find({
@@ -566,35 +574,54 @@ const oneUser = async (userId, Id) => {
       ERROR_MESSAGES.USER_NOT_FOUND
     );
   }
+  if (check.viewProfile) {
+    if (!JSON.stringify(check.viewProfile).includes(JSON.stringify(Id))) {
+      const user = await User.findOneAndUpdate(
+        { _id: userId, isDeleted: false },
+        { $push: { viewProfile: { user: Id } } },
+        { new: true }
+      );
 
-  if (!JSON.stringify(check.viewProfile).includes(JSON.stringify(Id))) {
-    const user = await User.findOneAndUpdate(
-      { _id: userId, isDeleted: false },
-      { $push: { viewProfile: { user: Id } } },
-      { new: true }
-    );
+      const notification = await Notification.create({
+        message: "Someone viewed your profile",
+        userId: Id,
+        type: "viewProfile",
+      });
+      const data = await User.findOneAndUpdate(
+        { _id: userId, isDeleted: false },
+        {
+          $push: {
+            notifications: {
+              $each: [{ notificationId: notification._id }],
+              $position: 0,
+            },
+          },
+        }
+      );
+    }
+
+    return check;
   }
-
-  return check;
+  const arr = [];
+  return arr;
 };
-const viewedProfile = async (page,limit,userId) => {
+const upComingLikes = async (page, limit, userId) => {
   const skip = page * limit;
-  const check = await User.findOne({_id:userId,isDeleted:false}).lean();
-
+  const check = await User.findOne({ _id: userId, isDeleted: false }).lean();
   const users = await User.findOne(
     { _id: userId, isDeleted: false },
-    { notifications: { $slice: [skip, limit] } }
+    { likes: { $slice: [skip, limit] } }
   ).populate({
-    path: "viewProfile.user",
+    path: "likes",
   });
- if(check.packages == "Gold" || check.packages == "Platinum"){
-  return users
- }else{
-  throw new OperationalError(
-    STATUS_CODES.ACTION_FAILED,
-    ERROR_MESSAGES.UPGRATE
-  )
- }
+  if (check.packages == "Gold" || check.packages == "Platinum") {
+    return users;
+  } else {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.UPGRATE
+    );
+  }
 };
 module.exports = {
   getUsers,
@@ -607,5 +634,6 @@ module.exports = {
   rewind,
   checkApp,
   oneUser,
-  viewedProfile,
+  upComingLikes,
+  oneNotification,
 };

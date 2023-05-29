@@ -56,3 +56,8 @@ exports.profile = {
     limit: Joi.number().required(),
   }),
 };
+exports.notify = {
+  query: Joi.object().keys({
+    notificationId: Joi.string().required(),
+  }),
+};

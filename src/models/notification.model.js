@@ -15,6 +15,7 @@ const notificationSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isSeen: { type: Boolean, default: false },
   },
   {
     timestamps: true,

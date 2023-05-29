@@ -16,6 +16,7 @@ const {
   VALID_PREFERANCES,
   VALID_SIGN,
   VALID_GENDER,
+  SOCIAL_TYPE
 } = require("../../config/appConstants");
 
 exports.login = {
@@ -39,6 +40,7 @@ exports.userSocialLogin = {
   body: Joi.object().keys({
     name: Joi.string().required(),
     socialId: Joi.string().required(),
+    socialType:Joi.string().required().valid(...Object.values(SOCIAL_TYPE)),
     //phoneNumber: JOI.PHONENUMBER,
     //profession: Joi.string().required(),
     //bio: Joi.string().required(),

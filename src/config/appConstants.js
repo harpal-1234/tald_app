@@ -382,7 +382,11 @@ const ERROR_MESSAGES = {
   UPGRATE: "Please upgrate your account",
   GROUP_NOT_EXIST: "This group does not exist",
 };
-
+const SOCIAL_TYPE = {
+  FACEBOOK: "facebook",
+  APPLE: "apple",
+  GOOGLE: "google",
+};
 const STATUS_CODES = {
   SUCCESS: 200,
   CREATED: 201,
@@ -466,6 +470,7 @@ module.exports = {
   MESSAGE_TYPE,
   PLANS,
   PLAN,
+  SOCIAL_TYPE,
 };
 
 // SPA: "spa",

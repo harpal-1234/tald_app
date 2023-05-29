@@ -68,9 +68,15 @@ router.get(
   userController.oneUser
 );
 router.get(
-  "/viewedProfile",
+  "/upComingLikes",
   auth(USER_TYPE.USER),
   validate(userValidation.profile),
-  userController.viewedProfile
+  userController.upComingLikes
+);
+router.get(
+  "/seeNotification",
+  auth(USER_TYPE.USER),
+  validate(userValidation.notify),
+  userController.oneNotification
 );
 module.exports = router;

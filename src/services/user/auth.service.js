@@ -34,7 +34,7 @@ const createUser = async (userData, userId) => {
   ) {
     yearDiff--;
   }
-  if (data.socialId) {
+  if (data.facebookId || data.appleId || data.googleId) {
     const user = await User.findOneAndUpdate(
       { _id: userId },
       {
@@ -55,14 +55,30 @@ const createUser = async (userData, userId) => {
         dateOfBirth: userData.dateOfBirth,
         age: yearDiff,
         lookingFor: userData.lookingFor,
-        address:userData.address,
+        address: userData.address,
         $set: {
-          location: { type: "Point", coordinates: [userData.long, userData.lat] },
+          location: {
+            type: "Point",
+            coordinates: [userData.long, userData.lat],
+          },
         },
         isVerify: true,
       },
       { new: true }
     );
+    const customer = await stripe.customers.create({
+      userId: user._id,
+      name: userData.name,
+      phone: userData.phoneNumber,
+      address: {
+        line1: "510 Townsend St",
+        postal_code: "98140",
+        city: "San Francisco",
+        state: "CA",
+        country: "US",
+      },
+      description: "Payment",
+    });
     return user;
   }
   console.log(data.phoneNumber, userData.phoneNumber);
@@ -93,7 +109,7 @@ const createUser = async (userData, userId) => {
       dateOfBirth: userData.dateOfBirth,
       age: yearDiff,
       lookingFor: userData.lookingFor,
-      address:userData.address,
+      address: userData.address,
       $set: {
         location: { type: "Point", coordinates: [userData.long, userData.lat] },
       },
@@ -101,6 +117,19 @@ const createUser = async (userData, userId) => {
     },
     { new: true }
   );
+  const customer = await stripe.customers.create({
+    userId: user._id,
+    name: userData.name,
+    phone: userData.phoneNumber,
+    address: {
+      line1: "510 Townsend St",
+      postal_code: "98140",
+      city: "San Francisco",
+      state: "CA",
+      country: "US",
+    },
+    description: "Payment",
+  });
   // const check = await User.findOneAndUpdate(
   //   { _id: user._id },
   //   { stripeId: customer.id },
@@ -218,18 +247,94 @@ const userLogin = async (phoneNumber) => {
 };
 
 const userSocialLogin = async (data) => {
-  const user = await User.findOne({
-    socialId: data.socialId,
+  const check = await User.findOne({
+    $or: [
+      { facebookId: data.socialId },
+      { appleId: data.socialId },
+      { googleId: data.socialId },
+    ],
     isDeleted: false,
   });
-
-  if (user) {
+  if (data.socialType == "facebook") {
+    const user = await User.findOneAndUpdate(
+      {
+        facebookId: data.socialId,
+        isDeleted: false,
+      },
+      {
+        $setOnInsert: {
+          name: data.name,
+        },
+        $set: { facebookId: data.socialId },
+      },
+      { upsert: true, new: true }
+    );
     return user;
   }
-
-  const newUser = await User.create(data);
-
-  return newUser;
+  if (data.socialType == "apple") {
+    const user = await User.findOneAndUpdate(
+      {
+        appleId: data.socialId,
+        isDeleted: false,
+      },
+      {
+        $setOnInsert: {
+          name: data.name,
+        },
+        $set: { appleId: data.socialId },
+      },
+      { upsert: true, new: true }
+    );
+    // if (!check) {
+    //   const customer = await stripe.customers.create({
+    //     userId: user._id,
+    //     email: userData.email,
+    //     name: userData.name,
+    //     phone: userData.phoneNumber,
+    //     address: {
+    //       line1: "510 Townsend St",
+    //       postal_code: "98140",
+    //       city: "San Francisco",
+    //       state: "CA",
+    //       country: "US",
+    //     },
+    //     description: "Payment",
+    //   });
+    // }
+    return user;
+  }
+  if (data.socialType == "google") {
+    const user = await User.findOneAndUpdate(
+      {
+        googleId: data.socialId,
+        isDeleted: false,
+      },
+      {
+        $setOnInsert: {
+          name: data.name,
+        },
+        $set: { googleId: data.socialId },
+      },
+      { upsert: true, new: true }
+    );
+    // if (!check) {
+    //   const customer = await stripe.customers.create({
+    //     userId: user._id,
+    //     email: userData.email,
+    //     name: userData.name,
+    //     phone: userData.phoneNumber,
+    //     address: {
+    //       line1: "510 Townsend St",
+    //       postal_code: "98140",
+    //       city: "San Francisco",
+    //       state: "CA",
+    //       country: "US",
+    //     },
+    //     description: "Payment",
+    //   });
+    // }
+    return user;
+  }
 };
 
 const getUserById = async (userId) => {
@@ -317,10 +422,9 @@ const pushNotification = async (userId) => {
   }
   return "Enable";
 };
-const publickKey = async(publickKey,userId)=>{
-  const user = await User.findOne({_id:userId,isDeleted:false});
-
-}
+const publickKey = async (publickKey, userId) => {
+  const user = await User.findOne({ _id: userId, isDeleted: false });
+};
 // const app_key_provider = {
 //   getToken() {
 //     return config.onesignal_api_key;
@@ -359,7 +463,7 @@ module.exports = {
   getUserById,
   createUserNumber,
   verifyOtp,
-  publickKey
+  publickKey,
 };
 
 // if (socialId) {

@@ -84,6 +84,18 @@ const notification = catchAsync(async (req, res) => {
     //user.phoneNumber
   );
 });
+const oneNotification = catchAsync(async (req, res) => {
+  const {notificationId} = req.query;
+  const data = await appServices.oneNotification(notificationId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+    //user.phoneNumber
+  );
+});
 const conversation = catchAsync(async (req, res) => {
   const { page, limit } = req.query;
   const userId = req.token.user._id;
@@ -150,10 +162,10 @@ const oneUser = catchAsync(async (req, res) => {
     data
   );
 });
-const viewedProfile = catchAsync(async (req, res) => {
+const upComingLikes = catchAsync(async (req, res) => {
   const { page, limit } = req.query;
   const Id = req.token.user._id;
-  const data = await appServices.viewedProfile(page, limit, Id);
+  const data = await appServices.upComingLikes(page, limit, Id);
   return successResponse(
     req,
     res,
@@ -173,5 +185,6 @@ module.exports = {
   rewind,
   check,
   oneUser,
-  viewedProfile
+  upComingLikes,
+  oneNotification
 };

@@ -96,6 +96,9 @@ const userSchema = mongoose.Schema(
     boastDate: { type: Date },
     swipeCount: { type: Number, default: 60 },
     swipeDate: { type: Date, default: "" },
+    facebookId: { type: String },
+    appleId: { type: String },
+    googleId: { type: String },
     notifications: [
       {
         notificationId: {
