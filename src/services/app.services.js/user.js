@@ -623,6 +623,7 @@ const upComingLikes = async (page, limit, userId) => {
     );
   }
 };
+
 module.exports = {
   getUsers,
   filter,
@@ -636,4 +637,5 @@ module.exports = {
   oneUser,
   upComingLikes,
   oneNotification,
+  
 };

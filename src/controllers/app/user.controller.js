@@ -2,6 +2,7 @@ const { userService, tokenService, appServices } = require("../../services");
 const config = require("../../config/config");
 const { catchAsync } = require("../../utils/universalFunction");
 const { successResponse } = require("../../utils/response");
+const callServices = require("../../utils/videoCall");
 const {
   STATUS_CODES,
   SUCCESS_MESSAGES,
@@ -174,6 +175,30 @@ const upComingLikes = catchAsync(async (req, res) => {
     data
   );
 });
+const call = catchAsync(async (req, res) => {
+  const senderId = req.token.user._id;
+  const { eventId, roomName, userId, state, type } = req.body;
+
+  const value = await callServices.videoCall(roomName);
+  if (state == "1") {
+      const call = await NotificationServices.calls(
+        value.tokentoken,
+        value.videoGrant.room,
+        userId,
+        senderId,
+        type,
+      );
+    
+  }
+
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    value
+  );
+});
 module.exports = {
   getUser,
   filter,
@@ -186,5 +211,6 @@ module.exports = {
   check,
   oneUser,
   upComingLikes,
-  oneNotification
+  oneNotification,
+  call
 };

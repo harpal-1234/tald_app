@@ -5,6 +5,16 @@
 // const { socketService } = require("../services");
 // const { formatDriverLoc } = require("./formatResponse");
  
+
+const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+const charactersLength = characters.length;
+let randomString = '';
+
+for (let i = 0; i < 25; i++) {
+  const randomIndex = Math.floor(Math.random() * charactersLength);
+  randomString += characters.charAt(randomIndex);
+}
+console.log(randomString)
 // let socketIds = [];
  
 // /*
