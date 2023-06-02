@@ -1,5 +1,5 @@
 //token service
-
+module.exports.SocketServices = require("./app.services.js/chat")
 module.exports.tokenService = require("./tokenservice");
 
 //admin Vendor service

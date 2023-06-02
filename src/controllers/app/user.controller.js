@@ -16,6 +16,7 @@ const {
 } = require("../../utils/commonFunction");
 const { createStripeCustomer } = require("../../utils/stripe");
 const dotenv = require("dotenv");
+const NotificationServices = require("../../utils/notification")
 //const otpServices = require("../../utils/otp")
 dotenv.config();
 
@@ -199,6 +200,19 @@ const call = catchAsync(async (req, res) => {
     value
   );
 });
+const callAction = catchAsync(async (req, res) => {
+  const senderId = req.token.user._id;
+  const { userId, status } = req.body;
+  const value = await appServices.callAction(senderId, userId, status);
+
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    value
+  );
+});
 module.exports = {
   getUser,
   filter,
@@ -212,5 +226,7 @@ module.exports = {
   oneUser,
   upComingLikes,
   oneNotification,
-  call
+  call,
+  callAction
+  
 };

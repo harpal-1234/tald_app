@@ -7,7 +7,7 @@ const {
   STATUS_CODES,
   USER_TYPE,
 } = require("../config/appConstants");
-const { socketServices } = require("../services");
+const socketServices  = require("../services/app.services.js/chat");
 const { OperationalError } = require("../utils/errors");
 const { Token } = require("../model");
 const {
@@ -89,20 +89,14 @@ exports.connectSocket = (server) => {
       if (data.groupId) {
         const message = await socketServices.saveGroupMessage(
           data.sender,
-          users,
           data.message,
           data.type,
           data.groupId
         );
 
-        const emits = [];
-        users.map((id) => {
-          if (JSON.stringify(data.sender) !== JSON.stringify(id)) {
-            emits.push(id);
-          }
-        });
+    
 
-        emits.map((receiverId) => {
+        message.receiver.map((receiverId) => {
           if (userCache[receiverId]) {
             userCache[receiverId].map((id) => {
               io.to(id).emit("receiveMessage", message);
@@ -113,7 +107,7 @@ exports.connectSocket = (server) => {
         });
       }
       if (data.conversationId) {
-        const conversation = await socketServices.getConversation(
+        const conversation = await socketServices.oneConversation(
           data.conversationId
         );
         if (!conversation) {

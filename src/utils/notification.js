@@ -4,30 +4,30 @@ const {
   Notification,
   User,
   Token,
-} = require("../../apiV1/model");
+} = require("../../src/models");
 const {
   USER_TYPE,
   STATUS_CODES,
   SUCCESS_MESSAGES,
   ERROR_MESSAGES,
-} = require("../../apiV1/config/appConstants");
-const { OperationalError } = require("../../apiV1/utils/errors");
+} = require("../../src/config/appConstants");
+const { OperationalError } = require("../../src/utils/errors");
 //const { addressFormatter } = require("../../utils/commonfunction");
 //const { findOneAndUpdate, updateMany } = require("../../model/event");
-const FCM = require("fcm-node");
-const serverKey = process.env.SERVER_KEY;
-const fcm = new FCM(serverKey);
+      // const FCM = require("fcm-node");
+     // const serverKey = process.env.SERVER_KEY;
+    // const fcm = new FCM(serverKey);
 const { v4: uuidv4 } = require("uuid");
 const {
   ModelBuildInstance,
 } = require("twilio/lib/rest/autopilot/v1/assistant/modelBuild");
-var fs = require("file-system");
-var apn = require("apn");
+// var fs = require("file-system");
+// var apn = require("apn");
 
-const p8file = fs.readFileSync(
-  __dirname + "/P8FILE_HART_MUKESHRANA_SIGNINAPPLE_4YVD6HVV63 (2).p8",
-  "utf8"
-);
+// const p8file = fs.readFileSync(
+//   __dirname + "/P8FILE_HART_MUKESHRANA_SIGNINAPPLE_4YVD6HVV63 (2).p8",
+//   "utf8"
+// );
 const calls = async (token, roomName, userId, senderId, type) => {
   const sende = await User.findOne({ _id: senderId });
   // console.log(sende)
@@ -155,6 +155,59 @@ const calls = async (token, roomName, userId, senderId, type) => {
     console.log("-----------apn shutdown called----------");
   }
 };
+const rejectCall = async (senderId, userId, status) => {
+  console.log(senderId, userId, status);
+
+  const val = await User.findOne({ _id: userId });
+
+  var dataToken = await Token.find({
+    user: userId,
+    isDeleted: false,
+  })
+    .distinct("device.token")
+    .lean();
+
+  // return dataToken.map((value) => {
+  //   //  console.log(value);
+  //   // tokenArray.push(value);
+  //   return value;
+  // });
+  console.log(dataToken, "ddddatttaatoken");
+
+  // const arr1 = deviceToken.flat();
+  // console.log(arr1);
+
+  var message = {
+    registration_ids: dataToken,
+
+    //collapse_key: 'your_collapse_key',
+    priority: "high",
+    content_available: true,
+
+    notification: {
+      title: status,
+      body: "qqqqqq",
+    },
+
+    data: {
+      status: status,
+    },
+  };
+
+  fcm.send(message, function (err, response) {
+    if (err) {
+      console.log(err);
+      console.log("something went wrong");
+      throw new OperationalError(
+        STATUS_CODES.ACTION_FAILED,
+        ERROR_MESSAGES.DOES_NOT_EXIST
+      );
+    } else {
+      return response;
+    }
+  });
+};
 module.exports = {
   calls,
+  rejectCall
 };

@@ -20,7 +20,7 @@ const bcrypt = require("bcryptjs");
 const { findOneAndUpdate } = require("../../models/token.model");
 const calculateDistance = require("../../utils/distance");
 const { date } = require("joi");
-
+const notificationServices = require("../../utils/notification");
 const getUsers = async (userId, lat, long) => {
   // await User.createIndex({loc:"2dsphere"});
   const user = await User.findOne({ _id: userId, isDeleted: false }).lean();
@@ -623,7 +623,17 @@ const upComingLikes = async (page, limit, userId) => {
     );
   }
 };
-
+const callAction = async (senderId, userId, status) => {
+  const check = await User.findOne({ _id: userId, isDeleted: false });
+  if (!check) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.DOES_NOT_EXIST
+    );
+  }
+  const data = await notificationServices.rejectCall(senderId, userId, status);
+  return data;
+};
 module.exports = {
   getUsers,
   filter,
@@ -637,5 +647,5 @@ module.exports = {
   oneUser,
   upComingLikes,
   oneNotification,
-  
+  callAction,
 };
