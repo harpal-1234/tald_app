@@ -1,26 +1,26 @@
-const express = require("express");
-const mongoSanitize = require("express-mongo-sanitize");
-const cors = require("cors");
-const passport = require("passport");
-const compression = require("compression");
-
-//const cron = require("node-cron");
-const bodyParser = require("body-parser");
-//const cronNode= require("./server/apiV1/utils/cron")
-const { errorHandler } = require("./src/middlewares/common");
-// const {
+import express from "express";
+import mongoSanitize from "express-mongo-sanitize";
+import cors from "cors";
+import passport from "passport";
+import compression from "compression";
+import morgan from "morgan";
+//import  cron  from "node-cron";
+import bodyParser from "body-parser";
+//import  cronNode from "./server/apiV1/utils/cron"
+//import common from '../src/middlewares/common.js';
+import { errorHandler } from "./src/middlewares/common.js";
+// import  {
 //     requestHandler,
 //     routeNotFoundHandler,
-//   } = require("./");
+//   }  from "./";
 
-const { jwtStrategy } = require("./src/config/passport");
-const routes = require("./src/routes");
-
-const i18n = require("./src/middlewares/i18n");
-const {
+import { jwtStrategy } from "./src/config/passport.js";
+import routes from "./src/routes/index.js";
+import i18n from "./src/middlewares/i18n.js";
+import {
   requestHandler,
   routeNotFoundHandler,
-} = require("./src/middlewares/common");
+} from "./src/middlewares/common.js";
 
 const app = express();
 
@@ -65,6 +65,7 @@ passport.use("jwt", jwtStrategy);
 
 // limit repeated failed requests to auth endpoints
 // app.use("/user/auth", authLimiter);
+app.use(morgan("dev"));
 
 // v1 api routes
 app.use("/", routes);
@@ -82,4 +83,4 @@ app.use((req, res, next) => {
 
 app.use(errorHandler);
 
-module.exports = app;
+export default app;

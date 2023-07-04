@@ -1,39 +1,19 @@
-const {
-  Event,
-  Request,
-  Notification,
-  User,
-  Token,
-} = require("../../src/models");
-const {
+import {User, Token } from "../../src/models/index.js";
+import {
   USER_TYPE,
   STATUS_CODES,
   SUCCESS_MESSAGES,
   ERROR_MESSAGES,
-} = require("../../src/config/appConstants");
-const { OperationalError } = require("../../src/utils/errors");
-//const { addressFormatter } = require("../../utils/commonfunction");
-//const { findOneAndUpdate, updateMany } = require("../../model/event");
-      // const FCM = require("fcm-node");
-     // const serverKey = process.env.SERVER_KEY;
-    // const fcm = new FCM(serverKey);
-const { v4: uuidv4 } = require("uuid");
-const {
-  ModelBuildInstance,
-} = require("twilio/lib/rest/autopilot/v1/assistant/modelBuild");
-// var fs = require("file-system");
-// var apn = require("apn");
-
-// const p8file = fs.readFileSync(
-//   __dirname + "/P8FILE_HART_MUKESHRANA_SIGNINAPPLE_4YVD6HVV63 (2).p8",
-//   "utf8"
-// );
+} from "../../src/config/appConstants.js";
+import { OperationalError } from "../../src/utils/errors.js";
+import { v4 as uuidv4 } from 'uuid';
+const uuid = uuidv4();
 const calls = async (token, roomName, userId, senderId, type) => {
   const sende = await User.findOne({ _id: senderId });
-  // console.log(sende)
+
   const user = await User.findOne({ _id: userId, isDeleted: false });
 
-  // console.log(user);
+
   if (!user) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
@@ -207,7 +187,4 @@ const rejectCall = async (senderId, userId, status) => {
     }
   });
 };
-module.exports = {
-  calls,
-  rejectCall
-};
+export default{ calls, rejectCall };

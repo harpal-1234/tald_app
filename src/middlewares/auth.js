@@ -1,10 +1,10 @@
-const passport = require("passport");
-const {
+import  passport from "passport";
+import {
   USER_TYPE,
   ERROR_MESSAGES,
   STATUS_CODES,
-} = require("../config/appConstants");
-const { AuthFailedError } = require("../utils/errors");
+} from "../config/appConstants.js";
+import  { AuthFailedError } from "../utils/errors.js";
 
 const verifyCallback =
   (req, resolve, reject, role) => async (err, token, info) => {
@@ -115,7 +115,7 @@ const verifyCallback =
     return resolve();
   };
 
-const auth = (role) => async (req, res, next) => {
+ const auth = (role) => async (req, res, next) => {
   return new Promise((resolve, reject) => {
     passport.authenticate(
       "jwt",
@@ -126,5 +126,6 @@ const auth = (role) => async (req, res, next) => {
     .then(() => next())
     .catch((err) => next(err));
 };
+export default auth
 
-module.exports = auth;
+

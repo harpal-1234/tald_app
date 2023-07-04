@@ -1,145 +1,36 @@
-const bcrypt = require("bcryptjs");
-// const { tokenService } = require("../../services");
-const { successResponse } = require("../../utils/response");
-const { User, Token, Admin, Store } = require("../../models");
-const { ApiError } = require("../../utils/universalFunction");
-const Stripe = require("stripe");
-const stripe = new Stripe(
-  "sk_test_51MKSEVLBN7xbh0EQH9R2gQi1pon2Do6OQPdXKcAXfqQMWkn7OYwwBb2LRUJFElYeVpVJkkI5Dffgxlj2QjBakBp700a1efzUf0"
-);
-const {
-  joi,
-  loginType,
+import bcrypt from "bcryptjs";
+// import  { tokenService } from "../../services";
+import { successResponse } from "../../utils/response.js";
+import { User, Token, Admin } from "../../models/index.js";
+import { formatUser } from "../../utils/commonFunction.js";
+//import  { ApiError } from "../../utils/universalFunction.js";
+import {
   USER_TYPE,
   STATUS_CODES,
   ERROR_MESSAGES,
   SUCCESS_MESSAGES,
-  POPULATE_SKILLS,
-} = require("../../config/appConstants");
-const { OperationalError } = require("../../utils/errors");
-const config = require("../../config/config");
+} from "../../config/appConstants.js";
+import { OperationalError } from "../../utils/errors.js";
+import config from "../../config/config.js";
 
-const createUser = async (userData, userId) => {
-  const data = await User.findOne({
-    _id: userId,
-    isDeleted: false,
-  });
-  const birthDate = new Date(userData.dateOfBirth);
-  const currentDate = new Date();
-  var yearDiff = currentDate.getFullYear() - birthDate.getFullYear();
-  if (
-    currentDate.getMonth() < birthDate.getMonth() ||
-    (currentDate.getMonth() === birthDate.getMonth() &&
-      currentDate.getDate() < birthDate.getDate())
-  ) {
-    yearDiff--;
-  }
-  if (data.facebookId || data.appleId || data.googleId) {
-    const user = await User.findOneAndUpdate(
-      { _id: userId },
-      {
-        name: userData.name,
-        images: userData.images,
-        phoneNumber: userData.phoneNumber,
-        profession: userData.profession,
-        bio: userData.bio,
-        pronoun: userData.pronoun,
-        politicalViews: userData.politicalViews,
-        sign: userData.sign,
-        genderIdentity: userData.genderIdentity,
-        prefrences: userData.prefrences,
-        lifeStyles: userData.lifeStyles,
-        drugUsages: userData.drugUsages,
-        hobbiesAndInterests: userData.hobbiesAndInterests,
-        pets: userData.pets,
-        dateOfBirth: userData.dateOfBirth,
-        age: yearDiff,
-        lookingFor: userData.lookingFor,
-        address: userData.address,
-        $set: {
-          location: {
-            type: "Point",
-            coordinates: [userData.long, userData.lat],
-          },
-        },
-        isVerify: true,
-      },
-      { new: true }
-    );
-    const customer = await stripe.customers.create({
-      userId: user._id,
-      name: userData.name,
-      phone: userData.phoneNumber,
-      address: {
-        line1: "510 Townsend St",
-        postal_code: "98140",
-        city: "San Francisco",
-        state: "CA",
-        country: "US",
-      },
-      description: "Payment",
-    });
-    return user;
-  }
-  console.log(data.phoneNumber, userData.phoneNumber);
-  if (data.phoneNumber !== userData.phoneNumber) {
+export const createUser = async (userData) => {
+  const check = await User.findOne({ email: userData.email, isDeleted: false });
+  if (check) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.PHONE_NOT_MATCH
+      ERROR_MESSAGES.EMAIL_ALREADY_EXIST
     );
   }
-  console.log(userData.long, userData.lat);
-  const user = await User.findOneAndUpdate(
-    { _id: userId },
-    {
-      name: userData.name,
-      images: userData.images,
-      phoneNumber: userData.phoneNumber,
-      profession: userData.profession,
-      bio: userData.bio,
-      pronoun: userData.pronoun,
-      politicalViews: userData.politicalViews,
-      sign: userData.sign,
-      genderIdentity: userData.genderIdentity,
-      prefrences: userData.prefrences,
-      lifeStyles: userData.lifeStyles,
-      drugUsages: userData.drugUsages,
-      hobbiesAndInterests: userData.hobbiesAndInterests,
-      pets: userData.pets,
-      dateOfBirth: userData.dateOfBirth,
-      age: yearDiff,
-      lookingFor: userData.lookingFor,
-      address: userData.address,
-      $set: {
-        location: { type: "Point", coordinates: [userData.long, userData.lat] },
-      },
-      isVerify: true,
-    },
-    { new: true }
-  );
-  const customer = await stripe.customers.create({
-    userId: user._id,
-    name: userData.name,
-    phone: userData.phoneNumber,
-    address: {
-      line1: "510 Townsend St",
-      postal_code: "98140",
-      city: "San Francisco",
-      state: "CA",
-      country: "US",
-    },
-    description: "Payment",
+  const user = await User.create({
+    email: userData.email,
+    password: userData.password,
+    userName: userData.userName,
+    dateOfBirth: userData.dateofBirth,
+    type: userData.type,
   });
-  // const check = await User.findOneAndUpdate(
-  //   { _id: user._id },
-  //   { stripeId: customer.id },
-  //   { new: true }
-  // );
-  // console.log(check);
-  // console.log(user);
   return user;
 };
-const createUserNumber = async (phoneNumber) => {
+export const createUserNumber = async (phoneNumber) => {
   const check = await User.findOne({
     phoneNumber: phoneNumber,
     isDeleted: false,
@@ -153,7 +44,7 @@ const createUserNumber = async (phoneNumber) => {
     return check;
   }
 };
-const verifyOtp = async (otp, tokenId, userId) => {
+export const verifyOtp = async (otp, tokenId, userId) => {
   const user = await User.findOne({ _id: userId, isDeleted: false });
   if (!user) {
     throw new OperationalError(
@@ -199,21 +90,18 @@ const verifyOtp = async (otp, tokenId, userId) => {
     );
   }
 };
-const userLogin = async (phoneNumber) => {
-  // let user = await User.findOne({
-  //   email: email,
-  //   isDeleted: false,
-  // });
-  const user = await findOne({
-    phoneNumber: phoneNumber,
-    isVerify: true,
-    isDeleted: true,
+export const userLogin = async (data) => {
+  console.log(data);
+  let user = await User.findOne({
+    email: data.email,
+    type: data.type,
+    isDeleted: false,
   });
 
   if (!user) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.PHONE_NOT_EXIST
+      ERROR_MESSAGES.EMAIL_NOT_FOUND
     );
     // throw new ApiError(
     //   ERROR_MESSAGES.EMAIL_NOT_FIND
@@ -236,25 +124,25 @@ const userLogin = async (phoneNumber) => {
     );
   }
 
-  // if (!(await user.isPasswordMatch(password))) {
-  //   throw new OperationalError(
-  //     STATUS_CODES.ACTION_FAILED,
-  //     ERROR_MESSAGES.WRONG_PASSWORD
-  //   );
-  // }
+  if (!(await user.isPasswordMatch(data.password))) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.WRONG_PASSWORD
+    );
+  }
 
   return user;
 };
 
-const userSocialLogin = async (data) => {
-  const check = await User.findOne({
-    $or: [
-      { facebookId: data.socialId },
-      { appleId: data.socialId },
-      { googleId: data.socialId },
-    ],
-    isDeleted: false,
-  });
+export const userSocialLogin = async (data) => {
+  // const check = await User.findOne({
+  //   $or: [
+  //     { facebookId: data.socialId },
+  //     { appleId: data.socialId },
+  //     { googleId: data.socialId },
+  //   ],
+  //   isDeleted: false,
+  // });
   if (data.socialType == "facebook") {
     const user = await User.findOneAndUpdate(
       {
@@ -285,22 +173,6 @@ const userSocialLogin = async (data) => {
       },
       { upsert: true, new: true }
     );
-    // if (!check) {
-    //   const customer = await stripe.customers.create({
-    //     userId: user._id,
-    //     email: userData.email,
-    //     name: userData.name,
-    //     phone: userData.phoneNumber,
-    //     address: {
-    //       line1: "510 Townsend St",
-    //       postal_code: "98140",
-    //       city: "San Francisco",
-    //       state: "CA",
-    //       country: "US",
-    //     },
-    //     description: "Payment",
-    //   });
-    // }
     return user;
   }
   if (data.socialType == "google") {
@@ -317,27 +189,12 @@ const userSocialLogin = async (data) => {
       },
       { upsert: true, new: true }
     );
-    // if (!check) {
-    //   const customer = await stripe.customers.create({
-    //     userId: user._id,
-    //     email: userData.email,
-    //     name: userData.name,
-    //     phone: userData.phoneNumber,
-    //     address: {
-    //       line1: "510 Townsend St",
-    //       postal_code: "98140",
-    //       city: "San Francisco",
-    //       state: "CA",
-    //       country: "US",
-    //     },
-    //     description: "Payment",
-    //   });
-    // }
+
     return user;
   }
 };
 
-const getUserById = async (userId) => {
+export const getUserById = async (userId) => {
   const user = await User.findById(userId).lean();
 
   if (!user) {
@@ -350,10 +207,9 @@ const getUserById = async (userId) => {
   return user;
 };
 
-const userLogout = async (userId, type) => {
+export const userLogout = async (tokenId) => {
   const token = await Token.findOne({
-    _id: userId,
-    type: type,
+    _id: tokenId,
     isDeleted: false,
   });
 
@@ -367,14 +223,14 @@ const userLogout = async (userId, type) => {
     throw new OperationalError(STATUS_CODES.NOT_FOUND, ERROR_MESSAGES.LOG_OUT);
   }
   await Token.findByIdAndUpdate(
-    { _id: userId },
+    { _id: tokenId },
     { isDeleted: true },
     { new: true }
   );
   return;
 };
 
-const resetPassword = async (tokenData, newPassword) => {
+export const resetPassword = async (tokenData, newPassword) => {
   let query = tokenData.user;
   newPassword = await bcrypt.hash(newPassword, 8);
   if (tokenData.role === USER_TYPE.USER) {
@@ -399,7 +255,7 @@ const resetPassword = async (tokenData, newPassword) => {
   return { tokenvalue, adminvalue };
 };
 
-const pushNotification = async (userId) => {
+export const pushNotification = async (userId) => {
   const data = await User.findOne({ _id: userId, isDeleted: false });
   if (data.isNotification == "Enable") {
     await User.findOneAndUpdate(
@@ -422,8 +278,37 @@ const pushNotification = async (userId) => {
   }
   return "Enable";
 };
-const publickKey = async (publickKey, userId) => {
+export const publickKey = async (publickKey, userId) => {
   const user = await User.findOne({ _id: userId, isDeleted: false });
+};
+export const changePassword = async (userId, oldPassword, newPassword) => {
+  const user = await User.findById(userId);
+  if (!(await bcrypt.compare(oldPassword, user.password))) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.OLD_PASSWORD
+    );
+  }
+  let updatedPassword = { password: newPassword };
+  Object.assign(user, updatedPassword);
+  await user.save();
+  return user;
+};
+export const editProfile = async (userId, data) => {
+  const user = await User.findOneAndUpdate(
+    { _id: userId },
+    {
+      image: data.image,
+      name: data.name,
+      email: data.email,
+    },
+    {
+      new: true,
+      lean: true,
+    }
+  );
+  const data1 = await formatUser(user);
+  return data1;
 };
 // const app_key_provider = {
 //   getToken() {
@@ -453,18 +338,18 @@ const publickKey = async (publickKey, userId) => {
 //   return response;
 // };
 
-module.exports = {
-  userSocialLogin,
-  createUser,
-  userLogin,
-  userLogout,
-  resetPassword,
-  pushNotification,
-  getUserById,
-  createUserNumber,
-  verifyOtp,
-  publickKey,
-};
+// export default{
+//   userSocialLogin,
+//   createUser,
+//   userLogin,
+//   userLogout,
+//   resetPassword,
+//   pushNotification,
+//   getUserById,
+//   createUserNumber,
+//   verifyOtp,
+//   publickKey,
+// };
 
 // if (socialId) {
 //   const newUser = await User.findOne({ email: email });

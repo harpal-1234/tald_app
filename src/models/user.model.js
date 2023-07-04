@@ -1,36 +1,20 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-const {
-  WORK_TYPE,
-  USER_TYPE,
-  JOB_TITLE,
-  PUSH_NOTIFICATION_STATUS,
-  PRONOUN,
-  GENDER,
-  SIGN,
-  PETS,
-  DISTANCE,
-  PREFERANCES,
-  LIFE_STYLE,
-  DRUGS,
-  HOBBIES_AND_INTRESTS,
-  LOOKIN_FOR,
-  DEVICE_TYPE,
-  POLITICALS_VIEWS,
-  NOTIFICATION_STATUS,
-  PLANS,
-  PLAN,
-} = require("../config/appConstants");
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
+import { USER_TYPE, DEVICE_TYPE, BUSINESS } from "../config/appConstants.js";
 // const { address } = require("./commonField.models");
-const { string } = require("joi");
+//const { string } = require("joi");
 
 const userSchema = mongoose.Schema(
   {
-    // email:{type:String,required:true},
-    name: { type: String, default: "" },
-    stripeId: { type: String, default: "" },
-    images: [{ image: { type: String } }],
-    address: { type: String, default: "" },
+    email: { type: String, required: true },
+    password: { type: String, required: true },
+    type: { type: String, required: true },
+    userName: { type: String },
+    image: { type: String },
+    dateOfBirth: { type: String },
+    typeOfBusiness: { type: String, enum: [...Object.values(BUSINESS)] },
+    businessName: { type: String },
+    address: { type: String },
     location: {
       type: { type: String, default: "Point" },
       coordinates: {
@@ -39,112 +23,44 @@ const userSchema = mongoose.Schema(
         required: true,
       },
     },
-    //logitude and latitude
-    phoneNumber: { type: String },
-    profession: { type: String },
-    bio: { type: String },
-    dateOfBirth: { type: String },
-    age: { type: Number },
-    pronoun: { type: String, enum: [...Object.values(PRONOUN)] },
-    politicalViews: {
-      type: String,
-      enum: [...Object.values(POLITICALS_VIEWS)],
-    },
-    sign: { type: String, enum: [...Object.values(SIGN)] },
-    genderIdentity: { type: String, enum: [...Object.values(GENDER)] },
-    prefrences: [{ type: String, enum: [...Object.values(PREFERANCES)] }],
-    lifeStyles: [{ type: String, enum: [...Object.values(LIFE_STYLE)] }],
-    drugUsages: [{ type: String, enum: [...Object.values(DRUGS)] }],
-    hobbiesAndInterests: [
-      { type: String, enum: [...Object.values(HOBBIES_AND_INTRESTS)] },
-    ],
-    pets: [{ type: String, enum: [...Object.values(PETS)] }],
-    lookingFor: [{ type: String, enum: [...Object.values(LOOKIN_FOR)] }],
-    likes: [{ type: mongoose.SchemaTypes.ObjectId, ref: "user" }],
-    sendRequests: [{ type: mongoose.SchemaTypes.ObjectId, ref: "user" }],
-    matches: [{ type: mongoose.SchemaTypes.ObjectId, ref: "user" }],
-    dislikes: [{ type: mongoose.SchemaTypes.ObjectId, ref: "user" }],
-    rewind: [{ type: mongoose.SchemaTypes.ObjectId, ref: "user" }],
-    socialId: { type: String },
-    isNotification: {
-      type: String,
-      enum: [...Object.values(NOTIFICATION_STATUS)],
-      default: NOTIFICATION_STATUS.ENABLE,
-    },
-    seeDistance: {
-      type: String,
-      enum: [...Object.values(DISTANCE)],
-      default: DISTANCE.KM,
-    },
-    distance: { type: Number, default: 100 },
-    maxAge: { type: Number, default: 40 },
-    minAge: { type: Number, default: 18 },
-    isVerify: { type: Boolean, default: false },
+    city: { type: String },
+    zipCode: { type: String },
+    PhoneNumber: { type: String },
+    operatingHours: { type: String },
+    about: { type: String },
+    websiteUrl: { type: String },
+    coverImage: { type: String },
+    // facebookId: { type: String },
+    // appleId: { type: String },
+    // googleId: { type: String },
     isBlocked: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
-    packages: {
-      type: String,
-      enum: [...Object.values(PLANS)],
-      default: PLANS.FREEMIUM,
-    },
-    packageDate: { type: Date },
-    packageAmount: { type: Number },
-    plan: { type: String, enum: [...Object.values(PLAN)] },
-    trailDate: { type: String },
-    gifts: { type: Number, default: 0 },
-    giftDate: { type: Date },
-    boastDate: { type: Date },
-    swipeCount: { type: Number, default: 60 },
-    swipeDate: { type: Date, default: "" },
-    facebookId: { type: String },
-    appleId: { type: String },
-    googleId: { type: String },
-    notifications: [
-      {
-        notificationId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "notification",
-        },
-      },
-    ],
-    viewProfile: [
-      {
-        user: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
-      },
-    ],
-    isTrail: { type: Boolean, default: true },
-    isActiveTrail: { type: Boolean, default: false },
-    isBoasted: { type: Boolean, default: false },
-    isPayment: { type: Boolean, default: false },
   },
   {
     timestamps: true,
   }
 );
+userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
+  const emplyee = await this.findOne({ email, _id: { $ne: excludeUserId } });
+  return !!userSchema;
+};
 
-// userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
-//   const emplyee = await this.findOne({ email, _id: { $ne: excludeUserId } });
-//   return !!userSchema;
-// };
+userSchema.pre("save", async function (next) {
+  const user = this;
 
-// userSchema.pre("save", async function (next) {
-//   const user = this;
-//   if (user.name) {
-//     user.name =
-//       user.name.trim()[0].toUpperCase() + user.name.slice(1).toLowerCase();
-//     if (user.isModified("password")) {
-//       user.password = await bcrypt.hash(user.password, 8);
-//     }
-//   }
-
-//   next();
-// });
-// userSchema.methods.isPasswordMatch = async function (password) {
-//   const user = this;
-//   return bcrypt.compare(password, user.password);
-// };
+  if (user.isModified("password")) {
+    user.password = await bcrypt.hash(user.password, 8);
+  }
+  next();
+});
+userSchema.methods.isPasswordMatch = async function (password) {
+  const user = this;
+  console.log(password, user.password);
+  console.log(await bcrypt.compare(password, user.password));
+  return bcrypt.compare(password, user.password);
+};
 
 userSchema.index({ location: "2dsphere" });
 const User = mongoose.model("user", userSchema);
 
-module.exports = User;
+export { User };

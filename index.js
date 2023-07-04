@@ -1,10 +1,9 @@
-const mongoose = require("mongoose");
-const app = require("./app");
-const config = require("./src/config/config");
-const logger = require("./src/config/logger");
-const CreateAdmin = require("./src/utils/bootstrap");
-
-
+import mongoose from "mongoose";
+import app from "./app.js";
+import config from "./src/config/config.js";
+import logger from "./src/config/logger.js";
+import CreateAdmin from "./src/utils/bootstrap.js";
+mongoose.set('strictQuery', false);
 let server;
 mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
   console.log("Connected to MongoDB");

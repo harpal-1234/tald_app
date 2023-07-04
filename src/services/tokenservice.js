@@ -1,37 +1,35 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
-const moment = require("moment");
-var ObjectID = require("mongodb").ObjectID;
+import moment from "moment";
+import { ObjectID } from 'mongodb';
 
-const config = require("../config/config");
-const {
+import config from "../config/config.js";
+import {
   TOKEN_TYPE,
   USER_TYPE,
   STATUS_CODES,
   ERROR_MESSAGES,
   DEVICE_TYPE,
-} = require("../config/appConstants");
-const { Token, Admin, User, Vendor, Store } = require("../models");
-// const { workSeekerProfileService } = require("../services");
-const { OperationalError } = require("../utils/errors");
-const { formatUser } = require("../utils/formatResponse");
-const { Console } = require("winston/lib/winston/transports");
+} from "../config/appConstants.js";
+import { Token, User } from "../models/index.js";
+// import  { workSeekerProfileService } from "../services";
+import { OperationalError } from "../utils/errors.js";
+import { formatUser } from "../utils/formatResponse.js";
 // const { verifyAccount } = require("../utils/sendMail");
 
-const generateToken = (data, secret = config.jwt.secret) => {
+export const generateToken = (data, secret = config.jwt.secret) => {
   const payload = {
     // user: data.user,
     exp: data.tokenExpires.unix(),
     type: data.tokenType,
     id: data.tokenId,
     role: data.userType,
-    
   };
 
   return jwt.sign(payload, secret);
 };
 
-const saveToken = async (data) => {
+export const saveToken = async (data) => {
   // console.log("-------------------------------")
 
   let dataToBesaved = {
@@ -41,11 +39,9 @@ const saveToken = async (data) => {
     //device: { type: data.deviceType, token: data.deviceToken },
     role: data.userType,
     token: data.token,
-    otp:data.otp,
-    phoneNumber:data.phoneNumber
+    type:data.type
   };
 
-  
   if (data.userType === USER_TYPE.ADMIN) {
     dataToBesaved.admin = data.user._id;
   }
@@ -54,20 +50,17 @@ const saveToken = async (data) => {
   }
 
   const tokenDoc = await Token.create(dataToBesaved);
- 
-   
+
   return tokenDoc;
 };
 
-const generateAuthToken = async (
+export const generateAuthToken = async (
   user,
-  otp,
   userType,
-  phoneNumber
- // deviceToken,
+  // deviceToken,
   //deviceType,
+  type
 ) => {
-
   const tokenExpires = moment().add(config.jwt.accessExpirationMinutes, "days");
 
   var tokenId = new ObjectID();
@@ -78,6 +71,7 @@ const generateAuthToken = async (
     tokenType: TOKEN_TYPE.ACCESS,
     userType,
     tokenId,
+    type
   });
 
   const data = await saveToken({
@@ -89,8 +83,7 @@ const generateAuthToken = async (
     tokentype: TOKEN_TYPE.ACCESS,
     userType,
     user,
-    otp,
-    phoneNumber
+    type
   });
 
   return {
@@ -99,7 +92,7 @@ const generateAuthToken = async (
   };
 };
 
-const adminverifyToken = async (tokenData, admintype) => {
+export const adminverifyToken = async (tokenData, admintype) => {
   const payload = jwt.verify(tokenData.token, config.jwt.secret);
   const tokenDoc = await Token.findOne({
     tokenData,
@@ -112,14 +105,13 @@ const adminverifyToken = async (tokenData, admintype) => {
   return tokenDoc;
 };
 
-const refreshAuth = async (user, userType, tokenId) => {
+export const refreshAuth = async (user, userType, tokenId) => {
   await Token.findByIdAndUpdate(tokenId, { isDeleted: true });
   return generateAuthToken(user, userType);
 };
 
-const logout = async (tokenId) => {
+export const logout = async (tokenId) => {
   const token = await Token.findOne({ _id: tokenId, isDeleted: false });
-  
 
   if (!token) {
     throw new OperationalError(
@@ -138,8 +130,8 @@ const logout = async (tokenId) => {
   return updatedToken;
 };
 
-const generateResetPasswordToken = async (email) => {
-  const user = await User.findOne({ email: email });
+export const generateResetPasswordToken = async (email,type) => {
+  const user = await User.findOne({ email: email,type:type });
 
   if (!user) {
     throw new OperationalError(
@@ -166,6 +158,7 @@ const generateResetPasswordToken = async (email) => {
     tokenId,
     tokenExpires,
     tokenType: TOKEN_TYPE.RESET_PASSWORD,
+    type:type
   });
 
   const data = await saveToken({
@@ -176,12 +169,13 @@ const generateResetPasswordToken = async (email) => {
     tokenExpires,
     tokenType: TOKEN_TYPE.RESET_PASSWORD,
     userType: USER_TYPE.USER,
+    type:type
   });
 
   return { resetPasswordToken };
 };
 
-const generateVendorResetPassword = async (email) => {
+export const generateVendorResetPassword = async (email) => {
   const user = await Store.findOne({ email: email });
 
   if (!user) {
@@ -224,7 +218,7 @@ const generateVendorResetPassword = async (email) => {
   return { resetPasswordToken };
 };
 
-const verifyResetPasswordToken = async (token) => {
+export const verifyResetPasswordToken = async (token) => {
   try {
     const payload = jwt.verify(token, config.jwt.secret);
 
@@ -240,13 +234,13 @@ const verifyResetPasswordToken = async (token) => {
   }
 };
 
-module.exports = {
-  generateVendorResetPassword,
-  generateAuthToken,
-  saveToken,
-  refreshAuth,
-  logout,
-  adminverifyToken,
-  generateResetPasswordToken,
-  verifyResetPasswordToken,
-};
+// export default {
+//   generateVendorResetPassword,
+//   generateAuthToken,
+//   saveToken,
+//   refreshAuth,
+//   logout,
+//   adminverifyToken,
+//   generateResetPasswordToken,
+//   verifyResetPasswordToken,
+// };

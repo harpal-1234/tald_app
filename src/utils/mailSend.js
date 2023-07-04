@@ -1,10 +1,10 @@
-const nodemailer = require("nodemailer");
-const fs = require("fs");
-const path = require("path");
-const Handlebars = require("handlebars");
-const dotenv=require('dotenv');
+import nodemailer from "nodemailer";
+import fs from "fs";
+import path from "path";
+import Handlebars from "handlebars";
+import dotenv from "dotenv";
 dotenv.config();
-// const config = require("../config/config");
+// const config  from "../config/config");
 
 var resetPassword = fs.readFileSync(
   path.join(__dirname, "../../views/vendorEmail/resetPassword.hbs"),
@@ -18,7 +18,6 @@ var verify = fs.readFileSync(
   "utf8"
 );
 
-
 var verifyAccountTemplate = Handlebars.compile(verify);
 
 try {
@@ -31,7 +30,6 @@ try {
   });
 
   function forgotPasswordEmail(email, token) {
-  
     return new Promise((resolve, reject) => {
       var info = {
         from: process.env.SENDER_EMAIL,
@@ -50,7 +48,7 @@ try {
           title: "Forgot Password",
         }),
       };
-     
+
       transporter.sendMail(info, (error, accept) => {
         if (error) {
           reject(error);
@@ -59,14 +57,14 @@ try {
       });
     });
   }
-   
-  function contactUs(body,email){
+
+  function contactUs(body, email) {
     return new Promise((resolve, reject) => {
       var info = {
-        from:process.env.SENDER_EMAIL,
-        to:process.env.SENDER_EMAIL,
+        from: process.env.SENDER_EMAIL,
+        to: process.env.SENDER_EMAIL,
         subject: "Contact Us Report",
-        html:`<b><span>Name:</span></b><span>${name}</span><b><br><br><span>Email:</span></b>${email}<br><br><b><span>Message:</span></b>${data1}`,
+        html: `<b><span>Name:</span></b><span>${name}</span><b><br><br><span>Email:</span></b>${email}<br><br><b><span>Message:</span></b>${data1}`,
       };
 
       transporter.sendMail(info, (error, accept) => {
@@ -76,11 +74,9 @@ try {
         resolve(accept, console.log("Mail Sended"));
       });
     });
-
   }
 
-  function verifyAccount(email,token) {
-   
+  function verifyAccount(email, token) {
     return new Promise((resolve, reject) => {
       var info = {
         from: process.env.SENDER_EMAIL,
@@ -105,4 +101,4 @@ try {
   throw err;
 }
 
-module.exports = { forgotPasswordEmail, verifyAccount ,contactUs};
+export { forgotPasswordEmail, verifyAccount, contactUs };

@@ -1,9 +1,9 @@
-const express = require("express");
-const { validate, validateView } = require("../../middlewares/validate");
-const authValidation = require("../../validations/admin/auth.validation");
-const authController = require("../../controllers/admin/auth.controller");
-const auth = require("../../middlewares/auth");
-const { USER_TYPE, joi } = require("../../config/appConstants");
+import  express from "express";
+import { validate, validateView } from "../../middlewares/validate.js";
+import authValidation from "../../validations/admin/auth.validation.js";
+import * as authController from "../../controllers/admin/auth.controller.js";
+import auth from "../../middlewares/auth.js";
+import { USER_TYPE} from "../../config/appConstants.js";
 
 const router = express.Router();
 
@@ -75,4 +75,4 @@ router.get(
   validate(authValidation.allUser),
   authController.allUser
 );
-module.exports = router;
+export default router;

@@ -1,4 +1,6 @@
-const i18n = require("i18n");
+import i18n from "i18n";
+import path from "path";
+const  __dirname = path.resolve()
 i18n.configure({
   locales: ["en", "hi"],
   defaultLocale: "en",
@@ -13,4 +15,4 @@ i18n.configure({
     __n: "__n", //and req.__n can be called as req.__n
   },
 });
-module.exports = i18n;
+export default i18n;

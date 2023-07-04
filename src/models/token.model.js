@@ -1,9 +1,9 @@
-const mongoose = require("mongoose");
-const {
+import mongoose from "mongoose";
+import  {
   TOKEN_TYPE,
   USER_TYPE,
   DEVICE_TYPE,
-} = require("../config/appConstants");
+} from "../config/appConstants.js";
 
 const tokenSchema = mongoose.Schema(
   {
@@ -12,8 +12,6 @@ const tokenSchema = mongoose.Schema(
     expires: { type: Date, required: true },
     token: { type: String, unique: true },
     role: { type: String, enum: [...Object.values(USER_TYPE)] },
-    otp: { code: { type: String }, expiresAt: { type: Date } },
-    phoneNumber:{type:String},
     device: {
       type: {
         type: String,
@@ -34,4 +32,4 @@ const tokenSchema = mongoose.Schema(
 
 const Token = mongoose.model("token", tokenSchema);
 
-module.exports = Token;
+export{Token};

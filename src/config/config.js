@@ -1,10 +1,8 @@
-const dotenv = require("dotenv");
-const path = require("path");
-const Joi = require("joi");
-
-dotenv.config({ path: path.join(__dirname, "../../.env") });
-
-
+import dotenv from "dotenv";
+import path from "path";
+import Joi from "joi";
+const  __dirname = path.resolve();
+dotenv.config({ path: path.join(__dirname, ".env") });
 
 const envVarsSchema = Joi.object()
   .keys({
@@ -42,7 +40,7 @@ if (error) {
   throw new Error(`Config validation error: ${error}`);
 }
 
-module.exports = {
+export default {
   port: envVars.PORT,
   mongoose: {
     url: envVars.MONGODB_URL,
@@ -62,13 +60,12 @@ module.exports = {
   smtp: { email: envVars.EMAIL, password: envVars.PASSWORD },
   baseurl: envVars.API_BASE_URL,
   projectName: envVars.PROJECT_NAME,
-  onesignal_api_key:envVars.ONESIGNAL_API_KEY,
-  onesignal_app_key:envVars.ONESIGNAL_APP_KEY,
-  fcmServerKey:envVars.FCM_SERVER_KEY,
+  onesignal_api_key: envVars.ONESIGNAL_API_KEY,
+  onesignal_app_key: envVars.ONESIGNAL_APP_KEY,
+  fcmServerKey: envVars.FCM_SERVER_KEY,
   panelurl: envVars.ADMIN_BASE_URL,
   stripe: {
     publishableKey: envVars.STRIPE_PUBLISHABLE_KEY,
     secretKey: envVars.STRIPE_SECRET_KEY,
   },
 };
-

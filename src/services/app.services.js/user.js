@@ -1,27 +1,17 @@
-const { successResponse } = require("../../utils/response");
-const {
-  User,
-  Deal,
-  Store,
-  Notification,
-  Conversation,
-} = require("../../models");
-const { ApiError } = require("../../utils/universalFunction");
-const {
-  joi,
-  USER_TYPE,
+import { successResponse } from "../../utils/response.js";
+import { User } from "../../models/index.js";
+import  {catchAsync} from "../../utils/universalFunction.js";
+import {
   STATUS_CODES,
   ERROR_MESSAGES,
-  SUCCESS_MESSAGES,
-} = require("../../config/appConstants");
-const { OperationalError } = require("../../utils/errors");
-const config = require("../../config/config");
-const bcrypt = require("bcryptjs");
-const { findOneAndUpdate } = require("../../models/token.model");
-const calculateDistance = require("../../utils/distance");
-const { date } = require("joi");
-const notificationServices = require("../../utils/notification");
-const getUsers = async (userId, lat, long) => {
+} from "../../config/appConstants.js";
+import { OperationalError } from "../../utils/errors.js";
+import config from "../../config/config.js";
+import bcrypt from "bcryptjs";
+import  joi  from "joi";
+import notificationServices from "../../utils/notification.js";
+const date = joi.date
+export const getUsers = async (userId, lat, long) => {
   // await User.createIndex({loc:"2dsphere"});
   const user = await User.findOne({ _id: userId, isDeleted: false }).lean();
   let distance;
@@ -173,7 +163,7 @@ const getUsers = async (userId, lat, long) => {
   }
   return users;
 };
-const filter = async (distance, minAge, maxAge, userId) => {
+export const filter = async (distance, minAge, maxAge, userId) => {
   const user = await User.findOneAndUpdate(
     { _id: userId },
     {
@@ -186,7 +176,7 @@ const filter = async (distance, minAge, maxAge, userId) => {
   console.log(user);
   return user;
 };
-const seeDistance = async (type, userId) => {
+export const seeDistance = async (type, userId) => {
   const user = await User.findOneAndUpdate(
     { _id: userId },
     {
@@ -197,7 +187,7 @@ const seeDistance = async (type, userId) => {
 
   return user;
 };
-const likeAndDislike = async (type, id, userId) => {
+export const likeAndDislike = async (type, id, userId) => {
   const check = await User.findOne({ _id: id, isDeleted: false });
   if (!check) {
     throw new OperationalError(
@@ -298,7 +288,7 @@ const likeAndDislike = async (type, id, userId) => {
     // );
   }
 };
-const notification = async (page, limit, Id) => {
+export const notification = async (page, limit, Id) => {
   const skip = page * limit;
   const data = await User.findOne(
     { _id: Id },
@@ -317,7 +307,7 @@ const notification = async (page, limit, Id) => {
 
   return data.notifications;
 };
-const oneNotification = async (Id) => {
+export const oneNotification = async (Id) => {
   const data = await Notification.findByIdAndUpdate(
     { _id: Id, isDeleted: false },
     { isSeen: true },
@@ -326,7 +316,7 @@ const oneNotification = async (Id) => {
 
   return data;
 };
-const conversation = async (page, limit, userId) => {
+export const conversation = async (page, limit, userId) => {
   const skip = page * limit;
   const data = await Conversation.find({
     $or: [{ sender: userId }, { receiver: userId }],
@@ -354,7 +344,7 @@ const conversation = async (page, limit, userId) => {
     return [];
   }
 };
-const checkOut = async (userId, packageType, packageAmount, plan) => {
+export const checkOut = async (userId, packageType, packageAmount, plan) => {
   const user = await User.findOne({ _id: userId, isDeleted: false }).lean();
   if (user.isTrail == true) {
     const date = new Date();
@@ -479,7 +469,7 @@ const checkOut = async (userId, packageType, packageAmount, plan) => {
     );
   }
 };
-const rewind = async (userId, page, limit) => {
+export const rewind = async (userId, page, limit) => {
   const skip = page * limit;
   const check = await User.findOne({ _id: userId, isDeleted: false });
   const user = await User.findOne(
@@ -501,7 +491,7 @@ const rewind = async (userId, page, limit) => {
     );
   }
 };
-const checkApp = async (userId) => {
+export const checkApp = async (userId) => {
   const user = await User.find({ _id: userId, isDeleted: false }).lean();
   const date = new Date();
   if (user.swipeDate <= date || !user.swipeDate) {
@@ -566,7 +556,7 @@ const checkApp = async (userId) => {
     }
   }
 };
-const oneUser = async (userId, Id) => {
+export const oneUser = async (userId, Id) => {
   const check = await User.findOne({ _id: userId, isDeleted: false }).lean();
   if (!check) {
     throw new OperationalError(
@@ -605,7 +595,7 @@ const oneUser = async (userId, Id) => {
   const arr = [];
   return arr;
 };
-const upComingLikes = async (page, limit, userId) => {
+export const upComingLikes = async (page, limit, userId) => {
   const skip = page * limit;
   const check = await User.findOne({ _id: userId, isDeleted: false }).lean();
   const users = await User.findOne(
@@ -623,7 +613,7 @@ const upComingLikes = async (page, limit, userId) => {
     );
   }
 };
-const callAction = async (senderId, userId, status) => {
+export const callAction = async (senderId, userId, status) => {
   const check = await User.findOne({ _id: userId, isDeleted: false });
   if (!check) {
     throw new OperationalError(
@@ -634,18 +624,18 @@ const callAction = async (senderId, userId, status) => {
   const data = await notificationServices.rejectCall(senderId, userId, status);
   return data;
 };
-module.exports = {
-  getUsers,
-  filter,
-  seeDistance,
-  likeAndDislike,
-  notification,
-  conversation,
-  checkOut,
-  rewind,
-  checkApp,
-  oneUser,
-  upComingLikes,
-  oneNotification,
-  callAction,
-};
+// export default{
+//   getUsers,
+//   filter,
+//   seeDistance,
+//   likeAndDislike,
+//   notification,
+//   conversation,
+//   checkOut,
+//   rewind,
+//   checkApp,
+//   oneUser,
+//   upComingLikes,
+//   oneNotification,
+//   callAction,
+// };

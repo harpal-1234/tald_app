@@ -1,5 +1,5 @@
-const { Admin } = require("../models");
-const { USER_TYPE } = require("../config/appConstants");
+import { Admin } from "../models/index.js";
+//import { USER_TYPE } from "../config/appConstants";
 const Run = async () => {
   /*-------------------------------------------------------------------------------
    * add admin
@@ -31,4 +31,4 @@ const CreateAdmin = async (adminDetails) => {
   }
 };
 
-module.exports = Run;
+export default Run ;

@@ -19,7 +19,7 @@ const catchAsync = (fn) => (req, res, next) => {
     }, {});
   };
   
-  module.exports = {
+  export {
     catchAsync,
     paginationOptions,
     pick,

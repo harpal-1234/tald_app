@@ -1,40 +1,37 @@
-const { userService, tokenService } = require("../../services");
-const config = require("../../config/config");
-const { catchAsync } = require("../../utils/universalFunction");
-const { successResponse } = require("../../utils/response");
-const {
+import { userService, tokenService } from "../../services/index.js";
+import config from "../../config/config.js";
+import { catchAsync } from "../../utils/universalFunction.js";
+import { successResponse } from "../../utils/response.js";
+import {
   STATUS_CODES,
   SUCCESS_MESSAGES,
   USER_TYPE,
-} = require("../../config/appConstants");
+} from "../../config/appConstants.js";
 
 // const formatRes = require("../../../utils/formatResponse");
-const { forgotPasswordEmail } = require("../../utils/sendMail");
-const {
+import { forgotPasswordEmail, contactUs } from "../../utils/sendMail.js";
+import {
   successMessageWithoutData,
   successMessage,
-} = require("../../utils/commonFunction");
-const { createStripeCustomer } = require("../../utils/stripe");
-const dotenv = require("dotenv");
-//const otpServices = require("../../utils/otp")
+} from "../../utils/commonFunction.js";
+//import { createStripeCustomer } from "../../utils/stripe.js";
+import dotenv from "dotenv";
+//import  otpServices = require("../../utils/otp")
 dotenv.config();
 
 const signUp = catchAsync(async (req, res) => {
-  const userId = req.token.user._id;
-  const newUser = await userService.createUser(req.body, userId);
+  const newUser = await userService.createUser(req.body);
   // const newStripeCustomer=await createStripeCustomer(newUser);
   const data = {
-    name: newUser.name,
-    pushNotification: newUser.isPushNotification,
-    phoneNumber: newUser.phoneNumber,
-    isVerify: newUser.isVerify,
+    email: newUser.email,
+    _id: newUser._id,
+    type: req.body.type,
   };
 
   const token = await tokenService.generateAuthToken(
     newUser,
-    " ",
     USER_TYPE.USER,
-    data.phoneNumber
+    req.body.type
   );
 
   return successResponse(
@@ -42,93 +39,28 @@ const signUp = catchAsync(async (req, res) => {
     res,
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.SUCCESS,
-    newUser,
+    data,
     token
   );
 });
-const sendOtp = catchAsync(async (req, res) => {
-  const { phoneNumber } = req.body;
 
-  //const otp = await otpServices.otp(phoneNumber);
-
-  let otpExpires = new Date();
-  otpExpires.setSeconds(otpExpires.getSeconds() + 240);
-  otp = { code: "0000", expiresAt: "" };
-  // otp.code = 0000;
-  otp.expiresAt = otpExpires;
-  const user = await userService.createUserNumber(phoneNumber);
-  const token = await tokenService.generateAuthToken(
-    user,
-    otp,
-    USER_TYPE.USER,
-    phoneNumber
-  );
-  return successResponse(
-    req,
-    res,
-    STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.SEND_OTP,
-    token
-    //user.phoneNumber
-  );
-});
-const verifyOtp = catchAsync(async (req, res) => {
-  const { otp } = req.query;
-  const tokenId = req.token._id;
-  const userId = req.token.user._id;
-  const data = await userService.verifyOtp(otp, tokenId, userId);
-console.log(data)
-  if (data) {
-    const val = {
-      phoneNumber: data.phoneNumber,
-      _id: data._id,
-      isVerify: data.isVerify,
-    };
-    const token = await tokenService.generateAuthToken(
-      data,
-      otp,
-      USER_TYPE.USER,
-      val.phoneNumber
-    );
-    return successResponse(
-      req,
-      res,
-      STATUS_CODES.SUCCESS,
-      SUCCESS_MESSAGES.SUCCESS,
-      val,
-      token
-
-      //user.phoneNumber
-    );
-  }
-});
 const userLogin = catchAsync(async (req, res) => {
-  // const newUser = await userService.userLogin(
-  //   req.body.email,
-  //   req.body.password,
-  //   req.body.type
-  // );
-  const { phoneNumber } = req.body;
-  const user = await userService.userLogin(phoneNumber);
-  //const otp = await otpServices.otp(phoneNumber);
-
-  let otpExpires = new Date();
-  otpExpires.setSeconds(otpExpires.getSeconds() + 240);
-  otp = { code: "0000", expiresAt: "" };
-  // otp.code = 0000;
-  otp.expiresAt = otpExpires;
-
+  const user = await userService.userLogin(req.body);
+  const data = {
+    email: user.email,
+    _id: user._id,
+  };
   const token = await tokenService.generateAuthToken(
     user,
-    otp,
     USER_TYPE.USER,
-    phoneNumber
+    req.body.type
   );
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.SEND_OTP,
+    SUCCESS_MESSAGES.SUCCESS,
+    data,
     token
     //user.phoneNumber
   );
@@ -138,17 +70,14 @@ const userSocialLogin = catchAsync(async (req, res) => {
   const newUser = await userService.userSocialLogin(req.body);
   const token = await tokenService.generateAuthToken(
     newUser,
-    "",
-    USER_TYPE.USER,
+    USER_TYPE.USER
     // req.body.deviceToken,
     // req.body.deviceType
   );
 
   const data = {
     name: newUser.name,
-    email: newUser.isVerify,
-    pushNotification: newUser.isPushNotification,
-    phoneNumber: newUser.phoneNumber,
+    email: newUser.email,
   };
 
   return successResponse(
@@ -162,7 +91,7 @@ const userSocialLogin = catchAsync(async (req, res) => {
 });
 
 const userLogout = catchAsync(async (req, res) => {
-  const newUser = await userService.userLogout(req.token._id, req.body.type);
+  const newUser = await userService.userLogout(req.token._id);
 
   return successResponse(
     req,
@@ -173,7 +102,7 @@ const userLogout = catchAsync(async (req, res) => {
 });
 
 const forgotPassword = catchAsync(async (req, res) => {
-  const token = await tokenService.generateResetPasswordToken(req.body.email);
+  const token = await tokenService.generateResetPasswordToken(req.body.email,req.body.type);
 
   await forgotPasswordEmail(req.body.email, token.resetPasswordToken);
   return res.send(successMessageWithoutData(200, "Email successfully sent"));
@@ -236,20 +165,42 @@ const resetForgotPassword = catchAsync(async (req, res) => {
     });
   }
 });
+const changePassword = catchAsync(async (req, res) => {
+  const user = await userService.changePassword(
+    req.token.user._id,
+    req.body.oldPassword,
+    req.body.newPassword
+  );
 
-const pushNotification = catchAsync(async (req, res) => {
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.PASSWORD_CHANGE
+  );
+});
+const editProfile = catchAsync(async (req, res) => {
   const userId = req.token.user._id;
-  const notification = await userService.pushNotification(userId);
+  const user = await userService.editProfile(userId, req.body);
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.SUCCESS,
-    notification
+    user
   );
 });
-
-module.exports = {
+const userContactUs = catchAsync(async (req, res) => {
+  const { name, email, message } = req.body;
+  const userDetails = await contactUs(name, message, email);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.CONTACT_US
+  );
+});
+export default {
   userSocialLogin,
   signUp,
   userLogin,
@@ -257,7 +208,7 @@ module.exports = {
   forgotPassword,
   forgotPage,
   resetForgotPassword,
-  pushNotification,
-  sendOtp,
-  verifyOtp,
+  changePassword,
+  editProfile,
+  userContactUs,
 };

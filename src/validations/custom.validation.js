@@ -17,7 +17,7 @@ const objectId = (value, helpers) => {
     return value;
   };
   
-  module.exports = {
+  export {
     objectId,
     password,
   };

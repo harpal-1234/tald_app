@@ -1,6 +1,6 @@
-const momentTz = require("moment-timezone");
-const moment = require("moment");
-const { USER_TYPE } = require("../config/appConstants");
+import momentTz from "moment-timezone";
+import moment from "moment";
+import { USER_TYPE } from "../config/appConstants.js";
 
 const localtime = (DateTime, timeZone) => {
   const localDt = momentTz.tz(DateTime, timeZone).format("YYYY-MM-DDTHH:mm:ss");
@@ -147,7 +147,7 @@ const matchSkills = (skills, user) => {
 
 //format address
 
-module.exports = {
+export {
   formatWorkSeeker,
   converStringToDate,
   formatAddressDB,

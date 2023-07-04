@@ -1,15 +1,14 @@
 //token service
-module.exports.SocketServices = require("./app.services.js/chat")
-module.exports.tokenService = require("./tokenservice");
+import * as tokenService from "./tokenservice.js";
 
 //admin Vendor service
 
 //admin Services
-module.exports.adminService = require("./admin/auth.service");
+import * as  adminService from "./admin/auth.service.js";
 //user services
-module.exports.userService = require("./user/auth.service");
+import * as userService from "./user/auth.service.js";
 
-module.exports.userProfileService = require("./user/profile.service");
-module.exports.appServices=require("./app.services.js/user")
+import * as appServices from "./app.services.js/user.js";
 
 // module.exports.userService=require("./user/profile/auth.service");
+export { tokenService, adminService, userService, appServices };

@@ -1,8 +1,8 @@
-const { Admin, Token, Banner, User, Group } = require("../../models");
-const { STATUS_CODES, ERROR_MESSAGES } = require("../../config/appConstants");
-const { OperationalError } = require("../../utils/errors");
+import { Admin, Token, User } from "../../models/index.js";
+import { STATUS_CODES, ERROR_MESSAGES } from "../../config/appConstants.js";
+import { OperationalError } from "../../utils/errors.js";
 
-const adminLogin = async (email, password) => {
+export const adminLogin = async (email, password) => {
   const admin = await Admin.findOne({ email: email });
 
   if (!admin) {
@@ -20,7 +20,7 @@ const adminLogin = async (email, password) => {
   return admin;
 };
 
-const changePassword = async (adminId, oldPassword, newPassword) => {
+export const changePassword = async (adminId, oldPassword, newPassword) => {
   const admin = await Admin.findById(adminId);
   if (!(await admin.isPasswordMatch(oldPassword))) {
     throw new OperationalError(
@@ -34,14 +34,14 @@ const changePassword = async (adminId, oldPassword, newPassword) => {
   return admin;
 };
 
-const dashBoard = async (adminId) => {
+export const dashBoard = async (adminId) => {
   const users = await User.countDocuments({ isDeleted: false });
   const groups = await Group.countDocuments({ isDeleted: false });
   const revenue = 0;
   return { users, groups, revenue };
 };
 
-const adminLogout = async (tokenId) => {
+export const adminLogout = async (tokenId) => {
   const token = await Token.findOne({ _id: tokenId, isDeleted: false });
 
   if (!token) {
@@ -55,11 +55,11 @@ const adminLogout = async (tokenId) => {
   });
   return updatedToken;
 };
-const createGroup = async (data) => {
+export const createGroup = async (data) => {
   const group = await Group.create(data);
   return group;
 };
-const getGroup = async (page, limit, search) => {
+export const getGroup = async (page, limit, search) => {
   const skip = page * limit;
   if (search) {
     const group = await Group.find({
@@ -96,7 +96,7 @@ const getGroup = async (page, limit, search) => {
   });
   return { group, totalGroups };
 };
-const getUser = async (page, limit, search) => {
+export const getUser = async (page, limit, search) => {
   const skip = page * limit;
   if (search) {
     const users = await User.find({
@@ -134,7 +134,7 @@ const getUser = async (page, limit, search) => {
 
   return { users, total };
 };
-const allUser = async (search) => {
+export const allUser = async (search) => {
   if (search) {
     const users = await User.find({
       isDeleted: false,
@@ -165,7 +165,7 @@ const allUser = async (search) => {
 
   return { users, total };
 };
-const userActions = async (userId) => {
+export const userActions = async (userId) => {
   const check = await User.findOne({ _id: userId, isDeleted: false });
   if (!check) {
     throw new OperationalError(
@@ -187,7 +187,7 @@ const userActions = async (userId) => {
     return "User Blocked successfully";
   }
 };
-const userDelete = async (userId) => {
+export const userDelete = async (userId) => {
   const check = await User.findOne({ _id: userId, isDeleted: false });
   if (!check) {
     throw new OperationalError(
@@ -202,7 +202,7 @@ const userDelete = async (userId) => {
   );
   return "User deleted successfully";
 };
-const groupDelete = async (groupId) => {
+export const groupDelete = async (groupId) => {
   const check = await Group.findOne({ _id: groupId, isDeleted: false });
   if (!check) {
     throw new OperationalError(
@@ -218,16 +218,16 @@ const groupDelete = async (groupId) => {
   return "Group deleted successfully";
 };
 
-module.exports = {
-  adminLogin,
-  changePassword,
-  dashBoard,
-  adminLogout,
-  createGroup,
-  getGroup,
-  getUser,
-  userActions,
-  userDelete,
-  groupDelete,
-  allUser,
-};
+// export default{
+//   adminLogin,
+//   changePassword,
+//   dashBoard,
+//   adminLogout,
+//   createGroup,
+//   getGroup,
+//   getUser,
+//   userActions,
+//   userDelete,
+//   groupDelete,
+//   allUser,
+// };

@@ -1,30 +1,19 @@
-const express = require("express");
-const { validate, validateView } = require("../../middlewares/validate");
-const authValidation = require("../../validations/user/auth.validation");
-const authController = require("../../controllers/user/auth.controller");
-const auth = require("../../middlewares/auth");
-const { USER_TYPE, joi } = require("../../config/appConstants");
+import express from "express";
+import { validate, validateView } from "../../middlewares/validate.js";
+import authValidation from "../../validations/user/auth.validation.js";
+import authController from "../../controllers/user/auth.controller.js";
+import auth from "../../middlewares/auth.js";
+import { USER_TYPE } from "../../config/appConstants.js";
 
 const router = express.Router();
 
 router.post(
   "/signUp",
-  auth(USER_TYPE.USER),
+ // auth(USER_TYPE.USER),
   validate(authValidation.signUp),
   authController.signUp
 );
 
-router.post(
-  "/sendOtp",
-  validate(authValidation.sendOtp),
-  authController.sendOtp
-);
-router.put(
-  "/verifyOtp",
-  auth(USER_TYPE.USER),
-  validate(authValidation.verifyOtp),
-  authController.verifyOtp
-);
 router.post("/login", validate(authValidation.login), authController.userLogin);
 
 router.post(
@@ -35,20 +24,19 @@ router.post(
 
 // router.get("/getProfile", auth(USER_TYPE.USER), authController.getProfile);
 
-// router.put(
-//   "/changePassword",
-//   auth(USER_TYPE.USER),
-//   validate(authValidation.changePassword),
-//   authController.changePassword
-// );
+router.put(
+  "/changePassword",
+  auth(USER_TYPE.USER),
+  validate(authValidation.changePassword),
+  authController.changePassword
+);
 
-// router.put(
-//   "/editProfile",
-//   auth(USER_TYPE.USER),
-//   upload.uploadFile.single('profileImage'),
-//   validate(authValidation.editprofile),
-//   authController.editProfile
-// )
+router.put(
+  "/editProfile",
+  auth(USER_TYPE.USER),
+  validate(authValidation.editprofile),
+  authController.editProfile
+)
 
 // router.post(
 //   "/refreshToken",
@@ -80,17 +68,16 @@ router
 router.post(
   "/logout",
   auth(USER_TYPE.USER),
-  //validate(authValidation.logOut),
+  //(authValidation.logOut),
   authController.userLogout
 );
 
-router.get(
-  "/pushNotification",
+router.post(
+  "/contactUs",
   auth(USER_TYPE.USER),
-  // validate(authValidation.pushNotificationStatus ),
-  authController.pushNotification
+  validate(authValidation.contactUs),
+  authController.userContactUs
 );
-
 // router.get("/getCustomerList", auth(USER_TYPE.USER), authController.getCustomerList);
 
 // router.get("/dashBoard",auth(USER_TYPE.USER), authController.dashBoard);
@@ -99,4 +86,4 @@ router.get(
 
 // router.delete("/deleteImage",auth(USER_TYPE.USER),authController.deleteImage);
 
-module.exports = router;
+export default router;

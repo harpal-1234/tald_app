@@ -1,9 +1,12 @@
-const { Strategy: JwtStrategy, ExtractJwt } = require("passport-jwt");
-const config = require("./config");
-const { TOKEN_TYPE, USER_TYPE, POPULATE_SKILLS } = require("./appConstants");
-const { Token } = require("../models");
-const { formatUserDB } = require("../utils/formatResponse");
-const { AuthFailedError } = require("../utils/errors");
+//import { JwtStrategy, ExtractJwt } from 'passport-jwt';
+import passportJwt from 'passport-jwt';
+const JwtStrategy = passportJwt.Strategy;
+const ExtractJwt = passportJwt.ExtractJwt;
+import config from "./config.js";
+import { TOKEN_TYPE, USER_TYPE} from "./appConstants.js";
+import { Token } from "../models/index.js";
+import { formatUserDB } from "../utils/formatResponse.js";
+import { AuthFailedError } from "../utils/errors.js";
 
 const jwtOptions = {
   secretOrKey: config.jwt.secret,
@@ -47,6 +50,6 @@ const jwtVerify = async (payload, done) => {
 
 const jwtStrategy = new JwtStrategy(jwtOptions, jwtVerify);
 
-module.exports = {
-  jwtStrategy,
+export {
+  jwtStrategy
 };

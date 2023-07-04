@@ -1,5 +1,5 @@
-const { valid } = require("joi");
-const Joi = require("joi");
+import { valid } from "joi";
+import Joi from "joi";
 const {
   JOI,
   USER_TYPE,
@@ -18,7 +18,7 @@ const {
   VALID_GENDER,
 } = require("../../config/appConstants");
 
-exports.editprofile = {
+const  editprofile = {
   body: Joi.object().keys({
     name: Joi.string().required(),
     images: Joi.array().items(
@@ -60,7 +60,7 @@ exports.editprofile = {
   }),
 };
 
-exports.userContactUs = {
+const userContactUs = {
   body: Joi.object().keys({
     name: Joi.string().required(),
     phoneNumber: JOI.PHONENUMBER,
@@ -68,19 +68,27 @@ exports.userContactUs = {
   }),
 };
 
-exports.userLocation = {
+const userLocation = {
   body: Joi.object().keys({
     location: Joi.string(),
   }),
 };
-exports.changePassword = {
+const changePassword = {
   body: Joi.object().keys({
     oldPassword:JOI.PASSWORD,
     newPassword:JOI.PASSWORD,
   }),
 };
-exports.favouriteStoreDeal = {
+const favouriteStoreDeal = {
   query: Joi.object().keys({
     storeId: Joi.string().required(),
   }),
 };
+
+export default{
+  favouriteStoreDeal,
+  changePassword,
+  userLocation,
+  userContactUs,
+  editprofile
+}

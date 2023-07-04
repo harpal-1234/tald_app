@@ -1,13 +1,13 @@
-const { adminService, tokenService } = require("../../services");
-const {
+import {adminService, tokenService}  from "../../services/index.js";
+import{
   USER_TYPE,
   STATUS_CODES,
   SUCCESS_MESSAGES,
-} = require("../../config/appConstants");
-const { catchAsync } = require("../../utils/universalFunction");
-const { successResponse } = require("../../utils/response");
+} from "../../config/appConstants.js";
+import { catchAsync } from"../../utils/universalFunction.js";
+import  { successResponse } from "../../utils/response.js";
 
-const adminLogin = catchAsync(async (req, res) => {
+export const adminLogin = catchAsync(async (req, res) => {
   let { email, password } = req.body;
   const admin = await adminService.adminLogin(email, password);
   const token = await tokenService.generateAuthToken(
@@ -24,7 +24,7 @@ const adminLogin = catchAsync(async (req, res) => {
   );
 });
 
-const changePassword = catchAsync(async (req, res) => {
+export const changePassword = catchAsync(async (req, res) => {
   await adminService.changePassword(
     req.token.admin._id,
     req.body.oldPassword,
@@ -33,7 +33,7 @@ const changePassword = catchAsync(async (req, res) => {
   return successResponse(req, res, STATUS_CODES.SUCCESS);
 });
 
-const dashBoard = catchAsync(async (req, res) => {
+export const dashBoard = catchAsync(async (req, res) => {
   const adminId = req.token._id;
 
   const data = await adminService.dashBoard(adminId);
@@ -46,7 +46,7 @@ const dashBoard = catchAsync(async (req, res) => {
   );
 });
 
-const adminLogout = catchAsync(async (req, res) => {
+export const adminLogout = catchAsync(async (req, res) => {
   await adminService.adminLogout(req.token._id);
   return successResponse(
     req,
@@ -55,7 +55,7 @@ const adminLogout = catchAsync(async (req, res) => {
     SUCCESS_MESSAGES.LOGOUT
   );
 });
-const createGroup = catchAsync(async (req, res) => {
+export const createGroup = catchAsync(async (req, res) => {
   const group = await adminService.createGroup(req.body);
   return successResponse(
     req,
@@ -65,7 +65,7 @@ const createGroup = catchAsync(async (req, res) => {
     group
   );
 });
-const getGroup = catchAsync(async (req, res) => {
+export const getGroup = catchAsync(async (req, res) => {
   const { page, limit, search } = req.query;
   const group = await adminService.getGroup(page, limit, search);
   return successResponse(
@@ -76,7 +76,7 @@ const getGroup = catchAsync(async (req, res) => {
     group
   );
 });
-const getUser = catchAsync(async (req, res) => {
+export const getUser = catchAsync(async (req, res) => {
   const { page, limit, search } = req.query;
   const user = await adminService.getUser(page, limit, search);
   return successResponse(
@@ -87,7 +87,7 @@ const getUser = catchAsync(async (req, res) => {
     user
   );
 });
-const allUser = catchAsync(async (req, res) => {
+export const allUser = catchAsync(async (req, res) => {
   const {search} = req.query;
   const user = await adminService.allUser(search);
   return successResponse(
@@ -98,7 +98,7 @@ const allUser = catchAsync(async (req, res) => {
     user
   );
 });
-const userAction = catchAsync(async (req, res) => {
+export const userAction = catchAsync(async (req, res) => {
   const { userId } = req.body;
   const user = await adminService.userActions(userId);
   return successResponse(
@@ -109,7 +109,7 @@ const userAction = catchAsync(async (req, res) => {
     user
   );
 });
-const userDelete = catchAsync(async (req, res) => {
+export const userDelete = catchAsync(async (req, res) => {
   const { userId } = req.body;
   const user = await adminService.userDelete(userId);
   return successResponse(
@@ -120,7 +120,7 @@ const userDelete = catchAsync(async (req, res) => {
     user
   );
 });
-const deleteGroup = catchAsync(async (req, res) => {
+export const deleteGroup = catchAsync(async (req, res) => {
   const { groupId } = req.body;
   const user = await adminService.groupDelete(groupId);
   return successResponse(
@@ -131,7 +131,7 @@ const deleteGroup = catchAsync(async (req, res) => {
     user
   );
 });
-const dashboard = catchAsync(async (req, res) => {
+export const dashboard = catchAsync(async (req, res) => {
   // const {groupId}=req.body
   const user = await adminService.dashBoard();
   return successResponse(
@@ -142,17 +142,17 @@ const dashboard = catchAsync(async (req, res) => {
     user
   );
 });
-module.exports = {
-  adminLogin,
-  changePassword,
-  dashBoard,
-  adminLogout,
-  createGroup,
-  getGroup,
-  getUser,
-  userAction,
-  userDelete,
-  deleteGroup,
-  dashboard,
-  allUser
-};
+// export default{
+//   adminLogin,
+//   changePassword,
+//   dashBoard,
+//   adminLogout,
+//   createGroup,
+//   getGroup,
+//   getUser,
+//   userAction,
+//   userDelete,
+//   deleteGroup,
+//   dashboard,
+//   allUser
+//};

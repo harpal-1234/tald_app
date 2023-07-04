@@ -1,10 +1,9 @@
-const { v4: uuidv4 } = require("uuid");
-const rateLimit = require("express-rate-limit");
-
-const { NotFoundError } = require("../utils/errors");
-const { errorResponse } = require("../utils/response");
-const { ERROR_MESSAGES, STATUS_CODES } = require("../config/appConstants");
-
+import { v4 as uuidv4 } from 'uuid';
+import rateLimit from "express-rate-limit";
+import { NotFoundError } from "../utils/errors.js";
+import { errorResponse } from "../utils/response.js";
+import { ERROR_MESSAGES, STATUS_CODES } from "../config/appConstants.js";
+const uuid = uuidv4();
 const errorHandler = (error, req, res, next) => {
   console.log(error);
   return errorResponse(error, req, res);
@@ -32,7 +31,7 @@ const authLimiter = rateLimit({
   skipSuccessfulRequests: true,
 });
 
-module.exports = {
+export{
   errorHandler,
   routeNotFoundHandler,
   requestHandler,

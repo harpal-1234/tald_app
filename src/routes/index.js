@@ -1,9 +1,8 @@
-const express = require("express");
-const userAuth = require("./user/auth.routes");
-const userProfile = require("./user/profile.routes");
-const staticRoutes = require("../routes/static.routes");
-const adminAuth = require("./admin/auth.routes");
-const app = require("./app/user.routes")
+import express from "express";
+import userAuth from "./user/auth.routes.js";
+import staticRoutes from "../routes/static.routes.js";
+import adminAuth from "./admin/auth.routes.js";
+import app from "./app/user.routes.js";
 //const adminUserRoutes=require("./admin/user.routes");
 //const staticRoutes = require("./");
 //const commonRoutes = require("./user/common.routes");
@@ -24,10 +23,6 @@ const defaultRoutes = [
     route: userAuth,
   },
   {
-    path: "/user/profile",
-    route: userProfile,
-  },
-  {
     path: "/app/user",
     route: app,
   },
@@ -41,4 +36,4 @@ defaultRoutes.forEach((route) => {
   router.use(route.path, route.route);
 });
 
-module.exports = router;
+export default router ;
