@@ -80,6 +80,7 @@ export const createGroup = catchAsync(async (req, res) => {
     group
   );
 });
+
 export const getGroup = catchAsync(async (req, res) => {
   const { page, limit, search } = req.query;
   const group = await adminService.getGroup(page, limit, search);

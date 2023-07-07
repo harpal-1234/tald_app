@@ -25,7 +25,7 @@ router.get(
 //   authController.changePassword
 // );
 
-// router.post("/logout", auth(USER_TYPE.ADMIN), authController.adminLogout);
+router.post("/logout", auth(USER_TYPE.ADMIN), authController.adminLogout);
 // router.get(
 //   "/getDashboard",
 //   auth(USER_TYPE.ADMIN),
