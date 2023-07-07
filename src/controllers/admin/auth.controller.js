@@ -14,17 +14,18 @@ export const adminLogin = catchAsync(async (req, res) => {
     email: admin.email,
     _id: admin._id,
   };
-  // const token = await tokenService.generateAuthToken(
-  //   admin,
-  //   "",
-  //   USER_TYPE.ADMIN
-  // );
+  const token = await tokenService.generateAuthToken(
+    admin,
+    USER_TYPE.ADMIN,
+    USER_TYPE.ADMIN
+  );
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.DEFAULT,
-    newUser
+    newUser,
+    token
   );
 });
 export const userList = catchAsync(async (req, res) => {
