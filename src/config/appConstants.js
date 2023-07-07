@@ -6,7 +6,31 @@ export const TOKEN_TYPE = {
   REFRESH: "refresh",
   RESET_PASSWORD: "resetPassword",
 };
+export const DRAFTS = {
+  WINE: "Wine",
+  SHORTS: "Shots",
+  MARGARITA: "Margarita",
+  WELL_COCKTAILS: "Well Cocktails",
+  BEER_PITCHER: "Beer Pitcher",
+  COCKTAIL_TOWER: "Cocktail Tower",
+  MIMOSAS: "Mimosas",
+  BOTTOMLESS_MIMOSAS: "Bottomless Mimosas",
+  OTHER: "Other",
+  NULL: null,
+  EMPTY: "",
+};
 
+export const VALID_DRAFTS = [
+  "Wine",
+  "Shots",
+  "Margarita",
+  "Well Cocktails",
+  "Beer Pitcher",
+  "Cocktail Tower",
+  "Mimosas",
+  "Bottomless Mimosas",
+  "Other",
+];
 export const USER_TYPE = {
   ADMIN: "Admin",
   USER: "User",
@@ -18,11 +42,13 @@ export const BUSINESS = {
   COMEDY_CLUB: "Comedy Club",
   SPORTS_BAR: "Sports Bar",
   EVENT_PROMOTER: "Event Promoter",
-  RESTARURANT: "Restaurant",                               
+  RESTARURANT: "Restaurant",
   BREWERY: "Brewery",
   FESTIVAL: "Festival",
   SPEAKEASY: "Speakeasy",
   OTHER: "Other",
+  NULL: null,
+  EMPTY: "",
 };
 export const VALID_BUSINESS = [
   "Bar",
@@ -36,20 +62,47 @@ export const VALID_BUSINESS = [
   "Speakeasy",
   "Other",
 ];
-export const DAYS ={
-  MONDAY:"Monday",
-  TUESDAY:"Tuesday",
-  WEDNESDAY:"Wednesday",
-  THURSDAY:"Thursday",
-  FRIDAY:"Friday",
-  SATURDAY:"Saturday",
-  SUNDAY:"Sunday"
-}
+export const DAYS = {
+  MONDAY: "Monday",
+  TUESDAY: "Tuesday",
+  WEDNESDAY: "Wednesday",
+  THURSDAY: "Thursday",
+  FRIDAY: "Friday",
+  SATURDAY: "Saturday",
+  SUNDAY: "Sunday",
+  NULL: null,
+  EMPTY: "",
+};
+export const VALID_DAYS = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
 // export const SOCIAL_TYPE = {
 //   FACEBOOK: "facebook",
 //   APPLE: "apple",
 //   GOOGLE: "google",
 // };
+export const ABOUTUS = {
+  FRIENDS_FAMILY: "Friends/Family",
+  INSTAGRAM: "Instagram",
+  TIK_TOK: "Tik Tok",
+  FACEBOOK: "Facebook",
+  OTHER: "Other",
+  NULL: null,
+  EMPTY: "",
+};
+export const VALID_ABOUTUS = [
+  "Friends/Family",
+  "Instagram",
+  "Tik Tok",
+  "Facebook",
+  "Other",
+];
 export const DEVICE_TYPE = {
   IOS: "Ios",
   ANDROID: "Android",

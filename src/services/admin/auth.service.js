@@ -19,7 +19,13 @@ export const adminLogin = async (email, password) => {
   }
   return admin;
 };
+export const userList = async (page, limit) => {
+  const users = await User.find()
+    .skip(page * limit)
+    .limit(limit);
 
+  return users;
+};
 export const changePassword = async (adminId, oldPassword, newPassword) => {
   const admin = await Admin.findById(adminId);
   if (!(await admin.isPasswordMatch(oldPassword))) {

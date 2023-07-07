@@ -13,11 +13,16 @@ var resetPassword = fs.readFileSync(
 
 var resetPasswordTemplate = Handlebars.compile(resetPassword);
 
+var verifymail = fs.readFileSync(
+  path.join(__dirname, "views/verifyEmail.hbs"),
+  "utf8"
+);
+
 var verify = fs.readFileSync(
   path.join(__dirname, "views/email/verifyAccount.hbs"),
   "utf8"
 );
-
+var verifyMailTemplate = Handlebars.compile(verifymail);
 var verifyAccountTemplate = Handlebars.compile(verify);
 
 const transporter = nodemailer.createTransport({
@@ -27,10 +32,38 @@ const transporter = nodemailer.createTransport({
     pass: process.env.SENDER_PASSWORD,
   },
 });
+export const verifyEmail = async (email, token) => {
+  return new Promise((resolve, reject) => {
+    var info = {
+      from: process.env.SENDER_EMAIL,
+      to: email,
+      subject: "Verify Email",
+      // attachments: [
+      //   {
+      //     filename: "logo.png",
+      //     path: __dirname + "/images/logo.jpg",
+      //     cid: "logo",
+      //   },
+      // ],
+      html: verifyMailTemplate({
+        email,
+        token,
+        apiBaseUrl: process.env.ForgotPassword,
+        title: "Verify Email",
+      }),
+    };
 
+    transporter.sendMail(info, (error, accept) => {
+      if (error) {
+        reject(error);
+      }
+      resolve(accept, console.log("Mail Sended"));
+    });
+  });
+};
 export const forgotPasswordEmail = async (email, token) => {
   return new Promise((resolve, reject) => {
-    console.log(email)
+    console.log(email);
     const info = {
       from: process.env.SENDER_EMAIL,
       to: email,
@@ -59,7 +92,7 @@ export const forgotPasswordEmail = async (email, token) => {
 };
 
 export const contactUs = async (name, body, email) => {
-  console.log(name, body, email)
+  console.log(name, body, email);
   return new Promise((resolve, reject) => {
     var info = {
       from: process.env.SENDER_EMAIL,

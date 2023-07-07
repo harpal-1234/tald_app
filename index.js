@@ -3,7 +3,7 @@ import app from "./app.js";
 import config from "./src/config/config.js";
 import logger from "./src/config/logger.js";
 import CreateAdmin from "./src/utils/bootstrap.js";
-mongoose.set('strictQuery', false);
+mongoose.set("strictQuery", false);
 let server;
 mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
   console.log("Connected to MongoDB");

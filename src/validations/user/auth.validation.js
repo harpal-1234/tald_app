@@ -5,6 +5,12 @@ import {
   USER_TYPE,
   SOCIAL_LOGIN,
   SOCIAL_TYPE,
+  ABOUTUS,
+  VALID_BUSINESS,
+  DRAFTS,
+  VALID_ABOUTUS,
+  VALID_DRAFTS,
+  VALID_DAYS
 } from "../../config/appConstants.js";
 
 const login = {
@@ -58,11 +64,7 @@ const sendOtp = {
 const signUp = {
   body: Joi.object().keys({
     email: JOI.EMAIL,
-    password: Joi.string().required(),
-    type: Joi.string().required().valid("User", "Vendor"),
-    userName: Joi.string.required().allow(null, ""),
-    dateOfBirth: Joi.string().required().allow(null, ""),
-  }),
+  })
 };
 
 const forgotPassword = {

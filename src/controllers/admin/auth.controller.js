@@ -1,29 +1,43 @@
-import {adminService, tokenService}  from "../../services/index.js";
-import{
+import { adminService, tokenService } from "../../services/index.js";
+import {
   USER_TYPE,
   STATUS_CODES,
   SUCCESS_MESSAGES,
 } from "../../config/appConstants.js";
-import { catchAsync } from"../../utils/universalFunction.js";
-import  { successResponse } from "../../utils/response.js";
+import { catchAsync } from "../../utils/universalFunction.js";
+import { successResponse } from "../../utils/response.js";
 
 export const adminLogin = catchAsync(async (req, res) => {
   let { email, password } = req.body;
   const admin = await adminService.adminLogin(email, password);
-  const token = await tokenService.generateAuthToken(
-    admin,
-    "",
-    USER_TYPE.ADMIN
-  );
+  const newUser = {
+    email: admin.email,
+    _id: admin._id,
+  };
+  // const token = await tokenService.generateAuthToken(
+  //   admin,
+  //   "",
+  //   USER_TYPE.ADMIN
+  // );
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.DEFAULT,
-    token
+    newUser
   );
 });
-
+export const userList = catchAsync(async (req, res) => {
+  let { page, limit } = req.query;
+  const users = await adminService.userList(page, limit);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    users
+  );
+});
 export const changePassword = catchAsync(async (req, res) => {
   await adminService.changePassword(
     req.token.admin._id,
@@ -88,7 +102,7 @@ export const getUser = catchAsync(async (req, res) => {
   );
 });
 export const allUser = catchAsync(async (req, res) => {
-  const {search} = req.query;
+  const { search } = req.query;
   const user = await adminService.allUser(search);
   return successResponse(
     req,

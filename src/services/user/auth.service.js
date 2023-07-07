@@ -11,305 +11,303 @@ import {
   SUCCESS_MESSAGES,
 } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
-import config from "../../config/config.js";
 
 export const createUser = async (userData) => {
-  const check = await User.findOne({ email: userData.email, isDeleted: false });
+  const check = await User.findOne({
+    email: userData.email,
+    isDeleted: false,
+  });
   if (check) {
-    throw new OperationalError(
-      STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.EMAIL_ALREADY_EXIST
-    );
+    return check;
   }
   const user = await User.create({
     email: userData.email,
-    password: userData.password,
-    userName: userData.userName,
-    dateOfBirth: userData.dateofBirth,
-    type: userData.type,
   });
   return user;
 };
-export const createUserNumber = async (phoneNumber) => {
-  const check = await User.findOne({
-    phoneNumber: phoneNumber,
-    isDeleted: false,
-    isVerify: true,
-  });
-  console.log(check);
-  if (!check) {
-    const user = await User.create({ phoneNumber: phoneNumber });
-    return user;
-  } else {
-    return check;
-  }
-};
-export const verifyOtp = async (otp, tokenId, userId) => {
-  const user = await User.findOne({ _id: userId, isDeleted: false });
-  if (!user) {
-    throw new OperationalError(
-      STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.USER_NOT_FOUND
-    );
-  }
-  let currentTime = new Date();
-  const token = await Token.findOne({ _id: tokenId });
 
-  // console.log(token.otp.expiresAt,currentTime)
-  if (token.otp.expiresAt < currentTime) {
-    throw new OperationalError(
-      STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.OTP_EXPIRE
-    );
-  }
-  if (token.phoneNumber && token.otp.code == otp) {
-    const user = await User.findOne({ _id: userId, isDeleted: false });
-    const tokenVerify = await Token.findOneAndUpdate(
-      { _id: tokenId },
-      { "otp.code": "", phoneNumber: "", isDeleted: true, isBlocked: true }
-    );
-    return user;
-  }
+// export const createUserNumber = async (phoneNumber) => {
+//   const check = await User.findOne({
+//     phoneNumber: phoneNumber,
+//     isDeleted: false,
+//     isVerify: true,
+//   });
+//   console.log(check);
+//   if (!check) {
+//     const user = await User.create({ phoneNumber: phoneNumber });
+//     return user;
+//   } else {
+//     return check;
+//   }
+// };
+// export const verifyOtp = async (otp, tokenId, userId) => {
+//   const user = await User.findOne({ _id: userId, isDeleted: false });
+//   if (!user) {
+//     throw new OperationalError(
+//       STATUS_CODES.ACTION_FAILED,
+//       ERROR_MESSAGES.USER_NOT_FOUND
+//     );
+//   }
+//   let currentTime = new Date();
+//   const token = await Token.findOne({ _id: tokenId });
 
-  if (token.otp.code == otp) {
-    const userVerify = await User.findOneAndUpdate(
-      { _id: userId },
-      { isVerify: true },
-      { new: true }
-    );
-    const tokenVerify = await Token.findOneAndUpdate(
-      { _id: tokenId },
-      { "otp.code": "" }
-    );
+//   // console.log(token.otp.expiresAt,currentTime)
+//   if (token.otp.expiresAt < currentTime) {
+//     throw new OperationalError(
+//       STATUS_CODES.ACTION_FAILED,
+//       ERROR_MESSAGES.OTP_EXPIRE
+//     );
+//   }
+//   if (token.phoneNumber && token.otp.code == otp) {
+//     const user = await User.findOne({ _id: userId, isDeleted: false });
+//     const tokenVerify = await Token.findOneAndUpdate(
+//       { _id: tokenId },
+//       { "otp.code": "", phoneNumber: "", isDeleted: true, isBlocked: true }
+//     );
+//     return user;
+//   }
 
-    return { userVerify, tokenVerify };
-  } else {
-    throw new OperationalError(
-      STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.VERIFY_UNMATCH
-    );
-  }
-};
-export const userLogin = async (data) => {
-  console.log(data);
-  let user = await User.findOne({
-    email: data.email,
-    type: data.type,
-    isDeleted: false,
-  });
+//   if (token.otp.code == otp) {
+//     const userVerify = await User.findOneAndUpdate(
+//       { _id: userId },
+//       { isVerify: true },
+//       { new: true }
+//     );
+//     const tokenVerify = await Token.findOneAndUpdate(
+//       { _id: tokenId },
+//       { "otp.code": "" }
+//     );
 
-  if (!user) {
-    throw new OperationalError(
-      STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.EMAIL_NOT_FOUND
-    );
-    // throw new ApiError(
-    //   ERROR_MESSAGES.EMAIL_NOT_FIND
-    //   // httpStatus.UNAUTHORIZED,
-    //   // "Email does not exist please signup"
-    // );
-  }
+//     return { userVerify, tokenVerify };
+//   } else {
+//     throw new OperationalError(
+//       STATUS_CODES.ACTION_FAILED,
+//       ERROR_MESSAGES.VERIFY_UNMATCH
+//     );
+//   }
+// };
+// export const userLogin = async (data) => {
+//   console.log(data);
+//   let user = await User.findOne({
+//     email: data.email,
+//     type: data.type,
+//     isVerify: true,
+//     isDeleted: false,
+//   });
 
-  if (user.isBlocked) {
-    throw new OperationalError(
-      STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.ACCOUNT_BLOCKED
-    );
-  }
+//   if (!user) {
+//     throw new OperationalError(
+//       STATUS_CODES.ACTION_FAILED,
+//       ERROR_MESSAGES.EMAIL_NOT_FOUND
+//     );
+//     // throw new ApiError(
+//     //   ERROR_MESSAGES.EMAIL_NOT_FIND
+//     //   // httpStatus.UNAUTHORIZED,
+//     //   // "Email does not exist please signup"
+//     // );
+//   }
 
-  if (user.isDeleted) {
-    throw new OperationalError(
-      STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.ACCOUNT_DELETED
-    );
-  }
+//   if (user.isBlocked) {
+//     throw new OperationalError(
+//       STATUS_CODES.ACTION_FAILED,
+//       ERROR_MESSAGES.ACCOUNT_BLOCKED
+//     );
+//   }
 
-  if (!(await user.isPasswordMatch(data.password))) {
-    throw new OperationalError(
-      STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.WRONG_PASSWORD
-    );
-  }
+//   if (user.isDeleted) {
+//     throw new OperationalError(
+//       STATUS_CODES.ACTION_FAILED,
+//       ERROR_MESSAGES.ACCOUNT_DELETED
+//     );
+//   }
 
-  return user;
-};
+//   if (!(await user.isPasswordMatch(data.password))) {
+//     throw new OperationalError(
+//       STATUS_CODES.ACTION_FAILED,
+//       ERROR_MESSAGES.WRONG_PASSWORD
+//     );
+//   }
+//   await formatUser(user);
 
-export const userSocialLogin = async (data) => {
-  // const check = await User.findOne({
-  //   $or: [
-  //     { facebookId: data.socialId },
-  //     { appleId: data.socialId },
-  //     { googleId: data.socialId },
-  //   ],
-  //   isDeleted: false,
-  // });
-  if (data.socialType == "facebook") {
-    const user = await User.findOneAndUpdate(
-      {
-        facebookId: data.socialId,
-        isDeleted: false,
-      },
-      {
-        $setOnInsert: {
-          name: data.name,
-        },
-        $set: { facebookId: data.socialId },
-      },
-      { upsert: true, new: true }
-    );
-    return user;
-  }
-  if (data.socialType == "apple") {
-    const user = await User.findOneAndUpdate(
-      {
-        appleId: data.socialId,
-        isDeleted: false,
-      },
-      {
-        $setOnInsert: {
-          name: data.name,
-        },
-        $set: { appleId: data.socialId },
-      },
-      { upsert: true, new: true }
-    );
-    return user;
-  }
-  if (data.socialType == "google") {
-    const user = await User.findOneAndUpdate(
-      {
-        googleId: data.socialId,
-        isDeleted: false,
-      },
-      {
-        $setOnInsert: {
-          name: data.name,
-        },
-        $set: { googleId: data.socialId },
-      },
-      { upsert: true, new: true }
-    );
+//   return user;
+// };
 
-    return user;
-  }
-};
+// export const userSocialLogin = async (data) => {
+//   // const check = await User.findOne({
+//   //   $or: [
+//   //     { facebookId: data.socialId },
+//   //     { appleId: data.socialId },
+//   //     { googleId: data.socialId },
+//   //   ],
+//   //   isDeleted: false,
+//   // });
+//   if (data.socialType == "facebook") {
+//     const user = await User.findOneAndUpdate(
+//       {
+//         facebookId: data.socialId,
+//         isDeleted: false,
+//       },
+//       {
+//         $setOnInsert: {
+//           name: data.name,
+//         },
+//         $set: { facebookId: data.socialId },
+//       },
+//       { upsert: true, new: true }
+//     );
+//     return user;
+//   }
+//   if (data.socialType == "apple") {
+//     const user = await User.findOneAndUpdate(
+//       {
+//         appleId: data.socialId,
+//         isDeleted: false,
+//       },
+//       {
+//         $setOnInsert: {
+//           name: data.name,
+//         },
+//         $set: { appleId: data.socialId },
+//       },
+//       { upsert: true, new: true }
+//     );
+//     return user;
+//   }
+//   if (data.socialType == "google") {
+//     const user = await User.findOneAndUpdate(
+//       {
+//         googleId: data.socialId,
+//         isDeleted: false,
+//       },
+//       {
+//         $setOnInsert: {
+//           name: data.name,
+//         },
+//         $set: { googleId: data.socialId },
+//       },
+//       { upsert: true, new: true }
+//     );
 
-export const getUserById = async (userId) => {
-  const user = await User.findById(userId).lean();
+//     return user;
+//   }
+// };
 
-  if (!user) {
-    throw new OperationalError(
-      STATUS_CODES.NOT_FOUND,
-      ERROR_MESSAGES.USER_NOT_FOUND
-    );
-  }
+// export const getUserById = async (userId) => {
+//   const user = await User.findById(userId).lean();
 
-  return user;
-};
+//   if (!user) {
+//     throw new OperationalError(
+//       STATUS_CODES.NOT_FOUND,
+//       ERROR_MESSAGES.USER_NOT_FOUND
+//     );
+//   }
 
-export const userLogout = async (tokenId) => {
-  const token = await Token.findOne({
-    _id: tokenId,
-    isDeleted: false,
-  });
+//   return user;
+// };
 
-  if (!token) {
-    throw new OperationalError(
-      STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.AUTHENTICATION_FAILED
-    );
-  }
-  if (token.isDeleted) {
-    throw new OperationalError(STATUS_CODES.NOT_FOUND, ERROR_MESSAGES.LOG_OUT);
-  }
-  await Token.findByIdAndUpdate(
-    { _id: tokenId },
-    { isDeleted: true },
-    { new: true }
-  );
-  return;
-};
+// export const userLogout = async (tokenId) => {
+//   const token = await Token.findOne({
+//     _id: tokenId,
+//     isDeleted: false,
+//   });
 
-export const resetPassword = async (tokenData, newPassword) => {
-  let query = tokenData.user;
-  newPassword = await bcrypt.hash(newPassword, 8);
-  if (tokenData.role === USER_TYPE.USER) {
-    const userdata = await User.findOneAndUpdate(
-      { _id: query },
-      { $set: { password: newPassword } }
-    );
-    const tokenvalue = await Token.findByIdAndUpdate(tokenData._id, {
-      isDeleted: true,
-    });
-    return { userdata, tokenvalue };
-  }
+//   if (!token) {
+//     throw new OperationalError(
+//       STATUS_CODES.ACTION_FAILED,
+//       ERROR_MESSAGES.AUTHENTICATION_FAILED
+//     );
+//   }
+//   if (token.isDeleted) {
+//     throw new OperationalError(STATUS_CODES.NOT_FOUND, ERROR_MESSAGES.LOG_OUT);
+//   }
+//   await Token.findByIdAndUpdate(
+//     { _id: tokenId },
+//     { isDeleted: true },
+//     { new: true }
+//   );
+//   return;
+// };
 
-  const adminvalue = await Admin.findOneAndUpdate(
-    { _id: query },
-    { $set: { password: newPassword } }
-  );
-  const tokenvalue = await Token.findByIdAndUpdate(tokenData._id, {
-    isDeleted: true,
-  });
+// export const resetPassword = async (tokenData, newPassword) => {
+//   let query = tokenData.user;
+//   newPassword = await bcrypt.hash(newPassword, 8);
+//   if (tokenData.role === USER_TYPE.USER) {
+//     const userdata = await User.findOneAndUpdate(
+//       { _id: query },
+//       { $set: { password: newPassword } }
+//     );
+//     const tokenvalue = await Token.findByIdAndUpdate(tokenData._id, {
+//       isDeleted: true,
+//     });
+//     return { userdata, tokenvalue };
+//   }
 
-  return { tokenvalue, adminvalue };
-};
+//   const adminvalue = await Admin.findOneAndUpdate(
+//     { _id: query },
+//     { $set: { password: newPassword } }
+//   );
+//   const tokenvalue = await Token.findByIdAndUpdate(tokenData._id, {
+//     isDeleted: true,
+//   });
 
-export const pushNotification = async (userId) => {
-  const data = await User.findOne({ _id: userId, isDeleted: false });
-  if (data.isNotification == "Enable") {
-    await User.findOneAndUpdate(
-      { _id: userId, isDeleted: false },
-      {
-        isNotification: "Disable",
-      },
-      { new: true }
-    );
-    return "Disable";
-  }
-  if (data.isNotification == "Disable") {
-    await User.findOneAndUpdate(
-      { _id: userId, isDeleted: false },
-      {
-        isNotification: "Enable",
-      },
-      { new: true }
-    );
-  }
-  return "Enable";
-};
-export const publickKey = async (publickKey, userId) => {
-  const user = await User.findOne({ _id: userId, isDeleted: false });
-};
-export const changePassword = async (userId, oldPassword, newPassword) => {
-  const user = await User.findById(userId);
-  if (!(await bcrypt.compare(oldPassword, user.password))) {
-    throw new OperationalError(
-      STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.OLD_PASSWORD
-    );
-  }
-  let updatedPassword = { password: newPassword };
-  Object.assign(user, updatedPassword);
-  await user.save();
-  return user;
-};
-export const editProfile = async (userId, data) => {
-  const user = await User.findOneAndUpdate(
-    { _id: userId },
-    {
-      image: data.image,
-      name: data.name,
-      email: data.email,
-    },
-    {
-      new: true,
-      lean: true,
-    }
-  );
-  const data1 = await formatUser(user);
-  return data1;
-};
+//   return { tokenvalue, adminvalue };
+// };
+
+// export const pushNotification = async (userId) => {
+//   const data = await User.findOne({ _id: userId, isDeleted: false });
+//   if (data.isNotification == "Enable") {
+//     await User.findOneAndUpdate(
+//       { _id: userId, isDeleted: false },
+//       {
+//         isNotification: "Disable",
+//       },
+//       { new: true }
+//     );
+//     return "Disable";
+//   }
+//   if (data.isNotification == "Disable") {
+//     await User.findOneAndUpdate(
+//       { _id: userId, isDeleted: false },
+//       {
+//         isNotification: "Enable",
+//       },
+//       { new: true }
+//     );
+//   }
+//   return "Enable";
+// };
+// export const publickKey = async (publickKey, userId) => {
+//   const user = await User.findOne({ _id: userId, isDeleted: false });
+// };
+// export const changePassword = async (userId, oldPassword, newPassword) => {
+//   const user = await User.findById(userId);
+//   if (!(await bcrypt.compare(oldPassword, user.password))) {
+//     throw new OperationalError(
+//       STATUS_CODES.ACTION_FAILED,
+//       ERROR_MESSAGES.OLD_PASSWORD
+//     );
+//   }
+//   let updatedPassword = { password: newPassword };
+//   Object.assign(user, updatedPassword);
+//   await user.save();
+//   return user;
+// };
+// export const editProfile = async (userId, data) => {
+//   const user = await User.findOneAndUpdate(
+//     { _id: userId },
+//     {
+//       image: data.image,
+//       name: data.name,
+//       email: data.email,
+//     },
+//     {
+//       new: true,
+//       lean: true,
+//     }
+//   );
+//   const data1 = await formatUser(user);
+//   return data1;
+// };
 // const app_key_provider = {
 //   getToken() {
 //     return config.onesignal_api_key;

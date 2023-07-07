@@ -1,20 +1,11 @@
 import mongoose from "mongoose";
-import bcrypt  from "bcryptjs"; 
+import bcrypt from "bcryptjs";
 
 const adminSchema = mongoose.Schema(
   {
     // name: { type: String },
     email: { type: String, lowercase: true, trim: true, unique: true },
     password: { type: String, required: true },
-    orders: [
-      {
-        vendor: { type: mongoose.SchemaTypes.ObjectId, ref: "user" },
-        amount: {type:String},
-        bannerId:{type: mongoose.SchemaTypes.ObjectId, ref: "banners"},
-        paymentId:{type:String}
-      },
-    ],
-    totalRevanue:{type:Number,default:0}
   },
   {
     timestamps: true,
@@ -34,8 +25,6 @@ adminSchema.pre("save", async function (next) {
   next();
 });
 
- const Admin = mongoose.model("admins", adminSchema);
+const Admin = mongoose.model("admins", adminSchema);
 
- export{
-  Admin
- }
+export { Admin };

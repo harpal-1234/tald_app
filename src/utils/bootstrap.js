@@ -7,7 +7,7 @@ const Run = async () => {
   let password = "$2a$08$8QBeUqrXcf334kMMrDS1euP5nbn00MZpP5Yi4PBucI9MIdASz8qDC";
 
   let adminDetails = {
-    email: "magent@test.com",
+    email: "test@gmail.com",
     $setOnInsert: { password },
   };
   CreateAdmin(adminDetails);

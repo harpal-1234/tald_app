@@ -14,76 +14,81 @@ router.post(
   authController.signUp
 );
 
-router.post("/login", validate(authValidation.login), authController.userLogin);
-
-router.post(
-  "/socialLogin",
-  validate(authValidation.userSocialLogin),
-  authController.userSocialLogin
-);
-
-// router.get("/getProfile", auth(USER_TYPE.USER), authController.getProfile);
-
-router.put(
-  "/changePassword",
-  auth(USER_TYPE.USER),
-  validate(authValidation.changePassword),
-  authController.changePassword
-);
-
-router.put(
-  "/editProfile",
-  auth(USER_TYPE.USER),
-  validate(authValidation.editprofile),
-  authController.editProfile
-)
+// router.post("/login", validate(authValidation.login), authController.userLogin);
 
 // router.post(
-//   "/refreshToken",
-//   validate(authValidation.refreshToken),
-//   authController.refreshToken
+//   "/socialLogin",
+//   validate(authValidation.userSocialLogin),
+//   authController.userSocialLogin
 // );
 
-//--------forgot password--------------//
+// // router.get("/getProfile", auth(USER_TYPE.USER), authController.getProfile);
 
-router.post(
-  "/forgotPassword",
-  validate(authValidation.forgotPassword),
-  authController.forgotPassword
-);
+// router.put(
+//   "/changePassword",
+//   auth(USER_TYPE.USER),
+//   validate(authValidation.changePassword),
+//   authController.changePassword
+// );
 
-router
-  .route("/resetPassword")
-  .get(authController.forgotPage)
-  .post(
-    validateView(
-      validateView(authValidation.forgotPage),
-      authValidation.resetForgotPassword
-    ),
-    authController.resetForgotPassword
-  );
+// router.put(
+//   "/editProfile",
+//   auth(USER_TYPE.USER),
+//   validate(authValidation.editprofile),
+//   authController.editProfile
+// )
+// router.get(
+//   "/verifyEmail",
+//   //auth(USER_TYPE.USER),
+//   //validate(UserValidation.verify),
+//   authController.verifyMail
+// );
+// // router.post(
+// //   "/refreshToken",
+// //   validate(authValidation.refreshToken),
+// //   authController.refreshToken
+// // );
 
-// //----------end------------------//
+// //--------forgot password--------------//
 
-router.post(
-  "/logout",
-  auth(USER_TYPE.USER),
-  //(authValidation.logOut),
-  authController.userLogout
-);
+// router.post(
+//   "/forgotPassword",
+//   validate(authValidation.forgotPassword),
+//   authController.forgotPassword
+// );
 
-router.post(
-  "/contactUs",
-  auth(USER_TYPE.USER),
-  validate(authValidation.contactUs),
-  authController.userContactUs
-);
-// router.get("/getCustomerList", auth(USER_TYPE.USER), authController.getCustomerList);
+// router
+//   .route("/resetPassword")
+//   .get(authController.forgotPage)
+//   .post(
+//     validateView(
+//       validateView(authValidation.forgotPage),
+//       authValidation.resetForgotPassword
+//     ),
+//     authController.resetForgotPassword
+//   );
 
-// router.get("/dashBoard",auth(USER_TYPE.USER), authController.dashBoard);
+// // //----------end------------------//
 
-// router.delete("/deleteAccount", auth(USER_TYPE.USER), authController.deleteAccount);
+// router.post(
+//   "/logout",
+//   auth(USER_TYPE.USER),
+//   //(authValidation.logOut),
+//   authController.userLogout
+// );
 
-// router.delete("/deleteImage",auth(USER_TYPE.USER),authController.deleteImage);
+// router.post(
+//   "/contactUs",
+//   auth(USER_TYPE.USER),
+//   validate(authValidation.contactUs),
+//   authController.userContactUs
+// );
+// // router.get("/getCustomerList", auth(USER_TYPE.USER), authController.getCustomerList);
+
+// // router.get("/dashBoard",auth(USER_TYPE.USER), authController.dashBoard);
+
+// // router.delete("/deleteAccount", auth(USER_TYPE.USER), authController.deleteAccount);
+
+// // router.delete("/deleteImage",auth(USER_TYPE.USER),authController.deleteImage);
 
 export default router;
