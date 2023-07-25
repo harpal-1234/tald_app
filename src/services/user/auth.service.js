@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+
 // import  { tokenService } from "../../services";
 import { successResponse } from "../../utils/response.js";
 import { User, Token, Admin } from "../../models/index.js";
@@ -24,6 +25,49 @@ export const createUser = async (userData) => {
     email: userData.email,
   });
   return user;
+};
+
+export const register = async (userData) => {
+  console.log(userData);
+  const check = await User.findOne({
+    email: userData.email,
+    isVerify: true,
+    type: userData.type,
+    isDeleted: false,
+  });
+  if (check) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.EMAIL_ALREADY_EXIST
+    );
+  }
+  const user = await User.create({
+    email: userData.email,
+    name: userData.name,
+    password: userData.password,
+    type: userData.type,
+  });
+  console.log(user);
+  await formatUser(user);
+  return user;
+};
+export const verifyEmail = async (token) => {
+  const user = await Token.findOne({ token: token, isDeleted: false });
+
+  const data = await User.findOneAndUpdate(
+    { _id: user.user, isDeleted: false },
+    { isVerify: true },
+    { new: true }
+  );
+  // if (data.type == "Vendor") {
+  //   const deals = await Deal.updateMany(
+  //     { user: user.user, isDeleted: false },
+  //     { isVerify: true }
+  //   );
+  //   console.log(deals);
+  // }
+
+  return data;
 };
 
 // export const createUserNumber = async (phoneNumber) => {
@@ -86,51 +130,58 @@ export const createUser = async (userData) => {
 //     );
 //   }
 // };
-// export const userLogin = async (data) => {
-//   console.log(data);
-//   let user = await User.findOne({
-//     email: data.email,
-//     type: data.type,
-//     isVerify: true,
-//     isDeleted: false,
-//   });
+export const userLogin = async (data) => {
+  let user = await User.findOne({
+    email: data.email,
+    type: data.type,
+    isVerify: true,
+    isDeleted: false,
+  });
 
-//   if (!user) {
-//     throw new OperationalError(
-//       STATUS_CODES.ACTION_FAILED,
-//       ERROR_MESSAGES.EMAIL_NOT_FOUND
-//     );
-//     // throw new ApiError(
-//     //   ERROR_MESSAGES.EMAIL_NOT_FIND
-//     //   // httpStatus.UNAUTHORIZED,
-//     //   // "Email does not exist please signup"
-//     // );
-//   }
+  if (!user) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.EMAIL_NOT_FOUND
+    );
+    // throw new ApiError(
+    //   ERROR_MESSAGES.EMAIL_NOT_FIND
+    //   // httpStatus.UNAUTHORIZED,
+    //   // "Email does not exist please signup"
+    // );
+  }
 
-//   if (user.isBlocked) {
-//     throw new OperationalError(
-//       STATUS_CODES.ACTION_FAILED,
-//       ERROR_MESSAGES.ACCOUNT_BLOCKED
-//     );
-//   }
+  if (user.isBlocked) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.ACCOUNT_BLOCKED
+    );
+  }
 
-//   if (user.isDeleted) {
-//     throw new OperationalError(
-//       STATUS_CODES.ACTION_FAILED,
-//       ERROR_MESSAGES.ACCOUNT_DELETED
-//     );
-//   }
+  if (user.isDeleted) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.ACCOUNT_DELETED
+    );
+  }
+  console.log(await bcrypt.compare(data.password, user.password));
 
-//   if (!(await user.isPasswordMatch(data.password))) {
-//     throw new OperationalError(
-//       STATUS_CODES.ACTION_FAILED,
-//       ERROR_MESSAGES.WRONG_PASSWORD
-//     );
-//   }
-//   await formatUser(user);
+  if (!(await bcrypt.compare(data.password, user.password))) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.WRONG_PASSWORD
+    );
+  }
+  // if (!(await user.isPasswordMatch(data.password))) {
+  //   throw new OperationalError(
+  //     STATUS_CODES.ACTION_FAILED,
+  //     ERROR_MESSAGES.WRONG_PASSWORD
+  //   );
+  // }
 
-//   return user;
-// };
+  await formatUser(user);
+
+  return user;
+};
 
 // export const userSocialLogin = async (data) => {
 //   // const check = await User.findOne({
@@ -205,53 +256,53 @@ export const createUser = async (userData) => {
 //   return user;
 // };
 
-// export const userLogout = async (tokenId) => {
-//   const token = await Token.findOne({
-//     _id: tokenId,
-//     isDeleted: false,
-//   });
+export const userLogout = async (tokenId) => {
+  const token = await Token.findOne({
+    _id: tokenId,
+    isDeleted: false,
+  });
 
-//   if (!token) {
-//     throw new OperationalError(
-//       STATUS_CODES.ACTION_FAILED,
-//       ERROR_MESSAGES.AUTHENTICATION_FAILED
-//     );
-//   }
-//   if (token.isDeleted) {
-//     throw new OperationalError(STATUS_CODES.NOT_FOUND, ERROR_MESSAGES.LOG_OUT);
-//   }
-//   await Token.findByIdAndUpdate(
-//     { _id: tokenId },
-//     { isDeleted: true },
-//     { new: true }
-//   );
-//   return;
-// };
+  if (!token) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.AUTHENTICATION_FAILED
+    );
+  }
+  if (token.isDeleted) {
+    throw new OperationalError(STATUS_CODES.NOT_FOUND, ERROR_MESSAGES.LOG_OUT);
+  }
+  await Token.findByIdAndUpdate(
+    { _id: tokenId },
+    { isDeleted: true },
+    { new: true }
+  );
+  return;
+};
 
-// export const resetPassword = async (tokenData, newPassword) => {
-//   let query = tokenData.user;
-//   newPassword = await bcrypt.hash(newPassword, 8);
-//   if (tokenData.role === USER_TYPE.USER) {
-//     const userdata = await User.findOneAndUpdate(
-//       { _id: query },
-//       { $set: { password: newPassword } }
-//     );
-//     const tokenvalue = await Token.findByIdAndUpdate(tokenData._id, {
-//       isDeleted: true,
-//     });
-//     return { userdata, tokenvalue };
-//   }
+export const resetPassword = async (tokenData, newPassword) => {
+  let query = tokenData.user;
+  newPassword = await bcrypt.hash(newPassword, 8);
+  if (tokenData.role === USER_TYPE.USER) {
+    const userdata = await User.findOneAndUpdate(
+      { _id: query },
+      { $set: { password: newPassword } }
+    );
+    const tokenvalue = await Token.findByIdAndUpdate(tokenData._id, {
+      isDeleted: true,
+    });
+    return { userdata, tokenvalue };
+  }
 
-//   const adminvalue = await Admin.findOneAndUpdate(
-//     { _id: query },
-//     { $set: { password: newPassword } }
-//   );
-//   const tokenvalue = await Token.findByIdAndUpdate(tokenData._id, {
-//     isDeleted: true,
-//   });
+  const adminvalue = await Admin.findOneAndUpdate(
+    { _id: query },
+    { $set: { password: newPassword } }
+  );
+  const tokenvalue = await Token.findByIdAndUpdate(tokenData._id, {
+    isDeleted: true,
+  });
 
-//   return { tokenvalue, adminvalue };
-// };
+  return { tokenvalue, adminvalue };
+};
 
 // export const pushNotification = async (userId) => {
 //   const data = await User.findOne({ _id: userId, isDeleted: false });
@@ -279,19 +330,19 @@ export const createUser = async (userData) => {
 // export const publickKey = async (publickKey, userId) => {
 //   const user = await User.findOne({ _id: userId, isDeleted: false });
 // };
-// export const changePassword = async (userId, oldPassword, newPassword) => {
-//   const user = await User.findById(userId);
-//   if (!(await bcrypt.compare(oldPassword, user.password))) {
-//     throw new OperationalError(
-//       STATUS_CODES.ACTION_FAILED,
-//       ERROR_MESSAGES.OLD_PASSWORD
-//     );
-//   }
-//   let updatedPassword = { password: newPassword };
-//   Object.assign(user, updatedPassword);
-//   await user.save();
-//   return user;
-// };
+export const changePassword = async (userId, oldPassword, newPassword) => {
+  const user = await User.findById(userId);
+  if (!(await bcrypt.compare(oldPassword, user.password))) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.OLD_PASSWORD
+    );
+  }
+  let updatedPassword = { password: newPassword };
+  Object.assign(user, updatedPassword);
+  await user.save();
+  return user;
+};
 // export const editProfile = async (userId, data) => {
 //   const user = await User.findOneAndUpdate(
 //     { _id: userId },

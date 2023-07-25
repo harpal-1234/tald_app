@@ -10,7 +10,7 @@ import {
   DRAFTS,
   VALID_ABOUTUS,
   VALID_DRAFTS,
-  VALID_DAYS
+  VALID_DAYS,
 } from "../../config/appConstants.js";
 
 const login = {
@@ -64,13 +64,21 @@ const sendOtp = {
 const signUp = {
   body: Joi.object().keys({
     email: JOI.EMAIL,
-  })
+  }),
+};
+const register = {
+  body: Joi.object().keys({
+    email: JOI.EMAIL,
+    name: Joi.string().required(),
+    password: JOI.PASSWORD,
+    type: Joi.string().required().allow(USER_TYPE),
+  }),
 };
 
 const forgotPassword = {
   body: Joi.object().keys({
     email: JOI.EMAIL,
-    // userType: Joi.string().required(),
+    type: Joi.string().required().allow("Vendor", "User"),
   }),
 };
 
@@ -133,4 +141,5 @@ export default {
   logOut,
   login,
   contactUs,
+  register,
 };

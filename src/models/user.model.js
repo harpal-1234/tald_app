@@ -13,6 +13,12 @@ import {
 const userSchema = mongoose.Schema(
   {
     email: { type: String, required: true },
+    name: { type: String, required: true },
+    password: { type: String, required: true },
+    isBlocked: { type: Boolean, default: false },
+    type: { type: String, enum: [...Object.values(USER_TYPE)] },
+    isDeleted: { type: Boolean, default: false },
+    isVerify: { type: Boolean, default: false },
     isBlocked: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
   },
@@ -25,22 +31,22 @@ userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
   return !!userSchema;
 };
 
-// userSchema.pre("save", async function (next) {
-//   const user = this;
+userSchema.pre("save", async function (next) {
+  const user = this;
 
-//   if (user.isModified("password")) {
-//     user.password = await bcrypt.hash(user.password, 8);
-//   }
-//   next();
-// });
-// userSchema.methods.isPasswordMatch = async function (password) {
-//   const user = this;
-//   console.log(password, user.password);
-//   console.log(await bcrypt.compare(password, user.password));
-//   return bcrypt.compare(password, user.password);
-// };
+  if (user.isModified("password")) {
+    user.password = await bcrypt.hash(user.password, 8);
+  }
+  next();
+});
+userSchema.methods.isPasswordMatch = async function (password) {
+  const user = this;
+  console.log(password, user.password);
+  console.log(await bcrypt.compare(password, user.password));
+  return bcrypt.compare(password, user.password);
+};
 
-//userSchema.index({ location: "2dsphere" });
+userSchema.index({ location: "2dsphere" });
 const User = mongoose.model("user", userSchema);
 
 export { User };

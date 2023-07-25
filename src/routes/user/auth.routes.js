@@ -9,12 +9,24 @@ const router = express.Router();
 
 router.post(
   "/signUp",
- // auth(USER_TYPE.USER),
+  // auth(USER_TYPE.USER),
   validate(authValidation.signUp),
   authController.signUp
 );
 
-// router.post("/login", validate(authValidation.login), authController.userLogin);
+router.post(
+  "/register",
+  // auth(USER_TYPE.USER),
+  validate(authValidation.register),
+  authController.register
+);
+router.get(
+  "/verifyEmail",
+  //auth(USER_TYPE.USER),
+  //validate(UserValidation.verify),
+  authController.verifyMail
+);
+router.post("/login", validate(authValidation.login), authController.userLogin);
 
 // router.post(
 //   "/socialLogin",
@@ -24,12 +36,12 @@ router.post(
 
 // // router.get("/getProfile", auth(USER_TYPE.USER), authController.getProfile);
 
-// router.put(
-//   "/changePassword",
-//   auth(USER_TYPE.USER),
-//   validate(authValidation.changePassword),
-//   authController.changePassword
-// );
+router.put(
+  "/changePassword",
+  auth(USER_TYPE.USER),
+  validate(authValidation.changePassword),
+  authController.changePassword
+);
 
 // router.put(
 //   "/editProfile",
@@ -51,31 +63,31 @@ router.post(
 
 // //--------forgot password--------------//
 
-// router.post(
-//   "/forgotPassword",
-//   validate(authValidation.forgotPassword),
-//   authController.forgotPassword
-// );
+router.post(
+  "/forgotPassword",
+  validate(authValidation.forgotPassword),
+  authController.forgotPassword
+);
 
-// router
-//   .route("/resetPassword")
-//   .get(authController.forgotPage)
-//   .post(
-//     validateView(
-//       validateView(authValidation.forgotPage),
-//       authValidation.resetForgotPassword
-//     ),
-//     authController.resetForgotPassword
-//   );
+router
+  .route("/resetPassword")
+  .get(authController.forgotPage)
+  .post(
+    validateView(
+      validateView(authValidation.forgotPage),
+      authValidation.resetForgotPassword
+    ),
+    authController.resetForgotPassword
+  );
 
 // // //----------end------------------//
 
-// router.post(
-//   "/logout",
-//   auth(USER_TYPE.USER),
-//   //(authValidation.logOut),
-//   authController.userLogout
-// );
+router.post(
+  "/logout",
+  auth(USER_TYPE.USER),
+  //(authValidation.logOut),
+  authController.userLogout
+);
 
 // router.post(
 //   "/contactUs",

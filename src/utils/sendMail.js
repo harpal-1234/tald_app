@@ -33,6 +33,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 export const verifyEmail = async (email, token) => {
+  console.log(email)
   return new Promise((resolve, reject) => {
     var info = {
       from: process.env.SENDER_EMAIL,
@@ -55,6 +56,7 @@ export const verifyEmail = async (email, token) => {
 
     transporter.sendMail(info, (error, accept) => {
       if (error) {
+        // console.log(error, "eeeeeeeeeeeeeeerrrrrrrrrrrrrrrrrr");
         reject(error);
       }
       resolve(accept, console.log("Mail Sended"));
