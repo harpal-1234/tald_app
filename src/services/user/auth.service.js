@@ -69,67 +69,49 @@ export const verifyEmail = async (token) => {
 
   return data;
 };
+export const createService = async (userId, data) => {
+  const check = await User.findOne({
+    _id: userId,
+    isVerify: true,
+    isDeleted: false,
+  });
+  if (!check) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.USER_NOT_FOUND
+    );
+  }
 
-// export const createUserNumber = async (phoneNumber) => {
-//   const check = await User.findOne({
-//     phoneNumber: phoneNumber,
-//     isDeleted: false,
-//     isVerify: true,
-//   });
-//   console.log(check);
-//   if (!check) {
-//     const user = await User.create({ phoneNumber: phoneNumber });
-//     return user;
-//   } else {
-//     return check;
-//   }
-// };
-// export const verifyOtp = async (otp, tokenId, userId) => {
-//   const user = await User.findOne({ _id: userId, isDeleted: false });
-//   if (!user) {
-//     throw new OperationalError(
-//       STATUS_CODES.ACTION_FAILED,
-//       ERROR_MESSAGES.USER_NOT_FOUND
-//     );
-//   }
-//   let currentTime = new Date();
-//   const token = await Token.findOne({ _id: tokenId });
-
-//   // console.log(token.otp.expiresAt,currentTime)
-//   if (token.otp.expiresAt < currentTime) {
-//     throw new OperationalError(
-//       STATUS_CODES.ACTION_FAILED,
-//       ERROR_MESSAGES.OTP_EXPIRE
-//     );
-//   }
-//   if (token.phoneNumber && token.otp.code == otp) {
-//     const user = await User.findOne({ _id: userId, isDeleted: false });
-//     const tokenVerify = await Token.findOneAndUpdate(
-//       { _id: tokenId },
-//       { "otp.code": "", phoneNumber: "", isDeleted: true, isBlocked: true }
-//     );
-//     return user;
-//   }
-
-//   if (token.otp.code == otp) {
-//     const userVerify = await User.findOneAndUpdate(
-//       { _id: userId },
-//       { isVerify: true },
-//       { new: true }
-//     );
-//     const tokenVerify = await Token.findOneAndUpdate(
-//       { _id: tokenId },
-//       { "otp.code": "" }
-//     );
-
-//     return { userVerify, tokenVerify };
-//   } else {
-//     throw new OperationalError(
-//       STATUS_CODES.ACTION_FAILED,
-//       ERROR_MESSAGES.VERIFY_UNMATCH
-//     );
-//   }
-// };
+  const user = await User.findOneAndUpdate(
+    {
+      _id: userId,
+      isVerify: true,
+      isDeleted: false,
+    },
+    {
+      companyName: data.companyName,
+      location: {
+        type: "Point",
+        coordinates: [data.long, data.lat],
+      },
+      address: data.address,
+      instagramLink: data.instagramLink,
+      pinterestLink: data.pinterestLink,
+      about: data.about,
+      projectType: data.projectType,
+      virtual_Consultations: data.virtual_Consultations,
+      newClientProjects: data.newClientProjects,
+      destinationProject: data.destinationProject,
+      feeStructure: data.feeStructure,
+      tradeDiscount: data.tradeDiscount,
+      minBudget: data.minBudget,
+      maxBudget: data.maxBudget,
+    },
+    { new: true }
+  ).lean();
+  await formatUser(user);
+  return user;
+};
 export const userLogin = async (data) => {
   let user = await User.findOne({
     email: data.email,
@@ -183,78 +165,36 @@ export const userLogin = async (data) => {
   return user;
 };
 
-// export const userSocialLogin = async (data) => {
-//   // const check = await User.findOne({
-//   //   $or: [
-//   //     { facebookId: data.socialId },
-//   //     { appleId: data.socialId },
-//   //     { googleId: data.socialId },
-//   //   ],
-//   //   isDeleted: false,
-//   // });
-//   if (data.socialType == "facebook") {
-//     const user = await User.findOneAndUpdate(
-//       {
-//         facebookId: data.socialId,
-//         isDeleted: false,
-//       },
-//       {
-//         $setOnInsert: {
-//           name: data.name,
-//         },
-//         $set: { facebookId: data.socialId },
-//       },
-//       { upsert: true, new: true }
-//     );
-//     return user;
-//   }
-//   if (data.socialType == "apple") {
-//     const user = await User.findOneAndUpdate(
-//       {
-//         appleId: data.socialId,
-//         isDeleted: false,
-//       },
-//       {
-//         $setOnInsert: {
-//           name: data.name,
-//         },
-//         $set: { appleId: data.socialId },
-//       },
-//       { upsert: true, new: true }
-//     );
-//     return user;
-//   }
-//   if (data.socialType == "google") {
-//     const user = await User.findOneAndUpdate(
-//       {
-//         googleId: data.socialId,
-//         isDeleted: false,
-//       },
-//       {
-//         $setOnInsert: {
-//           name: data.name,
-//         },
-//         $set: { googleId: data.socialId },
-//       },
-//       { upsert: true, new: true }
-//     );
+export const userSocialLogin = async (data) => {
+  const user = await User.findOneAndUpdate(
+    {
+      googleId: data.socialId,
+      isDeleted: false,
+    },
+    {
+      $setOnInsert: {
+        name: data.name,
+      },
+      $set: { googleId: data.socialId },
+    },
+    { upsert: true, new: true }
+  );
 
-//     return user;
-//   }
-// };
+  return user;
+};
 
-// export const getUserById = async (userId) => {
-//   const user = await User.findById(userId).lean();
+export const getUserById = async (userId) => {
+  const user = await User.findById(userId).lean();
 
-//   if (!user) {
-//     throw new OperationalError(
-//       STATUS_CODES.NOT_FOUND,
-//       ERROR_MESSAGES.USER_NOT_FOUND
-//     );
-//   }
+  if (!user) {
+    throw new OperationalError(
+      STATUS_CODES.NOT_FOUND,
+      ERROR_MESSAGES.USER_NOT_FOUND
+    );
+  }
 
-//   return user;
-// };
+  return user;
+};
 
 export const userLogout = async (tokenId) => {
   const token = await Token.findOne({

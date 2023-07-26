@@ -103,29 +103,29 @@ const userLogin = catchAsync(async (req, res) => {
   );
 });
 
-// const userSocialLogin = catchAsync(async (req, res) => {
-//   const newUser = await userService.userSocialLogin(req.body);
-//   const token = await tokenService.generateAuthToken(
-//     newUser,
-//     USER_TYPE.USER
-//     // req.body.deviceToken,
-//     // req.body.deviceType
-//   );
+const userSocialLogin = catchAsync(async (req, res) => {
+  const newUser = await userService.userSocialLogin(req.body);
+  const token = await tokenService.generateAuthToken(
+    newUser,
+    USER_TYPE.USER
+    // req.body.deviceToken,
+    // req.body.deviceType
+  );
 
-//   const data = {
-//     name: newUser.name,
-//     email: newUser.email,
-//   };
+  const data = {
+    name: newUser.name,
+    email: newUser.email,
+  };
 
-//   return successResponse(
-//     req,
-//     res,
-//     STATUS_CODES.SUCCESS,
-//     SUCCESS_MESSAGES.SUCCESS,
-//     newUser,
-//     token
-//   );
-// });
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    newUser,
+    token
+  );
+});
 
 const userLogout = catchAsync(async (req, res) => {
   const newUser = await userService.userLogout(req.token._id);
@@ -219,6 +219,17 @@ const changePassword = catchAsync(async (req, res) => {
     SUCCESS_MESSAGES.PASSWORD_CHANGE
   );
 });
+const createService = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const data = await userService.createService(userId, req.body);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+  );
+});
 // const editProfile = catchAsync(async (req, res) => {
 //   const userId = req.token.user._id;
 //   const user = await userService.editProfile(userId, req.body);
@@ -250,5 +261,7 @@ export default {
   forgotPassword,
   forgotPage,
   resetForgotPassword,
-  changePassword
+  changePassword,
+  userSocialLogin,
+  createService,
 };

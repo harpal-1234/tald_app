@@ -62,7 +62,11 @@ router.put(
 // // );
 
 // //--------forgot password--------------//
-
+router.post(
+  "/socialLogin",
+  validate(authValidation.userSocialLogin),
+  authController.userSocialLogin
+);
 router.post(
   "/forgotPassword",
   validate(authValidation.forgotPassword),
@@ -88,7 +92,12 @@ router.post(
   //(authValidation.logOut),
   authController.userLogout
 );
-
+router.post(
+  "/createService",
+  auth(USER_TYPE.USER),
+  validate(authValidation.createServices),
+  authController.createService
+);
 // router.post(
 //   "/contactUs",
 //   auth(USER_TYPE.USER),

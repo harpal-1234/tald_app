@@ -2,6 +2,9 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import {
   USER_TYPE,
+  PROJECT_TYPE,
+  FEE_STRUCTURE,
+  OPTIONS,
   DEVICE_TYPE,
   BUSINESS,
   ABOUTUS,
@@ -17,6 +20,52 @@ const userSchema = mongoose.Schema(
     password: { type: String, required: true },
     isBlocked: { type: Boolean, default: false },
     type: { type: String, enum: [...Object.values(USER_TYPE)] },
+    googleId: { type: String },
+    companyName: { type: String },
+    location: {
+      type: { type: String, default: "Point" },
+      coordinates: {
+        type: [Number],
+        default: [0, 0],
+        required: true,
+      },
+    },
+    address: { type: String },
+    instagramLink: { type: String },
+    pinterestLink: { type: String },
+    about: { type: String },
+    projectType: {
+      question: { type: String },
+      answer: { type: String, enum: [...Object.values(PROJECT_TYPE)] },
+    },
+    virtual_Consultations: {
+      question: { type: String },
+      answer: { type: String, enum: [...Object.values(OPTIONS)] },
+      chargers_25_mins: { type: String },
+      chargers_55_mins: { type: String },
+    },
+    newClientProjects: {
+      question: { type: String },
+      answer: { type: String, enum: [...Object.values(OPTIONS)] },
+      chargers_25_mins: { type: String },
+      chargers_55_mins: { type: String },
+    },
+    destinationProject: {
+      question: { type: String },
+      answer: { type: String, enum: [...Object.values(OPTIONS)] },
+      chargers_25_mins: { type: String },
+      chargers_55_mins: { type: String },
+    },
+    feeStructure: {
+      question: { type: String },
+      answer: { type: String, enum: [...Object.values(FEE_STRUCTURE)] },
+    },
+    tradeDiscount: {
+      question: { type: String },
+      answer: { type: String, enum: [...Object.values(OPTIONS)] },
+    },
+    minBudget: { type: String },
+    maxBudget: { type: String },
     isDeleted: { type: Boolean, default: false },
     isVerify: { type: Boolean, default: false },
     isBlocked: { type: Boolean, default: false },

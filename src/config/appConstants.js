@@ -36,6 +36,29 @@ export const USER_TYPE = {
   USER: "User",
   VENDOR_ADMIN: "Vendor",
 };
+export const PROJECT_TYPE = {
+  RESIDENTIAL: "Residential",
+  COMMERCIAL: "Commercial",
+};
+export const FEE_STRUCTURE = {
+  FLAT_DESIGN_FEE: "Flat Design Fee",
+  FLAT_DSIGN_FEE_MARKUP: "Flat Design Fee + Mark-up",
+  HOURLY_FEE: "Hourly Fee",
+  HOURLY_FEE_MARKUP: "Hourly Fee + Mark-Up",
+  MARKUP_ONLY: "Mark-Up Only",
+};
+export const VALID_FEE_STRUCTURE = [
+  "Flat Design Fee",
+  "Flat Design Fee + Mark-up",
+  "Hourly Fee",
+  "Hourly Fee + Mark-Up",
+  "Mark-Up Only",
+];
+export const OPTIONS = {
+  YES: "Yes",
+  NO: "No",
+};
+export const VALID_PROJECT_TYPE = ["Residential", "Commercial"];
 export const BUSINESS = {
   BAR: "Bar",
   CLUB: "Club",

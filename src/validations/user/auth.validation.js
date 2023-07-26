@@ -3,14 +3,11 @@ import Joi from "joi";
 import {
   JOI,
   USER_TYPE,
+  PROJECT_TYPE,
+  FEE_STRUCTURE,
+  OPTIONS,
   SOCIAL_LOGIN,
   SOCIAL_TYPE,
-  ABOUTUS,
-  VALID_BUSINESS,
-  DRAFTS,
-  VALID_ABOUTUS,
-  VALID_DRAFTS,
-  VALID_DAYS,
 } from "../../config/appConstants.js";
 
 const login = {
@@ -29,14 +26,61 @@ const logOut = {
     // deviceType:Joi.string().valid(...Object.values(DEVICE_TYPE)),
   }),
 };
-
+const createServices = {
+  body: Joi.object().keys({
+    companyName: Joi.string(),
+    // location: Joi.object({
+    //   type: Joi.string().default("Point"),
+    //   coordinates: Joi.array().items(Joi.number()).length(2).required(),
+    // }),
+    lat: Joi.number(),
+    long: Joi.number(),
+    address: Joi.string(),
+    instagramLink: Joi.string(),
+    pinterestLink: Joi.string(),
+    about: Joi.string(),
+    projectType: Joi.object({
+      question: Joi.string(),
+      answer: Joi.string().valid(...Object.values(PROJECT_TYPE)),
+    }),
+    virtual_Consultations: Joi.object({
+      question: Joi.string(),
+      answer: Joi.string().valid(...Object.values(OPTIONS)),
+      chargers_25_mins: Joi.string(),
+      chargers_55_mins: Joi.string(),
+    }),
+    newClientProjects: Joi.object({
+      question: Joi.string(),
+      answer: Joi.string().valid(...Object.values(OPTIONS)),
+      chargers_25_mins: Joi.string(),
+      chargers_55_mins: Joi.string(),
+    }),
+    destinationProject: Joi.object({
+      question: Joi.string(),
+      answer: Joi.string().valid(...Object.values(OPTIONS)),
+      chargers_25_mins: Joi.string(),
+      chargers_55_mins: Joi.string(),
+    }),
+    feeStructure: Joi.object({
+      question: Joi.string(),
+      answer: Joi.string().valid(...Object.values(FEE_STRUCTURE)),
+    }),
+    tradeDiscount: Joi.object({
+      question: Joi.string(),
+      answer: Joi.string().valid(...Object.values(OPTIONS)),
+    }),
+    minBudget: Joi.string(),
+    maxBudget: Joi.string(),
+  }),
+};
 const userSocialLogin = {
   body: Joi.object().keys({
     name: Joi.string().required(),
     socialId: Joi.string().required(),
-    socialType: Joi.string()
-      .required()
-      .valid(...Object.values(SOCIAL_TYPE)),
+    email: Joi.string().required().allow(null, ""),
+    // socialType: Joi.string()
+    //   .required()
+    //   .valid(...Object.values(SOCIAL_TYPE)),
     //phoneNumber: JOI.PHONENUMBER,
     //profession: Joi.string().required(),
     //bio: Joi.string().required(),
@@ -142,4 +186,5 @@ export default {
   login,
   contactUs,
   register,
+  createServices,
 };
