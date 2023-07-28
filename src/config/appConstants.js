@@ -211,6 +211,7 @@ export const SUCCESS_MESSAGES = {
   PUSH_NOTIFICATION_STATUS: "Push notification status updated",
   ALL_CATEGORY: "All category Details",
   SEND_OTP: "Otp sent on your phoneNumber sucessfully",
+  DELETE_PROJECT: "Project deleted sucessfully",
 };
 
 export const UPDATED_MESSAGES = {
@@ -265,6 +266,8 @@ export const ERROR_MESSAGES = {
   LIMIT: "You have exhausted your daily limit for swiping",
   UPGRATE: "Please upgrate your account",
   GROUP_NOT_EXIST: "This group does not exist",
+  PROJECT: "This Project Already Exist ",
+  PROJECT_NOT_FOUND: "This Project Not Exist",
 };
 export const SOCIAL_TYPE = {
   FACEBOOK: "facebook",

@@ -2,6 +2,7 @@ import express from "express";
 import userAuth from "./user/auth.routes.js";
 import staticRoutes from "../routes/static.routes.js";
 import adminAuth from "./admin/auth.routes.js";
+import vendor from "./vendor/auth.routes.js"
 
 //const adminUserRoutes=require("./admin/user.routes");
 //const staticRoutes = require("./");
@@ -14,10 +15,10 @@ const defaultRoutes = [
     path: "/admin",
     route: adminAuth,
   },
-  // {
-  //   path: "/admin/user",
-  //   route: adminUserRoutes,
-  // },
+  {
+    path: "/vendor",
+    route: vendor,
+  },
   {
     path: "/user/auth",
     route: userAuth,
