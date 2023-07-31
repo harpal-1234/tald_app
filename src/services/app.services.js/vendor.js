@@ -8,6 +8,7 @@ import bcrypt from "bcryptjs";
 import joi from "joi";
 import notificationServices from "../../utils/notification.js";
 import { getPortfolio } from "../../controllers/app/vendor.js";
+import moment from "moment";
 
 export const createProject = async (userId, projectName) => {
   const check = await Project.findOne({
@@ -80,4 +81,25 @@ export const deleteProjectImages = async (imageIds, projectId, userId) => {
   }
 
   return data;
+};
+export const addAvailability = async (
+  weeklySchedule,
+  availability,
+  isIndefinitely,
+  inviteesSchedule,
+  userId
+) => {
+
+  const currentDate = new Date(availability.startDate);
+  // console.log(currentDate)
+  const next40thDay = new Date(
+    currentDate.getTime() + availability.numberOfDays * 24 * 60 * 60 * 1000
+  );
+  console.log(next40thDay, "gjguuhouhohoihoihoo");
+  const data = await User.findOneAndUpdate({
+    "availability.startDate": moment(
+      availability.startDate + "Z",
+      "YYYY-MM-DD" + "Z"
+    ).toDate(),
+  });
 };

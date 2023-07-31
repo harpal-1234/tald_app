@@ -8,6 +8,7 @@ import {
   OPTIONS,
   SOCIAL_LOGIN,
   SOCIAL_TYPE,
+  DAYS,
 } from "../../config/appConstants.js";
 
 export const createProject = {
@@ -31,5 +32,28 @@ export const deleteProjectImages = {
   body: Joi.object().keys({
     imageIds: Joi.array().required(),
     projectId: Joi.string().required(),
+  }),
+};
+export const addAvailability = {
+  body: Joi.object().keys({
+    // weeklySchedule: Joi.array()
+    //   .items(
+    //     Joi.object({
+    //       day: Joi.string()
+    //         .required()
+    //         .valid(...Object.values(DAYS))
+    //         .allow(null, ""),
+    //       startTime: Joi.string().required().allow(null, ""),
+    //       endTime: Joi.string().required().allow(null, ""),
+    //       status: Joi.boolean().required(),
+    //     })
+    //   )
+    //   .required(),
+    availability: Joi.object({
+      startDate: Joi.string(),
+      numberOfDays: Joi.number(),
+    }).required(),
+    // isIndefinitely: Joi.boolean().required(),
+    // inviteesSchedule: Joi.number().required(),
   }),
 };

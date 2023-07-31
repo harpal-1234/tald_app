@@ -37,6 +37,12 @@ router.delete(
   validate(authValidation.deleteProjectImages),
   authController.deleteProjectImages
 );
+router.put(
+  "/addAvailability",
+  auth(USER_TYPE.USER),
+  validate(authValidation.addAvailability),
+  authController.addAvailability
+);
 // router.get(
 //   "/users",
 //   auth(USER_TYPE.ADMIN),

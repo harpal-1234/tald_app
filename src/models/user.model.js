@@ -12,7 +12,15 @@ import {
 } from "../config/appConstants.js";
 // const { address } = require("./commonField.models");
 //const { string } = require("joi");
-
+const dateAndTime = mongoose.Schema(
+  {
+    day: { type: String },
+    startTime: { type: String },
+    endTime: { type: String },
+    status: { type: Boolean, default: false },
+  },
+  { _id: false }
+);
 const userSchema = mongoose.Schema(
   {
     email: { type: String, required: true },
@@ -66,6 +74,13 @@ const userSchema = mongoose.Schema(
     },
     minBudget: { type: String },
     maxBudget: { type: String },
+    weeklySchedule: dateAndTime,
+    availability: {
+      startDate: { type: String },
+      endDate: { type: String },
+    },
+    isIndefinitely: { type: Boolean, default: false },
+    inviteesSchedule: { type: Number },
     isDeleted: { type: Boolean, default: false },
     isVerify: { type: Boolean, default: false },
     isBlocked: { type: Boolean, default: false },
