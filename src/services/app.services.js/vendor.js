@@ -89,17 +89,20 @@ export const addAvailability = async (
   inviteesSchedule,
   userId
 ) => {
-
   const currentDate = new Date(availability.startDate);
   // console.log(currentDate)
   const next40thDay = new Date(
     currentDate.getTime() + availability.numberOfDays * 24 * 60 * 60 * 1000
   );
   console.log(next40thDay, "gjguuhouhohoihoihoo");
-  const data = await User.findOneAndUpdate({
-    "availability.startDate": moment(
-      availability.startDate + "Z",
-      "YYYY-MM-DD" + "Z"
-    ).toDate(),
+  const data = await User.findOneAndUpdate({_id:userId},{
+    availability: {
+      startDate: moment(
+        availability.startDate + "Z",
+        "YYYY-MM-DD" + "Z"
+      ).toDate(),
+      endDate: moment(next40thDay + "Z", "YYYY-MM-DD" + "Z").toDate(),
+    },
   });
+  console.log(data);
 };
