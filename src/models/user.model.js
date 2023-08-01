@@ -23,9 +23,9 @@ const dateAndTime = mongoose.Schema(
 );
 const userSchema = mongoose.Schema(
   {
-    email: { type: String, required: true },
-    name: { type: String, required: true },
-    password: { type: String, required: true },
+    email: { type: String },
+    name: { type: String},
+    password: { type: String},
     isBlocked: { type: Boolean, default: false },
     type: { type: String, enum: [...Object.values(USER_TYPE)] },
     googleId: { type: String },

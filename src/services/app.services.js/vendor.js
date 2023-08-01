@@ -94,15 +94,41 @@ export const addAvailability = async (
   const next40thDay = new Date(
     currentDate.getTime() + availability.numberOfDays * 24 * 60 * 60 * 1000
   );
-  console.log(next40thDay, "gjguuhouhohoihoihoo");
-  const data = await User.findOneAndUpdate({_id:userId},{
-    availability: {
-      startDate: moment(
-        availability.startDate + "Z",
-        "YYYY-MM-DD" + "Z"
-      ).toDate(),
-      endDate: moment(next40thDay + "Z", "YYYY-MM-DD" + "Z").toDate(),
-    },
-  });
-  console.log(data);
+  if (isIndefinitely == true) {
+    const data = await User.findOneAndUpdate(
+      { _id: userId },
+      {
+        availability: {
+          startDate: moment(
+            availability.startDate + "Z",
+            "YYYY-MM-DD" + "Z"
+          ).toDate(),
+          endDate: next40thDay,
+        },
+        weeklySchedule: weeklySchedule,
+        isIndefinitely: true,
+        inviteesSchedule: {},
+      }, 
+      { new: true }
+    );
+    return data;
+  } else {
+    const data = await User.findOneAndUpdate(
+      { _id: userId },
+      {
+        availability: {
+          startDate: moment(
+            availability.startDate + "Z",
+            "YYYY-MM-DD" + "Z"
+          ).toDate(),
+          endDate: next40thDay,
+        },
+        weeklySchedule: weeklySchedule,
+        isIndefinitely: false,
+        inviteesSchedule: inviteesSchedule,
+      },
+      { new: true }
+    );
+    return data;
+  }
 };

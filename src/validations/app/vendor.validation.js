@@ -36,24 +36,24 @@ export const deleteProjectImages = {
 };
 export const addAvailability = {
   body: Joi.object().keys({
-    // weeklySchedule: Joi.array()
-    //   .items(
-    //     Joi.object({
-    //       day: Joi.string()
-    //         .required()
-    //         .valid(...Object.values(DAYS))
-    //         .allow(null, ""),
-    //       startTime: Joi.string().required().allow(null, ""),
-    //       endTime: Joi.string().required().allow(null, ""),
-    //       status: Joi.boolean().required(),
-    //     })
-    //   )
-    //   .required(),
+    weeklySchedule: Joi.array()
+      .items(
+        Joi.object({
+          day: Joi.string()
+            .required()
+            .valid(...Object.values(DAYS))
+            .allow(null, ""),
+          startTime: Joi.string().required().allow(null, ""),
+          endTime: Joi.string().required().allow(null, ""),
+          status: Joi.boolean().required(),
+        })
+      )
+      .required(),
     availability: Joi.object({
       startDate: Joi.string(),
       numberOfDays: Joi.number(),
     }).required(),
-    // isIndefinitely: Joi.boolean().required(),
-    // inviteesSchedule: Joi.number().required(),
+    isIndefinitely: Joi.boolean().required(),
+    inviteesSchedule: Joi.number().required(),
   }),
 };
