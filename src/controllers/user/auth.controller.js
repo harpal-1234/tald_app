@@ -49,7 +49,8 @@ const register = catchAsync(async (req, res) => {
     res,
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.SUCCESS,
-    newUser
+    newUser,
+    token
   );
 });
 const verifyMail = catchAsync(async (req, res) => {
