@@ -17,13 +17,17 @@ var verifymail = fs.readFileSync(
   path.join(__dirname, "views/verifyEmail.hbs"),
   "utf8"
 );
-
 var verify = fs.readFileSync(
   path.join(__dirname, "views/email/verifyAccount.hbs"),
   "utf8"
 );
+var verifyEditProfile = fs.readFileSync(
+  path.join(__dirname, "views/editProfile.hbs"),
+  "utf8"
+);
 var verifyMailTemplate = Handlebars.compile(verifymail);
 var verifyAccountTemplate = Handlebars.compile(verify);
+var editProfileTemplate = Handlebars.compile(verifyEditProfile);
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -33,7 +37,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 export const verifyEmail = async (email, token) => {
-  console.log(email)
+  console.log(email);
   return new Promise((resolve, reject) => {
     var info = {
       from: process.env.SENDER_EMAIL,
@@ -122,6 +126,28 @@ export const verifyAccount = (email, token) => {
         title: "Verification",
         token,
         apiBaseUrl: process.env.ForgotPassword,
+      }),
+    };
+
+    transporter.sendMail(info, (error, accept) => {
+      if (error) {
+        reject(error);
+      }
+      resolve(accept, console.log("Mail Sended"));
+    });
+  });
+};
+export const editProfile = (email, token, name) => {
+  return new Promise((resolve, reject) => {
+    var info = {
+      from: process.env.SENDER_EMAIL,
+      to: email,
+      subject: "Verify Account",
+      html: editProfileTemplate({
+        title: "Verification",
+        token,
+        apiBaseUrl: process.env.ForgotPassword,
+        name,
       }),
     };
 

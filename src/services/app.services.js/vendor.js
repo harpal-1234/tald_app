@@ -90,7 +90,7 @@ export const addAvailability = async (
   userId
 ) => {
   const currentDate = new Date(availability.startDate);
-  // console.log(currentDate)
+ 
   const next40thDay = new Date(
     currentDate.getTime() + availability.numberOfDays * 24 * 60 * 60 * 1000
   );
@@ -99,16 +99,12 @@ export const addAvailability = async (
       { _id: userId },
       {
         availability: {
-          startDate: moment(
-            availability.startDate + "Z",
-            "YYYY-MM-DD" + "Z"
-          ).toDate(),
-          endDate: next40thDay,
+          startDate: "",
+          endDate: "",
         },
-        weeklySchedule: weeklySchedule,
         isIndefinitely: true,
-        inviteesSchedule: {},
-      }, 
+        inviteesSchedule: inviteesSchedule,
+      },
       { new: true }
     );
     return data;
@@ -131,4 +127,14 @@ export const addAvailability = async (
     );
     return data;
   }
+};
+export const getAvailability = async (userId) => {
+  const availability = await User.findOne({ _id: userId, isDeleted: false });
+  const data = {
+    availability: availability.availability,
+    weeklySchedule: availability.weeklySchedule,
+    isIndefinitely: availability.isIndefinitely,
+    inviteesSchedule: availability.inviteesSchedule,
+  };
+  return data;
 };

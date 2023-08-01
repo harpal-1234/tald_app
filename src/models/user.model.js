@@ -24,8 +24,8 @@ const dateAndTime = mongoose.Schema(
 const userSchema = mongoose.Schema(
   {
     email: { type: String },
-    name: { type: String},
-    password: { type: String},
+    name: { type: String },
+    password: { type: String },
     isBlocked: { type: Boolean, default: false },
     type: { type: String, enum: [...Object.values(USER_TYPE)] },
     googleId: { type: String },
@@ -74,7 +74,7 @@ const userSchema = mongoose.Schema(
     },
     minBudget: { type: String },
     maxBudget: { type: String },
-    weeklySchedule: dateAndTime,
+    weeklySchedule: [dateAndTime],
     availability: {
       startDate: { type: String },
       endDate: { type: String },

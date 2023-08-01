@@ -115,3 +115,15 @@ export const addAvailability = catchAsync(async (req, res) => {
     project
   );
 });
+export const getAvailability = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const project = await vendorServices.getAvailability(userId);
+
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    project
+  );
+});

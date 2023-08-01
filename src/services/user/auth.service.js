@@ -4,6 +4,11 @@ import bcrypt from "bcryptjs";
 import { successResponse } from "../../utils/response.js";
 import { User, Token, Admin } from "../../models/index.js";
 import { formatUser } from "../../utils/commonFunction.js";
+import {
+  forgotPasswordEmail,
+  contactUs,
+  verifyEmail,
+} from "../../utils/sendMail.js";
 //import  { ApiError } from "../../utils/universalFunction.js";
 import {
   USER_TYPE,
@@ -41,17 +46,20 @@ export const register = async (userData) => {
       ERROR_MESSAGES.EMAIL_ALREADY_EXIST
     );
   }
-  const user = await User.create({
+  const userr = await User.create({
     email: userData.email,
     name: userData.name,
     password: userData.password,
     type: userData.type,
   });
-  console.log(user);
+  const user = await User.findOne({ _id: userr._id, isDeleted: false }).lean();
   await formatUser(user);
   return user;
 };
-export const verifyEmail = async (token) => {
+export const editProfile = async (data, userId) => {
+  const check = await User.findOne({ _id: userId, isDeleted: false }).lean();
+};
+export const verifyEmails = async (token) => {
   const user = await Token.findOne({ token: token, isDeleted: false });
 
   const data = await User.findOneAndUpdate(

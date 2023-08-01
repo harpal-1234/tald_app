@@ -43,6 +43,12 @@ router.put(
   validate(authValidation.addAvailability),
   authController.addAvailability
 );
+router.get(
+  "/getAvailability",
+  auth(USER_TYPE.USER),
+  // validate(authValidation.addAvailability),
+  authController.getAvailability
+);
 // router.get(
 //   "/users",
 //   auth(USER_TYPE.ADMIN),
@@ -50,4 +56,3 @@ router.put(
 //   authController.userList
 // );
 export default router;
-

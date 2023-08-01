@@ -65,7 +65,7 @@ const verifyMail = catchAsync(async (req, res) => {
   //     return JSON.parse(jsonPayload);
   // }
 
-  const data = await userService.verifyEmail(token);
+  const data = await userService.verifyEmails(token);
 
   if (data.isVerify == true) {
     return res.render("forgotPassword/commonMessage", {
