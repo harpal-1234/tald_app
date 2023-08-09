@@ -14,14 +14,14 @@ const login = {
   body: Joi.object().keys({
     email: JOI.EMAIL,
     password: Joi.string().min(6).required(),
-    type: Joi.string().required().valid(USERTYPE1),
+    type: Joi.string().required().valid(...Object.values(USERTYPE1)),
     // deviceToken:Joi.string().required(),
     // deviceType:Joi.string().valid(...Object.values(DEVICE_TYPE)),
   }),
 };
 const logOut = {
   body: Joi.object().keys({
-    type: Joi.string().required().valid(USERTYPE1),
+    type: Joi.string().required().valid(...Object.values(USERTYPE1)),
     // deviceToken:Joi.string().required(),
     // deviceType:Joi.string().valid(...Object.values(DEVICE_TYPE)),
   }),
@@ -88,14 +88,14 @@ const register = {
     email: JOI.EMAIL,
     name: Joi.string().required(),
     password: JOI.PASSWORD,
-    type: Joi.string().required().allow(USERTYPE1),
+    type: Joi.string().required().allow(...Object.values(USERTYPE1)),
   }),
 };
 
 const forgotPassword = {
   body: Joi.object().keys({
     email: JOI.EMAIL,
-    type: Joi.string().required().allow(USERTYPE1),
+    type: Joi.string().required().allow(...Object.values(USERTYPE1)),
   }),
 };
 
