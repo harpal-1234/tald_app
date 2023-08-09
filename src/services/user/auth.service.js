@@ -38,12 +38,21 @@ export const register = async (userData) => {
       ERROR_MESSAGES.EMAIL_ALREADY_EXIST
     );
   }
-  var user = await User.create({
-    email: userData.email,
-    name: userData.name,
-    password: userData.password,
-    type: userData.type,
-  });
+  var user = await User.findByIdAndUpdate(
+    {
+      email: userData.email,
+      type: userData.type,
+    },
+    {
+      $set: {
+        email: userData.email,
+        name: userData.name,
+        password: userData.password,
+        type: userData.type,
+      },
+    },
+    { upsert: true, new: true }
+  );
   const value = user.toObject();
   await formatUser(value);
   return value;
