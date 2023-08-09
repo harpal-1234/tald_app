@@ -38,7 +38,7 @@ export const register = async (userData) => {
       ERROR_MESSAGES.EMAIL_ALREADY_EXIST
     );
   }
-  var user = await User.findByIdAndUpdate(
+  var user = await User.findOneAndUpdate(
     {
       email: userData.email,
       type: userData.type,
