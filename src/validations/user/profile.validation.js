@@ -18,31 +18,9 @@ const  editprofile = {
     long: Joi.number().required(),
     address: Joi.string().required(),
     dateOfBirth:Joi.string().required(),
-    //phoneNumber: JOI.PHONENUMBER,
     profession: Joi.string().required(),
     bio: Joi.string().required(),
     dateOfBirth:Joi.string().required(),
-    // pronoun: Joi.string()
-    //   .required()
-    //   .valid(...VALIDPRONOUN),
-    // politicalViews: Joi.string()
-    //   .required()
-    //   .valid(...VALID_POLITICALS_VIEWS),
-    // sign: Joi.string()
-    //   .required()
-    //   .valid(...VALID_SIGN),
-    // genderIdentity: Joi.string()
-    //   .required()
-    //   .valid(...VALID_GENDER),
-    // prefrences: Joi.array().items(Joi.string().valid(...VALID_PREFERANCES)),
-    // lifeStyles: Joi.array().items(Joi.string().valid(...VALID_LIFE_STYLE)),
-    // drugUsages: Joi.array().items(Joi.string().valid(...VALID_DRUGS)),
-    // hobbiesAndInterests: Joi.array().items(
-    //   Joi.string().valid(...VALID_HOBBIES_AND_INTRESTS)
-    // ),
-    // pets: Joi.array().items(Joi.string().valid(...VALID_PETS)),
-    // lookingFor: Joi.array().items(Joi.string().valid(...VALID_LOOKIN_FOR)),
-    //type:Joi.string().required().valid("User", "Vendor"),
     // deviceToken:Joi.string().required(),
     // deviceType:Joi.string().valid(...Object.values(DEVICE_TYPE)),
   }),

@@ -9,59 +9,33 @@ const router = express.Router();
 
 router.post(
   "/signUp",
-  // auth(USER_TYPE.USER),
+ 
   validate(authValidation.signUp),
   authController.signUp
 );
 
 router.post(
   "/register",
-  // auth(USER_TYPE.USER),
   validate(authValidation.register),
   authController.register
 );
 router.get(
   "/verifyEmail",
-  //auth(USER_TYPE.USER),
-  //validate(UserValidation.verify),
+  validate(authValidation.verifyEmail),
   authController.verifyMail
 );
-router.post("/login", validate(authValidation.login), authController.userLogin);
-
-// router.post(
-//   "/socialLogin",
-//   validate(authValidation.userSocialLogin),
-//   authController.userSocialLogin
-// );
-
-// // router.get("/getProfile", auth(USER_TYPE.USER), authController.getProfile);
-
+router.get(
+  "/profile",
+  validate(authValidation.verifyProfile),
+  authController.profile
+);
+router.post("/login", validate(authValidation.login), authController.userLogin)
 router.put(
   "/changePassword",
   auth(USER_TYPE.USER),
   validate(authValidation.changePassword),
   authController.changePassword
 );
-
-// router.put(
-//   "/editProfile",
-//   auth(USER_TYPE.USER),
-//   validate(authValidation.editprofile),
-//   authController.editProfile
-// )
-// router.get(
-//   "/verifyEmail",
-//   //auth(USER_TYPE.USER),
-//   //validate(UserValidation.verify),
-//   authController.verifyMail
-// );
-// // router.post(
-// //   "/refreshToken",
-// //   validate(authValidation.refreshToken),
-// //   authController.refreshToken
-// // );
-
-// //--------forgot password--------------//
 router.post(
   "/socialLogin",
   validate(authValidation.userSocialLogin),
@@ -84,12 +58,9 @@ router
     authController.resetForgotPassword
   );
 
-// // //----------end------------------//
-
 router.post(
   "/logout",
   auth(USER_TYPE.USER),
-  //(authValidation.logOut),
   authController.userLogout
 );
 router.post(
@@ -98,18 +69,10 @@ router.post(
   validate(authValidation.createServices),
   authController.createService
 );
-// router.post(
-//   "/contactUs",
-//   auth(USER_TYPE.USER),
-//   validate(authValidation.contactUs),
-//   authController.userContactUs
-// );
-// // router.get("/getCustomerList", auth(USER_TYPE.USER), authController.getCustomerList);
-
-// // router.get("/dashBoard",auth(USER_TYPE.USER), authController.dashBoard);
-
-// // router.delete("/deleteAccount", auth(USER_TYPE.USER), authController.deleteAccount);
-
-// // router.delete("/deleteImage",auth(USER_TYPE.USER),authController.deleteImage);
-
+router.put(
+  "/editProfile",
+  auth(USER_TYPE.USER),
+  validate(authValidation.editProfile),
+  authController.editProfile
+);
 export default router;

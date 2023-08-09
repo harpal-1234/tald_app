@@ -22,7 +22,6 @@ router.post(
 router.get(
   "/portfolio",
   auth(USER_TYPE.USER),
-  //validate(authValidation.addImages),
   authController.getPortfolio
 );
 router.delete(
@@ -46,13 +45,24 @@ router.put(
 router.get(
   "/getAvailability",
   auth(USER_TYPE.USER),
-  // validate(authValidation.addAvailability),
   authController.getAvailability
 );
-// router.get(
-//   "/users",
-//   auth(USER_TYPE.ADMIN),
-//   validate(authValidation.getUsers),
-//   authController.userList
-// );
+router.put(
+  "/editProjetDetail",
+  auth(USER_TYPE.USER),
+  validate(authValidation.editProject),
+  authController.editProjectDetails
+);
+router.put(
+  "/editCompanyDetails",
+  auth(USER_TYPE.USER),
+  validate(authValidation.editCompanyDetails),           
+  authController.editCompanyDetails
+);
+router.put(
+  "/feeStructure",
+  auth(USER_TYPE.USER),
+  validate(authValidation.feeStructure),           
+  authController.editFeeStructure
+);
 export default router;

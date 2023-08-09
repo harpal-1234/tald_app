@@ -1,9 +1,6 @@
 import {
-  userService,
-  tokenService,
   vendorServices,
 } from "../../services/index.js";
-import config from "../../config/config.js";
 import { catchAsync } from "../../utils/universalFunction.js";
 import { successResponse } from "../../utils/response.js";
 import {
@@ -11,20 +8,7 @@ import {
   SUCCESS_MESSAGES,
   USER_TYPE,
 } from "../../config/appConstants.js";
-
-// const formatRes = require("../../../utils/formatResponse");
-import {
-  forgotPasswordEmail,
-  contactUs,
-  verifyEmail,
-} from "../../utils/sendMail.js";
-import {
-  successMessageWithoutData,
-  successMessage,
-} from "../../utils/commonFunction.js";
-//import { createStripeCustomer } from "../../utils/stripe.js";
 import dotenv from "dotenv";
-//import  otpServices = require("../../utils/otp")
 dotenv.config();
 
 export const createProject = catchAsync(async (req, res) => {
@@ -54,7 +38,6 @@ export const addImages = catchAsync(async (req, res) => {
   );
 });
 export const getPortfolio = catchAsync(async (req, res) => {
-  //const { images, projectId } = req.body;
   const userId = req.token.user._id;
   const project = await vendorServices.Portfolio(userId);
 
@@ -119,6 +102,39 @@ export const getAvailability = catchAsync(async (req, res) => {
   const userId = req.token.user._id;
   const project = await vendorServices.getAvailability(userId);
 
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    project
+  );
+});
+export const editProjectDetails = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const project = await vendorServices.editProjectDetails(req.body, userId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    project
+  );
+});
+export const editCompanyDetails = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;                        
+  const project = await vendorServices.editCompanyDetails(req.body, userId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    project
+  );
+});
+export const editFeeStructure = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;                        
+  const project = await vendorServices.editFeeStructure(req.body, userId);
   return successResponse(
     req,
     res,

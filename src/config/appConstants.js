@@ -6,33 +6,12 @@ export const TOKEN_TYPE = {
   REFRESH: "refresh",
   RESET_PASSWORD: "resetPassword",
 };
-export const DRAFTS = {
-  WINE: "Wine",
-  SHORTS: "Shots",
-  MARGARITA: "Margarita",
-  WELL_COCKTAILS: "Well Cocktails",
-  BEER_PITCHER: "Beer Pitcher",
-  COCKTAIL_TOWER: "Cocktail Tower",
-  MIMOSAS: "Mimosas",
-  BOTTOMLESS_MIMOSAS: "Bottomless Mimosas",
-  OTHER: "Other",
-  NULL: null,
-  EMPTY: "",
-};
-
-export const VALID_DRAFTS = [
-  "Wine",
-  "Shots",
-  "Margarita",
-  "Well Cocktails",
-  "Beer Pitcher",
-  "Cocktail Tower",
-  "Mimosas",
-  "Bottomless Mimosas",
-  "Other",
-];
 export const USER_TYPE = {
   ADMIN: "Admin",
+  USER: "User",
+  VENDOR_ADMIN: "Vendor",
+};
+export const USERTYPE1 = {
   USER: "User",
   VENDOR_ADMIN: "Vendor",
 };
@@ -59,32 +38,6 @@ export const OPTIONS = {
   NO: "No",
 };
 export const VALID_PROJECT_TYPE = ["Residential", "Commercial"];
-export const BUSINESS = {
-  BAR: "Bar",
-  CLUB: "Club",
-  COMEDY_CLUB: "Comedy Club",
-  SPORTS_BAR: "Sports Bar",
-  EVENT_PROMOTER: "Event Promoter",
-  RESTARURANT: "Restaurant",
-  BREWERY: "Brewery",
-  FESTIVAL: "Festival",
-  SPEAKEASY: "Speakeasy",
-  OTHER: "Other",
-  NULL: null,
-  EMPTY: "",
-};
-export const VALID_BUSINESS = [
-  "Bar",
-  "Club",
-  "Comedy Club",
-  "Sports Bar",
-  "Event Promoter",
-  "Restaurant",
-  "Brewery",
-  "Festival",
-  "Speakeasy",
-  "Other",
-];
 export const DAYS = {
   MONDAY: "Monday",
   TUESDAY: "Tuesday",
@@ -105,11 +58,6 @@ export const VALID_DAYS = [
   "Saturday",
   "Sunday",
 ];
-// export const SOCIAL_TYPE = {
-//   FACEBOOK: "facebook",
-//   APPLE: "apple",
-//   GOOGLE: "google",
-// };
 export const ABOUTUS = {
   FRIENDS_FAMILY: "Friends/Family",
   INSTAGRAM: "Instagram",
@@ -131,19 +79,6 @@ export const DEVICE_TYPE = {
   ANDROID: "Android",
   WEB: "Web",
 };
-const PUSH_NOTIFICATION_STATUS = {
-  ENABLE: "Enable",
-  DISABLE: "Disable",
-};
-const PLAN = {
-  WEEKLY: "Weekly",
-  MONTHLY: "Monthly",
-  ANUALY: "Anualy",
-};
-const NOTIFICATION_STATUS = {
-  ENABLE: "Enable",
-  DISABLE: "Disable",
-};
 export const JOI = {
   EMAIL: Joi.string().email().lowercase().trim().required(),
   PASSWORD: Joi.string().min(6).required(),
@@ -159,34 +94,6 @@ export const JOI = {
     .required(),
   USER_TYPE: Joi.string().valid(USER_TYPE.USER, USER_TYPE.ADMIN).required(),
 };
-
-const SKILL_LEVEL = {
-  BASIC: 0,
-  ASTUTE: 1,
-  EXPERT: 2,
-};
-
-const WORK_LOCATION = {
-  REMOTE: "remote",
-  WORk_LOCATION: "work",
-};
-const DISTANCE = {
-  KM: "Km",
-  MILES: "Miles",
-};
-const ASSIGNMENT_STATUS = {
-  DRAFT: "draft",
-  PROPOSED: "proposed",
-  IN_PROCESS: "inProcess",
-  COMPLETED: "completed",
-};
-
-const REQUEST_STATUS = {
-  RECEIVED: "received",
-  PROPOSED: "proposed",
-  REJECDED: "rejected",
-};
-
 export const SUCCESS_MESSAGES = {
   SUCCESS: "Success",
   LOGOUT: "Your are successfully logged out",
@@ -212,6 +119,7 @@ export const SUCCESS_MESSAGES = {
   ALL_CATEGORY: "All category Details",
   SEND_OTP: "Otp sent on your phoneNumber sucessfully",
   DELETE_PROJECT: "Project deleted sucessfully",
+  VERIFY_EMAIL: "Please verify your email",
 };
 
 export const UPDATED_MESSAGES = {
@@ -311,57 +219,3 @@ export const DELETE_MASSAGES = {
   CATEGORY_DELETED: "Category Deleted Successfully",
   VENDOR_BLOCK: "Vendor Blocked successfully",
 };
-
-// module.exports = {
-//   PUSH_NOTIFICATION_STATUS,
-//   NOTIFICATION_STATUS,
-//   DELETE_MASSAGES,
-//   TOKEN_TYPE,
-//   USER_TYPE,
-//   JOI,
-//   DEVICE_TYPE,
-//   SKILL_LEVEL,
-//   WORK_LOCATION,
-//   ASSIGNMENT_STATUS,
-//   REQUEST_STATUS,
-//   SUCCESS_MESSAGES,
-//   ERROR_MESSAGES,
-//   STATUS_CODES,
-//   UPDATED_MESSAGES,
-//   SOCIAL_LOGIN,
-//   PRONOUN,
-//   GENDER,
-//   PETS,
-//   HOBBIES_AND_INTRESTS,
-//   POLITICALS_VIEWS,
-//   LOOKIN_FOR,
-//   DRUGS,
-//   LIFE_STYLE,
-//   PREFERANCES,
-//   SIGN,
-//   VALIDPRONOUN,
-//   VALID_GENDER,
-//   VALID_PETS,
-//   VALID_HOBBIES_AND_INTRESTS,
-//   VALID_POLITICALS_VIEWS,
-//   VALID_LOOKIN_FOR,
-//   VALID_DRUGS,
-//   VALID_LIFE_STYLE,
-//   VALID_PREFERANCES,
-//   VALID_SIGN,
-//   DISTANCE,
-//   MESSAGE_TYPE,
-//   PLANS,
-//   PLAN,
-//   SOCIAL_TYPE,
-// };
-
-// SPA: "spa",
-// FOOD: "food",
-// FOOTWEAR: "footwear",
-// CLOTHING: "clothing",
-// CANNABIS: "cannabis",
-// BUFFET: "buffet",
-// SALON: "salon",
-// HEATH: "heath",
-// ACTIVITY: "activity",

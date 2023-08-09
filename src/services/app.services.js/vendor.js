@@ -1,13 +1,6 @@
-import { successResponse } from "../../utils/response.js";
 import { User, Project } from "../../models/index.js";
-import { catchAsync } from "../../utils/universalFunction.js";
 import { STATUS_CODES, ERROR_MESSAGES } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
-import config from "../../config/config.js";
-import bcrypt from "bcryptjs";
-import joi from "joi";
-import notificationServices from "../../utils/notification.js";
-import { getPortfolio } from "../../controllers/app/vendor.js";
 import moment from "moment";
 
 export const createProject = async (userId, projectName) => {
@@ -90,7 +83,7 @@ export const addAvailability = async (
   userId
 ) => {
   const currentDate = new Date(availability.startDate);
- 
+
   const next40thDay = new Date(
     currentDate.getTime() + availability.numberOfDays * 24 * 60 * 60 * 1000
   );
@@ -137,4 +130,60 @@ export const getAvailability = async (userId) => {
     inviteesSchedule: availability.inviteesSchedule,
   };
   return data;
+};
+export const editProjectDetails = async (data, userId) => {
+  const value = await User.findOneAndUpdate(
+    {
+      _id: userId,
+      isVerify: true,
+      isDeleted: false,
+    },
+    {
+      projectType: data.projectType,
+      virtual_Consultations: data.virtual_Consultations,
+      newClientProjects: data.newClientProjects,
+      destinationProject: data.destinationProject,
+      minBudget: data.minBudget,
+      maxBudget: data.maxBudget,
+    },
+    { new: true }
+  );
+  return value;
+};
+export const editCompanyDetails = async (data, userId) => {
+  const value = await User.findOneAndUpdate(
+    {
+      _id: userId,
+      isVerify: true,
+      isDeleted: false,
+    },
+    {
+      companyName: data.companyName,
+      location: {
+        type: "Point",
+        coordinates: [data.long, data.lat],
+      },
+      address: data.address,
+      instagramLink: data.instagramLink,
+      pinterestLink: data.pinterestLink,
+      about: data.about,
+    },
+    { new: true }
+  );
+  return value;
+};
+export const editFeeStructure = async (data, userId) => {
+  const project = await User.findOneAndUpdate(
+    {
+      _id: userId,
+      isDeleted: false,
+      isVerify: true,
+    },
+    {
+      feeStructure: data.feeStructure,
+      tradeDiscount: data.tradeDiscount,
+    },
+    { new: true }
+  );
+  return project;
 };

@@ -7,20 +7,15 @@ import {
   SUCCESS_MESSAGES,
   USER_TYPE,
 } from "../../config/appConstants.js";
-
-// const formatRes = require("../../../utils/formatResponse");
 import {
   forgotPasswordEmail,
-  contactUs,
   verifyEmail,
 } from "../../utils/sendMail.js";
 import {
   successMessageWithoutData,
   successMessage,
 } from "../../utils/commonFunction.js";
-//import { createStripeCustomer } from "../../utils/stripe.js";
 import dotenv from "dotenv";
-//import  otpServices = require("../../utils/otp")
 dotenv.config();
 
 const signUp = catchAsync(async (req, res) => {
@@ -36,8 +31,6 @@ const signUp = catchAsync(async (req, res) => {
 });
 const register = catchAsync(async (req, res) => {
   const newUser = await userService.register(req.body);
-  // const newStripeCustomer=await createStripeCustomer(newUser);
-
   const token = await tokenService.generateAuthToken(
     newUser,
     USER_TYPE.USER,
@@ -55,24 +48,12 @@ const register = catchAsync(async (req, res) => {
 });
 const verifyMail = catchAsync(async (req, res) => {
   const token = req.query.token;
-  // console.log(req.query);
-  //    const token = parseJwt( async(val)=>{
-  //     var base64Url = token.split('.')[1];
-  //     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  //     var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
-  //         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-  //     }).join(''));
-
-  //     return JSON.parse(jsonPayload);
-  // }
-
   const data = await userService.verifyEmails(token);
 
   if (data.isVerify == true) {
     return res.render("forgotPassword/commonMessage", {
       title: "Forgot Password",
       successMessage: "Verify mail successfully",
-      // projectName: config.projectName,
     });
   } else {
     return res.render("forgotPassword/commonMessage", {
@@ -84,10 +65,6 @@ const verifyMail = catchAsync(async (req, res) => {
 
 const userLogin = catchAsync(async (req, res) => {
   const user = await userService.userLogin(req.body);
-  // const data = {
-  //   email: user.email,
-  //   _id: user._id,
-  // };
   const token = await tokenService.generateAuthToken(
     user,
     USER_TYPE.USER,
@@ -100,7 +77,6 @@ const userLogin = catchAsync(async (req, res) => {
     SUCCESS_MESSAGES.SUCCESS,
     user,
     token
-    //user.phoneNumber
   );
 });
 
@@ -231,29 +207,37 @@ const createService = catchAsync(async (req, res) => {
     data
   );
 });
-// const editProfile = catchAsync(async (req, res) => {
-//   const userId = req.token.user._id;
-//   const user = await userService.editProfile(userId, req.body);
-//   return successResponse(
-//     req,
-//     res,
-//     STATUS_CODES.SUCCESS,
-//     SUCCESS_MESSAGES.SUCCESS,
-//     user
-//   );
-// });
-// const userContactUs = catchAsync(async (req, res) => {
-//   const { name, email, message } = req.body;
-//   const userDetails = await contactUs(name, message, email);
-//   return successResponse(
-//     req,
-//     res,
-//     STATUS_CODES.SUCCESS,
-//     SUCCESS_MESSAGES.CONTACT_US
-//   );
-// });
+const editProfile = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const data = await userService.profileEdit(req.body, userId, req.token.token);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.VERIFY_EMAIL
+  );
+});
+const profile = catchAsync(async (req, res) => {
+  const { token, name, email } = req.query;
+
+  const data = await userService.profile(token, name, email);
+
+  if (data) {
+    return res.render("forgotPassword/commonMessage", {
+      title: "Edit Profile",
+      successMessage: "Your Profile successfully Updated",
+      projectName: config.projectName,
+    });
+  } else {
+    return res.render("forgotPassword/commonMessage", {
+      title: "Edit Profile",
+      successMessage: "something went wrong ,please try again",
+      projectName: config.projectName,
+    });
+  }
+});
+
 export default {
-  //userSocialLogin,
   signUp,
   register,
   verifyMail,
@@ -265,4 +249,6 @@ export default {
   changePassword,
   userSocialLogin,
   createService,
+  editProfile,
+  profile,
 };

@@ -1,13 +1,9 @@
 //import { valid } from "joi";
 import Joi from "joi";
 import {
-  JOI,
-  USER_TYPE,
   PROJECT_TYPE,
   FEE_STRUCTURE,
   OPTIONS,
-  SOCIAL_LOGIN,
-  SOCIAL_TYPE,
   DAYS,
 } from "../../config/appConstants.js";
 
@@ -55,5 +51,56 @@ export const addAvailability = {
     }).required(),
     isIndefinitely: Joi.boolean().required(),
     inviteesSchedule: Joi.number().required(),
+  }),
+};
+export const editProject = {
+  body: Joi.object().keys({
+    projectType: Joi.object({
+      question: Joi.string().required().allow(null, ""),
+      answer: Joi.string().valid(...Object.values(PROJECT_TYPE)),
+    }).required(),
+    virtual_Consultations: Joi.object({
+      question: Joi.string().required().allow(null, ""),
+      answer: Joi.string().valid(...Object.values(OPTIONS)),
+      chargers_25_mins: Joi.string(),
+      chargers_55_mins: Joi.string(),
+    }).required(),
+    newClientProjects: Joi.object({
+      question: Joi.string().required().allow(null, ""),
+      answer: Joi.string().valid(...Object.values(OPTIONS)),
+      chargers_25_mins: Joi.string().required().allow(null, ""),
+      chargers_55_mins: Joi.string().required().allow(null, ""),
+    }),
+    destinationProject: Joi.object({
+      question: Joi.string().required().allow(null, ""),
+      answer: Joi.string().valid(...Object.values(OPTIONS)),
+      chargers_25_mins: Joi.string().required().allow(null, ""),
+      chargers_55_mins: Joi.string().required().allow(null, ""),
+    }),
+    minBudget: Joi.string().required().allow(null, ""),
+    maxBudget: Joi.string().required().allow(null, ""),
+  }),
+};
+export const editCompanyDetails = {
+  body: Joi.object().keys({
+    companyName: Joi.string().required().allow("", null),
+    lat: Joi.number().required().allow("", null),
+    long: Joi.number().required().allow("", null),
+    address: Joi.string().required().allow("", null),
+    instagramLink: Joi.string().required().allow("", null),
+    pinterestLink: Joi.string().required().allow("", null),
+    about: Joi.string().required().allow("", null),
+  }),
+};
+export const feeStructure = {
+  body: Joi.object().keys({
+    feeStructure: Joi.object({
+      question: Joi.string().required().allow(null, ""),
+      answer: Joi.string().valid(...Object.values(FEE_STRUCTURE)),
+    }),
+    tradeDiscount: Joi.object({
+      question: Joi.string().required().allow(null, ""),
+      answer: Joi.string().valid(...Object.values(OPTIONS)),
+    }),
   }),
 };

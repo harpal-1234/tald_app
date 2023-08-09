@@ -6,7 +6,7 @@ import {
   PROJECT_TYPE,
   FEE_STRUCTURE,
   OPTIONS,
-  SOCIAL_LOGIN,
+  USERTYPE1,
   SOCIAL_TYPE,
 } from "../../config/appConstants.js";
 
@@ -14,14 +14,14 @@ const login = {
   body: Joi.object().keys({
     email: JOI.EMAIL,
     password: Joi.string().min(6).required(),
-    type: Joi.string().required().valid("User", "Vendor"),
+    type: Joi.string().required().valid(USERTYPE1),
     // deviceToken:Joi.string().required(),
     // deviceType:Joi.string().valid(...Object.values(DEVICE_TYPE)),
   }),
 };
 const logOut = {
   body: Joi.object().keys({
-    type: Joi.string().required().valid("User", "Vendor"),
+    type: Joi.string().required().valid(USERTYPE1),
     // deviceToken:Joi.string().required(),
     // deviceType:Joi.string().valid(...Object.values(DEVICE_TYPE)),
   }),
@@ -29,10 +29,6 @@ const logOut = {
 const createServices = {
   body: Joi.object().keys({
     companyName: Joi.string(),
-    // location: Joi.object({
-    //   type: Joi.string().default("Point"),
-    //   coordinates: Joi.array().items(Joi.number()).length(2).required(),
-    // }),
     lat: Joi.number(),
     long: Joi.number(),
     address: Joi.string(),
@@ -40,37 +36,37 @@ const createServices = {
     pinterestLink: Joi.string(),
     about: Joi.string(),
     projectType: Joi.object({
-      question: Joi.string(),
+      question: Joi.string().required().allow(null, ""),
       answer: Joi.string().valid(...Object.values(PROJECT_TYPE)),
-    }),
+    }).required(),
     virtual_Consultations: Joi.object({
-      question: Joi.string(),
+      question: Joi.string().required().allow(null, ""),
       answer: Joi.string().valid(...Object.values(OPTIONS)),
-      chargers_25_mins: Joi.string(),
-      chargers_55_mins: Joi.string(),
-    }),
+      chargers_25_mins: Joi.string().required().allow(null, ""),
+      chargers_55_mins: Joi.string().required().allow(null, ""),
+    }).required(),
     newClientProjects: Joi.object({
-      question: Joi.string(),
+      question: Joi.string().required().allow(null, ""),
       answer: Joi.string().valid(...Object.values(OPTIONS)),
-      chargers_25_mins: Joi.string(),
-      chargers_55_mins: Joi.string(),
-    }),
+      chargers_25_mins: Joi.string().required().allow(null, ""),
+      chargers_55_mins: Joi.string().required().allow(null, ""),
+    }).required(),
     destinationProject: Joi.object({
-      question: Joi.string(),
+      question: Joi.string().required().allow(null, ""),
       answer: Joi.string().valid(...Object.values(OPTIONS)),
-      chargers_25_mins: Joi.string(),
-      chargers_55_mins: Joi.string(),
-    }),
+      chargers_25_mins: Joi.string().required().allow(null, ""),
+      chargers_55_mins: Joi.string().required().allow(null, ""),
+    }).required(),
     feeStructure: Joi.object({
-      question: Joi.string(),
+      question: Joi.string().required().allow(null, ""),
       answer: Joi.string().valid(...Object.values(FEE_STRUCTURE)),
     }),
     tradeDiscount: Joi.object({
-      question: Joi.string(),
+      question: Joi.string().required().allow(null, ""),
       answer: Joi.string().valid(...Object.values(OPTIONS)),
     }),
-    minBudget: Joi.string(),
-    maxBudget: Joi.string(),
+    minBudget: Joi.string().required().allow(null, ""),
+    maxBudget: Joi.string().required().allow(null, ""),
   }),
 };
 const userSocialLogin = {
@@ -78,33 +74,10 @@ const userSocialLogin = {
     name: Joi.string().required(),
     socialId: Joi.string().required(),
     email: Joi.string().required().allow(null, ""),
-    // socialType: Joi.string()
-    //   .required()
-    //   .valid(...Object.values(SOCIAL_TYPE)),
-    //phoneNumber: JOI.PHONENUMBER,
-    //profession: Joi.string().required(),
-    //bio: Joi.string().required(),
-    //pronoun: Joi.string()
-    // .required()
-    // .valid(...VALIDPRONOUN),
     // deviceToken:Joi.string().required(),
     // deviceType:Joi.string().valid(...Object.values(DEVICE_TYPE)),
   }),
 };
-const verifyOtp = {
-  query: Joi.object().keys({
-    otp: Joi.string().required(),
-    // userType: Joi.string().required(),
-  }),
-};
-
-const sendOtp = {
-  body: Joi.object().keys({
-    phoneNumber: Joi.string().required(),
-    // userType: Joi.string().required(),
-  }),
-};
-
 const signUp = {
   body: Joi.object().keys({
     email: JOI.EMAIL,
@@ -115,14 +88,14 @@ const register = {
     email: JOI.EMAIL,
     name: Joi.string().required(),
     password: JOI.PASSWORD,
-    type: Joi.string().required().allow(USER_TYPE),
+    type: Joi.string().required().allow(USERTYPE1),
   }),
 };
 
 const forgotPassword = {
   body: Joi.object().keys({
     email: JOI.EMAIL,
-    type: Joi.string().required().allow("Vendor", "User"),
+    type: Joi.string().required().allow(USERTYPE1),
   }),
 };
 
@@ -158,7 +131,13 @@ const editprofile = {
     email: Joi.string().required().allow(null, ""),
   }),
 };
-
+const verifyProfile = {
+  query: Joi.object().keys({
+    token: Joi.string().required(),
+    name: Joi.string().required().allow(null, ""),
+    email: JOI.EMAIL,
+  }),
+};
 const pushNotificationStatus = {
   body: Joi.object().keys({
     pushNotification: Joi.string(),
@@ -171,6 +150,17 @@ const contactUs = {
     message: Joi.string().required(),
   }),
 };
+const editProfile = {
+  body: Joi.object().keys({
+    email: JOI.EMAIL,
+    name: Joi.string().required(),
+  }),
+};
+const verifyEmail = {
+  body: Joi.object().keys({
+    token: Joi.string().required(),
+  }),
+};
 export default {
   signUp,
   pushNotificationStatus,
@@ -179,12 +169,13 @@ export default {
   resetForgotPassword,
   forgotPage,
   forgotPassword,
-  sendOtp,
-  verifyOtp,
   userSocialLogin,
   logOut,
   login,
   contactUs,
   register,
   createServices,
+  editProfile,
+  verifyProfile,
+  verifyEmail,
 };

@@ -1,19 +1,4 @@
 import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
-import {
-  USER_TYPE,
-  PROJECT_TYPE,
-  FEE_STRUCTURE,
-  OPTIONS,
-  DEVICE_TYPE,
-  BUSINESS,
-  ABOUTUS,
-  VALID_DAYS,
-} from "../config/appConstants.js";
-
-// const { address } = require("./commonField.models");
-//const { string } = require("joi");
-
 const projectSchema = mongoose.Schema(
   {
     images: [{ image: { type: String } }],

@@ -5,10 +5,6 @@ import {
   PROJECT_TYPE,
   FEE_STRUCTURE,
   OPTIONS,
-  DEVICE_TYPE,
-  BUSINESS,
-  ABOUTUS,
-  VALID_DAYS,
 } from "../config/appConstants.js";
 // const { address } = require("./commonField.models");
 //const { string } = require("joi");

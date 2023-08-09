@@ -43,13 +43,6 @@ export const verifyEmail = async (email, token) => {
       from: process.env.SENDER_EMAIL,
       to: email,
       subject: "Verify Email",
-      // attachments: [
-      //   {
-      //     filename: "logo.png",
-      //     path: __dirname + "/images/logo.jpg",
-      //     cid: "logo",
-      //   },
-      // ],
       html: verifyMailTemplate({
         email,
         token,
@@ -60,7 +53,6 @@ export const verifyEmail = async (email, token) => {
 
     transporter.sendMail(info, (error, accept) => {
       if (error) {
-        // console.log(error, "eeeeeeeeeeeeeeerrrrrrrrrrrrrrrrrr");
         reject(error);
       }
       resolve(accept, console.log("Mail Sended"));
@@ -74,13 +66,7 @@ export const forgotPasswordEmail = async (email, token) => {
       from: process.env.SENDER_EMAIL,
       to: email,
       subject: "Reset Password",
-      // attachments: [
-      //   {
-      //     filename: "logo.png",
-      //     path: __dirname + "/images/logo.png",
-      //     cid: "logo",
-      //   },
-      // ],
+
       html: resetPasswordTemplate({
         token,
         apiBaseUrl: process.env.ForgotPassword,
@@ -148,6 +134,7 @@ export const editProfile = (email, token, name) => {
         token,
         apiBaseUrl: process.env.ForgotPassword,
         name,
+        email,
       }),
     };
 

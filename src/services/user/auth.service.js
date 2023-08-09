@@ -1,39 +1,33 @@
 import bcrypt from "bcryptjs";
-
-// import  { tokenService } from "../../services";
-import { successResponse } from "../../utils/response.js";
 import { User, Token, Admin } from "../../models/index.js";
 import { formatUser } from "../../utils/commonFunction.js";
 import {
-  forgotPasswordEmail,
-  contactUs,
-  verifyEmail,
+  editProfile,
 } from "../../utils/sendMail.js";
-//import  { ApiError } from "../../utils/universalFunction.js";
 import {
   USER_TYPE,
   STATUS_CODES,
   ERROR_MESSAGES,
-  SUCCESS_MESSAGES,
 } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
 
 export const createUser = async (userData) => {
-  const check = await User.findOne({
-    email: userData.email,
-    isDeleted: false,
-  });
-  if (check) {
-    return check;
-  }
-  const user = await User.create({
-    email: userData.email,
-  });
-  return user;
+  const check = await User.findOneAndUpdate(
+    {
+      email: userData.email,
+      isDeleted: false,
+    },
+    {
+      $set: {
+        email: userData.email,
+      },
+    },
+    { upsert: true }
+  );
+  return check;
 };
 
 export const register = async (userData) => {
-  console.log(userData);
   const check = await User.findOne({
     email: userData.email,
     isVerify: true,
@@ -46,35 +40,46 @@ export const register = async (userData) => {
       ERROR_MESSAGES.EMAIL_ALREADY_EXIST
     );
   }
-  const userr = await User.create({
+  var user = await User.create({
     email: userData.email,
     name: userData.name,
     password: userData.password,
     type: userData.type,
   });
-  const user = await User.findOne({ _id: userr._id, isDeleted: false }).lean();
-  await formatUser(user);
-  return user;
+  const value = user.toObject();
+  await formatUser(value);
+  return value;
 };
-export const editProfile = async (data, userId) => {
-  const check = await User.findOne({ _id: userId, isDeleted: false }).lean();
+export const profileEdit = async (data, userId, token) => {
+  await editProfile(data.email, token, data.name);
+  return;
+};
+
+export const profile = async (token, name, email) => {
+  const check = await Token.findOne({ token: token, isDeleted: false }).lean();
+
+  if (check) {
+    const user = await User.findOne({
+      _id: check.user,
+      isVerify: true,
+      isDeleted: false,
+    });
+    if (user) {
+      const data = await User.findOneAndUpdate(
+        { _id: user._id, isDeleted: false },
+        { email: email, name: name }
+      );
+      return data;
+    }
+  }
 };
 export const verifyEmails = async (token) => {
   const user = await Token.findOne({ token: token, isDeleted: false });
-
   const data = await User.findOneAndUpdate(
     { _id: user.user, isDeleted: false },
     { isVerify: true },
     { new: true }
   );
-  // if (data.type == "Vendor") {
-  //   const deals = await Deal.updateMany(
-  //     { user: user.user, isDeleted: false },
-  //     { isVerify: true }
-  //   );
-  //   console.log(deals);
-  // }
-
   return data;
 };
 export const createService = async (userId, data) => {
@@ -133,24 +138,12 @@ export const userLogin = async (data) => {
       STATUS_CODES.ACTION_FAILED,
       ERROR_MESSAGES.EMAIL_NOT_FOUND
     );
-    // throw new ApiError(
-    //   ERROR_MESSAGES.EMAIL_NOT_FIND
-    //   // httpStatus.UNAUTHORIZED,
-    //   // "Email does not exist please signup"
-    // );
   }
 
   if (user.isBlocked) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
       ERROR_MESSAGES.ACCOUNT_BLOCKED
-    );
-  }
-
-  if (user.isDeleted) {
-    throw new OperationalError(
-      STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.ACCOUNT_DELETED
     );
   }
   console.log(await bcrypt.compare(data.password, user.password));
@@ -161,13 +154,6 @@ export const userLogin = async (data) => {
       ERROR_MESSAGES.WRONG_PASSWORD
     );
   }
-  // if (!(await user.isPasswordMatch(data.password))) {
-  //   throw new OperationalError(
-  //     STATUS_CODES.ACTION_FAILED,
-  //     ERROR_MESSAGES.WRONG_PASSWORD
-  //   );
-  // }
-
   await formatUser(user);
 
   return user;
@@ -251,33 +237,6 @@ export const resetPassword = async (tokenData, newPassword) => {
 
   return { tokenvalue, adminvalue };
 };
-
-// export const pushNotification = async (userId) => {
-//   const data = await User.findOne({ _id: userId, isDeleted: false });
-//   if (data.isNotification == "Enable") {
-//     await User.findOneAndUpdate(
-//       { _id: userId, isDeleted: false },
-//       {
-//         isNotification: "Disable",
-//       },
-//       { new: true }
-//     );
-//     return "Disable";
-//   }
-//   if (data.isNotification == "Disable") {
-//     await User.findOneAndUpdate(
-//       { _id: userId, isDeleted: false },
-//       {
-//         isNotification: "Enable",
-//       },
-//       { new: true }
-//     );
-//   }
-//   return "Enable";
-// };
-// export const publickKey = async (publickKey, userId) => {
-//   const user = await User.findOne({ _id: userId, isDeleted: false });
-// };
 export const changePassword = async (userId, oldPassword, newPassword) => {
   const user = await User.findById(userId);
   if (!(await bcrypt.compare(oldPassword, user.password))) {
@@ -291,121 +250,3 @@ export const changePassword = async (userId, oldPassword, newPassword) => {
   await user.save();
   return user;
 };
-// export const editProfile = async (userId, data) => {
-//   const user = await User.findOneAndUpdate(
-//     { _id: userId },
-//     {
-//       image: data.image,
-//       name: data.name,
-//       email: data.email,
-//     },
-//     {
-//       new: true,
-//       lean: true,
-//     }
-//   );
-//   const data1 = await formatUser(user);
-//   return data1;
-// };
-// const app_key_provider = {
-//   getToken() {
-//     return config.onesignal_api_key;
-//   },
-// };
-// const configuration = OneSignal.createConfiguration({
-//   authMethods: {
-//     app_key: {
-//       tokenProvider: app_key_provider,
-//     },
-//   },
-// });
-//   const client = new OneSignal.DefaultApi(configuration);
-//   const notification = new OneSignal.Notification();
-
-//   notification.app_id = config.onesignal_app_key;
-//   notification.included_segments = [req.token.device.token];
-//   notification.contents = {
-//     en: "Hello OneSignal!",
-//   };
-//   const { id } = await client.createNotification(notification);
-
-//   const response = await client.getNotification(config.onesignal_app_key, id);
-//   console.log(response);
-
-//   return response;
-// };
-
-// export default{
-//   userSocialLogin,
-//   createUser,
-//   userLogin,
-//   userLogout,
-//   resetPassword,
-//   pushNotification,
-//   getUserById,
-//   createUserNumber,
-//   verifyOtp,
-//   publickKey,
-// };
-
-// if (socialId) {
-//   const newUser = await User.findOne({ email: email });
-
-//   if (newUser) {
-//     throw new OperationalError(
-//       STATUS_CODES.ACTION_FAILED,
-//       ERROR_MESSAGES.EMAIL_ALREADY_EXIST
-//     );
-//   }
-
-//   if (Object.keys(socialId).toString() === "facebookId") {
-//     const facebookUser = await User.create({
-//       email: email,
-//       name: name,
-//       socialId: socialId,
-//     });
-// const facebookUser = await User.findOneAndUpdate(
-//   { $or: [{ socialId: socialId.facebookId }, { email: email }] },
-//   {
-//     $set: { socialId: { facebookId: socialId.facebookId } },
-//     $setOnInsert: {
-//       email: email,
-//       name: name,
-//     },
-//   },
-//   { upsert: true, new: true }
-// );
-
-//   return facebookUser;
-// }
-
-// if (Object.keys(socialId).toString() === "googleId") {
-//   const googleUser = await User.create({
-//     email: email,
-//     name: name,
-//     socialId: socialId,
-//   });
-
-//   return googleUser;
-// }
-// if (Object.keys(socialId).toString() === "appleId") {
-//   const appleUser = await User.create({
-//     email: email,
-//     name: name,
-//     socialId: socialId,
-//   });
-// const appleUser = await User.findOneAndUpdate(
-//   { $or: [{ socialId: socialId.appleId }, { email: email }] },
-//   {
-//     $set: { socialId: { appleId: socialId.appleId } },
-//     $setOnInsert: {
-//       email: email,
-//       name: name,
-//     },
-//   },
-//   { upsert: true, new: true }
-// );
-
-//     return appleUser;
-//   }
-// }
