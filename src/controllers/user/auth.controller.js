@@ -7,10 +7,7 @@ import {
   SUCCESS_MESSAGES,
   USER_TYPE,
 } from "../../config/appConstants.js";
-import {
-  forgotPasswordEmail,
-  verifyEmail,
-} from "../../utils/sendMail.js";
+import { forgotPasswordEmail, verifyEmail } from "../../utils/sendMail.js";
 import {
   successMessageWithoutData,
   successMessage,

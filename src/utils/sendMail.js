@@ -44,7 +44,6 @@ export const verifyEmail = async (email, token) => {
       to: email,
       subject: "Verify Email",
       html: verifyMailTemplate({
-        email,
         token,
         apiBaseUrl: process.env.ForgotPassword,
         title: "Verify Email",
