@@ -47,7 +47,7 @@ export const register = async (userData) => {
       $set: {
         email: userData.email,
         name: userData.name,
-        password: userData.password,
+        password: await bcrypt.hash(userData.password, 8),
         type: userData.type,
       },
     },
@@ -138,7 +138,7 @@ export const userLogin = async (data) => {
     type: data.type,
     isVerify: true,
     isDeleted: false,
-  });
+  }).lean();
 
   if (!user) {
     throw new OperationalError(
@@ -153,8 +153,6 @@ export const userLogin = async (data) => {
       ERROR_MESSAGES.ACCOUNT_BLOCKED
     );
   }
-  console.log(await bcrypt.compare(data.password, user.password));
-
   if (!(await bcrypt.compare(data.password, user.password))) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
