@@ -1,9 +1,7 @@
 import bcrypt from "bcryptjs";
 import { User, Token, Admin } from "../../models/index.js";
 import { formatUser } from "../../utils/commonFunction.js";
-import {
-  editProfile,
-} from "../../utils/sendMail.js";
+import { editProfile } from "../../utils/sendMail.js";
 import {
   USER_TYPE,
   STATUS_CODES,
@@ -22,7 +20,7 @@ export const createUser = async (userData) => {
         email: userData.email,
       },
     },
-    { upsert: true }
+    { upsert: true, new: true }
   );
   return check;
 };
