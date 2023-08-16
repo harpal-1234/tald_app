@@ -168,13 +168,14 @@ export const userSocialLogin = async (data) => {
   const user = await User.findOneAndUpdate(
     {
       googleId: data.socialId,
+      type: data.type,
       isDeleted: false,
     },
     {
       $setOnInsert: {
         name: data.name,
       },
-      $set: { googleId: data.socialId, isVerify: true },
+      $set: { googleId: data.socialId, isVerify: true, type: data.type },
     },
     { upsert: true, new: true }
   );
