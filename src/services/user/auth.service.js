@@ -174,7 +174,7 @@ export const userSocialLogin = async (data) => {
       $setOnInsert: {
         name: data.name,
       },
-      $set: { googleId: data.socialId },
+      $set: { googleId: data.socialId, isVerify: true },
     },
     { upsert: true, new: true }
   );
