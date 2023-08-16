@@ -98,8 +98,8 @@ export const createService = async (userId, data) => {
   if (!check) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.USER_NOT_FOUND
-    );
+      ERROR_MESSAGES.USER_NOT_FOUND                       
+    );                                                      
   }
 
   const user = await User.findOneAndUpdate(
@@ -126,6 +126,7 @@ export const createService = async (userId, data) => {
       tradeDiscount: data.tradeDiscount,
       minBudget: data.minBudget,
       maxBudget: data.maxBudget,
+      isSignUp: true,
     },
     { new: true }
   ).lean();

@@ -75,6 +75,7 @@ const userSchema = mongoose.Schema(
       startDate: { type: String },
       endDate: { type: String },
     },
+    isSignUp:{ type: Boolean, default: false },
     isIndefinitely: { type: Boolean, default: false },
     inviteesSchedule: { type: Number },
     isDeleted: { type: Boolean, default: false },
