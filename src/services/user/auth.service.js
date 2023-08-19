@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { User, Token, Admin } from "../../models/index.js";
+import { User, Token, Admin, Request } from "../../models/index.js";
 import { formatUser } from "../../utils/commonFunction.js";
 import { editProfile } from "../../utils/sendMail.js";
 import {
@@ -98,8 +98,8 @@ export const createService = async (userId, data) => {
   if (!check) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.USER_NOT_FOUND                       
-    );                                                      
+      ERROR_MESSAGES.USER_NOT_FOUND
+    );
   }
 
   const user = await User.findOneAndUpdate(
@@ -130,6 +130,9 @@ export const createService = async (userId, data) => {
     },
     { new: true }
   ).lean();
+  await Request.create({
+    sender: userId,
+  });
   await formatUser(user);
   return user;
 };

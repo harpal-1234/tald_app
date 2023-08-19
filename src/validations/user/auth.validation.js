@@ -69,8 +69,8 @@ const createServices = {
       question: Joi.string().required().allow(null, ""),
       answer: Joi.string().valid(...Object.values(OPTIONS)),
     }),
-    minBudget: Joi.string().required().allow(null, ""),
-    maxBudget: Joi.string().required().allow(null, ""),
+    minBudget: Joi.number().required().allow(null),
+    maxBudget: Joi.number().required().allow(null),
   }),
 };
 const userSocialLogin = {
@@ -78,7 +78,7 @@ const userSocialLogin = {
     name: Joi.string().required(),
     socialId: Joi.string().required(),
     email: Joi.string().required().allow(null, ""),
-    type:Joi.string().required().valid("Vendor","User")
+    type: Joi.string().required().valid("Vendor", "User"),
     // deviceToken:Joi.string().required(),
     // deviceType:Joi.string().valid(...Object.values(DEVICE_TYPE)),
   }),

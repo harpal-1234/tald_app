@@ -10,11 +10,13 @@ export const USER_TYPE = {
   ADMIN: "Admin",
   USER: "User",
   VENDOR_ADMIN: "Vendor",
+  NON_USER:"Non"
 };
 export const USERTYPE1 = {
   USER: "User",
   VENDOR_ADMIN: "Vendor",
 };
+
 export const PROJECT_TYPE = {
   RESIDENTIAL: "Residential",
   COMMERCIAL: "Commercial",
@@ -176,6 +178,7 @@ export const ERROR_MESSAGES = {
   GROUP_NOT_EXIST: "This group does not exist",
   PROJECT: "This Project Already Exist ",
   PROJECT_NOT_FOUND: "This Project Not Exist",
+  REQUEST_NOT_FOUND: "This Request Not Found",
 };
 export const SOCIAL_TYPE = {
   FACEBOOK: "facebook",

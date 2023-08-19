@@ -18,6 +18,18 @@ router.get(
   validate(authValidation.getUsers),
   authController.userList
 );
+router.get(
+  "/requests",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.getUsers),
+  authController.requests
+);
+router.put(
+  "/requestAction",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.requestAction),
+  authController.requestAction
+);
 router.post("/logout", auth(USER_TYPE.ADMIN), authController.adminLogout);
 
 export default router;

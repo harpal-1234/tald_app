@@ -13,7 +13,14 @@ const getUsers = {
     limit: Joi.number().required(),
   }),
 };
+const requestAction = {
+  body: Joi.object().keys({
+    status: Joi.boolean().required().valid(true,false),
+    requestId: Joi.string().required(),
+  }),
+};
 export default{
   adminLogin,
-  getUsers
+  getUsers,
+  requestAction
 }

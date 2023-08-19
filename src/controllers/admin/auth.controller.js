@@ -39,6 +39,28 @@ export const userList = catchAsync(async (req, res) => {
     users
   );
 });
+export const requests = catchAsync(async (req, res) => {
+  let { page, limit } = req.query;
+  const request = await adminService.requests(page, limit);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    request
+  );
+});
+export const requestAction = catchAsync(async (req, res) => {
+  let { status, requestId } = req.body;
+  const request = await adminService.requestAction(status, requestId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    request
+  );
+});
 export const changePassword = catchAsync(async (req, res) => {
   await adminService.changePassword(
     req.token.admin._id,
@@ -47,7 +69,6 @@ export const changePassword = catchAsync(async (req, res) => {
   );
   return successResponse(req, res, STATUS_CODES.SUCCESS);
 });
-
 
 export const adminLogout = catchAsync(async (req, res) => {
   await adminService.adminLogout(req.token._id);
