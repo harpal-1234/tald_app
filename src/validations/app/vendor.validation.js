@@ -29,7 +29,10 @@ export const getInteriorDesigner = {
       .required()
       .valid(...Object.values(OPTIONS))
       .allow(null, ""),
-    consultationLength: Joi.string().required().valid("25 mins", "55 mins"),
+    consultationLength: Joi.string()
+      .required()
+      .valid("25 mins", "55 mins")
+      .allow(null, ""),
     minimumPrice: Joi.number().required().allow(null, ""),
     maximumPrice: Joi.number().required().allow(null, ""),
   }),
