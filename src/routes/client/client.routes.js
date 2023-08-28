@@ -10,7 +10,7 @@ const router = express.Router();
 router.get(
   "/interiorDesigner",
   auth(USER_TYPE.NON_USER),
-  //validate(authValidation.createProject),                
+  validate(authValidation.getInteriorDesigner),                
   authController.getInteriorDesigners
 );
 

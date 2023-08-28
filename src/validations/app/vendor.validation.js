@@ -6,10 +6,32 @@ import {
   OPTIONS,
   DAYS,
 } from "../../config/appConstants.js";
+import { Types } from "mongoose";
 
 export const createProject = {
   body: Joi.object().keys({
     projectName: Joi.string().required(),
+  }),
+};
+export const getInteriorDesigner = {
+  body: Joi.object().keys({
+    type: Joi.string()
+      .required()
+      .valid("All", "VirtualConsultation", "InteriorDesigner")
+      .allow(null, ""),
+    lat: Joi.number().required().allow(null, ""),
+    long: Joi.number().required().allow(null, ""),
+    projectType: Joi.string()
+      .required()
+      .valid(...Object.values(PROJECT_TYPE))
+      .allow(null, ""),
+    destination: Joi.string()
+      .required()
+      .valid(...Object.values(OPTIONS))
+      .allow(null, ""),
+    consultationLength: Joi.string().required().valid("25 mins", "55 mins"),
+    minimumPrice: Joi.number().required().allow(null, ""),
+    maximumPrice: Joi.number().required().allow(null, ""),
   }),
 };
 export const addImages = {
