@@ -5,6 +5,10 @@ import {
   PROJECT_TYPE,
   FEE_STRUCTURE,
   OPTIONS,
+  GOALS,
+  PREFERENCES,
+  PROJECT_SIZE,
+  STYLE,
 } from "../config/appConstants.js";
 // const { address } = require("./commonField.models");
 //const { string } = require("joi");
@@ -75,6 +79,10 @@ const userSchema = mongoose.Schema(
       startDate: { type: String },
       endDate: { type: String },
     },
+    goals: [{ type: String, enum: [...Object.values(GOALS)] }],
+    preferences: [{ type: String, enum: [...Object.values(PREFERENCES)] }],
+    projectSize: { type: String, enum: [...Object.values(PROJECT_SIZE)] },
+    styles: [{ type: String, enum: [...Object.values(STYLE)] }],
     isSignUp: { type: Boolean, default: false },
     isApproved: { type: Boolean, default: false },
     isIndefinitely: { type: Boolean, default: false },

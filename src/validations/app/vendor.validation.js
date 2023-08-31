@@ -5,6 +5,10 @@ import {
   FEE_STRUCTURE,
   OPTIONS,
   DAYS,
+  PREFERENCES,
+  GOALS,
+  PROJECT_SIZE,
+  STYLE,
 } from "../../config/appConstants.js";
 import { Types } from "mongoose";
 
@@ -14,7 +18,7 @@ export const createProject = {
   }),
 };
 export const getInteriorDesigner = {
-  body: Joi.object().keys({
+  query: Joi.object().keys({
     type: Joi.string()
       .required()
       .valid("All", "VirtualConsultation", "InteriorDesigner")
@@ -35,6 +39,30 @@ export const getInteriorDesigner = {
       .allow(null, ""),
     minimumPrice: Joi.number().required().allow(null, ""),
     maximumPrice: Joi.number().required().allow(null, ""),
+    // preferences: Joi.array()
+    //   .required()
+    //   .items(Joi.string().required().valid(...Object.values(PREFERENCES)))
+    //   .allow(null, ""),
+    // styles: Joi.array()
+    //   .required()
+    //   .items(
+    //     Joi.string()
+    //       .required()
+    //       .valid(...Object.values(STYLE))
+    //   )
+    //   .allow(null, ""),
+    // goals: Joi.array()
+    //   .required()
+    //   .items(
+    //     Joi.string()
+    //       .required()
+    //       .valid(...Object.values(GOALS))
+    //   )
+    //   .allow(null, ""),
+    // projectSize: Joi.string()
+    //   .required()
+    //   .valid(...Object.values(PROJECT_SIZE))
+    //   .allow(null, ""),
   }),
 };
 export const addImages = {

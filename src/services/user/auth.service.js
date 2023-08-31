@@ -126,6 +126,10 @@ export const createService = async (userId, data) => {
       tradeDiscount: data.tradeDiscount,
       minBudget: data.minBudget,
       maxBudget: data.maxBudget,
+      preferences: data.preferences,
+      projectSize: data.projectSize,
+      styles: data.styles,
+      goals: data.goals,
       isSignUp: true,
     },
     { new: true }

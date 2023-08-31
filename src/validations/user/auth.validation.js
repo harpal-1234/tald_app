@@ -8,6 +8,10 @@ import {
   OPTIONS,
   USERTYPE1,
   SOCIAL_TYPE,
+  PREFERENCES,
+  STYLE,
+  GOALS,
+  PROJECT_SIZE,
 } from "../../config/appConstants.js";
 
 const login = {
@@ -69,6 +73,18 @@ const createServices = {
       question: Joi.string().required().allow(null, ""),
       answer: Joi.string().valid(...Object.values(OPTIONS)),
     }),
+    preferences: Joi.array()
+      .required()
+      .items(Joi.string().valid(...Object.values(PREFERENCES))),
+    styles: Joi.array()
+      .required()
+      .items(Joi.string().required().valid(...Object.values(STYLE))),
+    goals: Joi.array()
+      .required()
+      .items(Joi.string().required().valid(...Object.values(GOALS))),
+    projectSize: Joi.string()
+      .required()
+      .valid(...Object.values(PROJECT_SIZE)),
     minBudget: Joi.number().required().allow(null),
     maxBudget: Joi.number().required().allow(null),
   }),

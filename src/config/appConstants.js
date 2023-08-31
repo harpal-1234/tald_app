@@ -10,7 +10,7 @@ export const USER_TYPE = {
   ADMIN: "Admin",
   USER: "User",
   VENDOR_ADMIN: "Vendor",
-  NON_USER:"Non"
+  NON_USER: "Non",
 };
 export const USERTYPE1 = {
   USER: "User",
@@ -21,6 +21,47 @@ export const PROJECT_TYPE = {
   RESIDENTIAL: "Residential",
   COMMERCIAL: "Commercial",
 };
+export const GOALS = {
+  LAYOUT: "Layout/ Spatial Planning",
+  GENERAL_STYLE: "General Style Guidance",
+  SELECTING_FURNITURE: "Selecting Furniture & Accessories",
+  BEST_PLACES: "Best Places to Shop",
+  UPHOLSTERY_SELECTIONS: "Upholstery Selections",
+  FIXTURES_HARDWARE: "Fixtures & Hardware",
+  CABINETRY_DESIGNS: "Cabinetry Designs",
+  SURFACE_STYLING: "Surface Styling",
+  PAINT_COLORS: "Paint Colors",
+  WINDOW_TREATMENT: "Window Treatment",
+  CAREER_GUIDANCE: "Career Guidance for Designers",
+};
+export const STYLE = {
+  COASTAL: "Coastal",
+  CONTEMPORARY: "Contemporary",
+  GLAMOROUS: "Glamorous",
+  HISTORIC: "Historic",
+  MINIMALIST: "Minimalist",
+  MODERN: "Modern",
+  MAXIMALIST: "Maximalist",
+  SCANDINAVIAN: "Scandinavian",
+  SOUTHERN: "Southern",
+  TRADITIONAL: "Traditional",
+  TRANSITIONAL: "Transitional",
+};
+export const PREFERENCES = {
+  VINTAGE_ELEMENT: "Vintage Element",
+  FAMILY_FRIENDLY: "Family Friendly",
+  MOUNTAIN_HOME: "Mountain Home",
+  FULLY_CUSTOM: "Fully Custom",
+  PLEASE_NO_VINTAGE: "Please No Vintage",
+  BEACH_HOME: "Beach Home",
+  PRINTS_TEXTURES: "Prints & Textures",
+  LAYERED_TEXTURES: "Layered Textures",
+};
+export const PROJECT_SIZE = {
+  PARTIAL_RENOVATION:"Partial Renovation",
+  NEW_BUILD:"New Build",
+  FULL_RENOVATION:"Full Renovation"
+}
 export const FEE_STRUCTURE = {
   FLAT_DESIGN_FEE: "Flat Design Fee",
   FLAT_DSIGN_FEE_MARKUP: "Flat Design Fee + Mark-up",

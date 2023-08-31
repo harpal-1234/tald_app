@@ -4,6 +4,10 @@ import {
   ERROR_MESSAGES,
   OPTIONS,
   PROJECT_TYPE,
+  PREFERENCES,
+  PROJECT_SIZE,
+  GOALS,
+  STYLE,
 } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
 import { formatUser } from "../../utils/commonFunction.js";
@@ -16,8 +20,26 @@ export const getInteriorDesigners = async (
   destination,
   consultationLength,
   minimumPrice,
-  maximumPrice
+  maximumPrice,
+  preferences,
+  styles,
+  goals,
+  projectSize
 ) => {
+  console.log(
+    type,
+    lat,
+    long,
+    projectType,
+    destination,
+    consultationLength,
+    minimumPrice,
+    maximumPrice,
+    preferences,
+    styles,
+    goals,
+    projectSize
+  );
   var query;
   var query1;
   var query2;
@@ -33,7 +55,7 @@ export const getInteriorDesigners = async (
     query = ["No", "Yes"];
     query1 = ["Yes"];
   }
-  console.log(minimumPrice);
+
   if (consultationLength == "25 mins") {
     query2 = {
       "virtual_Consultations.chargers_25_mins": { $nin: [null, ""] },
@@ -65,10 +87,10 @@ export const getInteriorDesigners = async (
       ...query2,
       $and: [
         {
-          minBudget: minimumPrice ? { $gte: minimumPrice } : { $lte: "0" },
+          minBudget: minimumPrice ? { $gte: minimumPrice } : { $gte: 0 },
           maxBudget: maximumPrice
             ? { $lte: maximumPrice }
-            : { $lte: "100000000000000000000000000" },
+            : { $lte: 1000000000000000 },
         },
       ],
       location: {
@@ -82,6 +104,20 @@ export const getInteriorDesigners = async (
           // $maxDistance:1000
         },
       },
+      // preferences: preferences
+      //   ? { $in: preferences }
+      //   : { $in: [...Object.values(PREFERENCES)] },
+      // projectSize: projectSize
+      //   ? projectSize
+      //   : {
+      //       $in: [
+      //         PROJECT_SIZE.FULL_RENOVATION,
+      //         PROJECT_SIZE.NEW_BUILD,
+      //         PROJECT_SIZE.PARTIAL_RENOVATION,
+      //       ],
+      //     },
+      // goals: goals ? { $in: goals } : { $in: [...Object.values(GOALS)] },
+      // styles: styles ? { $in: styles } : { $in: [...Object.values(STYLE)] },
     }).lean();
     await formatUser(designer);
     return designer;
@@ -101,12 +137,26 @@ export const getInteriorDesigners = async (
     ...query2,
     $and: [
       {
-        minBudget: minimumPrice ? { $gte: minimumPrice } : { $lte: "0" },
+        minBudget: minimumPrice ? { $gte: minimumPrice } : { $gte: 0 },
         maxBudget: maximumPrice
           ? { $lte: maximumPrice }
-          : { $lte: "100000000000000000000000000" },
+          : { $lte: 1000000000000000 },
       },
     ],
+    // preferences: preferences
+    //   ? { $in: preferences }
+    //   : { $in: [...Object.values(PREFERENCES)] },
+    // projectSize: projectSize
+    //   ? projectSize
+    //   : {
+    //       $in: [
+    //         PROJECT_SIZE.FULL_RENOVATION,
+    //         PROJECT_SIZE.NEW_BUILD,
+    //         PROJECT_SIZE.PARTIAL_RENOVATION,
+    //       ],
+    //     },
+    // goals: goals ? { $in: goals } : { $in: [...Object.values(GOALS)] },
+    // styles: styles ? { $in: styles } : { $in: [...Object.values(STYLE)] },
   }).lean();
   await formatUser(designer);
   return designer;

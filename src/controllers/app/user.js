@@ -13,7 +13,12 @@ export const getInteriorDesigners = catchAsync(async (req, res) => {
     consultationLength,
     minimumPrice,
     maximumPrice,
-  } = req.body;
+    preferences,
+    styles,
+    goals,
+    projectSize,
+  } = req.query;
+
   // const userId = req.token.user._id;
   const project = await clientServices.getInteriorDesigners(
     type,
@@ -23,7 +28,11 @@ export const getInteriorDesigners = catchAsync(async (req, res) => {
     destination,
     consultationLength,
     minimumPrice,
-    maximumPrice
+    maximumPrice,
+    preferences,
+    styles,
+    goals,
+    projectSize
   );
 
   return successResponse(
