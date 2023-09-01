@@ -65,4 +65,10 @@ router.put(
   validate(authValidation.feeStructure),           
   authController.editFeeStructure
 );
+router.put(
+  "/editVendorProfile",
+  auth(USER_TYPE.USER),
+  validate(authValidation.editVendorProfile),           
+  authController.editVendorProfile
+);
 export default router;

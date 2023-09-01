@@ -115,8 +115,8 @@ export const editProject = {
     virtual_Consultations: Joi.object({
       question: Joi.string().required().allow(null, ""),
       answer: Joi.string().valid(...Object.values(OPTIONS)),
-      chargers_25_mins: Joi.string(),
-      chargers_55_mins: Joi.string(),
+      chargers_25_mins: Joi.string().allow(null, ""),
+      chargers_55_mins: Joi.string().allow(null, ""),
     }).required(),
     newClientProjects: Joi.object({
       question: Joi.string().required().allow(null, ""),
@@ -130,8 +130,8 @@ export const editProject = {
       chargers_25_mins: Joi.string().required().allow(null, ""),
       chargers_55_mins: Joi.string().required().allow(null, ""),
     }),
-    minBudget: Joi.string().required().allow(null, ""),
-    maxBudget: Joi.string().required().allow(null, ""),
+    minBudget: Joi.number().required().allow(null),
+    maxBudget: Joi.number().required().allow(null),
   }),
 };
 export const editCompanyDetails = {
@@ -147,6 +147,49 @@ export const editCompanyDetails = {
 };
 export const feeStructure = {
   body: Joi.object().keys({
+    feeStructure: Joi.object({
+      question: Joi.string().required().allow(null, ""),
+      answer: Joi.string().valid(...Object.values(FEE_STRUCTURE)),
+    }),
+    tradeDiscount: Joi.object({
+      question: Joi.string().required().allow(null, ""),
+      answer: Joi.string().valid(...Object.values(OPTIONS)),
+    }),
+  }),
+};
+export const editVendorProfile = {
+  body: Joi.object().keys({
+    companyName: Joi.string().required().allow("", null),
+    lat: Joi.number().required().allow("", null),
+    long: Joi.number().required().allow("", null),
+    address: Joi.string().required().allow("", null),
+    instagramLink: Joi.string().required().allow("", null),
+    pinterestLink: Joi.string().required().allow("", null),
+    about: Joi.string().required().allow("", null),
+    projectType: Joi.object({
+      question: Joi.string().required().allow(null, ""),
+      answer: Joi.string().valid(...Object.values(PROJECT_TYPE)),
+    }).required(),
+    virtual_Consultations: Joi.object({
+      question: Joi.string().required().allow(null, ""),
+      answer: Joi.string().valid(...Object.values(OPTIONS)),
+      chargers_25_mins: Joi.string().allow(null, ""),
+      chargers_55_mins: Joi.string().allow(null, ""),
+    }).required(),
+    newClientProjects: Joi.object({
+      question: Joi.string().required().allow(null, ""),
+      answer: Joi.string().valid(...Object.values(OPTIONS)),
+      chargers_25_mins: Joi.string().required().allow(null, ""),
+      chargers_55_mins: Joi.string().required().allow(null, ""),
+    }),
+    destinationProject: Joi.object({
+      question: Joi.string().required().allow(null, ""),
+      answer: Joi.string().valid(...Object.values(OPTIONS)),
+      chargers_25_mins: Joi.string().required().allow(null, ""),
+      chargers_55_mins: Joi.string().required().allow(null, ""),
+    }),
+    minBudget: Joi.number().required().allow(null),
+    maxBudget: Joi.number().required().allow(null),
     feeStructure: Joi.object({
       question: Joi.string().required().allow(null, ""),
       answer: Joi.string().valid(...Object.values(FEE_STRUCTURE)),

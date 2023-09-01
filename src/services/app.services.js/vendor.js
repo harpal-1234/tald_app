@@ -187,3 +187,33 @@ export const editFeeStructure = async (data, userId) => {
   );
   return project;
 };
+export const editVendorProfile = async (data, userId) => {
+  const profile = await User.findOneAndUpdate(
+    {
+      _id: userId,
+      isDeleted: false,
+      isVerify: true,
+    },
+    {
+      projectType: data.projectType,
+      virtual_Consultations: data.virtual_Consultations,
+      newClientProjects: data.newClientProjects,
+      destinationProject: data.destinationProject,
+      minBudget: data.minBudget,
+      maxBudget: data.maxBudget,
+      companyName: data.companyName,
+      location: {
+        type: "Point",
+        coordinates: [data.long, data.lat],
+      },
+      address: data.address,
+      instagramLink: data.instagramLink,
+      pinterestLink: data.pinterestLink,
+      about: data.about,
+      feeStructure: data.feeStructure,
+      tradeDiscount: data.tradeDiscount,
+    },
+    { new: true }
+  );
+  return profile;
+};
