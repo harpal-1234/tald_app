@@ -95,6 +95,7 @@ export const createService = async (userId, data) => {
     isVerify: true,
     isDeleted: false,
   });
+  check.JSON.string
   if (!check) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,

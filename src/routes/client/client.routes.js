@@ -13,5 +13,11 @@ router.get(
   validate(authValidation.getInteriorDesigner),                
   authController.getInteriorDesigners
 );
+router.get(
+  "/interiorDesignerById",
+  auth(USER_TYPE.NON_USER),
+  validate(authValidation.getInteriorDesignerById),                
+  authController.getInteriorDesignerById
+);
 
 export default router;

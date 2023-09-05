@@ -220,6 +220,7 @@ export const ERROR_MESSAGES = {
   PROJECT: "This Project Already Exist ",
   PROJECT_NOT_FOUND: "This Project Not Exist",
   REQUEST_NOT_FOUND: "This Request Not Found",
+  DESIGNER_NOT_FOUND:"Designer Not Found"
 };
 export const SOCIAL_TYPE = {
   FACEBOOK: "facebook",

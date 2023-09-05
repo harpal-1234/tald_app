@@ -17,52 +17,55 @@ export const createProject = {
     projectName: Joi.string().required(),
   }),
 };
+export const getInteriorDesignerById = {
+  query: Joi.object().keys({
+    designerId: Joi.string().required(),
+  }),
+};
 export const getInteriorDesigner = {
   query: Joi.object().keys({
     type: Joi.string()
       .required()
       .valid("All", "VirtualConsultation", "InteriorDesigner")
       .allow(null, ""),
-    lat: Joi.number().required().allow(null, ""),
-    long: Joi.number().required().allow(null, ""),
+    lat: Joi.number().allow(null, ""),
+    long: Joi.number().allow(null, ""),
     projectType: Joi.string()
-      .required()
       .valid(...Object.values(PROJECT_TYPE))
       .allow(null, ""),
     destination: Joi.string()
-      .required()
       .valid(...Object.values(OPTIONS))
       .allow(null, ""),
     consultationLength: Joi.string()
-      .required()
       .valid("25 mins", "55 mins")
       .allow(null, ""),
-    minimumPrice: Joi.number().required().allow(null, ""),
-    maximumPrice: Joi.number().required().allow(null, ""),
-    // preferences: Joi.array()
-    //   .required()
-    //   .items(Joi.string().required().valid(...Object.values(PREFERENCES)))
-    //   .allow(null, ""),
-    // styles: Joi.array()
-    //   .required()
-    //   .items(
-    //     Joi.string()
-    //       .required()
-    //       .valid(...Object.values(STYLE))
-    //   )
-    //   .allow(null, ""),
-    // goals: Joi.array()
-    //   .required()
-    //   .items(
-    //     Joi.string()
-    //       .required()
-    //       .valid(...Object.values(GOALS))
-    //   )
-    //   .allow(null, ""),
-    // projectSize: Joi.string()
-    //   .required()
-    //   .valid(...Object.values(PROJECT_SIZE))
-    //   .allow(null, ""),
+    // .required()
+    minimumPrice: Joi.number().allow(null, ""),
+    maximumPrice: Joi.number().allow(null, ""),
+    preferences: Joi.array()
+      .items(
+        Joi.string()
+          .required()
+          .valid(...Object.values(PREFERENCES))
+      )
+      .allow(null, ""),
+    styles: Joi.array()
+      .items(
+        Joi.string()
+          .required()
+          .valid(...Object.values(STYLE))                  
+      )
+      .allow(null, ""),
+    goals: Joi.array()
+      .items(
+        Joi.string()
+          .required()
+          .valid(...Object.values(GOALS))
+      )
+      .allow(null, ""),
+    projectSize: Joi.string()
+      .valid(...Object.values(PROJECT_SIZE))
+      .allow(null, ""),
   }),
 };
 export const addImages = {
