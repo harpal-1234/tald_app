@@ -227,7 +227,8 @@ export const getInteriorDesigners = async (
     .skip(page * limit)
     .limit(limit);
   if (designer.length > 0) {
-    designer.forEach(async (value) => {
+    await designer.forEach(async (value) => {
+      console.log(designer);
       const project = await Project.findOne({
         user: value._id,
         isDeleted: false,

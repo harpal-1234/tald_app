@@ -66,7 +66,7 @@ export const getInteriorDesigner = {
     projectSize: Joi.string()
       .valid(...Object.values(PROJECT_SIZE))
       .allow(null, ""),
-  }),
+   }),
 };
 export const addImages = {
   body: Joi.object().keys({
