@@ -20,6 +20,8 @@ export const createProject = {
 export const getInteriorDesignerById = {
   query: Joi.object().keys({
     designerId: Joi.string().required(),
+    page: Joi.number().required(),
+    limit: Joi.number().required(),
   }),
 };
 export const getInteriorDesigner = {
@@ -53,7 +55,7 @@ export const getInteriorDesigner = {
       .items(
         Joi.string()
           .required()
-          .valid(...Object.values(STYLE))                  
+          .valid(...Object.values(STYLE))
       )
       .allow(null, ""),
     goals: Joi.array()
@@ -66,7 +68,7 @@ export const getInteriorDesigner = {
     projectSize: Joi.string()
       .valid(...Object.values(PROJECT_SIZE))
       .allow(null, ""),
-   }),
+  }),
 };
 export const addImages = {
   body: Joi.object().keys({

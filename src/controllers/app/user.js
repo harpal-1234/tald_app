@@ -44,13 +44,13 @@ export const getInteriorDesigners = catchAsync(async (req, res) => {
   );
 });
 export const getInteriorDesignerById = catchAsync(async (req, res) => {
-  const {
-   designerId
-  } = req.query;
+  const { designerId, page, limit } = req.query;
 
   // const userId = req.token.user._id;
   const project = await clientServices.getInteriorDesignerById(
-    designerId
+    designerId,
+    page,
+    limit
   );
 
   return successResponse(

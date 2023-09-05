@@ -287,19 +287,32 @@ export const getInteriorDesigners = async (
   // await formatUser(designer);
   return { designer, total };
 };
-export const getInteriorDesignerById = async (designerId) => {
+export const getInteriorDesignerById = async (designerId, page, limit) => {
   const designer = await User.findOne({
     _id: designerId,
     isVerify: true,
     // isApproved:true,
     isDeleted: false,
   });
+
   if (!designer) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
       ERROR_MESSAGES.DESIGNER_NOT_FOUND
     );
   }
+  const projects = await Project.find({ user: designerId, isDeleted: false })
+    .lean()
+    .skip(page * limit)
+    .limit(limit);
+  const totalProjects = await Project.countDocuments({
+    user: designerId,
+    isDeleted: false,
+  });
   await formatUser(designer);
-  return designer;
+  return {
+    designer: designer,
+    projects: projects,
+    totalProjects: totalProjects,
+  };
 };
