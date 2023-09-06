@@ -96,7 +96,7 @@ export const getInteriorDesigners = async (
         },
       },
       preferences: preferences
-        ? { $in: preferences }
+        ? { $in: JSON.parse(preferences) }
         : { $in: [...Object.values(PREFERENCES)] },
       projectSize: projectSize
         ? projectSize
@@ -107,8 +107,12 @@ export const getInteriorDesigners = async (
               PROJECT_SIZE.PARTIAL_RENOVATION,
             ],
           },
-      goals: goals ? { $in: goals } : { $in: [...Object.values(GOALS)] },
-      styles: styles ? { $in: styles } : { $in: [...Object.values(STYLE)] },
+      goals: goals
+        ? { $in: JSON.parse(goals) }
+        : { $in: [...Object.values(GOALS)] },
+      styles: styles
+        ? { $in: JSON.parse(styles) }
+        : { $in: [...Object.values(STYLE)] },
     })
       .lean()
       .skip(page * limit)
@@ -167,7 +171,7 @@ export const getInteriorDesigners = async (
         },
       },
       preferences: preferences
-        ? { $in: preferences }
+        ? { $in: JSON.parse(preferences) }
         : { $in: [...Object.values(PREFERENCES)] },
       projectSize: projectSize
         ? projectSize
@@ -178,13 +182,16 @@ export const getInteriorDesigners = async (
               PROJECT_SIZE.PARTIAL_RENOVATION,
             ],
           },
-      goals: goals ? { $in: goals } : { $in: [...Object.values(GOALS)] },
-      styles: styles ? { $in: styles } : { $in: [...Object.values(STYLE)] },
+      goals: goals
+        ? { $in: JSON.parse(goals) }
+        : { $in: [...Object.values(GOALS)] },
+      styles: styles
+        ? { $in: JSON.parse(styles) }
+        : { $in: [...Object.values(STYLE)] },
     });
     // await formatUser(designer);
     return { designer, total };
   }
-
   const designer = await User.find({
     // isApproved:true,
     isDeleted: false,
@@ -209,7 +216,7 @@ export const getInteriorDesigners = async (
       },
     ],
     preferences: preferences
-      ? { $in: preferences }
+      ? { $in: JSON.parse(preferences) }
       : { $in: [...Object.values(PREFERENCES)] },
     projectSize: projectSize
       ? projectSize
@@ -220,8 +227,12 @@ export const getInteriorDesigners = async (
             PROJECT_SIZE.PARTIAL_RENOVATION,
           ],
         },
-    goals: goals ? { $in: goals } : { $in: [...Object.values(GOALS)] },
-    styles: styles ? { $in: styles } : { $in: [...Object.values(STYLE)] },
+    goals: goals
+      ? { $in: JSON.parse(goals) }
+      : { $in: [...Object.values(GOALS)] },
+    styles: styles
+      ? { $in: JSON.parse(styles) }
+      : { $in: [...Object.values(STYLE)] },
   })
     .lean()
     .skip(page * limit)
@@ -270,7 +281,7 @@ export const getInteriorDesigners = async (
       },
     ],
     preferences: preferences
-      ? { $in: preferences }
+      ? { $in: JSON.parse(preferences) }
       : { $in: [...Object.values(PREFERENCES)] },
     projectSize: projectSize
       ? projectSize
@@ -281,8 +292,12 @@ export const getInteriorDesigners = async (
             PROJECT_SIZE.PARTIAL_RENOVATION,
           ],
         },
-    goals: goals ? { $in: goals } : { $in: [...Object.values(GOALS)] },
-    styles: styles ? { $in: styles } : { $in: [...Object.values(STYLE)] },
+    goals: goals
+      ? { $in: JSON.parse(goals) }
+      : { $in: [...Object.values(GOALS)] },
+    styles: styles
+      ? { $in: JSON.parse(styles) }
+      : { $in: [...Object.values(STYLE)] },
   });
   // await formatUser(designer);
   return { designer, total };

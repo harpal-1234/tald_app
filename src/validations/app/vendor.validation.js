@@ -44,30 +44,35 @@ export const getInteriorDesigner = {
     // .required()
     minimumPrice: Joi.number().allow(null, ""),
     maximumPrice: Joi.number().allow(null, ""),
-    preferences: Joi.array()
-      .items(
-        Joi.string()
-          .required()
-          .valid(...Object.values(PREFERENCES))
-      )
-      .allow(null, ""),
-    styles: Joi.array()
-      .items(
-        Joi.string()
-          .required()
-          .valid(...Object.values(STYLE))
-      )
-      .allow(null, ""),
-    goals: Joi.array()
-      .items(
-        Joi.string()
-          .required()
-          .valid(...Object.values(GOALS))
-      )
-      .allow(null, ""),
+    preferences: Joi.string(),
+    // Joi.array()
+    //   .items(
+    //     Joi.string()
+    //       .required()
+    //       .valid(...Object.values(PREFERENCES))
+    //   )
+    //   .allow(null, ""),
+    styles: Joi.string(),
+    // Joi.array()
+    //   .items(
+    //     Joi.string()
+    //       .required()
+    //       .valid(...Object.values(STYLE))
+    //   )
+    //   .allow(null, ""),
+    goals: Joi.string(),
+    // Joi.array()
+    //   .items(
+    //     Joi.string()
+    //       .required()
+    //       .valid(...Object.values(GOALS))
+    //   )
+    //   .allow(null, ""),
     projectSize: Joi.string()
       .valid(...Object.values(PROJECT_SIZE))
       .allow(null, ""),
+    page: Joi.number().required(),
+    limit: Joi.number().required(),
   }),
 };
 export const addImages = {

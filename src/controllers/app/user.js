@@ -17,6 +17,8 @@ export const getInteriorDesigners = catchAsync(async (req, res) => {
     styles,
     goals,
     projectSize,
+    page,
+    limit
   } = req.query;
 
   // const userId = req.token.user._id;
@@ -32,7 +34,9 @@ export const getInteriorDesigners = catchAsync(async (req, res) => {
     preferences,
     styles,
     goals,
-    projectSize
+    projectSize,
+    page,
+    limit
   );
 
   return successResponse(
