@@ -74,7 +74,7 @@ export const getInteriorDesigner = {
     page: Joi.number().required(),
     limit: Joi.number().required(),
   }),
-};                                        
+};
 export const addImages = {
   body: Joi.object().keys({
     projectId: Joi.string().required(),
@@ -169,44 +169,76 @@ export const feeStructure = {
 };
 export const editVendorProfile = {
   body: Joi.object().keys({
-    companyName: Joi.string().required().allow("", null),
-    lat: Joi.number().required().allow("", null),
-    long: Joi.number().required().allow("", null),
-    address: Joi.string().required().allow("", null),
-    instagramLink: Joi.string().required().allow("", null),
-    pinterestLink: Joi.string().required().allow("", null),
-    about: Joi.string().required().allow("", null),
+    companyName: Joi.string().allow("", null),
+    lat: Joi.number().allow("", null),
+    long: Joi.number().allow("", null),
+    address: Joi.string().allow("", null),
+    instagramLink: Joi.string().allow("", null),
+    pinterestLink: Joi.string().allow("", null),
+    about: Joi.string().allow("", null),
     projectType: Joi.object({
-      question: Joi.string().required().allow(null, ""),
-      answer: Joi.string().valid(...Object.values(PROJECT_TYPE)),
-    }).required(),
+      question: Joi.string().allow(null, "").required(),
+      answer: Joi.string()
+        .valid(...Object.values(PROJECT_TYPE))
+        .required(),
+    }),
     virtual_Consultations: Joi.object({
-      question: Joi.string().required().allow(null, ""),
-      answer: Joi.string().valid(...Object.values(OPTIONS)),
+      question: Joi.string().allow(null, "").required(),
+      answer: Joi.string()
+        .valid(...Object.values(OPTIONS))
+        .required(),
       chargers_25_mins: Joi.string().allow(null, ""),
       chargers_55_mins: Joi.string().allow(null, ""),
-    }).required(),
+    }),
     newClientProjects: Joi.object({
-      question: Joi.string().required().allow(null, ""),
-      answer: Joi.string().valid(...Object.values(OPTIONS)),
-      chargers_25_mins: Joi.string().required().allow(null, ""),
-      chargers_55_mins: Joi.string().required().allow(null, ""),
+      question: Joi.string().allow(null, "").required(),
+      answer: Joi.string()
+        .valid(...Object.values(OPTIONS))
+        .required(),
+      chargers_25_mins: Joi.string().allow(null, ""),
+      chargers_55_mins: Joi.string().allow(null, ""),
     }),
     destinationProject: Joi.object({
-      question: Joi.string().required().allow(null, ""),
-      answer: Joi.string().valid(...Object.values(OPTIONS)),
-      chargers_25_mins: Joi.string().required().allow(null, ""),
-      chargers_55_mins: Joi.string().required().allow(null, ""),
+      question: Joi.string().allow(null, "").required(),
+      answer: Joi.string()
+        .valid(...Object.values(OPTIONS))
+        .required(),
+      chargers_25_mins: Joi.string().allow(null, ""),
+      chargers_55_mins: Joi.string().allow(null, ""),
     }),
-    minBudget: Joi.number().required().allow(null),
-    maxBudget: Joi.number().required().allow(null),
+    minBudget: Joi.number().allow(null),
+    maxBudget: Joi.number().allow(null),
     feeStructure: Joi.object({
       question: Joi.string().required().allow(null, ""),
-      answer: Joi.string().valid(...Object.values(FEE_STRUCTURE)),
+      answer: Joi.string()
+        .valid(...Object.values(FEE_STRUCTURE))
+        .required(),
     }),
     tradeDiscount: Joi.object({
       question: Joi.string().required().allow(null, ""),
-      answer: Joi.string().valid(...Object.values(OPTIONS)),
+      answer: Joi.string()
+        .valid(...Object.values(OPTIONS))
+        .required(),
     }),
+    preferences: Joi.array()
+      // .required()
+      .items(Joi.string().valid(...Object.values(PREFERENCES))),
+    styles: Joi.array()
+      // .required()
+      .items(
+        Joi.string()
+          .required()
+          .valid(...Object.values(STYLE))
+      ),
+    goals: Joi.array()
+      // .required()
+      .items(
+        Joi.string()
+          .required()
+          .valid(...Object.values(GOALS))
+      ),
+    projectSize: Joi.string()
+      // .required()
+      .valid(...Object.values(PROJECT_SIZE)),
   }),
 };

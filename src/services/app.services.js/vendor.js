@@ -212,6 +212,10 @@ export const editVendorProfile = async (data, userId) => {
       about: data.about,
       feeStructure: data.feeStructure,
       tradeDiscount: data.tradeDiscount,
+      preferences: data.preferences,
+      projectSize: data.projectSize,
+      styles: data.styles,
+      goals: data.goals,
     },
     { new: true }
   );
