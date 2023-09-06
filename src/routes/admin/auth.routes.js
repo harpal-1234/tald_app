@@ -19,6 +19,12 @@ router.get(
   authController.userList
 );
 router.get(
+  "/vendorList",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.getUsers),
+  authController.vendorList
+);
+router.get(
   "/requests",
   auth(USER_TYPE.ADMIN),
   validate(authValidation.getUsers),

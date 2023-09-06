@@ -1,6 +1,8 @@
 import { Admin, Token, User, Request } from "../../models/index.js";
 import { STATUS_CODES, ERROR_MESSAGES } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
+//import { formatUser } from "../../utils/formatResponse.js";
+import { formatUser } from "../../utils/commonFunction.js";
 
 export const adminLogin = async (email, password) => {
   const admin = await Admin.findOne({ email: email });
@@ -20,10 +22,27 @@ export const adminLogin = async (email, password) => {
   return admin;
 };
 export const userList = async (page, limit) => {
-  const users = await User.find()
+  const users = await User.find({
+    type: "User",
+    isDeleted: false,
+    isVerify: true,
+  })
     .skip(page * limit)
-    .limit(limit);
-
+    .limit(limit)
+    .lean();
+  await formatUser(users);
+  return users;
+};
+export const vendorList = async (page, limit) => {
+  const users = await User.find({
+    type: "Vendor",
+    isDeleted: false,
+    isVerify: true,
+  })
+    .skip(page * limit)
+    .limit(limit)
+    .lean();
+  await formatUser(users);
   return users;
 };
 export const requestAction = async (status, requestId) => {
