@@ -50,20 +50,20 @@ const createServices = {
     virtual_Consultations: Joi.object({
       question: Joi.string().required().allow(null, ""),
       answer: Joi.string().valid(...Object.values(OPTIONS)),
-      chargers_25_mins: Joi.string().required().allow(null, ""),
-      chargers_55_mins: Joi.string().required().allow(null, ""),
+      chargers_25_mins: Joi.string().allow(null, ""),
+      chargers_55_mins: Joi.string().allow(null, ""),
     }).required(),
     newClientProjects: Joi.object({
       question: Joi.string().required().allow(null, ""),
       answer: Joi.string().valid(...Object.values(OPTIONS)),
-      chargers_25_mins: Joi.string().required().allow(null, ""),
-      chargers_55_mins: Joi.string().required().allow(null, ""),
+      chargers_25_mins: Joi.string().allow(null, ""),
+      chargers_55_mins: Joi.string().allow(null, ""),
     }).required(),
     destinationProject: Joi.object({
       question: Joi.string().required().allow(null, ""),
       answer: Joi.string().valid(...Object.values(OPTIONS)),
-      chargers_25_mins: Joi.string().required().allow(null, ""),
-      chargers_55_mins: Joi.string().required().allow(null, ""),
+      chargers_25_mins: Joi.string().allow(null, ""),
+      chargers_55_mins: Joi.string().allow(null, ""),
     }).required(),
     feeStructure: Joi.object({
       question: Joi.string().required().allow(null, ""),

@@ -74,7 +74,7 @@ export const getInteriorDesigner = {
     page: Joi.number().required(),
     limit: Joi.number().required(),
   }),
-};
+};                                        
 export const addImages = {
   body: Joi.object().keys({
     projectId: Joi.string().required(),

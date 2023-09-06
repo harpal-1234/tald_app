@@ -49,20 +49,20 @@ const userSchema = mongoose.Schema(
     virtual_Consultations: {
       question: { type: String },
       answer: { type: String, enum: [...Object.values(OPTIONS)] },
-      chargers_25_mins: { type: String },
-      chargers_55_mins: { type: String },
+      chargers_25_mins: { type: String ,default:null},
+      chargers_55_mins: { type: String ,default:null},
     },
     newClientProjects: {
       question: { type: String },
       answer: { type: String, enum: [...Object.values(OPTIONS)] },
-      chargers_25_mins: { type: String },
-      chargers_55_mins: { type: String },
+      chargers_25_mins: { type: String ,default:null},
+      chargers_55_mins: { type: String ,default:null},
     },
     destinationProject: {
       question: { type: String },
       answer: { type: String, enum: [...Object.values(OPTIONS)] },
-      chargers_25_mins: { type: String },
-      chargers_55_mins: { type: String },
+      chargers_25_mins: { type: String ,default:null},
+      chargers_55_mins: { type: String ,default:null},
     },
     feeStructure: {
       question: { type: String },
