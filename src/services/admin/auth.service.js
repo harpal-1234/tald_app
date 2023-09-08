@@ -30,8 +30,13 @@ export const userList = async (page, limit) => {
     .skip(page * limit)
     .limit(limit)
     .lean();
+  const total = await User.countDocuments({
+    type: "User",
+    isDeleted: false,
+    isVerify: true,
+  });
   await formatUser(users);
-  return users;
+  return { users, total };
 };
 export const vendorList = async (page, limit) => {
   const users = await User.find({
@@ -42,7 +47,12 @@ export const vendorList = async (page, limit) => {
     .skip(page * limit)
     .limit(limit)
     .lean();
-  await formatUser(users);
+  const total = await User.countDocuments({
+    type: "Vendor",
+    isDeleted: false,
+    isVerify: true,
+  });
+  await formatUser(users, total);
   return users;
 };
 export const requestAction = async (status, requestId) => {
@@ -109,8 +119,8 @@ export const requests = async (page, limit) => {
         "inviteesSchedule",
       ],
     });
-
-  return request;
+  const total = await Request.countDocuments({ isDeleted: false });
+  return { request, total };
 };
 export const changePassword = async (adminId, oldPassword, newPassword) => {
   const admin = await Admin.findById(adminId);
