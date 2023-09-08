@@ -69,7 +69,7 @@ export const requestAction = async (status, requestId) => {
         _id: requestId,
         isDeleted: false,
       },
-      { status: true },
+      { status: true, isDeleted: true },
       { new: true }
     );
     const user = await User.findByIdAndUpdate(
@@ -84,7 +84,7 @@ export const requestAction = async (status, requestId) => {
         _id: requestId,
         isDeleted: false,
       },
-      { status: false, isReject: true },
+      { status: false, isReject: true, isDeleted: true },
       { new: true }
     );
   }
