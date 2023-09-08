@@ -52,8 +52,8 @@ export const vendorList = async (page, limit) => {
     isDeleted: false,
     isVerify: true,
   });
-  await formatUser(users, total);
-  return users;
+  await formatUser(users);
+  return { users, total };
 };
 export const requestAction = async (status, requestId) => {
   const check = await Request.findOne({ _id: requestId, isDeleted: false });
