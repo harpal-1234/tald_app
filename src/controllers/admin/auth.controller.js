@@ -72,6 +72,17 @@ export const requestAction = catchAsync(async (req, res) => {
     request
   );
 });
+export const userAction = catchAsync(async (req, res) => {
+  let { userId } = req.body;
+  const value = await adminService.userAction(userId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    value
+  );
+});
 export const changePassword = catchAsync(async (req, res) => {
   await adminService.changePassword(
     req.token.admin._id,

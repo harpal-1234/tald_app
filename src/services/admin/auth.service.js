@@ -89,6 +89,42 @@ export const requestAction = async (status, requestId) => {
     );
   }
 };
+export const userAction = async (userId) => {
+  const user = await User.findOne({
+    _id: userId,
+    isDeleted: false,
+    isVerify: true,
+  });
+  if (!user) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.USER_NOT_FOUND
+    );
+  }
+  if (user.isBlocked) {
+    await User.findByIdAndUpdate(
+      {
+        _id: userId,
+        isDeleted: false,
+        isVerify: true,
+      },
+      { isBlocked: false },
+      { new: true }
+    );
+    return false;
+  } else {
+    await User.findByIdAndUpdate(
+      {
+        _id: userId,
+        isDeleted: false,
+        isVerify: true,
+      },
+      { isBlocked: true },
+      { new: true }
+    );
+    return true;
+  }
+};
 export const requests = async (page, limit) => {
   const request = await Request.find({ isDeleted: false })
     .skip(page * limit)

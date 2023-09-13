@@ -24,6 +24,17 @@ export const getInteriorDesignerById = {
     limit: Joi.number().required(),
   }),
 };
+export const saveProfile = {
+  body: Joi.object().keys({
+    designerId: Joi.string().required(),
+  }),
+};
+export const getSaveProfile = {
+  body: Joi.object().keys({
+    page: Joi.number().required(),
+    limit: Joi.number().required(),
+  }),
+};
 export const getInteriorDesigner = {
   query: Joi.object().keys({
     type: Joi.string()

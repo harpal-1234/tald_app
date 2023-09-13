@@ -19,5 +19,16 @@ router.get(
   validate(authValidation.getInteriorDesignerById),                
   authController.getInteriorDesignerById
 );
-
+router.put(
+  "/saveProfile",
+  auth(USER_TYPE.USER),
+  validate(authValidation.saveProfile),                
+  authController.saveProfile
+);
+router.put(
+  "/getSaveProfiles",
+  auth(USER_TYPE.USER),
+  validate(authValidation.getSaveProfile),                
+  authController.saveProfile
+);
 export default router;

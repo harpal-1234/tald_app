@@ -18,7 +18,7 @@ export const getInteriorDesigners = catchAsync(async (req, res) => {
     goals,
     projectSize,
     page,
-    limit
+    limit,
   } = req.query;
 
   // const userId = req.token.user._id;
@@ -63,5 +63,33 @@ export const getInteriorDesignerById = catchAsync(async (req, res) => {
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.SUCCESS,
     project
+  );
+});
+export const saveProfile = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const designer = await clientServices.saveProfile(
+    req.body.designerId,userId
+  );
+
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+
+  );
+});
+export const getSaveProfile = catchAsync(async (req, res) => {
+  const {userId} = req.token.user._id;
+  const designer = await clientServices.saveProfile(
+    req.body.designerId,userId
+  );
+
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+
   );
 });

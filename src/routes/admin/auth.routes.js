@@ -36,6 +36,12 @@ router.put(
   validate(authValidation.requestAction),
   authController.requestAction
 );
+router.put(
+  "/userAction",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.userAction),
+  authController.userAction
+);
 router.post("/logout", auth(USER_TYPE.ADMIN), authController.adminLogout);
 
 export default router;

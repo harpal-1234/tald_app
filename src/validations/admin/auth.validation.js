@@ -19,8 +19,14 @@ const requestAction = {
     requestId: Joi.string().required(),
   }),
 };
+const userAction = {
+  body: Joi.object().keys({
+    userId: Joi.string().required(),
+  }),
+};
 export default{
   adminLogin,
   getUsers,
-  requestAction
+  requestAction,
+  userAction
 }

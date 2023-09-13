@@ -331,3 +331,42 @@ export const getInteriorDesignerById = async (designerId, page, limit) => {
     totalProjects: totalProjects,
   };
 };
+export const saveProfile = async (designerId, userId) => {
+  const check = await User.findOne({
+    _id: designerId,
+    isVerify: true,
+    // isApproved:true,
+    isDeleted: false,
+  });
+  if (!check) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.DESIGNER_NOT_FOUND
+    );
+  }
+  const designer = await User.findOneAndUpdate(
+    {
+      _id: userId,
+      isVerify: true,
+      // isApproved:true,
+      isDeleted: false,
+    },
+    { $push: { saveProfile: designerId } },
+    { new: true }
+  );
+  return;
+};
+export const getSaveProfiles = async (page, limit) => {
+  const check = await User.findOne({
+    _id: designerId,
+    isVerify: true,
+    // isApproved:true,
+    isDeleted: false,
+  });
+  if (!check) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.DESIGNER_NOT_FOUND
+    );
+  }
+}
