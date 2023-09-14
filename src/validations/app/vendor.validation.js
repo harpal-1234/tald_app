@@ -17,6 +17,12 @@ export const createProject = {
     projectName: Joi.string().required(),
   }),
 };
+export const seeProject = {
+  query: Joi.object().keys({
+    page: Joi.number().required(),
+    limit: Joi.number().required(),
+  }),
+};
 export const getInteriorDesignerById = {
   query: Joi.object().keys({
     designerId: Joi.string().required(),

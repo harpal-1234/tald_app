@@ -13,6 +13,12 @@ router.post(
   validate(authValidation.createProject),
   authController.createProject
 );
+router.get(
+  "/seeProjects",
+  auth(USER_TYPE.USER),
+  //validate(authValidation.seeProject),
+  authController.seeProject
+);
 router.post(
   "/addImages",
   auth(USER_TYPE.USER),

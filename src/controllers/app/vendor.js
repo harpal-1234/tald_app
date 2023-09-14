@@ -1,6 +1,4 @@
-import {
-  vendorServices,
-} from "../../services/index.js";
+import { vendorServices } from "../../services/index.js";
 import { catchAsync } from "../../utils/universalFunction.js";
 import { successResponse } from "../../utils/response.js";
 import {
@@ -22,6 +20,18 @@ export const createProject = catchAsync(async (req, res) => {
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.SUCCESS,
     project
+  );
+});
+export const seeProject = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const projects = await vendorServices.seeProject(userId);
+
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    projects
   );
 });
 export const addImages = catchAsync(async (req, res) => {
@@ -122,7 +132,7 @@ export const editProjectDetails = catchAsync(async (req, res) => {
   );
 });
 export const editCompanyDetails = catchAsync(async (req, res) => {
-  const userId = req.token.user._id;                        
+  const userId = req.token.user._id;
   const project = await vendorServices.editCompanyDetails(req.body, userId);
   return successResponse(
     req,
@@ -133,7 +143,7 @@ export const editCompanyDetails = catchAsync(async (req, res) => {
   );
 });
 export const editFeeStructure = catchAsync(async (req, res) => {
-  const userId = req.token.user._id;                        
+  const userId = req.token.user._id;
   const project = await vendorServices.editFeeStructure(req.body, userId);
   return successResponse(
     req,
@@ -145,7 +155,7 @@ export const editFeeStructure = catchAsync(async (req, res) => {
 });
 
 export const editVendorProfile = catchAsync(async (req, res) => {
-  const userId = req.token.user._id;                        
+  const userId = req.token.user._id;
   const project = await vendorServices.editVendorProfile(req.body, userId);
   return successResponse(
     req,

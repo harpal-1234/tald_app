@@ -21,6 +21,14 @@ export const createProject = async (userId, projectName) => {
   });
   return project;
 };
+export const seeProject = async (userId) => {
+  const project = await Project.find({
+    user: userId,
+    isDeleted: false,
+  });
+  
+  return project;
+};
 export const addImages = async (userId, projectId, images) => {
   const check = await Project.findOne({
     _id: projectId,
