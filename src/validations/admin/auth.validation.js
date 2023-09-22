@@ -22,6 +22,12 @@ const getUsers = {
     limit: Joi.number().required(),
   }),
 };
+const changePassword = {
+  body: Joi.object().keys({
+    oldPassword: JOI.PASSWORD,
+    newPassword: JOI.PASSWORD,
+  }),
+};
 const requestAction = {
   body: Joi.object().keys({
     status: Joi.boolean().required().valid(true, false),
@@ -102,4 +108,5 @@ export default {
   requestAction,
   userAction,
   createInteriorDesigner,
+  changePassword
 };

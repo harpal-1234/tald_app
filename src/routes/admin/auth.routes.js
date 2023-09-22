@@ -18,6 +18,12 @@ router.get(
   validate(authValidation.getUsers),
   authController.userList
 );
+router.put(
+  "/chnagePassword",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.changePassword),
+  authController.changePassword
+);
 router.get(
   "/vendorList",
   auth(USER_TYPE.ADMIN),

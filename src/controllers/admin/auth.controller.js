@@ -28,6 +28,7 @@ export const adminLogin = catchAsync(async (req, res) => {
     token
   );
 });
+
 export const userList = catchAsync(async (req, res) => {
   let { page, limit } = req.query;
   const users = await adminService.userList(page, limit);
