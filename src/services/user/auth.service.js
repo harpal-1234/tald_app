@@ -26,12 +26,14 @@ export const createUser = async (userData) => {
 };
 
 export const register = async (userData) => {
+  console.log(userData)
   const check = await User.findOne({
     email: userData.email,
     isVerify: true,
     type: userData.type,
     isDeleted: false,
   });
+  console.log(check)
   if (check) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
