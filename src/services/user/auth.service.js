@@ -238,6 +238,7 @@ export const resetPassword = async (tokenData, newPassword) => {
       { _id: query },
       { $set: { password: newPassword } }
     );
+    console.log(userdata)
     const tokenvalue = await Token.findByIdAndUpdate(tokenData._id, {
       isDeleted: true,
     });
