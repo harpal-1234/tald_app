@@ -456,7 +456,7 @@ export const getSlots = async (designerId, date, userId, timeDuration) => {
     }
   }
   console.log(dates, count);
-
+  const slots = [];
   for (date of dates) {
     const day = moment(date.date).format("dddd");
     var time;
@@ -490,22 +490,25 @@ export const getSlots = async (designerId, date, userId, timeDuration) => {
     }
     console.log(slotStartTime, "slotStart time ");
     const endTime = moment(date.endTime, "HH:mm");
+
     if (time1.isBefore(endTime)) {
       while (slotStartTime.isBefore(moment(endTime).subtract(29, "minutes"))) {
         let slotEndTime = moment(slotStartTime).add(1, "hour");
         if (slotEndTime.isAfter(endTime)) {
           slotEndTime = moment(endTime);
         }
-        console.log(
-          "Cut slot available:",
-          moment(slotStartTime).format(),
-          "to",
-          slotEndTime.format("HH:mm")
-        );
+        slots.push(moment(slotStartTime).format()),
+          console.log(
+            "Cut slot available:",
+            moment(slotStartTime).format(),
+            "to",
+            slotEndTime.format("HH:mm")
+          );
         slotStartTime.add(30, "minutes");
       }
     }
   }
+  console.log(slots);
 };
 export const getSaveProfiles = async (page, limit) => {
   const check = await User.findOne({
