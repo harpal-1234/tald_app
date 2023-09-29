@@ -41,6 +41,13 @@ export const getSaveProfile = {
     limit: Joi.number().required(),
   }),
 };
+export const getSlots = {
+  query: Joi.object().keys({
+    designerId: Joi.string().required(),
+    date: Joi.string().required(),
+    timeDuration: Joi.string().required().allow("25_mins,55_mins"),
+  }),
+};
 export const getInteriorDesigner = {
   query: Joi.object().keys({
     type: Joi.string()

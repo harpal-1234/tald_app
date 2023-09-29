@@ -31,4 +31,10 @@ router.put(
   validate(authValidation.getSaveProfile),                
   authController.saveProfile
 );
+router.get(
+  "/getSlots",
+  auth(USER_TYPE.USER),
+  validate(authValidation.getSlots),                
+  authController.getSlots
+);
 export default router;

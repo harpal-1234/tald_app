@@ -2,7 +2,7 @@ import { User, Project } from "../../models/index.js";
 import { STATUS_CODES, ERROR_MESSAGES } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
 import moment from "moment";
-
+import { formatUser } from "../../utils/commonFunction.js";
 export const createProject = async (userId, projectName) => {
   const check = await Project.findOne({
     projectName: projectName,
@@ -26,7 +26,7 @@ export const seeProject = async (userId) => {
     user: userId,
     isDeleted: false,
   });
-  
+
   return project;
 };
 export const addImages = async (userId, projectId, images) => {
@@ -96,7 +96,7 @@ export const addAvailability = async (
     currentDate.getTime() + availability.numberOfDays * 24 * 60 * 60 * 1000
   );
   if (isIndefinitely == true) {
-    const data = await User.findOneAndUpdate(
+    const data1 = await User.findOneAndUpdate(
       { _id: userId },
       {
         availability: {
@@ -108,9 +108,11 @@ export const addAvailability = async (
       },
       { new: true }
     );
+    const data = data1.toObject();
+    await formatUser(data);
     return data;
   } else {
-    const data = await User.findOneAndUpdate(
+    const data1 = await User.findOneAndUpdate(
       { _id: userId },
       {
         availability: {
@@ -126,6 +128,8 @@ export const addAvailability = async (
       },
       { new: true }
     );
+    const data = data1.toObject();
+    await formatUser(data);
     return data;
   }
 };
