@@ -48,6 +48,19 @@ export const getSlots = {
     timeDuration: Joi.string().required().allow("25_mins,55_mins"),
   }),
 };
+export const bookConsultations = {
+  body: Joi.object().keys({
+    designerId: Joi.string().required(),
+    timeSlots: Joi.array().required(),
+    projectSummary: Joi.string().required().allow(null,""),
+    files:Joi.array().items(
+      Joi.object({
+        file: Joi.string().required(),
+        fileType:Joi.string().required()
+      })
+    )
+  }),
+};
 export const getInteriorDesigner = {
   query: Joi.object().keys({
     type: Joi.string()
@@ -177,6 +190,12 @@ export const editCompanyDetails = {
     instagramLink: Joi.string().required().allow("", null),
     pinterestLink: Joi.string().required().allow("", null),
     about: Joi.string().required().allow("", null),
+  }),
+};
+export const getConsultations = {
+  query: Joi.object().keys({
+    page: Joi.number().required(),
+    limit: Joi.number().required(),
   }),
 };
 export const feeStructure = {

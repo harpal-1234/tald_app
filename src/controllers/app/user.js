@@ -80,15 +80,40 @@ export const saveProfile = catchAsync(async (req, res) => {
   );
 });
 export const getSlots = catchAsync(async (req, res) => {
-  const { designerId, date,timeDuration } = req.query;
+  const { designerId, date, timeDuration } = req.query;
   const userId = req.token.user._id;
-  const designer = await clientServices.getSlots(designerId, date, userId,timeDuration);
+  const slots = await clientServices.getSlots(
+    designerId,
+    date,
+    userId,
+    timeDuration
+  );
 
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.SUCCESS
+    SUCCESS_MESSAGES.SUCCESS,
+    slots
+  );
+});
+export const bookConsultations = catchAsync(async (req, res) => {
+  const { designerId, timeSlots, projectSummary ,files} = req.body;
+  const userId = req.token.user._id;
+  const slots = await clientServices.bookConsultations(
+    designerId,
+    timeSlots,
+    projectSummary,
+    userId,
+    files
+  );
+
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    slots
   );
 });
 export const getSaveProfile = catchAsync(async (req, res) => {

@@ -369,50 +369,6 @@ export const getSlots = async (designerId, date, userId, timeDuration) => {
       ERROR_MESSAGES.DESIGNER_NOT_FOUND
     );
   }
-  const availability = [
-    {
-      day: "Sunday",
-      startTime: "6:30",
-      endTime: "24:00",
-      status: true,
-    },
-    {
-      day: "Monday",
-      startTime: "6:30",
-      endTime: "24:00",
-      status: true,
-    },
-    {
-      day: "Tuesday",
-      startTime: "6:30",
-      endTime: "24:00",
-      status: true,
-    },
-    {
-      day: "Wednesday",
-      startTime: "6:30",
-      endTime: "24:00",
-      status: true,
-    },
-    {
-      day: "Thursday",
-      startTime: "6:30",
-      endTime: "23:00",
-      status: true,
-    },
-    {
-      day: "Friday",
-      startTime: "6:30",
-      endTime: "18:00",
-      status: true,
-    },
-    {
-      day: "Saturday",
-      startTime: "6:30",
-      endTime: "18:00",
-      status: true,
-    },
-  ];
   const consultations = await Consultations.find({
     designer: designerId,
     isDeleted: false,
@@ -421,28 +377,35 @@ export const getSlots = async (designerId, date, userId, timeDuration) => {
   })
     .distinct("confirmSlotTime")
     .lean();
-  let count = 0;
+
   const dates = [];
 
   var nextDate = date;
   nextDate = new Date(nextDate);
-  const testDay = moment(nextDate).format("dddd");
+  var testDay;
+  testDay = moment(nextDate).format("dddd");
+
   for (let count = 0; count < 3; ) {
     let checkKey = false;
     if (count == 1) {
       nextDate.setHours(0, 0, 0, 0);
-      nextDate.setDate(nextDate.getDate() + 1);
+      nextDate.setDate(nextDate.getDate());
+      testDay = moment(nextDate).format("dddd");
     }
-    for (const val of availability) {
-      if (val.status && val.day == testDay) {
+    for (const val of check.weeklySchedule) {
+      if (val.status && val.day == testDay && count < 3) {
         dates.push({
-          date: new Date(nextDate),
+          date: moment(new Date(nextDate)),
           startTime: val.startTime,
           endTime: val.endTime,
         });
-        // nextDate.setHours(0, 0, 0, 0);
+        nextDate.setHours(0, 0, 0, 0);
         nextDate.setDate(nextDate.getDate() + 1);
         nextDate = new Date(nextDate);
+        moment(nextDate).format("dddd");
+        //console.log(nextDate,"nnnnnnnnnnnnnnn",moment(nextDate).format("dddd"))
+        testDay = moment(nextDate).format("dddd");
+
         count = count + 1;
         checkKey = true;
         console.log(nextDate);
@@ -452,15 +415,19 @@ export const getSlots = async (designerId, date, userId, timeDuration) => {
     if (checkKey == false) {
       nextDate.setDate(nextDate.getDate() + 1);
       nextDate.setHours(0, 0, 0, 0);
-      nextDate = nextDate;
+      testDay = moment(nextDate).format("dddd");
+      console.log(nextDate, "nnnnnnnnnnnnnnn");
+      nextDate = new Date(nextDate);
     }
   }
-  console.log(dates, count);
+  console.log(dates);
   const slots = [];
+
   for (date of dates) {
+    console.log(date);
     const day = moment(date.date).format("dddd");
     var time;
-    time = moment(date.date).format("HH:mm");
+    time = moment(date.date);
     var value;
     value = moment(date.date).format("mm");
     let subStruct;
@@ -469,27 +436,37 @@ export const getSlots = async (designerId, date, userId, timeDuration) => {
     } else {
       subStruct = 60 - parseInt(value);
     }
+    const parsedDateTime = moment(date.date);
+    parsedDateTime.set({
+      hour: moment(date.startTime, "HH:mm").hour(),
+      minute: moment(date.startTime, "HH:mm").minute(),
+    });
 
-    const startTime = moment(date.startTime, "HH:mm");
-    let time1 = moment(time, "HH:mm");
-
+    // Format the updated date-time string
+    const startTime = parsedDateTime.format();
+    let time1 = moment(time);
+    console.log(time1, "ggggggggggggg", startTime);
     var slotStartTime;
 
     if (time1.isBefore(startTime)) {
       const currentTime = moment(date.date);
-      const startT = moment(startTime, "HH:mm");
+      const startT = moment(startTime);
       const timeDifference = startT.diff(currentTime);
-      const newTime = currentTime.add(timeDifference, "milliseconds");
+      const newTime = currentTime.add(Math.abs(timeDifference), "milliseconds");
       slotStartTime = moment(newTime);
-      console.log(slotStartTime, "slotTime");
     }
-    console.log(date.date, "date");
-
     if (!slotStartTime) {
       slotStartTime = moment(date.date).add(subStruct, "minutes");
     }
     console.log(slotStartTime, "slotStart time ");
-    const endTime = moment(date.endTime, "HH:mm");
+    const parsedDateTime1 = moment(date.date);
+    parsedDateTime1.set({
+      hour: moment(date.endTime, "HH:mm").hour(),
+      minute: moment(date.endTime, "HH:mm").minute(),
+    });
+
+    // Format the updated date-time string
+    const endTime = parsedDateTime1.format();
 
     if (time1.isBefore(endTime)) {
       while (slotStartTime.isBefore(moment(endTime).subtract(29, "minutes"))) {
@@ -497,18 +474,43 @@ export const getSlots = async (designerId, date, userId, timeDuration) => {
         if (slotEndTime.isAfter(endTime)) {
           slotEndTime = moment(endTime);
         }
-        slots.push(moment(slotStartTime).format()),
-          console.log(
-            "Cut slot available:",
-            moment(slotStartTime).format(),
-            "to",
-            slotEndTime.format("HH:mm")
-          );
+
+        // console.log(
+        //   "Cut slot available:",
+        //   moment(slotStartTime),
+        //   "to",
+        //   slotEndTime.format("HH:mm")
+        // );
+        slots.push(moment(slotStartTime).format());
         slotStartTime.add(30, "minutes");
       }
     }
   }
-  console.log(slots);
+  const data = await Consultations.find({
+    designer: designerId,
+    isPast: false,
+    isConfirm: true,
+  })
+    .distinct("confirmSlotTime")
+    .lean();
+    console.log(data)
+  if (timeDuration == "25_mins") {
+    const timeSlots = slots.filter((date) => !data.includes(date));
+    return timeSlots;
+  } else {
+    function isWithin30Minutes(date1, date2) {
+      const dateA = new Date(date1);
+      const dateB = new Date(date2);
+      const diffInMilliseconds = Math.abs(dateA - dateB);
+      const diffInMinutes = diffInMilliseconds / (1000 * 60);
+      return diffInMinutes <= 30;
+    }
+    const result = slots.filter((date1) => {
+      const matchingDate = data.find((date2) => isWithin30Minutes(date1, date2));
+      return !matchingDate;
+    });
+    return result;
+  }
 };
 export const getSaveProfiles = async (page, limit) => {
   const check = await User.findOne({
@@ -523,4 +525,33 @@ export const getSaveProfiles = async (page, limit) => {
       ERROR_MESSAGES.DESIGNER_NOT_FOUND
     );
   }
+};
+export const bookConsultations = async (
+  designerId,
+  timeSlots,
+  projectSummary,
+  userId,
+  files
+) => {
+  const check = await User.findOne({
+    _id: designerId,
+    isVerify: true,
+    isDeleted: false,
+  });
+  if (!check) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.DESIGNER_NOT_FOUND
+    );
+  }
+  const data = await Consultations.create({
+    designer: designerId,
+    timeSlots: timeSlots,
+    projectSummary: projectSummary,
+    user: userId,
+    files: files,
+    // confirmSlotTime: "2023-10-08T16:30:00+05:30",
+    // isConfirm: true,
+  });
+  return data;
 };

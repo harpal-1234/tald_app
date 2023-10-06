@@ -1,4 +1,4 @@
-import { User, Project } from "../../models/index.js";
+import { User, Project, Consultations } from "../../models/index.js";
 import { STATUS_CODES, ERROR_MESSAGES } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
 import moment from "moment";
@@ -232,4 +232,70 @@ export const editVendorProfile = async (data, userId) => {
     { new: true }
   );
   return profile;
+};
+export const getConsultations = async (page, limit, designerId) => {
+  const date = new Date();
+  date.moment(date).format();
+  const check = await consultations.updateMany({isDeleted:false,isConfirm:true},{})
+  const [requestedConsultations, confirmedConsultations, pastConsultations] =
+    await Promise.all([
+      Consultations.find({
+        designer: designerId,
+        isDeleted: false,
+        isConfirm: false,
+        isPast: false,
+      })
+        .skip(page * limit)
+        .limit(limit)
+        .sort({ _id: -1 })
+        .lean()
+        .populate({
+          path: "user",
+          select: ["_id", "email", "name"],
+        }),
+      Consultations.find({
+        designer: designerId,
+        isDeleted: false,
+        isConfirm: true,
+        isPast: false,
+      })
+        .skip(page * limit)
+        .limit(limit)
+        .sort({ _id: -1 })
+        .lean()
+        .populate({
+          path: "user",
+          select: ["_id", "email", "name"],
+        }),
+      ,
+      Consultations.find({
+        designer: designerId,
+        isDeleted: false,
+        isPast: true,
+      })
+        .skip(page * limit)
+        .limit(limit)
+        .sort({ _id: -1 })
+        .lean()
+        .populate({
+          path: "user",
+          select: ["_id", "email", "name"],
+        }),
+      ,
+    ]);
+  const consultations = [
+    {
+      type: "requestedConsultations",
+      value: requestedConsultations,
+    },
+    {
+      type: "confirmedConsultations",
+      value: confirmedConsultations,
+    },
+    {
+      type: "pastConsultations",
+      value: pastConsultations,
+    },
+  ];
+  return consultations;
 };

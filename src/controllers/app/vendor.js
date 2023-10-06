@@ -165,3 +165,19 @@ export const editVendorProfile = catchAsync(async (req, res) => {
     project
   );
 });
+export const getConsultations = catchAsync(async (req, res) => {
+  const designerId = req.token.user._id;
+
+  const consultations = await vendorServices.getConsultations(
+    req.query.page,
+    req.query.limit,
+    designerId
+  );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    consultations
+  );
+});

@@ -77,4 +77,10 @@ router.put(
   validate(authValidation.editVendorProfile),           
   authController.editVendorProfile
 );
+router.get(
+  "/getConsultations",
+  auth(USER_TYPE.USER),
+  validate(authValidation.getConsultations),           
+  authController.getConsultations
+);
 export default router;

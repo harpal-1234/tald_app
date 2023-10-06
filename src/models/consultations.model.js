@@ -6,7 +6,6 @@ const consultationSchema = mongoose.Schema(
     designer: { type: mongoose.SchemaTypes.ObjectId, ref: "user" },
     timeSlots: [{ type: String, required: true }],
     projectSummary: { type: String },
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
     confirmSlotTime: { type: String },
     isConfirm: { type: Boolean, default: false },
     isPast: { type: Boolean, default: false },
