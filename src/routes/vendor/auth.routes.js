@@ -83,4 +83,10 @@ router.get(
   validate(authValidation.getConsultations),           
   authController.getConsultations
 );
+router.put(
+  "/consultationAction",
+  auth(USER_TYPE.USER),
+  validate(authValidation.consultationAction),           
+  authController.consultationAction
+);
 export default router;

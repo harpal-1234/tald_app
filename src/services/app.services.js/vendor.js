@@ -235,8 +235,15 @@ export const editVendorProfile = async (data, userId) => {
 };
 export const getConsultations = async (page, limit, designerId) => {
   const date = new Date();
-  date.moment(date).format();
-  const check = await consultations.updateMany({isDeleted:false,isConfirm:true},{})
+  const currentDate = moment(date).format();
+  await Consultations.updateMany(
+    {
+      isDeleted: false,
+      isConfirm: true,
+      confirmSlotTime: { $lt: currentDate },
+    },
+    { $set: { isPast: true, isConfirm: false } }
+  );
   const [requestedConsultations, confirmedConsultations, pastConsultations] =
     await Promise.all([
       Consultations.find({
@@ -267,7 +274,6 @@ export const getConsultations = async (page, limit, designerId) => {
           path: "user",
           select: ["_id", "email", "name"],
         }),
-      ,
       Consultations.find({
         designer: designerId,
         isDeleted: false,
@@ -281,7 +287,6 @@ export const getConsultations = async (page, limit, designerId) => {
           path: "user",
           select: ["_id", "email", "name"],
         }),
-      ,
     ]);
   const consultations = [
     {
@@ -298,4 +303,45 @@ export const getConsultations = async (page, limit, designerId) => {
     },
   ];
   return consultations;
+};
+export const consultationAction = async (
+  consultationId,
+  confirmTime,
+  designerId
+) => {
+  const check = await Consultations.findOne({
+    _id: consultationId,
+    isDeleted: false,
+    designer: designerId,
+    isConfirm: false,
+    isPast: false,
+  });
+  if (!check) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.CONSULTATION_NOT_EXIST
+    );
+  }
+  const date = moment(new Date()).format();
+  if (date > confirmTime) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.VALID_DATE
+    );
+  }
+  const data = await Consultations.findOneAndUpdate(
+    {
+      _id: consultationId,
+      isDeleted: false,
+      designer: designerId,
+      isConfirm: false,
+      isPast: false,
+    },
+    {
+      confirmSlotTime: confirmTime,
+      isConfirm: true,
+    },
+    { new: true }
+  );
+  return data;
 };

@@ -58,10 +58,10 @@ export const PREFERENCES = {
   LAYERED_TEXTURES: "Layered Textures",
 };
 export const PROJECT_SIZE = {
-  PARTIAL_RENOVATION:"Partial Renovation",
-  NEW_BUILD:"New Build",
-  FULL_RENOVATION:"Full Renovation"
-}
+  PARTIAL_RENOVATION: "Partial Renovation",
+  NEW_BUILD: "New Build",
+  FULL_RENOVATION: "Full Renovation",
+};
 export const FEE_STRUCTURE = {
   FLAT_DESIGN_FEE: "Flat Design Fee",
   FLAT_DSIGN_FEE_MARKUP: "Flat Design Fee + Mark-up",
@@ -220,7 +220,9 @@ export const ERROR_MESSAGES = {
   PROJECT: "This Project Already Exist ",
   PROJECT_NOT_FOUND: "This Project Not Exist",
   REQUEST_NOT_FOUND: "This Request Not Found",
-  DESIGNER_NOT_FOUND:"Designer Not Found"
+  DESIGNER_NOT_FOUND: "Designer Not Found",
+  VALID_DATE: "Please select a valid date",
+  CONSULTATION_NOT_EXIST: "Sorry this consultation not exist",
 };
 export const SOCIAL_TYPE = {
   FACEBOOK: "facebook",

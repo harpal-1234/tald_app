@@ -13,10 +13,10 @@
         "url": "git push --set-upstream origin master"
     },
     "engines": {
-        "node": "18.16.1", 
-        "npm": "9.5.1" ,
-        "mongodb":"6.2"   
-      },
+        "node": "18.16.1",
+        "npm": "9.5.1",
+        "mongodb": "6.2"
+    },
     "keywords": [
         "Express",
         "Mongodb",
@@ -26,6 +26,7 @@
     "license": "ISC",
     "dependencies": {
         "@joi/date": "^2.1.0",
+        "axios": "^1.5.1",
         "bcryptjs": "^2.4.3",
         "body-parser": "^1.20.1",
         "compression": "^1.7.4",
@@ -40,6 +41,7 @@
         "i18n": "^0.15.1",
         "joi": "^17.7.0",
         "jsonwebtoken": "^9.0.0",
+        "jsrsasign": "^10.8.6",
         "moment": "^2.29.4",
         "moment-timezone": "^0.5.38",
         "mongoose": "^6.7.1",

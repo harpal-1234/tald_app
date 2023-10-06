@@ -198,6 +198,12 @@ export const getConsultations = {
     limit: Joi.number().required(),
   }),
 };
+export const consultationAction = {
+  body: Joi.object().keys({
+    consultationId: Joi.string().required(),
+    confirmTime: Joi.string().required(),
+  }),
+};
 export const feeStructure = {
   body: Joi.object().keys({
     feeStructure: Joi.object({

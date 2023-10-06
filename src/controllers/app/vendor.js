@@ -181,3 +181,18 @@ export const getConsultations = catchAsync(async (req, res) => {
     consultations
   );
 });
+export const consultationAction = catchAsync(async (req, res) => {
+  const designerId = req.token.user._id;
+  const consultation = await vendorServices.consultationAction(
+    req.body.consultationId,
+    req.body.confirmTime,
+    designerId
+  );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    consultation
+  );
+});
