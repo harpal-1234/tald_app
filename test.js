@@ -65,3 +65,31 @@ app.get('/auth/callback', async (req, res) => {
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
 });
+import jwt from "jsonwebtoken";
+import KJUR from "jsrsasign";
+// https://www.npmjs.com/package/jsrsasign
+
+function generateSignature(secret) {
+  const iat = Math.round(new Date().getTime() / 1000) - 30;
+  const exp = iat + 60 * 60 * 2;
+  const oHeader = { alg: "HS256", typ: "JWT" };
+
+  const oPayload = {
+    sdkKey: "GuiPmdbXTwGFQRXnCvatKA",
+    appKey: "GuiPmdbXTwGFQRXnCvatKA",
+    mn: 1,
+    role: "role",
+    iat: iat,
+    exp: exp,
+    tokenExp: exp,
+  };
+
+  const sHeader = JSON.stringify(oHeader);
+  const sPayload = JSON.stringify(oPayload);
+  const sdkJWT = KJUR.jws.JWS.sign("HS256", sHeader, sPayload, secret);
+  console.log(sdkJWT)
+  return sdkJWT;
+}
+
+
+generateSignature("s3UXkPfleU3jft1F2bC3UCLedtFqvaEn");
