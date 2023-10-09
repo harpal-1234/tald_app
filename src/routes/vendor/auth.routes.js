@@ -96,7 +96,7 @@ router.get(
   authController.zoom
 );
 router.get(
-  "/callBack",
+  "/app/callBack",
   // auth(USER_TYPE.USER),
   // validate(authValidation.getConsultations),           
   authController.callBack
