@@ -146,7 +146,7 @@ export const addAvailability = {
       )
       .required(),
     availability: Joi.object({
-      startDate: Joi.string(),
+      startDate: Joi.string().allow(null,""),
       numberOfDays: Joi.number(),
     }).required(),
     isIndefinitely: Joi.boolean().required(),
