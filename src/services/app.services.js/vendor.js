@@ -347,7 +347,7 @@ export const consultationAction = async (
   return data;
 };
 export const zoom = async () => {
-  const redirect_uri = "https:loalhost:5050/vendor/app/callBack";
+  const redirect_uri = "https:api.tald.co/vendor/app/callBack";
   const clientId = "GuiPmdbXTwGFQRXnCvatKA";
   const authUrl = `https://zoom.us/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirect_uri}`;
   return authUrl;
