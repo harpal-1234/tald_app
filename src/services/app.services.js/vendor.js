@@ -398,11 +398,11 @@ export const callBack = async (code) => {
     );
 
     const joinUrl = createMeetingResponse.data.join_url;
-    console.log(`Zoom meeting link: ${joinUrl}`);
+    console.log(`Zoom meeting link: <a href="${joinUrl}" target="_blank">${joinUrl}</a>`);
 
-    res.send(
-      `Zoom meeting link: <a href="${joinUrl}" target="_blank">${joinUrl}</a>`
-    );
+
+      return `Zoom meeting link: <a href="${joinUrl}" target="_blank">${joinUrl}</a>`
+    
   } catch (error) {
     console.error(
       "Error:",
