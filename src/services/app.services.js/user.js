@@ -370,7 +370,7 @@ export const getSlots = async (designerId, date, userId, timeDuration) => {
     );
   }
   if (!JSON.stringify(check.weeklySchedule).includes(true)) {
-    return "Sorry No Slots Available";
+    return [];
   }
   const consultations = await Consultations.find({
     designer: designerId,
