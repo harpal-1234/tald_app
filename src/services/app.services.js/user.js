@@ -369,6 +369,9 @@ export const getSlots = async (designerId, date, userId, timeDuration) => {
       ERROR_MESSAGES.DESIGNER_NOT_FOUND
     );
   }
+  if (!JSON.stringify(check.weeklySchedule).includes(true)) {
+    return "Sorry No Slots Available";
+  }
   const consultations = await Consultations.find({
     designer: designerId,
     isDeleted: false,
@@ -493,7 +496,7 @@ export const getSlots = async (designerId, date, userId, timeDuration) => {
   })
     .distinct("confirmSlotTime")
     .lean();
-    console.log(data)
+  console.log(data);
   if (timeDuration == "25_mins") {
     const timeSlots = slots.filter((date) => !data.includes(date));
     return timeSlots;
@@ -506,7 +509,9 @@ export const getSlots = async (designerId, date, userId, timeDuration) => {
       return diffInMinutes <= 30;
     }
     const result = slots.filter((date1) => {
-      const matchingDate = data.find((date2) => isWithin30Minutes(date1, date2));
+      const matchingDate = data.find((date2) =>
+        isWithin30Minutes(date1, date2)
+      );
       return !matchingDate;
     });
     return result;
