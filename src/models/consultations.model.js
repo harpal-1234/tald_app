@@ -7,6 +7,8 @@ const consultationSchema = mongoose.Schema(
     timeSlots: [{ type: String, required: true }],
     projectSummary: { type: String },
     confirmSlotTime: { type: String },
+    durationTime: { type: String, required: true },
+    zoomMeetingLink:{type:String},
     isConfirm: { type: Boolean, default: false },
     isPast: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },

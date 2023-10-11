@@ -43,4 +43,10 @@ router.post(
   validate(authValidation.bookConsultations),                
   authController.bookConsultations
 );
+router.get(
+  "/getConsultations",
+  auth(USER_TYPE.USER),
+  validate(authValidation.getConsultations),                
+  authController.getConsultations
+);
 export default router;

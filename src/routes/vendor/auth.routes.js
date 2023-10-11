@@ -89,16 +89,5 @@ router.put(
   validate(authValidation.consultationAction),           
   authController.consultationAction
 );
-router.get(
-  "/zoom",
-  // auth(USER_TYPE.USER),
-  // validate(authValidation.getConsultations),           
-  authController.zoom
-);
-router.get(
-  "/app/callBack",
-  // auth(USER_TYPE.USER),
-  // validate(authValidation.getConsultations),           
-  authController.callBack
-);
+
 export default router;

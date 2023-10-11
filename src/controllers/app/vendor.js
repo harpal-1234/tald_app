@@ -181,32 +181,13 @@ export const getConsultations = catchAsync(async (req, res) => {
     consultations
   );
 });
-export const zoom = catchAsync(async (req, res) => {
-  const zoom = await vendorServices.zoom();
-  return successResponse(
-    req,
-    res,
-    STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.SUCCESS,
-    zoom
-  );
-});
-export const callBack = catchAsync(async (req, res) => {
-  const zoom = await vendorServices.callBack(req.query.code);
-  return successResponse(
-    req,
-    res,
-    STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.SUCCESS,
-    zoom
-  );
-});
+
 export const consultationAction = catchAsync(async (req, res) => {
   const designerId = req.token.user._id;
   const consultation = await vendorServices.consultationAction(
     req.body.consultationId,
     req.body.confirmTime,
-    designerId
+    designerId,
   );
   return successResponse(
     req,

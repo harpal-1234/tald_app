@@ -45,20 +45,21 @@ export const getSlots = {
   query: Joi.object().keys({
     designerId: Joi.string().required(),
     date: Joi.string().required(),
-    timeDuration: Joi.string().required().allow("25_mins,55_mins"),
+    timeDuration: Joi.string().required().valid("25_mins","55_mins"),
   }),
 };
 export const bookConsultations = {
   body: Joi.object().keys({
     designerId: Joi.string().required(),
     timeSlots: Joi.array().required(),
-    projectSummary: Joi.string().required().allow(null,""),
-    files:Joi.array().items(
+    projectSummary: Joi.string().required().allow(null, ""),
+    files: Joi.array().items(
       Joi.object({
         file: Joi.string().required(),
-        fileType:Joi.string().required()
+        fileType: Joi.string().required(),
       })
-    )
+    ),
+   // durationTime: Joi.string().required().valid("25_mins","55_mins"),
   }),
 };
 export const getInteriorDesigner = {
@@ -130,6 +131,7 @@ export const deleteProjectImages = {
     projectId: Joi.string().required(),
   }),
 };
+
 export const addAvailability = {
   body: Joi.object().keys({
     weeklySchedule: Joi.array()
@@ -146,7 +148,7 @@ export const addAvailability = {
       )
       .required(),
     availability: Joi.object({
-      startDate: Joi.string().allow(null,""),
+      startDate: Joi.string().allow(null, ""),
       numberOfDays: Joi.number(),
     }).required(),
     isIndefinitely: Joi.boolean().required(),

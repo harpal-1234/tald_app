@@ -303,7 +303,12 @@ export const getInteriorDesigners = async (
   await formatUser(designer);
   return { designer, total };
 };
-export const getInteriorDesignerById = async (designerId, page, limit) => {
+export const getInteriorDesignerById = async (
+  designerId,
+  page,
+  limit,
+  userId
+) => {
   const designer = await User.findOne({
     _id: designerId,
     isVerify: true,
@@ -321,6 +326,17 @@ export const getInteriorDesignerById = async (designerId, page, limit) => {
     .lean()
     .skip(page * limit)
     .limit(limit);
+  if (userId) {
+    projects.forEach((val) => {
+      if (val.likedBy) {
+        if (JSON.stringify(val.likedBy).includes(userId)) {
+          val.isLike = true;
+        } else {
+          val.isLike = false;
+        }
+      }
+    });
+  }
   const totalProjects = await Project.countDocuments({
     user: designerId,
     isDeleted: false,
@@ -536,7 +552,8 @@ export const bookConsultations = async (
   timeSlots,
   projectSummary,
   userId,
-  files
+  files,
+ // durationTime
 ) => {
   const check = await User.findOne({
     _id: designerId,
@@ -555,8 +572,61 @@ export const bookConsultations = async (
     projectSummary: projectSummary,
     user: userId,
     files: files,
+    //durationTime: durationTime,
     // confirmSlotTime: "2023-10-08T16:30:00+05:30",
     // isConfirm: true,
   });
   return data;
+};
+export const getConsultations = async (page, limit, clientId) => {
+  const date = new Date();
+  const currentDate = moment(date).format();
+  await Consultations.updateMany(
+    {
+      isDeleted: false,
+      isConfirm: true,
+      confirmSlotTime: { $lt: currentDate },
+    },
+    { $set: { isPast: true, isConfirm: false } }
+  );
+  console.log(clientId, "jkkkkkkkkh");
+  const [UpcomingConsultation, pastConsultations] = await Promise.all([
+    Consultations.find({
+      user: clientId,
+      isDeleted: false,
+      isPast: false,
+    })
+      .skip(page * limit)
+      .limit(limit)
+      .sort({ _id: -1 })
+      .lean()
+      .populate({
+        path: "designer",
+        select: ["_id", "email", "name"],
+      }),
+    Consultations.find({
+      user: clientId,
+      isDeleted: false,
+      isPast: true,
+    })
+      .skip(page * limit)
+      .limit(limit)
+      .sort({ _id: -1 })
+      .lean()
+      .populate({
+        path: "designer",
+        select: ["_id", "email", "name"],
+      }),
+  ]);
+  const consultations = [
+    {
+      type: "UpcomingConsultations",
+      value: UpcomingConsultation,
+    },
+    {
+      type: "pastConsultations",
+      value: pastConsultations,
+    },
+  ];
+  return consultations;
 };

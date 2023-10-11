@@ -50,11 +50,16 @@ export const getInteriorDesigners = catchAsync(async (req, res) => {
 export const getInteriorDesignerById = catchAsync(async (req, res) => {
   const { designerId, page, limit } = req.query;
 
-  // const userId = req.token.user._id;
+  var userId;
+  const token = req.token;
+  if (token) {
+    userId = token.user._id;
+  }
   const project = await clientServices.getInteriorDesignerById(
     designerId,
     page,
-    limit
+    limit,
+    userId
   );
 
   return successResponse(
@@ -98,14 +103,21 @@ export const getSlots = catchAsync(async (req, res) => {
   );
 });
 export const bookConsultations = catchAsync(async (req, res) => {
-  const { designerId, timeSlots, projectSummary ,files} = req.body;
+  const {
+    designerId,
+    timeSlots,
+    projectSummary,
+    files,
+    //durationTime
+  } = req.body;
   const userId = req.token.user._id;
   const slots = await clientServices.bookConsultations(
     designerId,
     timeSlots,
     projectSummary,
     userId,
-    files
+    files,
+    //durationTime
   );
 
   return successResponse(
@@ -117,7 +129,7 @@ export const bookConsultations = catchAsync(async (req, res) => {
   );
 });
 export const getSaveProfile = catchAsync(async (req, res) => {
-  const { userId } = req.token.user._id;
+  const userId = req.token.user._id;
   const designer = await clientServices.saveProfile(
     req.body.designerId,
     userId
@@ -128,5 +140,21 @@ export const getSaveProfile = catchAsync(async (req, res) => {
     res,
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.SUCCESS
+  );
+});
+export const getConsultations = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const consultations = await clientServices.getConsultations(
+    req.query.page,
+    req.query.limit,
+    userId
+  );
+
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    consultations
   );
 });

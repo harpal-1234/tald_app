@@ -11,14 +11,15 @@ const verifyCallback =
     if (err || info || !token) {
       return reject(new AuthFailedError());
     }
-
-    if (role && token.role != role) {
-      return reject(
-        new AuthFailedError(
-          ERROR_MESSAGES.UNAUTHORIZED,
-          STATUS_CODES.AUTH_FAILED
-        )
-      );
+    if (role != "Non") {
+      if (role && token.role != role) {
+        return reject(
+          new AuthFailedError(
+            ERROR_MESSAGES.UNAUTHORIZED,
+            STATUS_CODES.AUTH_FAILED
+          )
+        );
+      }
     }
 
     if (token.role === USER_TYPE.ADMIN && !token.admin) {
@@ -30,7 +31,7 @@ const verifyCallback =
     if (token.role === USER_TYPE.NON_USER && !token.user) {
       return reject(new AuthFailedError());
     }
-    
+
     if (token.role === USER_TYPE.USER || token.role === USER_TYPE.NON_USER) {
       if (token.user.isDeleted) {
         return reject(
@@ -111,27 +112,10 @@ const verifyCallback =
     return resolve();
   };
 
-  const auth = (role) => async (req, res, next) => {
-    if (role == USER_TYPE.NON_USER) {
-      if (req.headers.authorization) {
-        return new Promise((resolve, reject) => {
-          passport.authenticate(
-            "jwt",
-            { session: false },
-            verifyCallback(req, resolve, reject, role)
-          )(req, res, next);
-        })
-          .then(() => next())
-          .catch((err) => next(err));
-      } else {
-        return new Promise((resolve, reject) => {
-          resolve();
-        })
-          .then(() => next())                                          
-          .catch((err) => next(err));
-      }
-    }
-    if (role == "Admin" || role == "User") {
+const auth = (role) => async (req, res, next) => {
+  console.log(role);
+  if (role == USER_TYPE.NON_USER) {
+    if (req.headers.authorization) {
       return new Promise((resolve, reject) => {
         passport.authenticate(
           "jwt",
@@ -141,6 +125,24 @@ const verifyCallback =
       })
         .then(() => next())
         .catch((err) => next(err));
+    } else {
+      return new Promise((resolve, reject) => {
+        resolve();
+      })
+        .then(() => next())
+        .catch((err) => next(err));
     }
-  };
+  }
+  if (role == "Admin" || role == "User") {
+    return new Promise((resolve, reject) => {
+      passport.authenticate(
+        "jwt",
+        { session: false },
+        verifyCallback(req, resolve, reject, role)
+      )(req, res, next);
+    })
+      .then(() => next())
+      .catch((err) => next(err));
+  }
+};
 export default auth;
