@@ -181,6 +181,11 @@ const editProfile = {
     name: Joi.string().required(),
   }),
 };
+const getProfile = {
+  query: Joi.object().keys({
+    type: Joi.string().required().valid("User","Vendor"),
+  }),
+};
 const verifyEmail = {
   query: Joi.object().keys({
     token: Joi.string().required(),
@@ -203,4 +208,5 @@ export default {
   editProfile,
   verifyProfile,
   verifyEmail,
+  getProfile
 };

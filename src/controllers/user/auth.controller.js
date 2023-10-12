@@ -214,6 +214,17 @@ const editProfile = catchAsync(async (req, res) => {
     SUCCESS_MESSAGES.VERIFY_EMAIL
   );
 });
+const getProfile = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const data = await userService.getProfile(userId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+  );
+});
 const profile = catchAsync(async (req, res) => {
   const { token, name, email } = req.query;
 
@@ -248,4 +259,5 @@ export default {
   createService,
   editProfile,
   profile,
+  getProfile,
 };

@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import { User, Token, Admin, Request } from "../../models/index.js";
-import { formatUser } from "../../utils/commonFunction.js";
+import { formatUser, formatVendor } from "../../utils/commonFunction.js";
 import { editProfile } from "../../utils/sendMail.js";
 import {
   USER_TYPE,
@@ -26,14 +26,14 @@ export const createUser = async (userData) => {
 };
 
 export const register = async (userData) => {
-  console.log(userData)
+  console.log(userData);
   const check = await User.findOne({
     email: userData.email,
     isVerify: true,
     type: userData.type,
     isDeleted: false,
   });
-  console.log(check)
+  console.log(check);
   if (check) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
@@ -62,6 +62,22 @@ export const register = async (userData) => {
 export const profileEdit = async (data, userId, token) => {
   await editProfile(data.email, token, data.name);
   return;
+};
+export const getProfile = async (userId) => {
+  const user = await User.findOne({
+    _id: userId,
+    isDeleted: false,
+    // type: type,
+    isVerify: true,
+  }).lean();
+
+  if (user.type == "User") {
+    formatVendor(user);
+    return user;
+  } else {
+    formatUser(user);
+    return user;
+  }
 };
 
 export const profile = async (token, name, email) => {
@@ -238,7 +254,7 @@ export const resetPassword = async (tokenData, newPassword) => {
       { _id: query },
       { $set: { password: newPassword } }
     );
-    console.log(userdata)
+    console.log(userdata);
     const tokenvalue = await Token.findByIdAndUpdate(tokenData._id, {
       isDeleted: true,
     });

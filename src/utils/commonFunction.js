@@ -16,8 +16,8 @@ export const formatUser = (userData) => {
       // data.activeDeals = 2;
       delete data.__v;
       delete data.password;
-      //delete data.isBlocked;
-      //delete data.isDeleted;
+      // delete data.isBlocked;
+      // delete data.isDeleted;
       // delete data.createdAt;
       // delete data.updatedAt;
       // delete data.customerId;
@@ -56,7 +56,59 @@ export const formatUser = (userData) => {
   }
   return userData;
 };
-
+export const formatVendor = (userData) => {
+  if (userData.length) {
+    userData.forEach((data) => {
+      delete data.__v;
+      delete data.password;
+      delete data.projectType;
+      delete data.virtual_Consultations;
+      delete data.newClientProjects;
+      delete data.destinationProject;
+      delete data.feeStructure;
+      delete data.tradeDiscount;
+      delete data.minBudget;
+      delete data.maxBudget;
+      delete data.weeklySchedule;
+      delete data.availability;
+      delete data.goals;
+      delete data.preferences;
+      delete data.projectSize;
+      delete data.styles;
+      delete data.isSignUp;
+      delete data.isApproved;
+      delete data.isIndefinitely;
+      delete data.inviteesSchedule;
+      delete data.saveProfiles;
+      delete data.saveImages;
+      // delete data.dealPurchases;
+    });
+  } else {
+    delete userData.__v;
+    delete userData.password;
+    delete userData.projectType;
+    delete userData.virtual_Consultations;
+    delete userData.newClientProjects;
+    delete userData.destinationProject;
+    delete userData.feeStructure;
+    delete userData.tradeDiscount;
+    delete userData.minBudget;
+    delete userData.maxBudget;
+    delete userData.weeklySchedule;
+    delete userData.availability;
+    delete userData.goals;
+    delete userData.preferences;
+    delete userData.projectSize;
+    delete userData.styles;
+    delete userData.isSignUp;
+    delete userData.isApproved;
+    delete userData.isIndefinitely;
+    delete userData.inviteesSchedule;
+    delete userData.saveProfiles;
+    delete userData.saveImages;
+  }
+  return userData;
+};
 export const formatFavourites = (userData) => {
   delete userData.__v;
   delete userData.name;
@@ -234,7 +286,3 @@ export const formatCategory = (userData) => {
   }
   return userData;
 };
-
-
-
-

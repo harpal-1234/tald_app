@@ -74,4 +74,10 @@ router.put(
   validate(authValidation.editProfile),
   authController.editProfile
 );
+router.get(
+  "/getProfile",
+  auth(USER_TYPE.USER),
+  //validate(authValidation.getProfile),
+  authController.getProfile
+);
 export default router;
