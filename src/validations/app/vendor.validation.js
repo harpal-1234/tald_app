@@ -9,8 +9,10 @@ import {
   GOALS,
   PROJECT_SIZE,
   STYLE,
+  KIND_OF_ASSITANCE,
+  STATUS,
 } from "../../config/appConstants.js";
-import { Types } from "mongoose";
+import { STATES, Types } from "mongoose";
 
 export const createProject = {
   body: Joi.object().keys({
@@ -45,7 +47,7 @@ export const getSlots = {
   query: Joi.object().keys({
     designerId: Joi.string().required(),
     date: Joi.string().required(),
-    timeDuration: Joi.string().required().valid("25_mins","55_mins"),
+    timeDuration: Joi.string().required().valid("25_mins", "55_mins"),
   }),
 };
 export const bookConsultations = {
@@ -59,7 +61,7 @@ export const bookConsultations = {
         fileType: Joi.string().required(),
       })
     ),
-   // durationTime: Joi.string().required().valid("25_mins","55_mins"),
+    durationTime: Joi.string().required().valid("25_mins","55_mins"),
   }),
 };
 export const getInteriorDesigner = {
@@ -200,10 +202,86 @@ export const getConsultations = {
     limit: Joi.number().required(),
   }),
 };
+export const createProjectInquery = {
+  body: Joi.object().keys({
+    projectName: Joi.string().required(),
+    designer: Joi.string().required(),
+    projectType: Joi.string()
+      .valid(...Object.values(PROJECT_TYPE))
+      .allow(null, ""),
+    kindOfAssistance: Joi.string()
+      .required()
+      .valid(...Object.values(KIND_OF_ASSITANCE)),
+    projectSummary: Joi.string().required(),
+    address: Joi.string().required(),
+    lat: Joi.number().required(),
+    long: Joi.number().required(),
+    startDate: Joi.string(),
+    endDate: Joi.string(),
+    projectFund: Joi.number().required(),
+    primaryDecisionMaker: Joi.string()
+      .required()
+      .valid(...Object.values(OPTIONS)),
+    workedWithInteriorDesigner: Joi.string()
+      .required()
+      .valid(...Object.values(OPTIONS)),
+    involvedYourProject: Joi.string().required(),
+    files: Joi.array().items(
+      Joi.object({
+        file: Joi.string().required(),
+        fileType: Joi.string().required(),
+      })
+    ),
+  }),
+};
+export const editProjectInquery = {
+  body: Joi.object().keys({
+    projectName: Joi.string().required(),
+    projectId: Joi.string().required(),
+    projectType: Joi.string()
+      .valid(...Object.values(PROJECT_TYPE))
+      .allow(null, ""),
+    kindOfAssistance: Joi.string()
+      .required()
+      .valid(...Object.values(KIND_OF_ASSITANCE)),
+    projectSummary: Joi.string().required(),
+    address: Joi.string().required(),
+    lat: Joi.number().required(),
+    long: Joi.number().required(),
+    startDate: Joi.string(),
+    endDate: Joi.string(),
+    projectFund: Joi.number().required(),
+    primaryDecisionMaker: Joi.string()
+      .required()
+      .valid(...Object.values(OPTIONS)),
+    workedWithInteriorDesigner: Joi.string()
+      .required()
+      .valid(...Object.values(OPTIONS)),
+    involvedYourProject: Joi.string().required(),
+    files: Joi.array().items(
+      Joi.object({
+        file: Joi.string().required(),
+        fileType: Joi.string().required(),
+      })
+    ),
+  }),
+};
 export const consultationAction = {
   body: Joi.object().keys({
     consultationId: Joi.string().required(),
     confirmTime: Joi.string().required(),
+  }),
+};
+export const getProjectInqueries = {
+  query: Joi.object().keys({
+    page: Joi.number().required(),
+    limit: Joi.number().required(),
+  }),
+};
+export const actionProjectQuery = {
+  body: Joi.object().keys({
+    projectId: Joi.string().required(),
+    status: Joi.string().required().valid(STATUS.ACCEPTED, STATUS.REJECTED),
   }),
 };
 export const feeStructure = {

@@ -108,7 +108,7 @@ export const bookConsultations = catchAsync(async (req, res) => {
     timeSlots,
     projectSummary,
     files,
-    //durationTime
+    durationTime
   } = req.body;
   const userId = req.token.user._id;
   const slots = await clientServices.bookConsultations(
@@ -117,7 +117,7 @@ export const bookConsultations = catchAsync(async (req, res) => {
     projectSummary,
     userId,
     files,
-    //durationTime
+    durationTime
   );
 
   return successResponse(
@@ -156,5 +156,41 @@ export const getConsultations = catchAsync(async (req, res) => {
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.SUCCESS,
     consultations
+  );
+});
+export const createProjectInquery = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const project = await clientServices.createProjectInquery(req.body, userId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    project
+  );
+});
+export const getProjectInqueries = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const projects = await clientServices.getProjectInqueries(
+    req.query.page,
+    req.query.limit,
+    userId
+  );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    projects
+  );
+});
+export const editProjectInquery = catchAsync(async (req, res) => {
+  const project = await clientServices.editProjectInquery(req.body);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    project
   );
 });

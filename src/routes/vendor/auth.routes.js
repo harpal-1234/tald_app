@@ -25,11 +25,7 @@ router.post(
   validate(authValidation.addImages),
   authController.addImages
 );
-router.get(
-  "/portfolio",
-  auth(USER_TYPE.USER),
-  authController.getPortfolio
-);
+router.get("/portfolio", auth(USER_TYPE.USER), authController.getPortfolio);
 router.delete(
   "/deleteProject",
   auth(USER_TYPE.USER),
@@ -62,32 +58,43 @@ router.put(
 router.put(
   "/editCompanyDetails",
   auth(USER_TYPE.USER),
-  validate(authValidation.editCompanyDetails),           
+  validate(authValidation.editCompanyDetails),
   authController.editCompanyDetails
 );
 router.put(
   "/feeStructure",
   auth(USER_TYPE.USER),
-  validate(authValidation.feeStructure),           
+  validate(authValidation.feeStructure),
   authController.editFeeStructure
 );
 router.put(
   "/editVendorProfile",
   auth(USER_TYPE.USER),
-  validate(authValidation.editVendorProfile),           
+  validate(authValidation.editVendorProfile),
   authController.editVendorProfile
 );
 router.get(
   "/getConsultations",
   auth(USER_TYPE.USER),
-  validate(authValidation.getConsultations),           
+  validate(authValidation.getConsultations),
   authController.getConsultations
 );
 router.put(
   "/consultationAction",
   auth(USER_TYPE.USER),
-  validate(authValidation.consultationAction),           
+  validate(authValidation.consultationAction),
   authController.consultationAction
 );
-
+router.get(
+  "/getProjectInqueries",
+  auth(USER_TYPE.USER),
+  validate(authValidation.getProjectInqueries),
+  authController.getProjectInqueries
+);
+router.put(
+  "/ActionProjectInquery",
+  auth(USER_TYPE.USER),
+  validate(authValidation.actionProjectQuery),
+  authController.actionProjectInquery
+);
 export default router;

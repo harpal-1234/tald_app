@@ -80,6 +80,17 @@ export const OPTIONS = {
   YES: "Yes",
   NO: "No",
 };
+export const STATUS = {
+  ACCEPTED: "Accepted",
+  REJECTED: "Rejected",
+  PENDING:"Pending"
+};
+export const KIND_OF_ASSITANCE = {
+  FURNISHING_STYLING: "Furnishing + Styling",
+  RENOVATION: "Renovation",
+  NEW_CONSTRUCTION: "New Construction",
+};
+
 export const VALID_PROJECT_TYPE = ["Residential", "Commercial"];
 export const DAYS = {
   MONDAY: "Monday",

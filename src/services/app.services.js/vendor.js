@@ -1,4 +1,9 @@
-import { User, Project, Consultations } from "../../models/index.js";
+import {
+  User,
+  Project,
+  Consultations,
+  ProjectInquery,
+} from "../../models/index.js";
 import { STATUS_CODES, ERROR_MESSAGES } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
 import moment from "moment";
@@ -337,8 +342,7 @@ export const consultationAction = async (
   });
   const zoomLink = await zoomMeeting.createZommLink(
     designer.email,
-    30
-    // check.durationTime == "25_mins" ? 30 : 60
+    check.durationTime == "25_mins" ? 30 : 60
   );
   const data = await Consultations.findOneAndUpdate(
     {
@@ -357,4 +361,47 @@ export const consultationAction = async (
   );
 
   return data;
+};
+export const getProjectInqueries = async (page, limit, designerId) => {
+  console.log(designerId);
+  const projects = await ProjectInquery.find({
+    designer: designerId,
+    isVerify: true,
+    isDeleted: false,
+  })
+    .skip(page * limit)
+    .limit(limit)
+    .lean()
+    .populate({
+      path: "user",
+      select: ["email", "userName"],
+    });
+  return projects;
+};
+export const actionProjectInquery = async (projectId, status) => {
+  const check = await ProjectInquery.findOne({
+    _id: projectId,
+    isDeleted: false,
+    isVerify: true,
+  });
+  if (!check) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.PROJECT_NOT_FOUND
+    );
+  }
+
+  const project = await ProjectInquery.findOneAndUpdate(
+    {
+      _id: projectId,
+      isVerify: true,
+      isDeleted: false,
+    },
+    {
+      status: status,
+    },
+    { new: true }
+  );
+
+  return project;
 };

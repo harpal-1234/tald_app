@@ -1,4 +1,9 @@
-import { User, Project, Consultations } from "../../models/index.js";
+import {
+  User,
+  Project,
+  Consultations,
+  ProjectInquery,
+} from "../../models/index.js";
 import {
   STATUS_CODES,
   ERROR_MESSAGES,
@@ -553,7 +558,7 @@ export const bookConsultations = async (
   projectSummary,
   userId,
   files,
- // durationTime
+  durationTime
 ) => {
   const check = await User.findOne({
     _id: designerId,
@@ -572,9 +577,7 @@ export const bookConsultations = async (
     projectSummary: projectSummary,
     user: userId,
     files: files,
-    //durationTime: durationTime,
-    // confirmSlotTime: "2023-10-08T16:30:00+05:30",
-    // isConfirm: true,
+    durationTime: durationTime,
   });
   return data;
 };
@@ -629,4 +632,54 @@ export const getConsultations = async (page, limit, clientId) => {
     },
   ];
   return consultations;
+};
+export const createProjectInquery = async (body, userId) => {
+  body.user = userId;
+  body.isVerify = true;
+  const check = await User.findOne({
+    _id: body.designer,
+    isVerify: true,
+    isDeleted: false,
+  });
+  if (!check) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.DESIGNER_NOT_FOUND
+    );
+  }
+  const project = await ProjectInquery.create(body);
+  return project;
+};
+export const getProjectInqueries = async (page, limit, userId) => {
+  const projects = await ProjectInquery.find({ user: userId, isDeleted: false })
+    .lean()
+    .skip(page * limit)
+    .limit(limit)
+    .populate({
+      path: "designer",
+      select: ["email", "userName"],
+    });
+  return projects;
+};
+export const editProjectInquery = async (body, userId) => {
+  const projectId = body.projectId;
+  body.user = userId;
+  delete body.projectId;
+  console.log(body);
+  const check = await ProjectInquery.findOne({
+    _id: projectId,
+    isDeleted: false,
+  });
+  if (!check) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.PROJECT_NOT_FOUND
+    );
+  }
+  const projects = await ProjectInquery.findOneAndUpdate(
+    { _id: projectId, isDeleted: false },
+    { body },
+    { new: true }
+  );
+  return projects;
 };

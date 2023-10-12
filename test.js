@@ -10,11 +10,11 @@ const callBack = async () => {
 
   const data = {
     grant_type: "account_credentials",
-    account_id: "nGJEkhXYQpGltGP4oZ50XA",
+    account_id: "wLSDJ_MjRCWkatkAEigKyA",
     //redirect_uri: "https://api.tald.co/vendor/app/callBack",
   };
-  const clientId = "23xbSBDSHakRlBrLR_TmA";
-  const clientSeceret = "fjyUODs4w57VP3RLKmng5tZROuh3OagG";
+  const clientId = "5b7nvuR4Sp6DPliFdcMvzg";
+  const clientSeceret = "DS2P4WehocxtnUI21BsjsaPcEBYEtFT6";
   const authHeader = `Basic ${Buffer.from(
     `${clientId}:${clientSeceret}`
   ).toString("base64")}`;

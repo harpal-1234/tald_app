@@ -187,7 +187,7 @@ export const consultationAction = catchAsync(async (req, res) => {
   const consultation = await vendorServices.consultationAction(
     req.body.consultationId,
     req.body.confirmTime,
-    designerId,
+    designerId
   );
   return successResponse(
     req,
@@ -195,5 +195,33 @@ export const consultationAction = catchAsync(async (req, res) => {
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.SUCCESS,
     consultation
+  );
+});
+export const getProjectInqueries = catchAsync(async (req, res) => {
+  const designerId = req.token.user._id;
+  const projects = await vendorServices.getProjectInqueries(
+    req.query.page,
+    req.query.limit,
+    designerId
+  );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    projects
+  );
+});
+export const actionProjectInquery = catchAsync(async (req, res) => {
+  const projects = await vendorServices.actionProjectInquery(
+    req.body.projectId,
+    req.body.status
+  );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    projects
   );
 });
