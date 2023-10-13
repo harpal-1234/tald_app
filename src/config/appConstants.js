@@ -12,6 +12,15 @@ export const USER_TYPE = {
   VENDOR_ADMIN: "Vendor",
   NON_USER: "Non",
 };
+export const MESSAGE_TYPE ={
+  IMAGE:"Image",
+  Video:"Video",
+  DOCUMENT:"Document",
+  GIF:"Gif",
+  AUDIO:"Audio",
+  TEXT:"Text",
+  EMPTY:""
+}
 export const USERTYPE1 = {
   USER: "User",
   VENDOR_ADMIN: "Vendor",

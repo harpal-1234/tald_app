@@ -6,6 +6,7 @@ import {
   SUCCESS_MESSAGES,
   USER_TYPE,
 } from "../../config/appConstants.js";
+import * as chatServices from "../../services/app.services.js/chat.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -223,5 +224,31 @@ export const actionProjectInquery = catchAsync(async (req, res) => {
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.SUCCESS,
     projects
+  );
+});
+export const getConversations = catchAsync(async (req, res) => {
+  const conversations = await chatServices.getConversation(
+    req.query.page,
+    req.query.limit,
+    req.token.user._id
+  );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    conversations
+  );
+});
+export const getChat = catchAsync(async (req, res) => {
+  const { conversationId, page, limit } = req.query;
+  const userId = req.token.user._id;
+  const chat = await chatServices.getChat(conversationId, userId, page, limit);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    chat
   );
 });

@@ -1,7 +1,7 @@
 import express from "express";
 import { validate, validateView } from "../../middlewares/validate.js";
-import * as authValidation from "../../validations/app/vendor.validation.js";
-import * as authController from "../../controllers/app/user.js";
+import * as clientValidation from "../../validations/app/vendor.validation.js";
+import * as clientController from "../../controllers/app/user.js";
 import auth from "../../middlewares/auth.js";
 import { USER_TYPE } from "../../config/appConstants.js";
 
@@ -10,61 +10,73 @@ const router = express.Router();
 router.get(
   "/interiorDesigner",
   auth(USER_TYPE.NON_USER),
-  validate(authValidation.getInteriorDesigner),
-  authController.getInteriorDesigners
+  validate(clientValidation.getInteriorDesigner),
+  clientController.getInteriorDesigners
 );
 router.get(
   "/interiorDesignerById",
   auth(USER_TYPE.NON_USER),
-  validate(authValidation.getInteriorDesignerById),
-  authController.getInteriorDesignerById
+  validate(clientValidation.getInteriorDesignerById),
+  clientController.getInteriorDesignerById
 );
 router.put(
   "/saveProfile",
   auth(USER_TYPE.USER),
-  validate(authValidation.saveProfile),
-  authController.saveProfile
+  validate(clientValidation.saveProfile),
+  clientController.saveProfile
 );
 router.put(
   "/getSaveProfiles",
   auth(USER_TYPE.USER),
-  validate(authValidation.getSaveProfile),
-  authController.saveProfile
+  validate(clientValidation.getSaveProfile),
+  clientController.saveProfile
 );
 router.get(
   "/getSlots",
   auth(USER_TYPE.USER),
-  validate(authValidation.getSlots),
-  authController.getSlots
+  validate(clientValidation.getSlots),
+  clientController.getSlots
 );
 router.post(
   "/bookConsultations",
   auth(USER_TYPE.USER),
-  validate(authValidation.bookConsultations),
-  authController.bookConsultations
+  validate(clientValidation.bookConsultations),
+  clientController.bookConsultations
 );
 router.get(
   "/getConsultations",
   auth(USER_TYPE.USER),
-  validate(authValidation.getConsultations),
-  authController.getConsultations
+  validate(clientValidation.getConsultations),
+  clientController.getConsultations
 );
 router.post(
   "/createProjectInquery",
   auth(USER_TYPE.USER),
-  validate(authValidation.createProjectInquery),
-  authController.createProjectInquery
+  validate(clientValidation.createProjectInquery),
+  clientController.createProjectInquery
 );
 router.get(
   "/getProjectInqueries",
   auth(USER_TYPE.USER),
-  validate(authValidation.getProjectInqueries),
-  authController.getProjectInqueries
+  validate(clientValidation.getProjectInqueries),
+  clientController.getProjectInqueries
 );
 router.put(
   "/editProjectInqueries",
   auth(USER_TYPE.USER),
-  validate(authValidation.editProjectInquery),
-  authController.editProjectInquery
+  validate(clientValidation.editProjectInquery),
+  clientController.editProjectInquery
+);
+router.get(
+  "/getConversations",
+  auth(USER_TYPE.USER),
+  validate(clientValidation.getConversations),
+  clientController.getConversations
+);
+router.get(
+  "/getChat",
+  auth(USER_TYPE.USER),
+  validate(clientValidation.getChat),
+  clientController.getChat
 );
 export default router;

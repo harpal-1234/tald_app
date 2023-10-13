@@ -1,6 +1,7 @@
 import { clientServices } from "../../services/index.js";
 import { catchAsync } from "../../utils/universalFunction.js";
 import { successResponse } from "../../utils/response.js";
+import * as chatServices from "../../services/app.services.js/chat.js";
 import { STATUS_CODES, SUCCESS_MESSAGES } from "../../config/appConstants.js";
 
 export const getInteriorDesigners = catchAsync(async (req, res) => {
@@ -103,13 +104,8 @@ export const getSlots = catchAsync(async (req, res) => {
   );
 });
 export const bookConsultations = catchAsync(async (req, res) => {
-  const {
-    designerId,
-    timeSlots,
-    projectSummary,
-    files,
-    durationTime
-  } = req.body;
+  const { designerId, timeSlots, projectSummary, files, durationTime } =
+    req.body;
   const userId = req.token.user._id;
   const slots = await clientServices.bookConsultations(
     designerId,
@@ -192,5 +188,31 @@ export const editProjectInquery = catchAsync(async (req, res) => {
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.SUCCESS,
     project
+  );
+});
+export const getConversations = catchAsync(async (req, res) => {
+  const conversations = await chatServices.getConversation(
+    req.query.page,
+    req.query.limit,
+    req.token.user._id
+  );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    conversations
+  );
+});
+export const getChat = catchAsync(async (req, res) => {
+  const { conversationId, page, limit } = req.query;
+  const userId = req.token.user._id;
+  const chat = await chatServices.getChat(conversationId, userId, page, limit);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    chat
   );
 });

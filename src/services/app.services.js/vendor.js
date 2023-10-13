@@ -3,6 +3,7 @@ import {
   Project,
   Consultations,
   ProjectInquery,
+  Conversation,
 } from "../../models/index.js";
 import { STATUS_CODES, ERROR_MESSAGES } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
@@ -359,7 +360,25 @@ export const consultationAction = async (
     },
     { new: true }
   );
-
+  if (data.isConfirm) {
+    const conversation = await Conversation.findOne({
+      $or: [
+        { sender: check.userId, receiver: designerId },
+        { sender: designerId, receiver: check.userId },
+      ],
+      isDeleted: false,
+    });
+    if (!conversation) {
+      const time = new Date();
+      await Conversation.create({
+        sender: designerId,
+        receiver: check.user,
+        message: "",
+        messageType: "",
+        messageTime: time,
+      });
+    }
+  }
   return data;
 };
 export const getProjectInqueries = async (page, limit, designerId) => {

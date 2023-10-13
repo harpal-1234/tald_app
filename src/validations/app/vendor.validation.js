@@ -61,7 +61,7 @@ export const bookConsultations = {
         fileType: Joi.string().required(),
       })
     ),
-    durationTime: Joi.string().required().valid("25_mins","55_mins"),
+    durationTime: Joi.string().required().valid("25_mins", "55_mins"),
   }),
 };
 export const getInteriorDesigner = {
@@ -270,6 +270,19 @@ export const consultationAction = {
   body: Joi.object().keys({
     consultationId: Joi.string().required(),
     confirmTime: Joi.string().required(),
+  }),
+};
+export const getConversations = {
+  query: Joi.object().keys({
+    page: Joi.number().required(),
+    limit: Joi.number().required(),
+  }),
+};
+export const getChat = {
+  query: Joi.object().keys({
+    page: Joi.number().required(),
+    limit: Joi.number().required(),
+    conversationId: Joi.string().required(),
   }),
 };
 export const getProjectInqueries = {
