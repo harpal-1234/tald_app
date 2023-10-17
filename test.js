@@ -37,24 +37,24 @@ const callBack = async () => {
     const accessToken = response.data.access_token;
     const startTime = new Date();
     const durationInMinutes = 60; 
-    const createMeetingResponse = await axios.post(
-      "https://api.zoom.us/v2/users/me/meetings",
-      {
-        topic: "Consultations Meeting",
-        type: 1,
-        start_time: startTime.toISOString(),
-        duration: durationInMinutes,
-        settings: {
-          host_email: "harpaljodha1998@gmail.com",
-        },
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    // const createMeetingResponse = await axios.post(
+    //   "https://api.zoom.us/v2/users/me/meetings",
+    //   {
+    //     topic: "Consultations Meeting",
+    //     type: 1,
+    //     start_time: startTime.toISOString(),
+    //     duration: durationInMinutes,
+    //     settings: {
+    //       host_email: "harpaljodha1998@gmail.com",
+    //     },
+    //   },
+    //   {
+    //     headers: {
+    //       Authorization: `Bearer ${accessToken}`,
+    //       "Content-Type": "application/json",
+    //     },
+    //   }
+    // );
 
     const joinUrl = createMeetingResponse.data.join_url;
     console.log(

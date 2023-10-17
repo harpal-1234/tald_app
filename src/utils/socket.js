@@ -1,15 +1,14 @@
-import socket from "socket.io";
+import { Server } from "socket.io";
 import jwt from "jsonwebtoken";
 import config from "../config/config.js";
 import {
-  ROLE,
   ERROR_MESSAGES,
   STATUS_CODES,
   USER_TYPE,
 } from "../config/appConstants.js";
 import * as socketServices from "../services/user/socketChat.js";
-import { OperationalError } from "../utils/errors";
-import { Token } from "../models/index";
+import { OperationalError } from "../utils/errors.js";
+import { Token } from "../models/index.js";
 
 // const server = new Server();
 
@@ -23,9 +22,10 @@ let userCache = {};
    }
  
 */
+// const socket = Socket
 
-exports.connectSocket = (server) => {
-  io = socket(server);
+export const connectSocket = (server) => {
+  const io = new Server(server);
 
   io.use(function (socket, next) {
     console.log("user is trying to connect");
@@ -42,7 +42,7 @@ exports.connectSocket = (server) => {
             );
           const token = await Token.findOne({
             token: socket.handshake.query.token,
-          }).lean();
+          }).lean();                                        
 
           console.log(
             "decoded",

@@ -3,6 +3,7 @@ import app from "./app.js";
 import config from "./src/config/config.js";
 import logger from "./src/config/logger.js";
 import CreateAdmin from "./src/utils/bootstrap.js";
+import { connectSocket } from "./src/utils/socket.js";
 mongoose.set("strictQuery", false);
 let server;
 mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
@@ -11,6 +12,7 @@ mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
   server = app.listen(config.port, () => {
     console.log(`Listening to port ${config.port}`);
   });
+  connectSocket(server);
 });
 
 const unexpectedErrorHandler = (error) => {

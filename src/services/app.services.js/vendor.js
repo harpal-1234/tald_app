@@ -111,6 +111,7 @@ export const addAvailability = async (
           endDate: "",
         },
         isIndefinitely: true,
+        weeklySchedule: weeklySchedule,
         inviteesSchedule: inviteesSchedule,
       },
       { new: true }

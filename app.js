@@ -4,16 +4,8 @@ import cors from "cors";
 import passport from "passport";
 import compression from "compression";
 import morgan from "morgan";
-//import  cron  from "node-cron";
 import bodyParser from "body-parser";
-//import  cronNode from "./server/apiV1/utils/cron"
-//import common from '../src/middlewares/common.js';
 import { errorHandler } from "./src/middlewares/common.js";
-// import  {
-//     requestHandler,
-//     routeNotFoundHandler,
-//   }  from "./";
-
 import { jwtStrategy } from "./src/config/passport.js";
 import routes from "./src/routes/index.js";
 import i18n from "./src/middlewares/i18n.js";
