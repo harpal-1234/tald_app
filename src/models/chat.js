@@ -8,6 +8,7 @@ const chatSchema = mongoose.Schema(
     conversation: { type: mongoose.Schema.Types.ObjectId, ref: "conversation" },
     message: { type: String, required: true },
     type: { type: String, enum: [...Object.values(MESSAGE_TYPE)] },
+    mesageTime: { type: String },
     isChatDelete: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
     isBlocked: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
     isDeleted: { type: Boolean, default: false },

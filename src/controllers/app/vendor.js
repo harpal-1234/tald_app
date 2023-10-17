@@ -252,3 +252,54 @@ export const getChat = catchAsync(async (req, res) => {
     chat
   );
 });
+export const deleteChat = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const chat = await chatServices.deleteChat(req.body.conversationId, userId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+  );
+});
+export const blockUser = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const data = await chatServices.blockUser(
+    req.body.conversationId,
+    req.body.userId,
+    userId
+  );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS
+  );
+});
+export const unBlockUser = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const data = await chatServices.unBlockUser(
+    req.body.conversationId,
+    req.body.userId,
+    userId
+  );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS
+  );
+});
+export const clearConversation = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const data = await chatServices.deleteConversation(
+    req.body.conversationId,
+    userId
+  );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS
+  );
+});

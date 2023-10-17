@@ -109,4 +109,28 @@ router.get(
   validate(vendorValidation.getChat),
   vendorController.getChat
 );
+router.delete(
+  "/deleteChat",
+  auth(USER_TYPE.USER),
+  validate(vendorValidation.deleteChat),
+  vendorController.deleteChat
+);
+router.put(
+  "/blockUser",
+  auth(USER_TYPE.USER),
+  validate(vendorValidation.blockUser),
+  vendorController.blockUser
+);
+router.put(
+  "/unBlockUser",
+  auth(USER_TYPE.USER),
+  validate(vendorValidation.blockUser),
+  vendorController.unBlockUser
+);
+router.put(
+  "/deleteConversation",
+  auth(USER_TYPE.USER),
+  validate(vendorValidation.deleteChat),
+  vendorController.clearConversation
+);
 export default router;

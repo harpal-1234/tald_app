@@ -285,6 +285,17 @@ export const getChat = {
     conversationId: Joi.string().required(),
   }),
 };
+export const deleteChat = {
+  body: Joi.object().keys({
+    conversationId: Joi.string().required(),
+  }),
+};
+export const blockUser = {
+  body: Joi.object().keys({
+    conversationId: Joi.string().required(),
+    userId: Joi.string().required(),
+  }),
+};
 export const getProjectInqueries = {
   query: Joi.object().keys({
     page: Joi.number().required(),

@@ -8,11 +8,19 @@ const conversationSchema = mongoose.Schema(
     message: { type: String },
     messageType: { type: String, enum: [...Object.values(MESSAGE_TYPE)] },
     messageTime: { type: String },
-    blocked: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
-    blockMessage: { type: String },
-    blockMessageTime: { type: String },
-    blockMessageType: { type: String, enum: [...Object.values(MESSAGE_TYPE)] },
-    isDeleted: { type: Boolean, default: false },
+    blocked: [
+      {
+        user: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+        blockMessage: { type: String },
+        blockMessageTime: { type: String },
+        blockMessageType: {
+          type: String,
+          enum: [...Object.values(MESSAGE_TYPE)],
+        },
+      },
+    ],
+
+    isDeleted: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
   },
   {
     timestamps: true,

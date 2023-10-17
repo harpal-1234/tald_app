@@ -23,9 +23,14 @@ export const saveMessages = async (
 ) => {
   const check = await Conversation.findOne({
     _id: conversationId,
-    isDeleted: false,
     blocked: { $in: senderId },
   });
+  if (JSON.stringify(check.isDeleted).includes(receiverId)) {
+    await Conversation.findOneAndUpdate(
+      { _id: conversationId },
+      { $pull: { isDeleted: receiverId } }
+    );
+  }
 
   const time = new Date();
   const saveMessage = await Chat.create({
@@ -33,11 +38,17 @@ export const saveMessages = async (
     receiver: receiverId,
     conversation: conversationId,
     message: message,
+    messageTime: time,
     type: type,
   });
   await Conversation.findOneAndUpdate(
     { _id: conversationId, isDeleted: false },
     { message: message, messageType: type, messageTime: time }
   );
+  saveMessage.toObject().isEmit = JSON.stringify(check.blocked).includes(
+    senderId
+  )
+    ? false
+    : true;
   return saveMessage;
 };

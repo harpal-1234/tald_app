@@ -117,10 +117,12 @@ exports.connectSocket = (server) => {
         );
         console.log(userCache[receiverId], senderId);
         console.log(message);
-        if (userCache[receiverId]) {
-          userCache[receiverId].map((id) => {
-            io.to(id).emit("receiveMessage", message);
-          });
+        if (message.isEmit) {
+          if (userCache[receiverId]) {
+            userCache[receiverId].map((id) => {
+              io.to(id).emit("receiveMessage", message);
+            });
+          }
         }
       }
     });
