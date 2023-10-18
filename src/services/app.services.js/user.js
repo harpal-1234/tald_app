@@ -3,6 +3,7 @@ import {
   Project,
   Consultations,
   ProjectInquery,
+  projectRequest,
 } from "../../models/index.js";
 import {
   STATUS_CODES,
@@ -656,7 +657,7 @@ export const getInqueryStatus = async (projectId) => {
 
   return project?.designers;
 };
-export const submitProjectInquery = async (projectId, designerId) => {
+export const submitProjectInquery = async (projectId, designerId, userId) => {
   const check = await User.findOne({
     _id: designerId,
     isVerify: true,
@@ -669,28 +670,18 @@ export const submitProjectInquery = async (projectId, designerId) => {
     );
   }
   const date = new Date();
-  const data = await ProjectInquery.findOneAndUpdate(
-    { _id: projectId, isDeleted: false },
-    {
-      $push: {
-        designers: {
-          $each: [
-            {
-              designer: designerId,
-              status: false,
-              inqueryTime: moment(date).format(),
-            },
-          ],
-          $position: 0,
-        },
-      },
-    },
-    { new: true }
-  );
-  const project = data.toObject();
-  await formatProjectInquery(project);
+  const data = await projectRequest.create({
+    user: userId,
+    designer: designerId,
+    projectId: projectId,
+    inqueryTime: moment(date).format(),
+    status: "Pending",
+    isVerify: true,
+  });
+  // const project = data.toObject();
+  // await formatProjectInquery(project);
 
-  return project;
+  return data;
 };
 export const getProjectInqueries = async (page, limit, userId) => {
   const projects = await ProjectInquery.find({ user: userId, isDeleted: false })

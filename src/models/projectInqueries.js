@@ -11,17 +11,6 @@ const projectInquerySchema = mongoose.Schema(
     files: [{ file: { type: String }, fileType: { type: String } }],
     projectName: { type: String },
     user: { type: mongoose.SchemaTypes.ObjectId, ref: "user" },
-    designers: [
-      {
-        designer: { type: mongoose.SchemaTypes.ObjectId, ref: "user" },
-        status: {
-          type: String,
-          default: STATUS.PENDING,
-          enum: [...Object.values(STATUS)],
-        },
-        inqueryTime: { type: Date },
-      },
-    ],
     projectType: {
       type: String,
       required: true,

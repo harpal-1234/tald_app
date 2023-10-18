@@ -6,7 +6,8 @@ import { Request } from "../models/request.js";
 import { Consultations } from "../models/consultations.model.js";
 import { ProjectInquery } from "../models/projectInqueries.js";
 import { Conversation } from "../models/conversation.js";
-import {Chat} from "../models/chat.js"
+import { Chat } from "../models/chat.js";
+import { projectRequest } from "../models/projectRequest.js";
 
 export {
   Admin,
@@ -17,5 +18,6 @@ export {
   Consultations,
   ProjectInquery,
   Conversation,
-  Chat
+  Chat,
+  projectRequest,
 };

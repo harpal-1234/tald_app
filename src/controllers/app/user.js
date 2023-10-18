@@ -169,7 +169,8 @@ export const submitProjectInquery = catchAsync(async (req, res) => {
   const userId = req.token.user._id;
   const project = await clientServices.submitProjectInquery(
     req.body.projectId,
-    req.body.designerId
+    req.body.designerId,
+    userId
   );
   return successResponse(
     req,

@@ -215,15 +215,15 @@ export const getProjectInqueries = catchAsync(async (req, res) => {
 });
 export const actionProjectInquery = catchAsync(async (req, res) => {
   const projects = await vendorServices.actionProjectInquery(
-    req.body.projectId,
-    req.body.status
+    req.body.Id,
+    req.body.status,
+    req.token.user._id,
   );
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.SUCCESS,
-    projects
   );
 });
 export const getConversations = catchAsync(async (req, res) => {
@@ -259,7 +259,7 @@ export const deleteChat = catchAsync(async (req, res) => {
     req,
     res,
     STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS
   );
 });
 export const blockUser = catchAsync(async (req, res) => {

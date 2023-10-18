@@ -4,12 +4,17 @@ import {
   Consultations,
   ProjectInquery,
   Conversation,
+  projectRequest,
 } from "../../models/index.js";
 import { STATUS_CODES, ERROR_MESSAGES } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
 import moment from "moment";
-import { formatUser,formatProjectInquery } from "../../utils/commonFunction.js";
+import {
+  formatUser,
+  formatProjectInquery,
+} from "../../utils/commonFunction.js";
 import * as zoomMeeting from "../../utils/zoomMeeting.js";
+
 export const createProject = async (userId, projectName) => {
   const check = await Project.findOne({
     projectName: projectName,
@@ -383,37 +388,33 @@ export const consultationAction = async (
   return data;
 };
 export const getProjectInqueries = async (page, limit, designerId) => {
-  console.log(designerId);
-  const projects = await ProjectInquery.find({
-    designers: {
-      $elemMatch: {
-        designer: designerId,
-      },
-    },
-    isVerify: true,
-    isDeleted: false,
-  })
+  const projects = await projectRequest
+    .find({
+      designer: designerId,
+      isVerify: true,
+      isDeleted: false,
+    })
     .skip(page * limit)
     .limit(limit)
     .lean()
-    .populate({
-      path: "user",
-      select: ["email", "userName"],
-    });
+    .populate([
+      {
+        path: "user",
+        select: ["email", "userName"],
+      },
+      { path: "projectId" },
+    ]);
   projects?.forEach((val) => {
-    const filteredDesigners = val.designers.find(
-      (designer) => designer.designer.toString() === designerId.toString()
-    );
-    (val.designer = filteredDesigners.designer),
-      (val.status = filteredDesigners.status),
-      (val.inqueryTime = filteredDesigners.inqueryTime);
+    (val.project = val.projectId), delete val.projectId;
   });
-  formatProjectInquery(projects)
+
+  formatProjectInquery(projects);
   return projects;
 };
-export const actionProjectInquery = async (projectId, status) => {
-  const check = await ProjectInquery.findOne({
-    _id: projectId,
+export const actionProjectInquery = async (Id, status, designerId) => {
+  const check = await projectRequest.findOne({
+    _id: Id,
+    designer: designerId,
     isDeleted: false,
     isVerify: true,
   });
@@ -423,12 +424,13 @@ export const actionProjectInquery = async (projectId, status) => {
       ERROR_MESSAGES.PROJECT_NOT_FOUND
     );
   }
-
-  const project = await ProjectInquery.findOneAndUpdate(
+  
+  const project = await projectRequest.findOneAndUpdate(
     {
-      _id: projectId,
-      isVerify: true,
+      _id: Id,
+      designer: designerId,
       isDeleted: false,
+      isVerify: true,
     },
     {
       status: status,

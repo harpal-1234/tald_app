@@ -315,7 +315,7 @@ export const getProjectInqueries = {
 };
 export const actionProjectQuery = {
   body: Joi.object().keys({
-    projectId: Joi.string().required(),
+    Id: Joi.string().required(),
     status: Joi.string().required().valid(STATUS.ACCEPTED, STATUS.REJECTED),
   }),
 };
