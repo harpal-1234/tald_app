@@ -205,7 +205,7 @@ export const getConsultations = {
 export const createProjectInquery = {
   body: Joi.object().keys({
     projectName: Joi.string().required(),
-    designer: Joi.string().required(),
+    //designer: Joi.string().required(),
     projectType: Joi.string()
       .valid(...Object.values(PROJECT_TYPE))
       .allow(null, ""),
@@ -264,6 +264,17 @@ export const editProjectInquery = {
         fileType: Joi.string().required(),
       })
     ),
+  }),
+};
+export const submitProjectInquery = {
+  body: Joi.object().keys({
+    projectId: Joi.string().required(),
+    designerId: Joi.string().required(),
+  }),
+};
+export const getInqueryStatus = {
+  query: Joi.object().keys({
+    projectId: Joi.string().required(),
   }),
 };
 export const consultationAction = {

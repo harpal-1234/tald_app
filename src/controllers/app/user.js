@@ -165,6 +165,20 @@ export const createProjectInquery = catchAsync(async (req, res) => {
     project
   );
 });
+export const submitProjectInquery = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const project = await clientServices.submitProjectInquery(
+    req.body.projectId,
+    req.body.designerId
+  );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    project
+  );
+});
 export const getProjectInqueries = catchAsync(async (req, res) => {
   const userId = req.token.user._id;
   const projects = await clientServices.getProjectInqueries(
@@ -172,6 +186,16 @@ export const getProjectInqueries = catchAsync(async (req, res) => {
     req.query.limit,
     userId
   );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    projects
+  );
+});
+export const getInqueriesStatus = catchAsync(async (req, res) => {
+  const projects = await clientServices.getInqueryStatus(req.query.projectId);
   return successResponse(
     req,
     res,
@@ -190,6 +214,7 @@ export const editProjectInquery = catchAsync(async (req, res) => {
     project
   );
 });
+
 export const getConversations = catchAsync(async (req, res) => {
   const conversations = await chatServices.getConversation(
     req.query.page,

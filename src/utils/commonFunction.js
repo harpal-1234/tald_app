@@ -8,51 +8,22 @@ export const successMessageWithoutData = (code, message) => {
 export const formatUser = (userData) => {
   if (userData.length) {
     userData.forEach((data) => {
-      // const count = await Deal.countDocuments({
-      //   vendor: data._id,
-      //   isActive: true,
-      //   isDeleted: false,
-      // }).lean();
-      // data.activeDeals = 2;
       delete data.__v;
       delete data.password;
-      // delete data.isBlocked;
-      // delete data.isDeleted;
-      // delete data.createdAt;
-      // delete data.updatedAt;
-      // delete data.customerId;
-      // delete data.location;
-      // delete data.dealId;
-      // delete data.isPushNotification;
-      // delete data.isVerified;
-      // delete data.socialId;
-      // delete data.dealPurchaseId;
-      // delete data.favouriteStore;
-      // delete data.favouriteStores;
-      // delete data.recentlyView;
-      // delete data.orders;
-      // delete data.dealPurchases;
     });
   } else {
     delete userData.__v;
     delete userData.password;
-    // delete userData.role;
-    // delete userData.document;
-    // delete userData.isBlocked;
-    // delete userData.isDeleted;
-    // delete userData.jobTitle;
-    // delete userData.__v;
-    // delete userData.password;
-    // delete userData.location;
-    // delete userData.isPushNotification;
-    // delete userData.isVerified;
-    // delete userData.socialId;
-    // delete userData.dealPurchaseId;
-    // delete userData.favouriteStore;
-    // delete userData.favouriteStores;
-    // delete userData.recentlyView;
-    // delete userData.orders;
-    // delete userData.dealPurchases;
+  }
+  return userData;
+};
+export const formatProjectInquery = (userData) => {
+  if (userData.length) {
+    userData.forEach((data) => {
+      delete data.designers;
+    });
+  } else {
+    delete userData.designers;
   }
   return userData;
 };

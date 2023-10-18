@@ -15,7 +15,10 @@ import {
   STYLE,
 } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
-import { formatUser } from "../../utils/commonFunction.js";
+import {
+  formatUser,
+  formatProjectInquery,
+} from "../../utils/commonFunction.js";
 import moment from "moment";
 
 export const getInteriorDesigners = async (
@@ -636,8 +639,26 @@ export const getConsultations = async (page, limit, clientId) => {
 export const createProjectInquery = async (body, userId) => {
   body.user = userId;
   body.isVerify = true;
+  const project = await ProjectInquery.create(body);
+  return project;
+};
+export const getInqueryStatus = async (projectId) => {
+  const project = await ProjectInquery.findOne({
+    _id: projectId,
+    isDeleted: false,
+  }).populate({ path: "designers.designer", select: ["name", "email", "_id"] });
+  if (!project) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.PROJECT_NOT_FOUND
+    );
+  }
+
+  return project?.designers;
+};
+export const submitProjectInquery = async (projectId, designerId) => {
   const check = await User.findOne({
-    _id: body.designer,
+    _id: designerId,
     isVerify: true,
     isDeleted: false,
   });
@@ -647,25 +668,44 @@ export const createProjectInquery = async (body, userId) => {
       ERROR_MESSAGES.DESIGNER_NOT_FOUND
     );
   }
-  const project = await ProjectInquery.create(body);
+  const date = new Date();
+  const data = await ProjectInquery.findOneAndUpdate(
+    { _id: projectId, isDeleted: false },
+    {
+      $push: {
+        designers: {
+          $each: [
+            {
+              designer: designerId,
+              status: false,
+              inqueryTime: moment(date).format(),
+            },
+          ],
+          $position: 0,
+        },
+      },
+    },
+    { new: true }
+  );
+  const project = data.toObject();
+  await formatProjectInquery(project);
+
   return project;
 };
 export const getProjectInqueries = async (page, limit, userId) => {
   const projects = await ProjectInquery.find({ user: userId, isDeleted: false })
     .lean()
     .skip(page * limit)
-    .limit(limit)
-    .populate({
-      path: "designer",
-      select: ["email", "userName"],
-    });
+    .limit(limit);
+  await formatProjectInquery(projects);
+
   return projects;
 };
 export const editProjectInquery = async (body, userId) => {
   const projectId = body.projectId;
   body.user = userId;
   delete body.projectId;
-  console.log(body);
+
   const check = await ProjectInquery.findOne({
     _id: projectId,
     isDeleted: false,
@@ -681,5 +721,7 @@ export const editProjectInquery = async (body, userId) => {
     { body },
     { new: true }
   );
+  await formatProjectInquery(projects.toObject());
+
   return projects;
 };

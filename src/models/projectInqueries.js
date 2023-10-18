@@ -11,7 +11,17 @@ const projectInquerySchema = mongoose.Schema(
     files: [{ file: { type: String }, fileType: { type: String } }],
     projectName: { type: String },
     user: { type: mongoose.SchemaTypes.ObjectId, ref: "user" },
-    designer: { type: mongoose.SchemaTypes.ObjectId, ref: "user" },
+    designers: [
+      {
+        designer: { type: mongoose.SchemaTypes.ObjectId, ref: "user" },
+        status: {
+          type: String,
+          default: STATUS.PENDING,
+          enum: [...Object.values(STATUS)],
+        },
+        inqueryTime: { type: Date },
+      },
+    ],
     projectType: {
       type: String,
       required: true,
@@ -41,11 +51,7 @@ const projectInquerySchema = mongoose.Schema(
       enum: [...Object.values(OPTIONS)],
     },
     involvedYourProject: { type: String, required: true },
-    status: {
-      type: String,
-      default: STATUS.PENDING,
-      enum: [...Object.values(STATUS)],
-    },
+
     isDeleted: { type: Boolean, default: false },
     isVerify: { type: Boolean, default: false },
     isBlocked: { type: Boolean, default: false },

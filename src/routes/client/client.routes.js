@@ -67,6 +67,18 @@ router.put(
   validate(clientValidation.editProjectInquery),
   clientController.editProjectInquery
 );
+router.put(
+  "/submitProjectInqueries",
+  auth(USER_TYPE.USER),
+  validate(clientValidation.submitProjectInquery),
+  clientController.submitProjectInquery
+);
+router.get(
+  "/getInqueryStatus",
+  auth(USER_TYPE.USER),
+  validate(clientValidation.getInqueryStatus),
+  clientController.getInqueriesStatus
+);
 router.get(
   "/getConversations",
   auth(USER_TYPE.USER),

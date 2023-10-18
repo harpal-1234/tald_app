@@ -8,7 +8,7 @@ import {
 import { STATUS_CODES, ERROR_MESSAGES } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
 import moment from "moment";
-import { formatUser } from "../../utils/commonFunction.js";
+import { formatUser,formatProjectInquery } from "../../utils/commonFunction.js";
 import * as zoomMeeting from "../../utils/zoomMeeting.js";
 export const createProject = async (userId, projectName) => {
   const check = await Project.findOne({
@@ -385,7 +385,11 @@ export const consultationAction = async (
 export const getProjectInqueries = async (page, limit, designerId) => {
   console.log(designerId);
   const projects = await ProjectInquery.find({
-    designer: designerId,
+    designers: {
+      $elemMatch: {
+        designer: designerId,
+      },
+    },
     isVerify: true,
     isDeleted: false,
   })
@@ -396,6 +400,15 @@ export const getProjectInqueries = async (page, limit, designerId) => {
       path: "user",
       select: ["email", "userName"],
     });
+  projects?.forEach((val) => {
+    const filteredDesigners = val.designers.find(
+      (designer) => designer.designer.toString() === designerId.toString()
+    );
+    (val.designer = filteredDesigners.designer),
+      (val.status = filteredDesigners.status),
+      (val.inqueryTime = filteredDesigners.inqueryTime);
+  });
+  formatProjectInquery(projects)
   return projects;
 };
 export const actionProjectInquery = async (projectId, status) => {
