@@ -644,10 +644,13 @@ export const createProjectInquery = async (body, userId) => {
   return project;
 };
 export const getInqueryStatus = async (projectId) => {
-  const project = await ProjectInquery.findOne({
-    _id: projectId,
-    isDeleted: false,
-  }).populate({ path: "designers.designer", select: ["name", "email", "_id"] });
+  const project = await projectRequest
+    .find({
+      projectId: projectId,
+      isDeleted: false,
+    })
+    .populate({ path: "designer", select: ["name", "email", "_id"] })
+    .sort({ _id: -1 });
   if (!project) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
@@ -655,7 +658,7 @@ export const getInqueryStatus = async (projectId) => {
     );
   }
 
-  return project?.designers;
+  return project;
 };
 export const submitProjectInquery = async (projectId, designerId, userId) => {
   const check = await User.findOne({
