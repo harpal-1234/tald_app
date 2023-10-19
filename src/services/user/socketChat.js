@@ -45,10 +45,15 @@ export const saveMessages = async (
     { _id: conversationId, isDeleted: false },
     { message: message, messageType: type, messageTime: time }
   );
-  saveMessage.toObject().isEmit = JSON.stringify(check.blocked).includes(
-    senderId
-  )
-    ? false
-    : true;
-  return saveMessage;
+  const msg = await Chat.findOne({
+    _id: saveMessage._id,
+    isDeleted: false,
+  })
+    .populate([
+      { path: "sender", select: ["name", "email"] },
+      { path: "receiver", select: ["name", "email"] },
+    ])
+    .lean();
+  msg.isEmit = JSON.stringify(check.blocked).includes(senderId) ? false : true;
+  return msg;
 };

@@ -51,6 +51,16 @@ export const vendorList = catchAsync(async (req, res) => {
     users
   );
 });
+export const createVendor = catchAsync(async (req, res) => {
+  let { email, name } = req.body;
+  const users = await adminService.createVendor(email, name);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+  );
+});
 export const requests = catchAsync(async (req, res) => {
   let { page, limit } = req.query;
   const request = await adminService.requests(page, limit);

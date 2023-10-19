@@ -2,6 +2,7 @@ import { Admin, Token, User, Request } from "../../models/index.js";
 import { STATUS_CODES, ERROR_MESSAGES } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
 //import { formatUser } from "../../utils/formatResponse.js";
+import { createVendorMail } from "../../utils/sendMail.js";
 import { formatUser } from "../../utils/commonFunction.js";
 
 export const adminLogin = async (email, password) => {
@@ -54,6 +55,41 @@ export const vendorList = async (page, limit) => {
   });
   await formatUser(users);
   return { users, total };
+};
+export const createVendor = async (email, name) => {
+  const check = await User.findOne({
+    email: email,
+    isDeleted: false,
+    isVerify: true,
+  });
+  if (check) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.EMAIL_ALREADY_EXIST
+    );
+  }
+  function getRandomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+  const characters = "ABCDEFGHIJabcdefghijklmnopqrstuvwxyz0123456789";
+  let password = "";
+  for (let i = 0; i < 12; i++) {
+    const randomIndex = getRandomNumber(0, characters.length - 1);
+    password += characters.charAt(randomIndex);
+  }
+
+  const data = await User.create({
+    email: email,
+    name: name,
+    password: password,
+    isVerify: true,
+    type: "Vendor",
+    // adminUserPassword: password,
+    isApproved: true,
+  });
+  console.log(data);
+  createVendorMail(email, password, name);
+  return;
 };
 export const requestAction = async (status, requestId) => {
   const check = await Request.findOne({ _id: requestId, isDeleted: false });

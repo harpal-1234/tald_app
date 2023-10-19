@@ -48,6 +48,12 @@ router.put(
   validate(authValidation.userAction),
   authController.userAction
 );
+router.post(
+  "/createVendor",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.register),
+  authController.createVendor
+);
 router.post("/logout", auth(USER_TYPE.ADMIN), authController.adminLogout);
 
 export default router;

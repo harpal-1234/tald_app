@@ -25,10 +25,14 @@ var verifyEditProfile = fs.readFileSync(
   path.join(__dirname, "views/editProfile.hbs"),
   "utf8"
 );
+var addVendor = fs.readFileSync(
+  path.join(__dirname, "views/vendorInfo.hbs"),
+  "utf8"
+);
 var verifyMailTemplate = Handlebars.compile(verifymail);
 var verifyAccountTemplate = Handlebars.compile(verify);
 var editProfileTemplate = Handlebars.compile(verifyEditProfile);
-
+var vendorTemplate = Handlebars.compile(addVendor);
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -36,6 +40,29 @@ const transporter = nodemailer.createTransport({
     pass: process.env.SENDER_PASSWORD,
   },
 });
+export const createVendorMail = (email, password, name) => {
+  return new Promise((resolve, reject) => {
+    var info = {
+      from: process.env.SENDER_EMAIL,
+      to: email,
+      subject: "Tald",
+      html: vendorTemplate({
+        // title: "Verification",
+        email,
+        password,
+        name,
+        // apiBaseUrl: process.env.ForgotPassword,
+      }),
+    };
+
+    transporter.sendMail(info, (error, accept) => {
+      if (error) {
+        reject(error);
+      }
+      resolve(accept, console.log("Mail Sended"));
+    });
+  });
+};
 export const verifyEmail = async (email, token) => {
   console.log(email);
   return new Promise((resolve, reject) => {

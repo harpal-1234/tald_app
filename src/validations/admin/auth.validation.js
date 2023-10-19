@@ -102,11 +102,18 @@ const createInteriorDesigner = {
     maxBudget: Joi.number().required().allow(null),
   }),
 };
+const register = {
+  body: Joi.object().keys({
+    email: JOI.EMAIL,
+    name: Joi.string().required(),
+  }),
+};
 export default {
   adminLogin,
   getUsers,
   requestAction,
   userAction,
   createInteriorDesigner,
-  changePassword
+  changePassword,
+  register,
 };
