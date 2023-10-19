@@ -61,6 +61,11 @@ router.get(
   validate(clientValidation.getProjectInqueries),
   clientController.getProjectInqueries
 );
+router.get(
+  "/getProjects",
+  auth(USER_TYPE.USER),
+  clientController.getProjects
+);
 router.put(
   "/editProjectInqueries",
   auth(USER_TYPE.USER),

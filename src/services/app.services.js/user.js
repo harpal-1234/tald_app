@@ -19,6 +19,7 @@ import { OperationalError } from "../../utils/errors.js";
 import {
   formatUser,
   formatProjectInquery,
+  formatProjects,
 } from "../../utils/commonFunction.js";
 import moment from "moment";
 
@@ -692,6 +693,15 @@ export const getProjectInqueries = async (page, limit, userId) => {
     .skip(page * limit)
     .limit(limit);
   await formatProjectInquery(projects);
+
+  return projects;
+};
+export const getProjects = async (userId) => {
+  const projects = await ProjectInquery.find({
+    user: userId,
+    isDeleted: false,
+  }).lean();
+  await formatProjects(projects);
 
   return projects;
 };

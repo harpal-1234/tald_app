@@ -27,6 +27,54 @@ export const formatProjectInquery = (userData) => {
   }
   return userData;
 };
+export const formatProjects = (userData) => {
+  if (userData.length) {
+    userData.forEach((data) => {
+      delete data.files,
+        delete data.user,
+        delete data.projectType,
+        delete data.kindOfAssistance,
+        delete data.projectSummary,
+        delete data.address,
+        delete data.location,
+        delete data.startDate,
+        delete data.endDate,
+        delete data.projectFund,
+        delete data.primaryDecisionMaker,
+        delete data.workedWithInteriorDesigner,
+        delete data.involvedYourProject,
+        delete data.isDeleted,
+        delete data.isVerify,
+        delete data.isBlocked,
+        delete data.isDeleted,
+        delete data.designers,
+        delete data.designer,
+        delete data.status;
+    });
+  } else {
+    delete userData.files,
+      delete userData.user,
+      delete userData.projectType,
+      delete userData.kindOfAssistance,
+      delete userData.projectSummary,
+      delete userData.address,
+      delete userData.location,
+      delete userData.startDate,
+      delete userData.endDate,
+      delete userData.projectFund,
+      delete userData.primaryDecisionMaker,
+      delete userData.workedWithInteriorDesigner,
+      delete userData.involvedYourProject,
+      delete userData.isDeleted,
+      delete userData.isVerify,
+      delete userData.isBlocked,
+      delete userData.isDeleted,
+      delete userData.designers,
+      delete userData.designer,
+      delete userData.status;
+  }
+  return userData;
+};
 export const formatVendor = (userData) => {
   if (userData.length) {
     userData.forEach((data) => {

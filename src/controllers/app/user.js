@@ -195,6 +195,19 @@ export const getProjectInqueries = catchAsync(async (req, res) => {
     projects
   );
 });
+export const getProjects = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const projects = await clientServices.getProjects(
+    userId
+  );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    projects
+  );
+});
 export const getInqueriesStatus = catchAsync(async (req, res) => {
   const projects = await clientServices.getInqueryStatus(req.query.projectId);
   return successResponse(
