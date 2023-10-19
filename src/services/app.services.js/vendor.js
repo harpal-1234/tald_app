@@ -366,25 +366,7 @@ export const consultationAction = async (
     },
     { new: true }
   );
-  if (data.isConfirm) {
-    const conversation = await Conversation.findOne({
-      $or: [
-        { sender: check.userId, receiver: designerId },
-        { sender: designerId, receiver: check.userId },
-      ],
-      isDeleted: false,
-    });
-    if (!conversation) {
-      const time = new Date();
-      await Conversation.create({
-        sender: designerId,
-        receiver: check.user,
-        message: "",
-        messageType: "",
-        messageTime: time,
-      });
-    }
-  }
+
   return data;
 };
 export const getProjectInqueries = async (page, limit, designerId) => {
@@ -424,7 +406,7 @@ export const actionProjectInquery = async (Id, status, designerId) => {
       ERROR_MESSAGES.PROJECT_NOT_FOUND
     );
   }
-  
+
   const project = await projectRequest.findOneAndUpdate(
     {
       _id: Id,
@@ -437,6 +419,24 @@ export const actionProjectInquery = async (Id, status, designerId) => {
     },
     { new: true }
   );
+
+  const conversation = await Conversation.findOne({
+    $or: [
+      { sender: project.user, receiver: designerId },
+      { sender: designerId, receiver: project.user },
+    ],
+    isDeleted: false,
+  });
+  if (!conversation) {
+    const time = new Date();
+    await Conversation.create({
+      sender: designerId,
+      receiver: check.user,
+      message: "",
+      messageType: "",
+      messageTime: time,
+    });
+  }
 
   return project;
 };
