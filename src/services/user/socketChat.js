@@ -42,7 +42,7 @@ export const saveMessages = async (
     type: type,
   });
   await Conversation.findOneAndUpdate(
-    { _id: conversationId, isDeleted: false },
+    { _id: conversationId },
     { message: message, messageType: type, messageTime: time }
   );
   const msg = await Chat.findOne({

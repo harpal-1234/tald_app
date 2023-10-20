@@ -425,7 +425,6 @@ export const actionProjectInquery = async (Id, status, designerId) => {
       { sender: project.user, receiver: designerId },
       { sender: designerId, receiver: project.user },
     ],
-    isDeleted: false,
   });
   if (!conversation) {
     const time = new Date();
