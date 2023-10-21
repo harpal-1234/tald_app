@@ -86,7 +86,7 @@ const createServices = {
     projectSize: Joi.string()
       .required()
       .valid(...Object.values(PROJECT_SIZE)),
-    needHelp:Joi.array().required().items(Joi.string().required().valid(...Object.values(NEED_HELP))),
+    needHelp:Joi.array().items(Joi.string().valid(...Object.values(NEED_HELP))),
     minBudget: Joi.number().required().allow(null),
     maxBudget: Joi.number().required().allow(null),
   }),

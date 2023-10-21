@@ -403,10 +403,8 @@ export const editVendorProfile = {
           .valid(...Object.values(GOALS))
       ),
     needHelp: Joi.array()
-      .required()
       .items(
         Joi.string()
-          .required()
           .valid(...Object.values(NEED_HELP))
       ),
     projectSize: Joi.string()
