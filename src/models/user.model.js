@@ -9,6 +9,7 @@ import {
   PREFERENCES,
   PROJECT_SIZE,
   STYLE,
+  NEED_HELP
 } from "../config/appConstants.js";
 // const { address } = require("./commonField.models");
 //const { string } = require("joi");
@@ -89,6 +90,7 @@ const userSchema = mongoose.Schema(
     inviteesSchedule: { type: Number },
     saveProfiles: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
     saveImages: [{ type: String }],
+    needHelp:[{type:String,ennum:[...Object.values(NEED_HELP)]}],
     isDeleted: { type: Boolean, default: false },
     isVerify: { type: Boolean, default: false },
     isBlocked: { type: Boolean, default: false },

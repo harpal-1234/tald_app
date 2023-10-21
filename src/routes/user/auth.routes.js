@@ -75,6 +75,12 @@ router.put(
   authController.editProfile
 );
 router.get(
+  "/getfilter",
+  auth(USER_TYPE.NON_USER),
+  //validate(vendorValidation.getProjectInqueries),
+  authController.getFilter
+);
+router.get(
   "/getProfile",
   auth(USER_TYPE.USER),
   //validate(authValidation.getProfile),

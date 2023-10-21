@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { User, Token, Admin, Request } from "../../models/index.js";
+import { User, Token, Admin, Request ,Filter} from "../../models/index.js";
 import { formatUser, formatVendor } from "../../utils/commonFunction.js";
 import { editProfile } from "../../utils/sendMail.js";
 import {
@@ -24,7 +24,10 @@ export const createUser = async (userData) => {
   );
   return check;
 };
-
+export const getFilter = async()=>{
+  const filter = await Filter.findOne({isDeleted:false});
+  return filter
+}
 export const register = async (userData) => {
   console.log(userData);
   const check = await User.findOne({
@@ -149,6 +152,7 @@ export const createService = async (userId, data) => {
       projectSize: data.projectSize,
       styles: data.styles,
       goals: data.goals,
+      needHelp:data.needHelp,
       isSignUp: true,
     },
     { new: true }

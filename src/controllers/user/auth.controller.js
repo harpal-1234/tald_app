@@ -204,6 +204,16 @@ const createService = catchAsync(async (req, res) => {
     data
   );
 });
+ const getFilter = catchAsync(async (req, res) => {
+  const filter = await userService.getFilter();
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    filter
+  );
+});
 const editProfile = catchAsync(async (req, res) => {
   const userId = req.token.user._id;
   const data = await userService.profileEdit(req.body, userId, req.token.token);
@@ -260,4 +270,5 @@ export default {
   editProfile,
   profile,
   getProfile,
+  getFilter
 };

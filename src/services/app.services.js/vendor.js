@@ -5,6 +5,7 @@ import {
   ProjectInquery,
   Conversation,
   projectRequest,
+  Filter,
 } from "../../models/index.js";
 import { STATUS_CODES, ERROR_MESSAGES } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
@@ -241,6 +242,7 @@ export const editVendorProfile = async (data, userId) => {
       projectSize: data.projectSize,
       styles: data.styles,
       goals: data.goals,
+      needHelp:data.needHelp
     },
     { new: true }
   );
@@ -393,6 +395,7 @@ export const getProjectInqueries = async (page, limit, designerId) => {
   formatProjectInquery(projects);
   return projects;
 };
+
 export const actionProjectInquery = async (Id, status, designerId) => {
   const check = await projectRequest.findOne({
     _id: Id,

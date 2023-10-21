@@ -1,4 +1,4 @@
-import { Admin, Token, User, Request } from "../../models/index.js";
+import { Admin, Token, User, Request, Filter } from "../../models/index.js";
 import { STATUS_CODES, ERROR_MESSAGES } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
 //import { formatUser } from "../../utils/formatResponse.js";
@@ -123,6 +123,16 @@ export const requestAction = async (status, requestId) => {
       { status: false, isReject: true, isDeleted: true },
       { new: true }
     );
+  }
+};
+export const filterData = async (data) => {
+  const check = await Filter.findOne({ isDeleted: false });
+  if (!check) {
+    console.log(data)
+    const value = await Filter.create(data);
+    return value;
+  } else {
+    return check;
   }
 };
 export const userAction = async (userId) => {

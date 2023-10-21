@@ -11,6 +11,7 @@ import {
   STYLE,
   KIND_OF_ASSITANCE,
   STATUS,
+  NEED_HELP,
 } from "../../config/appConstants.js";
 import { STATES, Types } from "mongoose";
 
@@ -400,6 +401,13 @@ export const editVendorProfile = {
         Joi.string()
           .required()
           .valid(...Object.values(GOALS))
+      ),
+    needHelp: Joi.array()
+      .required()
+      .items(
+        Joi.string()
+          .required()
+          .valid(...Object.values(NEED_HELP))
       ),
     projectSize: Joi.string()
       // .required()

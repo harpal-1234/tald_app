@@ -12,15 +12,15 @@ export const USER_TYPE = {
   VENDOR_ADMIN: "Vendor",
   NON_USER: "Non",
 };
-export const MESSAGE_TYPE ={
-  IMAGE:"Image",
-  Video:"Video",
-  DOCUMENT:"Document",
-  GIF:"Gif",
-  AUDIO:"Audio",
-  TEXT:"Text",
-  EMPTY:""
-}
+export const MESSAGE_TYPE = {
+  IMAGE: "Image",
+  Video: "Video",
+  DOCUMENT: "Document",
+  GIF: "Gif",
+  AUDIO: "Audio",
+  TEXT: "Text",
+  EMPTY: "",
+};
 export const USERTYPE1 = {
   USER: "User",
   VENDOR_ADMIN: "Vendor",
@@ -44,39 +44,84 @@ export const GOALS = {
   CAREER_GUIDANCE: "Career Guidance for Designers",
 };
 export const STYLE = {
+  AMERICANA: "Americana",
+  BOHEMIAN: "Bohemian",
   COASTAL: "Coastal",
+  COLORFUL: "Colorful",
   CONTEMPORARY: "Contemporary",
-  GLAMOROUS: "Glamorous",
+  COTTAGECORE: "Cottagecore",
+  ECLECTIC: "Eclectic",
+  FRENCH_COUNTRY: "French Country",
   HISTORIC: "Historic",
+  INDUSTRIAL: "Industrial",
+  MAXIMALIST: "Maximalist",
+  MIDITERRANEAN: "Mediterranean",
+  MID_CENTURY: "Mid-Century",
   MINIMALIST: "Minimalist",
   MODERN: "Modern",
-  MAXIMALIST: "Maximalist",
+  RUSTIC: "Rustic",
   SCANDINAVIAN: "Scandinavian",
   SOUTHERN: "Southern",
   TRADITIONAL: "Traditional",
   TRANSITIONAL: "Transitional",
 };
 export const PREFERENCES = {
-  VINTAGE_ELEMENT: "Vintage Element",
+  ART_FOCUSED: "Art-Focused",
+  BEACH_OASIS: "Beach Oasis",
+  CHIC_CASTIA: "Chic Casita",
+  CITY_LIVING: "City Living",
+  EARTH_TONES: "Earth Tones",
+  ECO_FRIENDLY: "Eco-friendly",
+  FARM_HOUSE: "Farm House",
+  GLOBAL_INFLUENCE: "Global Influence",
+  HISTORIC_REVIVAL: "Historic Revival",
+  LAKE_GETAWAY: "Lake Getaway",
+  MOUNTAIN_ESCAPE: "Mountain Escape",
+  NEUTRAL: "Neutral Tones",
+  NO_VINTAGE_PLEASE: "No Vintage Please",
+  OPEN_CONCEPT: "Open Concept",
+  PET_PROOF: "Pet Proof",
+  SUSTAINABLY_SOURCED: "Sustainably Sourced",
+  TONE_ON_TONE: "Tone on Tone",
+  WELLNESS_FOCUSED: "Wellness-Focused",
+  VINTAGE_ELEMENT: "Vintage Elements",
   FAMILY_FRIENDLY: "Family Friendly",
-  MOUNTAIN_HOME: "Mountain Home",
-  FULLY_CUSTOM: "Fully Custom",
-  PLEASE_NO_VINTAGE: "Please No Vintage",
-  BEACH_HOME: "Beach Home",
-  PRINTS_TEXTURES: "Prints & Textures",
+  MOUNTAIN_ESCAPE: "Mountain Escape",
+  PRINTS_PATTERNSS: "Prints + Patterns",
   LAYERED_TEXTURES: "Layered Textures",
 };
+export const NEED_HELP = {
+  CHOOSE_PAINT_COLORS: "Choose Paint Colors",
+  DISCUSS_WHERE_TO_SHOP: "Discuss Where to Shop",
+  DRAFTING_PROJECT_BUDGET: "Drafting a Project Budget",
+  FIXTURE_HARDWARE_SELECTIONS: "Fixture + Hardware Selections",
+  FLOORING_ADVICE: "Flooring Advice",
+  GENERAL_iNTERIOR_DESIGN_ADVICE: "General Interior Design Advice",
+  HOSPITALITY_CONCEPTING: "Hospitality Concepting",
+  LAYOUT_SPATIAL_PLANING: "Layout / Spatial Planning",
+  MAKING_DESIGN_DECISIONS: "Making Design Decisions",
+  MILLWORK_DESIGN: "Millwork Design",
+  SELECT_FURNITURE_ACCESSORIES: "Select Furniture + Accessories",
+  SOLVE_DESIGN_CHALLENGE: "Solve a Design Challenge",
+  STYLING_SURFACES_SHELVING: "Styling Surfaces + Shelving",
+  UPHOLSTERY_SELECTIONS: "Upholstery Selections",
+  WINDOE_TREATMENT_SELECTIONS: "Window Treatment Selections",
+};
 export const PROJECT_SIZE = {
-  PARTIAL_RENOVATION: "Partial Renovation",
+  PARTIAL_HOME_FURNISHING: "Partial Home Furnishing",
   NEW_BUILD: "New Build",
   FULL_RENOVATION: "Full Renovation",
+  FULL_HOME_FURNISHING: "Full Home Furnishing",
+  PARTIAL_RENOVATION: "Partial Renovation",
+  GROUND_UP_DEVELOPEMENT: "Ground-Up Development",
+  FULL_SERVICE_COMMERCIAL_PROJECCT: "Full-Service Commercial Project",
 };
 export const FEE_STRUCTURE = {
-  FLAT_DESIGN_FEE: "Flat Design Fee",
-  FLAT_DSIGN_FEE_MARKUP: "Flat Design Fee + Mark-up",
+  FLAT_DESIGN_FEE: "Design Fee",
+  FLAT_DSIGN_FEE_MARKUP: "Design Fee + Markup",
   HOURLY_FEE: "Hourly Fee",
-  HOURLY_FEE_MARKUP: "Hourly Fee + Mark-Up",
-  MARKUP_ONLY: "Mark-Up Only",
+  HOURLY_FEE_MARKUP: "Hourly Fee + Markup",
+  MARKUP_ONLY: "Markup Only",
 };
 export const VALID_FEE_STRUCTURE = [
   "Flat Design Fee",
@@ -92,7 +137,7 @@ export const OPTIONS = {
 export const STATUS = {
   ACCEPTED: "Accepted",
   REJECTED: "Rejected",
-  PENDING:"Pending"
+  PENDING: "Pending",
 };
 export const KIND_OF_ASSITANCE = {
   FURNISHING_STYLING: "Furnishing + Styling",

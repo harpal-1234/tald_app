@@ -91,6 +91,7 @@ router.get(
   validate(vendorValidation.getProjectInqueries),
   vendorController.getProjectInqueries
 );
+
 router.put(
   "/ActionProjectInquery",
   auth(USER_TYPE.USER),

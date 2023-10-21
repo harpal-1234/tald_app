@@ -213,17 +213,18 @@ export const getProjectInqueries = catchAsync(async (req, res) => {
     projects
   );
 });
+
 export const actionProjectInquery = catchAsync(async (req, res) => {
   const projects = await vendorServices.actionProjectInquery(
     req.body.Id,
     req.body.status,
-    req.token.user._id,
+    req.token.user._id
   );
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS
   );
 });
 export const getConversations = catchAsync(async (req, res) => {

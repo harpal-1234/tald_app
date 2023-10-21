@@ -108,6 +108,16 @@ const register = {
     name: Joi.string().required(),
   }),
 };
+const filterData = {
+  body: Joi.object().keys({
+    style: Joi.array().required(),
+    preferences: Joi.array().required(),
+    projectSize: Joi.array().required(),
+    needHelp: Joi.array().required(),
+    feeStructure: Joi.array().required(),
+    goals:Joi.array().required()
+  }),
+};
 export default {
   adminLogin,
   getUsers,
@@ -116,4 +126,5 @@ export default {
   createInteriorDesigner,
   changePassword,
   register,
+  filterData
 };

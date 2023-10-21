@@ -94,6 +94,16 @@ export const userAction = catchAsync(async (req, res) => {
     value
   );
 });
+export const filterData = catchAsync(async(req,res)=>{
+  const data = await adminService.filterData(req.body);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+  );
+})
 export const changePassword = catchAsync(async (req, res) => {
   await adminService.changePassword(
     req.token.admin._id,

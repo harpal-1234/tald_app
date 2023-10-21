@@ -54,6 +54,12 @@ router.post(
   validate(authValidation.register),
   authController.createVendor
 );
+router.post(
+  "/createFilterData",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.filterData),
+  authController.filterData
+);
 router.post("/logout", auth(USER_TYPE.ADMIN), authController.adminLogout);
 
 export default router;
