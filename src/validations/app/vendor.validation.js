@@ -65,6 +65,13 @@ export const bookConsultations = {
     durationTime: Joi.string().required().valid("25_mins", "55_mins"),
   }),
 };
+export const addFileConsultation = {
+  body: Joi.object().keys({
+    consultationId: Joi.string().required(),
+    file: Joi.string().required(),
+    fileType: Joi.string().required(),
+  }),
+};
 export const getInteriorDesigner = {
   query: Joi.object().keys({
     type: Joi.string()
@@ -402,11 +409,9 @@ export const editVendorProfile = {
           .required()
           .valid(...Object.values(GOALS))
       ),
-    needHelp: Joi.array()
-      .items(
-        Joi.string()
-          .valid(...Object.values(NEED_HELP))
-      ),
+    needHelp: Joi.array().items(
+      Joi.string().valid(...Object.values(NEED_HELP))
+    ),
     projectSize: Joi.string()
       // .required()
       .valid(...Object.values(PROJECT_SIZE)),

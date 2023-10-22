@@ -43,6 +43,12 @@ router.post(
   validate(clientValidation.bookConsultations),
   clientController.bookConsultations
 );
+router.put(
+  "/addFileConsultation",
+  auth(USER_TYPE.USER),
+  validate(clientValidation.addFileConsultation),
+  clientController.addFileConsultation
+);
 router.get(
   "/getConsultations",
   auth(USER_TYPE.USER),

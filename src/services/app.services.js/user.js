@@ -638,6 +638,28 @@ export const getConsultations = async (page, limit, clientId) => {
   ];
   return consultations;
 };
+export const addFileConsultation = async (consultationId, file, fileType) => {
+  console.log(consultationId)
+  const check = await Consultations.findOne({
+    _id: consultationId,
+    isDeleted: false,
+  });
+  if (!check) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.CONSULTATION_NOT_EXIST
+    );
+  }
+  const consultation = await Consultations.findOneAndUpdate(
+    {
+      _id: consultationId,
+      isDeleted: false,
+    },
+    { $push: { files: { file: file, fileType: fileType } } },
+    { new: true }
+  );
+  return consultation
+};
 export const createProjectInquery = async (body, userId) => {
   body.user = userId;
   body.isVerify = true;

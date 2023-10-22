@@ -124,6 +124,22 @@ export const bookConsultations = catchAsync(async (req, res) => {
     slots
   );
 });
+export const addFileConsultation = catchAsync(async (req, res) => {
+  const { consultationId, file, fileType } = req.body;
+  const consultation = await clientServices.addFileConsultation(
+    consultationId,
+    file,
+    fileType
+  );
+
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    consultation
+  );
+});
 export const getSaveProfile = catchAsync(async (req, res) => {
   const userId = req.token.user._id;
   const designer = await clientServices.saveProfile(
@@ -197,9 +213,7 @@ export const getProjectInqueries = catchAsync(async (req, res) => {
 });
 export const getProjects = catchAsync(async (req, res) => {
   const userId = req.token.user._id;
-  const projects = await clientServices.getProjects(
-    userId
-  );
+  const projects = await clientServices.getProjects(userId);
   return successResponse(
     req,
     res,
