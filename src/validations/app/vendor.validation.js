@@ -119,6 +119,7 @@ export const getInteriorDesigner = {
     projectSize: Joi.string()
       .valid(...Object.values(PROJECT_SIZE))
       .allow(null, ""),
+    needHelp: Joi.string(),
     page: Joi.number().required(),
     limit: Joi.number().required(),
   }),

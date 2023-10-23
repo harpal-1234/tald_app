@@ -14,6 +14,7 @@ import {
   PROJECT_SIZE,
   GOALS,
   STYLE,
+  NEED_HELP,
 } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
 import {
@@ -37,7 +38,8 @@ export const getInteriorDesigners = async (
   goals,
   projectSize,
   page,
-  limit
+  limit,
+  needHelp
 ) => {
   var query;
   var query1;
@@ -87,6 +89,9 @@ export const getInteriorDesigners = async (
         $in: destination ? destination : [OPTIONS.YES, OPTIONS.NO],
       },
       ...query2,
+      needHelp: needHelp
+        ? { $in: JSON.parse(needHelp) }
+        : { $in: [...Object.values(NEED_HELP)] },
       $and: [
         {
           minBudget: minimumPrice ? { $gte: minimumPrice } : { $gte: 0 },
@@ -184,6 +189,9 @@ export const getInteriorDesigners = async (
       preferences: preferences
         ? { $in: JSON.parse(preferences) }
         : { $in: [...Object.values(PREFERENCES)] },
+      needHelp: needHelp
+        ? { $in: JSON.parse(needHelp) }
+        : { $in: [...Object.values(NEED_HELP)] },
       projectSize: projectSize
         ? projectSize
         : {
@@ -229,6 +237,9 @@ export const getInteriorDesigners = async (
     preferences: preferences
       ? { $in: JSON.parse(preferences) }
       : { $in: [...Object.values(PREFERENCES)] },
+    needHelp: needHelp
+      ? { $in: JSON.parse(needHelp) }
+      : { $in: [...Object.values(NEED_HELP)] },
     projectSize: projectSize
       ? projectSize
       : {
@@ -294,6 +305,9 @@ export const getInteriorDesigners = async (
     preferences: preferences
       ? { $in: JSON.parse(preferences) }
       : { $in: [...Object.values(PREFERENCES)] },
+    needHelp: needHelp
+      ? { $in: JSON.parse(needHelp) }
+      : { $in: [...Object.values(NEED_HELP)] },
     projectSize: projectSize
       ? projectSize
       : {
@@ -639,7 +653,7 @@ export const getConsultations = async (page, limit, clientId) => {
   return consultations;
 };
 export const addFileConsultation = async (consultationId, file, fileType) => {
-  console.log(consultationId)
+  console.log(consultationId);
   const check = await Consultations.findOne({
     _id: consultationId,
     isDeleted: false,
@@ -658,7 +672,7 @@ export const addFileConsultation = async (consultationId, file, fileType) => {
     { $push: { files: { file: file, fileType: fileType } } },
     { new: true }
   );
-  return consultation
+  return consultation;
 };
 export const createProjectInquery = async (body, userId) => {
   body.user = userId;
