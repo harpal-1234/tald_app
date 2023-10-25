@@ -92,7 +92,7 @@ export const getInteriorDesigner = {
     // .required()
     minimumPrice: Joi.number().allow(null, ""),
     maximumPrice: Joi.number().allow(null, ""),
-    preferences: Joi.string(),
+    preferences: Joi.string().allow(null,""),
     // Joi.array()
     //   .items(
     //     Joi.string()
@@ -100,7 +100,7 @@ export const getInteriorDesigner = {
     //       .valid(...Object.values(PREFERENCES))
     //   )
     //   .allow(null, ""),
-    styles: Joi.string(),
+    styles: Joi.string().allow(null,""),
     // Joi.array()
     //   .items(
     //     Joi.string()
@@ -108,7 +108,7 @@ export const getInteriorDesigner = {
     //       .valid(...Object.values(STYLE))
     //   )
     //   .allow(null, ""),
-    goals: Joi.string(),
+    goals: Joi.string().allow(null,""),
     // Joi.array()
     //   .items(
     //     Joi.string()
@@ -119,7 +119,7 @@ export const getInteriorDesigner = {
     projectSize: Joi.string()
       .valid(...Object.values(PROJECT_SIZE))
       .allow(null, ""),
-    needHelp: Joi.string(),
+    needHelp: Joi.string().allow(null,""),
     page: Joi.number().required(),
     limit: Joi.number().required(),
   }),

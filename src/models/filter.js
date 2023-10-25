@@ -13,8 +13,12 @@ const filterSchema = mongoose.Schema(
     projectSize:[{type:String}],
     needHelp:[{type:String}],
     feeStructure:[{type:String}],
-    goals:[{type:String}],
-    isDeleted:{type:Boolean,default:false}
+    goals: [{ type: String }],
+       projectType: [
+      {type:String}
+    ],
+    consultationLength:[{type:String}],
+    isDeleted: { type: Boolean, default: false },
   },
 
   {

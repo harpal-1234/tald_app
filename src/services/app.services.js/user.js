@@ -41,8 +41,9 @@ export const getInteriorDesigners = async (
   limit,
   needHelp
 ) => {
+
   var query;
-  var query1;
+  var query1;[] 
   var query2;
   if (type == "All") {
     query = ["Yes", "No"];
@@ -56,7 +57,7 @@ export const getInteriorDesigners = async (
     query = ["No", "Yes"];
     query1 = ["Yes"];
   }
-
+  
   if (consultationLength == "25 mins") {
     query2 = {
       "virtual_Consultations.chargers_25_mins": { $nin: [null, ""] },
@@ -73,6 +74,7 @@ export const getInteriorDesigners = async (
       "destinationProject.chargers_55_mins": { $nin: [null, ""] },
     };
   }
+  
   if (lat && long) {
     const designer = await User.find({
       // isApproved:true,
@@ -247,6 +249,10 @@ export const getInteriorDesigners = async (
             PROJECT_SIZE.FULL_RENOVATION,
             PROJECT_SIZE.NEW_BUILD,
             PROJECT_SIZE.PARTIAL_RENOVATION,
+            PROJECT_SIZE.FULL_HOME_FURNISHING,
+            PROJECT_SIZE.FULL_SERVICE_COMMERCIAL_PROJECCT,
+            PROJECT_SIZE.GROUND_UP_DEVELOPEMENT,
+            PROJECT_SIZE.PARTIAL_HOME_FURNISHING
           ],
         },
     goals: goals

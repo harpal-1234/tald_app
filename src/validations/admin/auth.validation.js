@@ -115,7 +115,9 @@ const filterData = {
     projectSize: Joi.array().required(),
     needHelp: Joi.array().required(),
     feeStructure: Joi.array().required(),
-    goals:Joi.array().required()
+    goals: Joi.array().required(),
+    projectType: Joi.array().required(),
+    consultationLength:Joi.array().required(),
   }),
 };
 export default {

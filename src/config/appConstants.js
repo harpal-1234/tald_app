@@ -124,11 +124,11 @@ export const FEE_STRUCTURE = {
   MARKUP_ONLY: "Markup Only",
 };
 export const VALID_FEE_STRUCTURE = [
-  "Flat Design Fee",
-  "Flat Design Fee + Mark-up",
+  "Design Fee",
+  "Design Fee + Markup",
   "Hourly Fee",
-  "Hourly Fee + Mark-Up",
-  "Mark-Up Only",
+  "Hourly Fee + Markup",
+  "Markup Only",
 ];
 export const OPTIONS = {
   YES: "Yes",
