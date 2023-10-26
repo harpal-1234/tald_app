@@ -205,7 +205,7 @@ const createService = catchAsync(async (req, res) => {
   );
 });
  const getFilter = catchAsync(async (req, res) => {
-  const filter = await userService.getFilter();
+  const filter = await userService.getFilter(req.query.type);
   return successResponse(
     req,
     res,

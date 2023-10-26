@@ -77,7 +77,7 @@ router.put(
 router.get(
   "/getfilter",
   auth(USER_TYPE.NON_USER),
-  //validate(vendorValidation.getProjectInqueries),
+  validate(authValidation.filters),
   authController.getFilter
 );
 router.get(

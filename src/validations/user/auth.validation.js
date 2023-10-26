@@ -79,14 +79,25 @@ const createServices = {
       .items(Joi.string().valid(...Object.values(PREFERENCES))),
     styles: Joi.array()
       .required()
-      .items(Joi.string().required().valid(...Object.values(STYLE))),
+      .items(
+        Joi.string()
+          .required()
+          .valid(...Object.values(STYLE))
+      ),
     goals: Joi.array()
       .required()
-      .items(Joi.string().required().valid(...Object.values(GOALS))),
+      .items(
+        Joi.string()
+          .required()
+          .valid(...Object.values(GOALS))
+      ),
     projectSize: Joi.string()
       .required()
       .valid(...Object.values(PROJECT_SIZE)),
-    needHelp:Joi.array().required().items(Joi.string().valid(...Object.values(NEED_HELP))),
+    needHelp: Joi.array()
+      .required()
+      .items(Joi.string().valid(...Object.values(NEED_HELP))),
+    fullServiceClients: Joi.string().required().valid(...Object.values(OPTIONS)),
     minBudget: Joi.number().required().allow(null),
     maxBudget: Joi.number().required().allow(null),
   }),
@@ -183,6 +194,11 @@ const editProfile = {
     name: Joi.string().required(),
   }),
 };
+const filters = {
+  query: Joi.object().keys({
+    type: Joi.string().required().valid("All","Virtual","Interior"),
+  }),
+};
 const getProfile = {
   query: Joi.object().keys({
     type: Joi.string().required().valid("User","Vendor"),
@@ -210,5 +226,6 @@ export default {
   editProfile,
   verifyProfile,
   verifyEmail,
-  getProfile
+  getProfile,
+  filters,
 };

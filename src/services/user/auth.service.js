@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { User, Token, Admin, Request ,Filter} from "../../models/index.js";
+import { User, Token, Admin, Request, Filter } from "../../models/index.js";
 import { formatUser, formatVendor } from "../../utils/commonFunction.js";
 import { editProfile } from "../../utils/sendMail.js";
 import {
@@ -24,10 +24,92 @@ export const createUser = async (userData) => {
   );
   return check;
 };
-export const getFilter = async()=>{
-  const filter = await Filter.findOne({isDeleted:false});
-  return filter
-}
+export const getFilter = async (type) => {
+  const filter = await Filter.findOne({ isDeleted: false });
+  if (type == "All") {
+   const data = [
+      {
+        key: "projectType",
+        value: filter.projectType,
+      },
+      {
+        key: "destination",
+        value: ["Yes", "No"],
+      },
+      {
+        key: "goals",
+        value: filter.goals,
+      },
+      {
+        key: "consultationLength",
+        value: ["25 mins", "55 mins"],
+      },
+      {
+        key: "styles",
+        value: filter.style,
+      },
+      {
+        key: "preferences",
+        value: filter.preferences,
+      },
+    ];
+    return data;
+  }
+  if (type == "Virtual") {
+    const data = [
+      {
+        key: "projectSize",
+        value: filter.projectSize,
+      },
+      {
+        key: "goals",
+        value: filter.goals,
+      },
+      {
+        key: "consultationLength",
+        value: ["25 mins", "55 mins"],
+      },
+      {
+        key: "styles",
+        value: filter.style,
+      },
+      {
+        key: "preferences",
+        value: filter.preferences,
+      },
+    ];
+    return data;
+  }
+  if (type == "Interior") {
+   const  data = [
+      {
+        key: "projectType",
+        value: filter.projectType,
+      },
+      {
+        key: "projectSize",
+        value: filter.projectSize,
+      },
+      {
+        key: "styles",
+        value: filter.style,
+      },
+      {
+        key: "price",
+        value: {},
+      },
+      {
+        key: "destination",
+        value: ["Yes", "No"],
+      },
+      {
+        key: "preferences",
+        value: filter.preferences,
+      },
+    ];
+    return data;
+  }
+};
 export const register = async (userData) => {
   console.log(userData);
   const check = await User.findOne({
@@ -152,7 +234,8 @@ export const createService = async (userId, data) => {
       projectSize: data.projectSize,
       styles: data.styles,
       goals: data.goals,
-      needHelp:data.needHelp,
+      needHelp: data.needHelp,
+      fullServiceClients: data.fullServiceClients,
       isSignUp: true,
     },
     { new: true }
