@@ -225,8 +225,8 @@ export const createProjectInquery = {
     address: Joi.string().required(),
     lat: Joi.number().required(),
     long: Joi.number().required(),
-    startDate: Joi.string(),
-    endDate: Joi.string(),
+    startDate: Joi.string().allow("",null),
+    endDate: Joi.string().allow("",null),
     projectFund: Joi.number().required(),
     primaryDecisionMaker: Joi.string()
       .required()
@@ -257,8 +257,8 @@ export const editProjectInquery = {
     address: Joi.string().required(),
     lat: Joi.number().required(),
     long: Joi.number().required(),
-    startDate: Joi.string(),
-    endDate: Joi.string(),
+    startDate: Joi.string().allow("",null),
+    endDate: Joi.string().allow("",null),
     projectFund: Joi.number().required(),
     primaryDecisionMaker: Joi.string()
       .required()

@@ -27,7 +27,7 @@ export const createUser = async (userData) => {
 export const getFilter = async (type) => {
   const filter = await Filter.findOne({ isDeleted: false });
   if (type == "All") {
-   const data = [
+    const data = [
       {
         key: "projectType",
         value: filter.projectType,
@@ -81,7 +81,7 @@ export const getFilter = async (type) => {
     return data;
   }
   if (type == "Interior") {
-   const  data = [
+    const data = [
       {
         key: "projectType",
         value: filter.projectType,
