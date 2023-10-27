@@ -37,6 +37,12 @@ router.get(
   validate(clientValidation.getSlots),
   clientController.getSlots
 );
+router.get(
+  "/getSlotDates",
+  auth(USER_TYPE.USER),
+  validate(clientValidation.getSlotDates),
+  clientController.getSlotDates
+);
 router.post(
   "/bookConsultations",
   auth(USER_TYPE.USER),

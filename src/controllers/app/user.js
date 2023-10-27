@@ -20,7 +20,7 @@ export const getInteriorDesigners = catchAsync(async (req, res) => {
     projectSize,
     page,
     limit,
-    needHelp
+    needHelp,
   } = req.query;
 
   // const userId = req.token.user._id;
@@ -97,6 +97,18 @@ export const getSlots = catchAsync(async (req, res) => {
     timeDuration
   );
 
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    slots
+  );
+});
+export const getSlotDates = catchAsync(async (req, res) => {
+  const { designerId, date } = req.query;
+  const userId = req.token.user._id;
+  const slots = await clientServices.getSlotDates(designerId, date);
   return successResponse(
     req,
     res,

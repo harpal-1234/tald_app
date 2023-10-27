@@ -41,9 +41,9 @@ export const getInteriorDesigners = async (
   limit,
   needHelp
 ) => {
-
   var query;
-  var query1;[] 
+  var query1;
+  [];
   var query2;
   if (type == "All") {
     query = ["Yes", "No"];
@@ -57,7 +57,7 @@ export const getInteriorDesigners = async (
     query = ["No", "Yes"];
     query1 = ["Yes"];
   }
-  
+
   if (consultationLength == "25 mins") {
     query2 = {
       "virtual_Consultations.chargers_25_mins": { $nin: [null, ""] },
@@ -74,7 +74,7 @@ export const getInteriorDesigners = async (
       "destinationProject.chargers_55_mins": { $nin: [null, ""] },
     };
   }
-  
+
   if (lat && long) {
     const designer = await User.find({
       // isApproved:true,
@@ -252,7 +252,7 @@ export const getInteriorDesigners = async (
             PROJECT_SIZE.FULL_HOME_FURNISHING,
             PROJECT_SIZE.FULL_SERVICE_COMMERCIAL_PROJECCT,
             PROJECT_SIZE.GROUND_UP_DEVELOPEMENT,
-            PROJECT_SIZE.PARTIAL_HOME_FURNISHING
+            PROJECT_SIZE.PARTIAL_HOME_FURNISHING,
           ],
         },
     goals: goals
@@ -418,6 +418,7 @@ export const getSlots = async (designerId, date, userId, timeDuration) => {
   if (!JSON.stringify(check.weeklySchedule).includes(true)) {
     return [];
   }
+  let countCheck = 0;
   const consultations = await Consultations.find({
     designer: designerId,
     isDeleted: false,
@@ -428,12 +429,13 @@ export const getSlots = async (designerId, date, userId, timeDuration) => {
     .lean();
 
   const dates = [];
-
-  var nextDate = date;
+let originalDate = new Date(date);
+originalDate.setMinutes(originalDate.getMinutes() + 1);
+let nextDate = originalDate.toISOString();
+//  var nextDate = date;
   nextDate = new Date(nextDate);
   var testDay;
   testDay = moment(nextDate).format("dddd");
-
   for (let count = 0; count < 3; ) {
     let checkKey = false;
     if (count == 1) {
@@ -443,18 +445,28 @@ export const getSlots = async (designerId, date, userId, timeDuration) => {
     }
     for (const val of check.weeklySchedule) {
       if (val.status && val.day == testDay && count < 3) {
-        dates.push({
-          date: moment(new Date(nextDate)),
-          startTime: val.startTime,
-          endTime: val.endTime,
-        });
+        if (countCheck !== 0) {
+          var d = nextDate;
+          d.setDate(nextDate.getDate() + 1);
+          dates.push({
+            date: moment(new Date(d)),
+            startTime: val.startTime,
+            endTime: val.endTime,
+          });
+        } else {
+          dates.push({
+            date: moment(new Date(nextDate)),
+            startTime: val.startTime,
+            endTime: val.endTime,
+          });
+        }
         nextDate.setHours(0, 0, 0, 0);
         nextDate.setDate(nextDate.getDate() + 1);
         nextDate = new Date(nextDate);
         moment(nextDate).format("dddd");
         //console.log(nextDate,"nnnnnnnnnnnnnnn",moment(nextDate).format("dddd"))
         testDay = moment(nextDate).format("dddd");
-
+        countCheck = countCheck + 1;
         count = count + 1;
         checkKey = true;
         console.log(nextDate);
@@ -462,6 +474,7 @@ export const getSlots = async (designerId, date, userId, timeDuration) => {
     }
     console.log(checkKey);
     if (checkKey == false) {
+      countCheck = countCheck + 1;
       nextDate.setDate(nextDate.getDate() + 1);
       nextDate.setHours(0, 0, 0, 0);
       testDay = moment(nextDate).format("dddd");
@@ -562,6 +575,90 @@ export const getSlots = async (designerId, date, userId, timeDuration) => {
     });
     return result;
   }
+};
+export const getSlotDates = async (designerId, date) => {
+  const check = await User.findOne({
+    _id: designerId,
+    isDeleted: false,
+    isVerify: true,
+  });
+  if (!check) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.DESIGNER_NOT_FOUND
+    );
+  }
+  if (!JSON.stringify(check.weeklySchedule).includes(true)) {
+    return [];
+  }
+  
+  const consultations = await Consultations.find({
+    designer: designerId,
+    isDeleted: false,
+    isConfirm: true,
+    isPast: false,
+  })
+    .distinct("confirmSlotTime")
+    .lean();
+
+  const dates = [];
+let originalDate = new Date(date);
+originalDate.setMinutes(originalDate.getMinutes() + 1);
+let nextDate = originalDate.toISOString();
+  //var nextDate = date;
+  nextDate = new Date(nextDate);
+  var testDay;
+  testDay = moment(nextDate).format("dddd");
+  let countCheck = 0;
+  for (let count = 0; count < 30; ) {
+    let checkKey = false;
+    if (count == 1) {
+      nextDate.setHours(0, 0, 0, 0);
+      nextDate.setDate(nextDate.getDate());
+      testDay = moment(nextDate).format("dddd");
+    }
+    for (const val of check.weeklySchedule) {
+      if (val.status && val.day == testDay && count < 30) {
+        if (countCheck !== 0) {
+          var d = nextDate;
+          d.setDate(nextDate.getDate() + 1);
+          dates.push({
+            date: moment(new Date(d)),
+            startTime: val.startTime,
+            endTime: val.endTime,
+          });
+        } else {
+          dates.push({
+            date: moment(new Date(nextDate)),
+            startTime: val.startTime,
+            endTime: val.endTime,
+          });
+        }
+        nextDate.setHours(0, 0, 0, 0);
+        nextDate.setDate(nextDate.getDate() + 1);
+        nextDate = new Date(nextDate);
+        moment(nextDate).format("dddd");
+        //console.log(nextDate,"nnnnnnnnnnnnnnn",moment(nextDate).format("dddd"))
+        testDay = moment(nextDate).format("dddd");
+
+        count = count + 1;
+        checkKey = true;
+        countCheck = countCheck + 1;
+        console.log(nextDate);
+      }
+    }
+    console.log(checkKey);
+    countCheck = countCheck + 1;
+    if (checkKey == false) {
+      nextDate.setDate(nextDate.getDate() + 1);
+      nextDate.setHours(0, 0, 0, 0);
+      testDay = moment(nextDate).format("dddd");
+      //  console.log(nextDate, "nnnnnnnnnnnnnnn");
+      nextDate = new Date(nextDate);
+    }
+  }
+  //console.log(dates);
+  return dates;
 };
 export const getSaveProfiles = async (page, limit) => {
   const check = await User.findOne({
