@@ -6,6 +6,9 @@ import {
   USER_TYPE,
   STATUS_CODES,
   ERROR_MESSAGES,
+  FEE_STRUCTURE,
+  VALID_FEE_STRUCTURE,
+  OPTIONS,
 } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
 
@@ -105,6 +108,48 @@ export const getFilter = async (type) => {
       {
         key: "preferences",
         value: filter.preferences,
+      },
+    ];
+    return data;
+  }
+  if (type == "signUp") {
+    const data = [
+      {
+        key: "projectSize",
+        value: filter.projectSize,
+      },
+      {
+        key: "projectType",
+        value: filter.projectType,
+      },
+      {
+        key: "goals",
+        value: filter.goals,
+      },
+      {
+        key: "destination",
+        value: ["Yes", "No"],
+      },
+      {
+        key: "goals",
+        value: filter.goals,
+      },
+      {
+        key: "preferences",
+        value: filter.preferences,
+      },
+      {
+        key: "styles",
+        value: filter.style,
+      },
+
+      {
+        key: "feeStructure",
+        value: VALID_FEE_STRUCTURE,
+      },
+      {
+        key: "tradeDiscount",
+        value: ["Yes", "No"],
       },
     ];
     return data;

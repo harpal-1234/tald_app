@@ -727,7 +727,7 @@ export const getConsultations = async (page, limit, clientId) => {
       .lean()
       .populate({
         path: "designer",
-        select: ["_id", "email", "name"],
+        select: ["_id", "email", "name", "companyName"],
       }),
     Consultations.find({
       user: clientId,
@@ -740,7 +740,7 @@ export const getConsultations = async (page, limit, clientId) => {
       .lean()
       .populate({
         path: "designer",
-        select: ["_id", "email", "name"],
+        select: ["_id", "email", "name", "companyName"],
       }),
   ]);
   const consultations = [
@@ -789,7 +789,10 @@ export const getInqueryStatus = async (projectId) => {
       projectId: projectId,
       isDeleted: false,
     })
-    .populate({ path: "designer", select: ["name", "email", "_id"] })
+    .populate({
+      path: "designer",
+      select: ["name", "email", "_id", "companyName"],
+    })
     .sort({ _id: -1 });
   if (!project) {
     throw new OperationalError(

@@ -196,7 +196,7 @@ const editProfile = {
 };
 const filters = {
   query: Joi.object().keys({
-    type: Joi.string().required().valid("All","Virtual","Interior"),
+    type: Joi.string().required().valid("All","Virtual","Interior","signUp"),
   }),
 };
 const getProfile = {
