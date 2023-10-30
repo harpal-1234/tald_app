@@ -36,16 +36,16 @@ export const getFilter = async (type) => {
         value: filter.projectType,
       },
       {
-        key: "destination",
+        key: "AcceptVirtualConsultation",
+        value: ["yes", "No"],
+      },
+      {
+        key: "fullServiceClient",
         value: ["Yes", "No"],
       },
       {
-        key: "goals",
-        value: filter.goals,
-      },
-      {
-        key: "consultationLength",
-        value: ["25 mins", "55 mins"],
+        key: "destination",
+        value: ["Yes", "No"],
       },
       {
         key: "styles",
@@ -54,6 +54,10 @@ export const getFilter = async (type) => {
       {
         key: "preferences",
         value: filter.preferences,
+      },
+      {
+        key: "projectSize",
+        value: filter.projectSize,
       },
     ];
     return data;
@@ -65,12 +69,20 @@ export const getFilter = async (type) => {
         value: filter.projectSize,
       },
       {
-        key: "goals",
-        value: filter.goals,
+        key: "dateRange",
+        value: ["startDate", "endDate"],
       },
       {
         key: "consultationLength",
         value: ["25 mins", "55 mins"],
+      },
+      {
+        key: "consultationFee",
+        value: ["minimumPrice", "maximumPrice"],
+      },
+      {
+        key: "goals",
+        value: filter.goals,
       },
       {
         key: "styles",
@@ -86,24 +98,24 @@ export const getFilter = async (type) => {
   if (type == "Interior") {
     const data = [
       {
-        key: "projectType",
-        value: filter.projectType,
+        key: "destination",
+        value: ["Yes", "No"],
       },
       {
         key: "projectSize",
         value: filter.projectSize,
       },
       {
+        key: "feeStructure",
+        value: VALID_FEE_STRUCTURE,
+      },
+      {
+        key: "consultationFee",
+        value: ["minimumPrice", "maximumPrice"],
+      },
+      {
         key: "styles",
         value: filter.style,
-      },
-      {
-        key: "price",
-        value: {},
-      },
-      {
-        key: "destination",
-        value: ["Yes", "No"],
       },
       {
         key: "preferences",
@@ -142,13 +154,20 @@ export const getFilter = async (type) => {
         key: "styles",
         value: filter.style,
       },
-
       {
         key: "feeStructure",
         value: VALID_FEE_STRUCTURE,
       },
       {
         key: "tradeDiscount",
+        value: ["Yes", "No"],
+      },
+      {
+        key: "needHelp",
+        value: filter.needHelp,
+      },
+      {
+        key: "fullServiceClient",
         value: ["Yes", "No"],
       },
     ];

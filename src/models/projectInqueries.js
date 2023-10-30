@@ -34,13 +34,12 @@ const projectInquerySchema = mongoose.Schema(
     startDate: { type: String, default: "" },
     endDate: { type: String, default: "" },
     projectFund: { type: Number, required: true },
-    primaryDecisionMaker: { type: String, enum: [...Object.values(OPTIONS)] },
+    primaryDecisionMaker: { type: String,required:true},
     workedWithInteriorDesigner: {
       type: String,
       enum: [...Object.values(OPTIONS)],
     },
     involvedYourProject: { type: String, required: true },
-
     isDeleted: { type: Boolean, default: false },
     isVerify: { type: Boolean, default: false },
     isBlocked: { type: Boolean, default: false },

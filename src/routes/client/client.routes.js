@@ -132,4 +132,10 @@ router.put(
   validate(clientValidation.deleteChat),
   clientController.clearConversation
 );
+router.put(
+  "/saveImages",
+  auth(USER_TYPE.USER),
+  validate(clientValidation.saveImages),
+  clientController.clearConversation
+);
 export default router;

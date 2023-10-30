@@ -39,10 +39,14 @@ export const getInteriorDesigners = async (
   projectSize,
   page,
   limit,
-  needHelp
+  needHelp,
+  fullServiceClients,
+  startDate,
+  endDate
 ) => {
   var query;
   var query1;
+  var query3;
   [];
   var query2;
   if (type == "All") {
@@ -57,7 +61,21 @@ export const getInteriorDesigners = async (
     query = ["No", "Yes"];
     query1 = ["Yes"];
   }
+  if (startDate && endDate && type == "VirtualConsultation") {
+    console.log(endDate);
+    const startDate1 = new Date(startDate);
+    const endDate1 = new Date(endDate);
+    query3 = {
+      $and: [
+        { "availability.startDate": { $lte: endDate1 } },
+        {
+          "availability.endDate": { $gte: startDate1 },
+        },
+      ],
+    };
+  }
 
+  console.log(query3);
   if (consultationLength == "25 mins") {
     query2 = {
       "virtual_Consultations.chargers_25_mins": { $nin: [null, ""] },
@@ -76,6 +94,7 @@ export const getInteriorDesigners = async (
   }
 
   if (lat && long) {
+    console.log(lat,long)
     const designer = await User.find({
       // isApproved:true,
       isDeleted: false,
@@ -91,6 +110,7 @@ export const getInteriorDesigners = async (
         $in: destination ? destination : [OPTIONS.YES, OPTIONS.NO],
       },
       ...query2,
+      ...query3,
       needHelp: needHelp
         ? { $in: JSON.parse(needHelp) }
         : { $in: [...Object.values(NEED_HELP)] },
@@ -106,13 +126,12 @@ export const getInteriorDesigners = async (
         $near: {
           $geometry: {
             type: "Point",
-            coordinates: [long, lat],
+            coordinates: [long,lat],
           },
-          $maxDistance: 1000000000000000,
-
-          // $maxDistance:1000
+          $maxDistance: 100000000,
         },
       },
+
       preferences: preferences
         ? { $in: JSON.parse(preferences) }
         : { $in: [...Object.values(PREFERENCES)] },
@@ -131,6 +150,9 @@ export const getInteriorDesigners = async (
       styles: styles
         ? { $in: JSON.parse(styles) }
         : { $in: [...Object.values(STYLE)] },
+      fullServiceClients: fullServiceClients
+        ? { $in: fullServiceClients }
+        : { $in: ["Yes", "No"] },
     })
       .lean()
       .skip(page * limit)
@@ -169,6 +191,7 @@ export const getInteriorDesigners = async (
         $in: destination ? destination : [OPTIONS.YES, OPTIONS.NO],
       },
       ...query2,
+      ...query3,
       $and: [
         {
           minBudget: minimumPrice ? { $gte: minimumPrice } : { $gte: 0 },
@@ -209,7 +232,11 @@ export const getInteriorDesigners = async (
       styles: styles
         ? { $in: JSON.parse(styles) }
         : { $in: [...Object.values(STYLE)] },
+      fullServiceClients: fullServiceClients
+        ? { $in: fullServiceClients }
+        : { $in: ["Yes", "No"] },
     });
+    console.log(designer);
     await formatUser(designer);
     return { designer, total };
   }
@@ -228,6 +255,7 @@ export const getInteriorDesigners = async (
       $in: destination ? destination : [OPTIONS.YES, OPTIONS.NO],
     },
     ...query2,
+    ...query3,
     $and: [
       {
         minBudget: minimumPrice ? { $gte: minimumPrice } : { $gte: 0 },
@@ -252,7 +280,8 @@ export const getInteriorDesigners = async (
             PROJECT_SIZE.FULL_HOME_FURNISHING,
             PROJECT_SIZE.FULL_SERVICE_COMMERCIAL_PROJECCT,
             PROJECT_SIZE.GROUND_UP_DEVELOPEMENT,
-            PROJECT_SIZE.PARTIAL_HOME_FURNISHING,
+          PROJECT_SIZE.PARTIAL_HOME_FURNISHING,
+            PROJECT_SIZE.Empty
           ],
         },
     goals: goals
@@ -261,6 +290,9 @@ export const getInteriorDesigners = async (
     styles: styles
       ? { $in: JSON.parse(styles) }
       : { $in: [...Object.values(STYLE)] },
+    fullServiceClients: fullServiceClients
+      ? { $in: fullServiceClients }
+      : { $in: ["Yes", "No"] },
   })
     .lean()
     .skip(page * limit)
@@ -300,6 +332,7 @@ export const getInteriorDesigners = async (
       $in: destination ? destination : [OPTIONS.YES, OPTIONS.NO],
     },
     ...query2,
+    ...query3,
     $and: [
       {
         minBudget: minimumPrice ? { $gte: minimumPrice } : { $gte: 0 },
@@ -329,6 +362,9 @@ export const getInteriorDesigners = async (
     styles: styles
       ? { $in: JSON.parse(styles) }
       : { $in: [...Object.values(STYLE)] },
+    fullServiceClients: fullServiceClients
+      ? { $in: fullServiceClients }
+      : { $in: ["Yes", "No"] },
   });
   await formatUser(designer);
   return { designer, total };
@@ -429,10 +465,10 @@ export const getSlots = async (designerId, date, userId, timeDuration) => {
     .lean();
 
   const dates = [];
-let originalDate = new Date(date);
-originalDate.setMinutes(originalDate.getMinutes() + 1);
-let nextDate = originalDate.toISOString();
-//  var nextDate = date;
+  let originalDate = new Date(date);
+  originalDate.setMinutes(originalDate.getMinutes() + 1);
+  let nextDate = originalDate.toISOString();
+  //  var nextDate = date;
   nextDate = new Date(nextDate);
   var testDay;
   testDay = moment(nextDate).format("dddd");
@@ -591,7 +627,7 @@ export const getSlotDates = async (designerId, date) => {
   if (!JSON.stringify(check.weeklySchedule).includes(true)) {
     return [];
   }
-  
+
   const consultations = await Consultations.find({
     designer: designerId,
     isDeleted: false,
@@ -602,9 +638,9 @@ export const getSlotDates = async (designerId, date) => {
     .lean();
 
   const dates = [];
-let originalDate = new Date(date);
-originalDate.setMinutes(originalDate.getMinutes() + 1);
-let nextDate = originalDate.toISOString();
+  let originalDate = new Date(date);
+  originalDate.setMinutes(originalDate.getMinutes() + 1);
+  let nextDate = originalDate.toISOString();
   //var nextDate = date;
   nextDate = new Date(nextDate);
   var testDay;

@@ -99,7 +99,7 @@ export const getInteriorDesigner = {
     // .required()
     minimumPrice: Joi.number().allow(null, ""),
     maximumPrice: Joi.number().allow(null, ""),
-    preferences: Joi.string().allow(null,""),
+    preferences: Joi.string().allow(null, ""),
     // Joi.array()
     //   .items(
     //     Joi.string()
@@ -107,7 +107,7 @@ export const getInteriorDesigner = {
     //       .valid(...Object.values(PREFERENCES))
     //   )
     //   .allow(null, ""),
-    styles: Joi.string().allow(null,""),
+    styles: Joi.string().allow(null, ""),
     // Joi.array()
     //   .items(
     //     Joi.string()
@@ -115,7 +115,7 @@ export const getInteriorDesigner = {
     //       .valid(...Object.values(STYLE))
     //   )
     //   .allow(null, ""),
-    goals: Joi.string().allow(null,""),
+    goals: Joi.string().allow(null, ""),
     // Joi.array()
     //   .items(
     //     Joi.string()
@@ -126,9 +126,14 @@ export const getInteriorDesigner = {
     projectSize: Joi.string()
       .valid(...Object.values(PROJECT_SIZE))
       .allow(null, ""),
-    needHelp: Joi.string().allow(null,""),
+    needHelp: Joi.string().allow(null, ""),
+    fullServiceClients: Joi.string()
+      .allow(null, "")
+      .valid(...Object.values(OPTIONS)),
     page: Joi.number().required(),
     limit: Joi.number().required(),
+    startDate: Joi.date().iso().required().allow(null, ""),
+    endDate: Joi.date().iso().required().allow(null, ""),
   }),
 };
 export const addImages = {
@@ -166,7 +171,7 @@ export const addAvailability = {
       )
       .required(),
     availability: Joi.object({
-      startDate: Joi.string().allow(null, ""),
+      startDate: Joi.date().iso().required().allow(null, ""),
       numberOfDays: Joi.number(),
     }).required(),
     isIndefinitely: Joi.boolean().required(),
@@ -232,12 +237,10 @@ export const createProjectInquery = {
     address: Joi.string().required(),
     lat: Joi.number().required(),
     long: Joi.number().required(),
-    startDate: Joi.string().allow("",null),
-    endDate: Joi.string().allow("",null),
+    startDate: Joi.string().allow("", null),
+    endDate: Joi.string().allow("", null),
     projectFund: Joi.number().required(),
-    primaryDecisionMaker: Joi.string()
-      .required()
-      .valid(...Object.values(OPTIONS)),
+    primaryDecisionMaker: Joi.string().required(),
     workedWithInteriorDesigner: Joi.string()
       .required()
       .valid(...Object.values(OPTIONS)),
@@ -264,8 +267,8 @@ export const editProjectInquery = {
     address: Joi.string().required(),
     lat: Joi.number().required(),
     long: Joi.number().required(),
-    startDate: Joi.string().allow("",null),
-    endDate: Joi.string().allow("",null),
+    startDate: Joi.string().allow("", null),
+    endDate: Joi.string().allow("", null),
     projectFund: Joi.number().required(),
     primaryDecisionMaker: Joi.string()
       .required()
@@ -315,6 +318,12 @@ export const getChat = {
 export const deleteChat = {
   body: Joi.object().keys({
     conversationId: Joi.string().required(),
+  }),
+};
+export const saveImages = {
+  body: Joi.object().keys({
+    projectId: Joi.string().required(),
+    image: Joi.string().required(),
   }),
 };
 export const blockUser = {
@@ -417,6 +426,9 @@ export const editVendorProfile = {
           .required()
           .valid(...Object.values(GOALS))
       ),
+    fullServiceClients: Joi.string()
+      .valid(...Object.values(OPTIONS))
+      .required(),
     needHelp: Joi.array().items(
       Joi.string().valid(...Object.values(NEED_HELP))
     ),

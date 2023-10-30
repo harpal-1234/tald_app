@@ -109,12 +109,15 @@ export const addAvailability = async (
     currentDate.getTime() + availability.numberOfDays * 24 * 60 * 60 * 1000
   );
   if (isIndefinitely == true) {
+    const date = new Date();
+    const next30YearsDate = new Date();
+    next30YearsDate.setFullYear(next30YearsDate.getFullYear() + 30);
     const data1 = await User.findOneAndUpdate(
       { _id: userId },
       {
         availability: {
-          startDate: "",
-          endDate: "",
+          startDate: moment(date).format("YYYY-MM-DD"),
+          endDate: moment(next30YearsDate).format("YYYY-MM-DD"),
         },
         isIndefinitely: true,
         weeklySchedule: weeklySchedule,
@@ -130,11 +133,8 @@ export const addAvailability = async (
       { _id: userId },
       {
         availability: {
-          startDate: moment(
-            availability.startDate + "Z",
-            "YYYY-MM-DD" + "Z"
-          ).toDate(),
-          endDate: next40thDay,
+          startDate: availability.startDate,
+          endDate: moment(next40thDay).format("YYYY-MM-DD"),
         },
         weeklySchedule: weeklySchedule,
         isIndefinitely: false,
@@ -242,7 +242,8 @@ export const editVendorProfile = async (data, userId) => {
       projectSize: data.projectSize,
       styles: data.styles,
       goals: data.goals,
-      needHelp:data.needHelp
+      needHelp: data.needHelp,
+      fullServiceClients: data.fullServiceClients,
     },
     { new: true }
   );

@@ -42,6 +42,7 @@ export const GOALS = {
   PAINT_COLORS: "Paint Colors",
   WINDOW_TREATMENT: "Window Treatment",
   CAREER_GUIDANCE: "Career Guidance for Designers",
+  Empty:""
 };
 export const STYLE = {
   AMERICANA: "Americana",
@@ -64,6 +65,7 @@ export const STYLE = {
   SOUTHERN: "Southern",
   TRADITIONAL: "Traditional",
   TRANSITIONAL: "Transitional",
+  Empty: "",
 };
 export const PREFERENCES = {
   ART_FOCUSED: "Art-Focused",
@@ -89,6 +91,7 @@ export const PREFERENCES = {
   MOUNTAIN_ESCAPE: "Mountain Escape",
   PRINTS_PATTERNSS: "Prints + Patterns",
   LAYERED_TEXTURES: "Layered Textures",
+  Empty: "",
 };
 export const NEED_HELP = {
   CHOOSE_PAINT_COLORS: "Choose Paint Colors",
@@ -106,6 +109,7 @@ export const NEED_HELP = {
   STYLING_SURFACES_SHELVING: "Styling Surfaces + Shelving",
   UPHOLSTERY_SELECTIONS: "Upholstery Selections",
   WINDOE_TREATMENT_SELECTIONS: "Window Treatment Selections",
+  Empty: "",
 };
 export const PROJECT_SIZE = {
   PARTIAL_HOME_FURNISHING: "Partial Home Furnishing",
@@ -115,6 +119,7 @@ export const PROJECT_SIZE = {
   PARTIAL_RENOVATION: "Partial Renovation",
   GROUND_UP_DEVELOPEMENT: "Ground-Up Development",
   FULL_SERVICE_COMMERCIAL_PROJECCT: "Full-Service Commercial Project",
+  Empty: "",
 };
 export const FEE_STRUCTURE = {
   FLAT_DESIGN_FEE: "Design Fee",
@@ -122,6 +127,7 @@ export const FEE_STRUCTURE = {
   HOURLY_FEE: "Hourly Fee",
   HOURLY_FEE_MARKUP: "Hourly Fee + Markup",
   MARKUP_ONLY: "Markup Only",
+  Empty: "",
 };
 export const VALID_FEE_STRUCTURE = [
   "Design Fee",
@@ -133,6 +139,7 @@ export const VALID_FEE_STRUCTURE = [
 export const OPTIONS = {
   YES: "Yes",
   NO: "No",
+  empty:""
 };
 
 export const STATUS = {

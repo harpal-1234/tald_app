@@ -37,7 +37,7 @@ const userSchema = mongoose.Schema(
         type: [Number],
         default: [0, 0],
         required: true,
-      },
+      }
     },
     address: { type: String },
     instagramLink: { type: String },
@@ -77,8 +77,8 @@ const userSchema = mongoose.Schema(
     maxBudget: { type: Number },
     weeklySchedule: [dateAndTime],
     availability: {
-      startDate: { type: String },
-      endDate: { type: String },
+      startDate: { type: Date },
+      endDate: { type: Date },
     },
     goals: [{ type: String, enum: [...Object.values(GOALS)] }],
     preferences: [{ type: String, enum: [...Object.values(PREFERENCES)] }],
@@ -89,7 +89,12 @@ const userSchema = mongoose.Schema(
     isIndefinitely: { type: Boolean, default: false },
     inviteesSchedule: { type: Number },
     saveProfiles: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
-    saveImages: [{ type: String }],
+    saveImages: [
+      {
+        image: { type: String },
+        projectId: { type: mongoose.Schema.Types.ObjectId, ref: "project" },
+      },
+    ],
     needHelp: [{ type: String, ennum: [...Object.values(NEED_HELP)] }],
     fullServiceClients: { type: String, enum: [...Object.values(OPTIONS)] },
     isDeleted: { type: Boolean, default: false },

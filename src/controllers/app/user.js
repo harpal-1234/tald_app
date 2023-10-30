@@ -21,6 +21,9 @@ export const getInteriorDesigners = catchAsync(async (req, res) => {
     page,
     limit,
     needHelp,
+    fullServiceClients,
+    startDate,
+    endDate
   } = req.query;
 
   // const userId = req.token.user._id;
@@ -39,7 +42,10 @@ export const getInteriorDesigners = catchAsync(async (req, res) => {
     projectSize,
     page,
     limit,
-    needHelp
+    needHelp,
+    fullServiceClients,
+    startDate,
+    endDate
   );
 
   return successResponse(
@@ -322,6 +328,19 @@ export const unBlockUser = catchAsync(async (req, res) => {
   );
 });
 export const clearConversation = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const data = await chatServices.deleteConversation(
+    req.body.conversationId,
+    userId
+  );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS
+  );
+});
+export const saveImages = catchAsync(async (req, res) => {
   const userId = req.token.user._id;
   const data = await chatServices.deleteConversation(
     req.body.conversationId,
