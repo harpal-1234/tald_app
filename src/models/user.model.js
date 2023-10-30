@@ -37,7 +37,7 @@ const userSchema = mongoose.Schema(
         type: [Number],
         default: [0, 0],
         required: true,
-      }
+      },
     },
     address: { type: String },
     instagramLink: { type: String },
@@ -45,7 +45,11 @@ const userSchema = mongoose.Schema(
     about: { type: String },
     projectType: {
       question: { type: String },
-      answer: { type: String, enum: [...Object.values(PROJECT_TYPE)] },
+      answer: {
+        type: String,
+        enum: [...Object.values(PROJECT_TYPE)],
+        default: "",
+      },
     },
     virtual_Consultations: {
       question: { type: String },
@@ -67,11 +71,15 @@ const userSchema = mongoose.Schema(
     },
     feeStructure: {
       question: { type: String },
-      answer: { type: String, enum: [...Object.values(FEE_STRUCTURE)] },
+      answer: {
+        type: String,
+        enum: [...Object.values(FEE_STRUCTURE)],
+        default: "",
+      },
     },
     tradeDiscount: {
       question: { type: String },
-      answer: { type: String, enum: [...Object.values(OPTIONS)] },
+      answer: { type: String, enum: [...Object.values(OPTIONS)], default: "" },
     },
     minBudget: { type: Number },
     maxBudget: { type: Number },
@@ -80,9 +88,11 @@ const userSchema = mongoose.Schema(
       startDate: { type: Date },
       endDate: { type: Date },
     },
-    goals: [{ type: String, enum: [...Object.values(GOALS)] }],
-    preferences: [{ type: String, enum: [...Object.values(PREFERENCES)] }],
-    projectSize: { type: String, enum: [...Object.values(PROJECT_SIZE)] },
+    goals: [{ type: String, enum: [...Object.values(GOALS)], default: "" }],
+    preferences: [
+      { type: String, enum: [...Object.values(PREFERENCES)], default: "" },
+    ],
+    projectSize: { type: String, enum: [...Object.values(PROJECT_SIZE)], default:""},
     styles: [{ type: String, enum: [...Object.values(STYLE)] }],
     isSignUp: { type: Boolean, default: false },
     isApproved: { type: Boolean, default: false },

@@ -50,15 +50,15 @@ export const getInteriorDesigners = async (
   [];
   var query2;
   if (type == "All") {
-    query = ["Yes", "No"];
-    query1 = ["Yes", "No"];
+    query = ["Yes", "No", ""];
+    query1 = ["Yes", "No", ""];
   }
   if (type == "VirtualConsultation") {
     query = ["Yes"];
-    query1 = ["No", "Yes"];
+    query1 = ["No", "Yes", ""];
   }
   if (type == "InteriorDesigner") {
-    query = ["No", "Yes"];
+    query = ["No", "Yes", ""];
     query1 = ["Yes"];
   }
   if (startDate && endDate && type == "VirtualConsultation") {
@@ -76,230 +76,79 @@ export const getInteriorDesigners = async (
   }
 
   console.log(query3);
-  if (consultationLength == "25 mins") {
-    query2 = {
-      "virtual_Consultations.chargers_25_mins": { $nin: [null, ""] },
-      "newClientProjects.chargers_25_mins": { $nin: [null, ""] },
-      "destinationProject.chargers_25_mins": { $nin: [null, ""] },
-      "destinationProject.chargers_25_mins": { $nin: [null, ""] },
-    };
-  }
-  if (consultationLength == "55 mins") {
-    query2 = {
-      "virtual_Consultations.chargers_55_mins": { $nin: [null, ""] },
-      "newClientProjects.chargers_55_mins": { $nin: [null, ""] },
-      "destinationProject.chargers_55_mins": { $nin: [null, ""] },
-      "destinationProject.chargers_55_mins": { $nin: [null, ""] },
-    };
-  }
-
-  if (lat && long) {
-    console.log(lat,long)
-    const designer = await User.find({
-      // isApproved:true,
-      isDeleted: false,
-      isVerify: true,
-      "virtual_Consultations.answer": { $in: query },
-      "newClientProjects.answer": { $in: query1 },
-      "projectType.answer": {
-        $in: projectType
-          ? [projectType]
-          : [PROJECT_TYPE.COMMERCIAL, PROJECT_TYPE.RESIDENTIAL],
-      },
-      "destinationProject.answer": {
-        $in: destination ? destination : [OPTIONS.YES, OPTIONS.NO],
-      },
-      ...query2,
-      ...query3,
-      needHelp: needHelp
-        ? { $in: JSON.parse(needHelp) }
-        : { $in: [...Object.values(NEED_HELP)] },
-      $and: [
-        {
-          minBudget: minimumPrice ? { $gte: minimumPrice } : { $gte: 0 },
-          maxBudget: maximumPrice
-            ? { $lte: maximumPrice }
-            : { $lte: 1000000000000000 },
-        },
-      ],
-      location: {
-        $near: {
-          $geometry: {
-            type: "Point",
-            coordinates: [long,lat],
-          },
-          $maxDistance: 100000000,
-        },
-      },
-
-      preferences: preferences
-        ? { $in: JSON.parse(preferences) }
-        : { $in: [...Object.values(PREFERENCES)] },
-      projectSize: projectSize
-        ? projectSize
-        : {
-            $in: [
-              PROJECT_SIZE.FULL_RENOVATION,
-              PROJECT_SIZE.NEW_BUILD,
-              PROJECT_SIZE.PARTIAL_RENOVATION,
-            ],
-          },
-      goals: goals
-        ? { $in: JSON.parse(goals) }
-        : { $in: [...Object.values(GOALS)] },
-      styles: styles
-        ? { $in: JSON.parse(styles) }
-        : { $in: [...Object.values(STYLE)] },
-      fullServiceClients: fullServiceClients
-        ? { $in: fullServiceClients }
-        : { $in: ["Yes", "No"] },
-    })
-      .lean()
-      .skip(page * limit)
-      .limit(limit);
-    if (designer.length > 0) {
-      designer.forEach(async (value) => {
-        const project = await Project.findOne({
-          user: value._id,
-          isDeleted: false,
-        });
-        delete value.__v;
-        delete value.password;
-        if (project) {
-          if (project.images) {
-            value.images = project.images;
-          } else {
-            value.images = [];
-          }
-        } else {
-          value.images = [];
-        }
-      });
+  if (consultationLength) {
+    if (consultationLength == "25 mins") {
+      query2 = {
+        "virtual_Consultations.chargers_25_mins": { $nin: [null, ""] },
+        "newClientProjects.chargers_25_mins": { $nin: [null, ""] },
+        "destinationProject.chargers_25_mins": { $nin: [null, ""] },
+        "destinationProject.chargers_25_mins": { $nin: [null, ""] },
+      };
     }
-    const total = await User.countDocuments({
-      // isApproved:true,
-      isDeleted: false,
-      isVerify: true,
-      "virtual_Consultations.answer": { $in: query },
-      "newClientProjects.answer": { $in: query1 },
-      "projectType.answer": {
-        $in: projectType
-          ? [projectType]
-          : [PROJECT_TYPE.COMMERCIAL, PROJECT_TYPE.RESIDENTIAL],
-      },
-      "destinationProject.answer": {
-        $in: destination ? destination : [OPTIONS.YES, OPTIONS.NO],
-      },
-      ...query2,
-      ...query3,
-      $and: [
-        {
-          minBudget: minimumPrice ? { $gte: minimumPrice } : { $gte: 0 },
-          maxBudget: maximumPrice
-            ? { $lte: maximumPrice }
-            : { $lte: 1000000000000000 },
-        },
-      ],
-      location: {
-        $near: {
-          $geometry: {
-            type: "Point",
-            coordinates: [long, lat],
-          },
-          $maxDistance: 1000000000000000,
-
-          // $maxDistance:1000
-        },
-      },
-      preferences: preferences
-        ? { $in: JSON.parse(preferences) }
-        : { $in: [...Object.values(PREFERENCES)] },
-      needHelp: needHelp
-        ? { $in: JSON.parse(needHelp) }
-        : { $in: [...Object.values(NEED_HELP)] },
-      projectSize: projectSize
-        ? projectSize
-        : {
-            $in: [
-              PROJECT_SIZE.FULL_RENOVATION,
-              PROJECT_SIZE.NEW_BUILD,
-              PROJECT_SIZE.PARTIAL_RENOVATION,
-            ],
-          },
-      goals: goals
-        ? { $in: JSON.parse(goals) }
-        : { $in: [...Object.values(GOALS)] },
-      styles: styles
-        ? { $in: JSON.parse(styles) }
-        : { $in: [...Object.values(STYLE)] },
-      fullServiceClients: fullServiceClients
-        ? { $in: fullServiceClients }
-        : { $in: ["Yes", "No"] },
-    });
-    console.log(designer);
-    await formatUser(designer);
-    return { designer, total };
+    if (consultationLength == "55 mins") {
+      query2 = {
+        "virtual_Consultations.chargers_55_mins": { $nin: [null, ""] },
+        "newClientProjects.chargers_55_mins": { $nin: [null, ""] },
+        "destinationProject.chargers_55_mins": { $nin: [null, ""] },
+        "destinationProject.chargers_55_mins": { $nin: [null, ""] },
+      };
+    }
   }
-  const designer = await User.find({
+  var options = {
     // isApproved:true,
     isDeleted: false,
     isVerify: true,
-    "virtual_Consultations.answer": { $in: query },
-    "newClientProjects.answer": { $in: query1 },
-    "projectType.answer": {
-      $in: projectType
-        ? [projectType]
-        : [PROJECT_TYPE.COMMERCIAL, PROJECT_TYPE.RESIDENTIAL],
-    },
-    "destinationProject.answer": {
-      $in: destination ? destination : [OPTIONS.YES, OPTIONS.NO],
-    },
+    isSignUp: true,
+  };
+  if (projectType) {
+    options.projectType.answer = projectType;
+  }
+  if (destination) {
+    options.destinationProject.answer = destination;
+  }
+  if (preferences) {
+    options.preferences = { $in: JSON.parse(preferences) };
+  }
+  if (needHelp) {
+    options.needHelp = { $in: JSON.parse(needHelp) };
+  }
+  if (projectSize) {
+    options.projectSize = projectSize;
+  }
+  if (goals) {
+    options.goals = { $in: JSON.parse(goals) };
+  }
+  if (styles) {
+    options.styles = { $in: JSON.parse(styles) };
+  }
+  if ((lat, long)) {
+    options.location = {
+      $near: {
+        $geometry: {
+          type: "Point",
+          coordinates: [long, lat],
+        },
+        $maxDistance: 1000000000,
+      },
+    };
+  }
+  if (fullServiceClients) {
+    options.fullServiceClients = { $in: fullServiceClients };
+  }
+  // if (virtual_Consultations.answer) {
+  //   options.virtual_Consultations.answer=
+  // }
+  console.log(options);
+  const designer = await User.find({
+    ...options,
     ...query2,
     ...query3,
-    $and: [
-      {
-        minBudget: minimumPrice ? { $gte: minimumPrice } : { $gte: 0 },
-        maxBudget: maximumPrice
-          ? { $lte: maximumPrice }
-          : { $lte: 1000000000000000 },
-      },
-    ],
-    preferences: preferences
-      ? { $in: JSON.parse(preferences) }
-      : { $in: [...Object.values(PREFERENCES)] },
-    needHelp: needHelp
-      ? { $in: JSON.parse(needHelp) }
-      : { $in: [...Object.values(NEED_HELP)] },
-    projectSize: projectSize
-      ? projectSize
-      : {
-          $in: [
-            PROJECT_SIZE.FULL_RENOVATION,
-            PROJECT_SIZE.NEW_BUILD,
-            PROJECT_SIZE.PARTIAL_RENOVATION,
-            PROJECT_SIZE.FULL_HOME_FURNISHING,
-            PROJECT_SIZE.FULL_SERVICE_COMMERCIAL_PROJECCT,
-            PROJECT_SIZE.GROUND_UP_DEVELOPEMENT,
-          PROJECT_SIZE.PARTIAL_HOME_FURNISHING,
-            PROJECT_SIZE.Empty
-          ],
-        },
-    goals: goals
-      ? { $in: JSON.parse(goals) }
-      : { $in: [...Object.values(GOALS)] },
-    styles: styles
-      ? { $in: JSON.parse(styles) }
-      : { $in: [...Object.values(STYLE)] },
-    fullServiceClients: fullServiceClients
-      ? { $in: fullServiceClients }
-      : { $in: ["Yes", "No"] },
   })
     .lean()
     .skip(page * limit)
     .limit(limit);
   if (designer.length > 0) {
     await designer.forEach(async (value) => {
-      console.log(designer);
       const project = await Project.findOne({
         user: value._id,
         isDeleted: false,
@@ -319,52 +168,9 @@ export const getInteriorDesigners = async (
   }
   const total = await User.countDocuments({
     // isApproved:true,
-    isDeleted: false,
-    isVerify: true,
-    "virtual_Consultations.answer": { $in: query },
-    "newClientProjects.answer": { $in: query1 },
-    "projectType.answer": {
-      $in: projectType
-        ? [projectType]
-        : [PROJECT_TYPE.COMMERCIAL, PROJECT_TYPE.RESIDENTIAL],
-    },
-    "destinationProject.answer": {
-      $in: destination ? destination : [OPTIONS.YES, OPTIONS.NO],
-    },
+    ...options,
     ...query2,
     ...query3,
-    $and: [
-      {
-        minBudget: minimumPrice ? { $gte: minimumPrice } : { $gte: 0 },
-        maxBudget: maximumPrice
-          ? { $lte: maximumPrice }
-          : { $lte: 1000000000000000 },
-      },
-    ],
-    preferences: preferences
-      ? { $in: JSON.parse(preferences) }
-      : { $in: [...Object.values(PREFERENCES)] },
-    needHelp: needHelp
-      ? { $in: JSON.parse(needHelp) }
-      : { $in: [...Object.values(NEED_HELP)] },
-    projectSize: projectSize
-      ? projectSize
-      : {
-          $in: [
-            PROJECT_SIZE.FULL_RENOVATION,
-            PROJECT_SIZE.NEW_BUILD,
-            PROJECT_SIZE.PARTIAL_RENOVATION,
-          ],
-        },
-    goals: goals
-      ? { $in: JSON.parse(goals) }
-      : { $in: [...Object.values(GOALS)] },
-    styles: styles
-      ? { $in: JSON.parse(styles) }
-      : { $in: [...Object.values(STYLE)] },
-    fullServiceClients: fullServiceClients
-      ? { $in: fullServiceClients }
-      : { $in: ["Yes", "No"] },
   });
   await formatUser(designer);
   return { designer, total };
