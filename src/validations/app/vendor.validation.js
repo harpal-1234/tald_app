@@ -132,8 +132,8 @@ export const getInteriorDesigner = {
       .valid(...Object.values(OPTIONS)),
     page: Joi.number().required(),
     limit: Joi.number().required(),
-    startDate: Joi.date().iso().required().allow(null, ""),
-    endDate: Joi.date().iso().required().allow(null, ""),
+    startDate: Joi.date().iso().allow(null, ""),
+    endDate: Joi.date().iso().allow(null, ""),
   }),
 };
 export const addImages = {
