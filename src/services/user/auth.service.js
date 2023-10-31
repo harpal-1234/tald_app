@@ -263,6 +263,7 @@ export const createService = async (userId, data) => {
     isDeleted: false,
   });
 
+  console.log(data.long,data.lat)
   if (!check) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,

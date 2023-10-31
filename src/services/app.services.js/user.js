@@ -149,7 +149,7 @@ export const getInteriorDesigners = async (
   // if (virtual_Consultations.answer) {
   //   options.virtual_Consultations.answer=
   // }
-  console.log(options, query2, query3, query);
+  console.log(options.location);
 
   const designer = await User.find({
     ...options,
@@ -178,8 +178,7 @@ export const getInteriorDesigners = async (
       }
     });
   }
-  const total = await User.countDocuments({
-    // isApproved:true,
+  const total = await User.count({
     ...options,
     ...query2,
     ...query3,
