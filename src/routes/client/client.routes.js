@@ -136,6 +136,12 @@ router.put(
   "/saveImages",
   auth(USER_TYPE.USER),
   validate(clientValidation.saveImages),
-  clientController.clearConversation
+  clientController.saveImages
+);
+router.get(
+  "/getSaveImages",
+  auth(USER_TYPE.USER),
+  validate(clientValidation.getSaveImages),
+  clientController.getSaveImages
 );
 export default router;

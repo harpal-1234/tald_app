@@ -70,16 +70,22 @@ export const createVendor = async (email, name) => {
       ERROR_MESSAGES.EMAIL_ALREADY_EXIST
     );
   }
-  function getRandomNumber(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-  const characters = "ABCDEFGHIJabcdefghijklmnopqrstuvwxyz0123456789";
+  // function getRandomNumber(min, max) {
+  //   return Math.floor(Math.random() * (max - min + 1)) + min;
+  // }
+ const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
+ const specialCharacters = "!@#$%^&*";
   let password = "";
+  const randomUppercase = String.fromCharCode(
+    65 + Math.floor(Math.random() * 26)
+  );
+  const randomSpecialChar =
+    specialCharacters[Math.floor(Math.random() * specialCharacters.length)];
+  password += randomUppercase + randomSpecialChar;
   for (let i = 0; i < 12; i++) {
-    const randomIndex = getRandomNumber(0, characters.length - 1);
+    const randomIndex = Math.floor(Math.random() * characters.length);
     password += characters.charAt(randomIndex);
   }
-
   const data = await User.create({
     email: email,
     name: name,

@@ -1,4 +1,4 @@
-import { Chat, Conversation, Project,User } from "../../models/index.js";
+import { Chat, Conversation, Project, User } from "../../models/index.js";
 import {
   USER_TYPE,
   STATUS_CODES,
@@ -211,19 +211,4 @@ export const deleteConversation = async (conversationId, userId) => {
   );
   return;
 };
-export const saveImages = async (data, userId) => {
-  const project = await Project.findOne({
-    _id: data.projectId,
-    isDeleted: false,
-  });
-  if (!project) {
-    throw new OperationalError(
-      STATUS_CODES.ACTION_FAILED,
-      ERROR_MESSAGES.PROJECT_NOT_FOUND
-    );
-  }
-  const user = await User.findOneAndUpdate(
-    { _id: userId, isDeleted: false, isVerify: true },
-    {}
-  );
-};
+

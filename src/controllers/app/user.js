@@ -23,10 +23,14 @@ export const getInteriorDesigners = catchAsync(async (req, res) => {
     needHelp,
     fullServiceClients,
     startDate,
-    endDate
+    endDate,
   } = req.query;
 
-  // const userId = req.token.user._id;
+   var userId;
+  const token = req.token;
+  if (token) {
+    userId = token.user._id;
+  }
   const project = await clientServices.getInteriorDesigners(
     type,
     lat,
@@ -45,7 +49,8 @@ export const getInteriorDesigners = catchAsync(async (req, res) => {
     needHelp,
     fullServiceClients,
     startDate,
-    endDate
+    endDate,
+    userId
   );
 
   return successResponse(
@@ -112,7 +117,7 @@ export const getSlots = catchAsync(async (req, res) => {
   );
 });
 export const getSlotDates = catchAsync(async (req, res) => {
-  const { designerId} = req.query;
+  const { designerId } = req.query;
   const userId = req.token.user._id;
   const slots = await clientServices.getSlotDates(designerId);
   return successResponse(
@@ -342,14 +347,26 @@ export const clearConversation = catchAsync(async (req, res) => {
 });
 export const saveImages = catchAsync(async (req, res) => {
   const userId = req.token.user._id;
-  const data = await chatServices.deleteConversation(
-    req.body.conversationId,
+  const data = await clientServices.saveImages(req.body, userId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS
+  );
+});
+export const getSaveImages = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const data = await clientServices.getSaveImages(
+    req.query.page,
+    req.query.limit,
     userId
   );
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.SUCCESS
+    SUCCESS_MESSAGES.SUCCESS,
+    data
   );
 });

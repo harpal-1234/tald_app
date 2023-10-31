@@ -42,7 +42,8 @@ export const getInteriorDesigners = async (
   needHelp,
   fullServiceClients,
   startDate,
-  endDate
+  endDate,
+  userId
 ) => {
   var query;
   var query1;
@@ -107,7 +108,7 @@ export const getInteriorDesigners = async (
     options.destinationProject.answer = destination;
   }
   if (preferences) {
-    options.preferences = { $in: JSON.parse(preferences) }
+    options.preferences = { $in: JSON.parse(preferences) };
   }
   if (needHelp) {
     options.needHelp = { $in: JSON.parse(needHelp) };
@@ -124,8 +125,8 @@ export const getInteriorDesigners = async (
   if (fullServiceClients) {
     options.fullServiceClients = { $in: fullServiceClients };
   }
-  if (lat, long) {
-     options.location ={
+  if ((lat, long)) {
+    options.location = {
       $near: {
         $geometry: {
           type: "Point",
@@ -134,17 +135,17 @@ export const getInteriorDesigners = async (
         $maxDistance: 1000000000,
         // $maxDistance:1000
       },
-    }
+    };
   }
   if (maximumPrice && minimumPrice) {
     options.$and = [
-        {
-          minBudget: minimumPrice ? { $gte: minimumPrice } : { $gte: 0 },
-          maxBudget: maximumPrice
-            ? { $lte: maximumPrice }
-            : { $lte: 1000000000000000 },
-        },
-      ]
+      {
+        minBudget: minimumPrice ? { $gte: minimumPrice } : { $gte: 0 },
+        maxBudget: maximumPrice
+          ? { $lte: maximumPrice }
+          : { $lte: 1000000000000000 },
+      },
+    ];
   }
   // if (virtual_Consultations.answer) {
   //   options.virtual_Consultations.answer=
@@ -159,6 +160,14 @@ export const getInteriorDesigners = async (
     .lean()
     .skip(page * limit)
     .limit(limit);
+  var check;
+  if (userId) {
+    check = await User.findOne({
+      _id: userId,
+      isDeleted: false,
+      isVerify: true,
+    });
+  }
   if (designer.length > 0) {
     await designer.forEach(async (value) => {
       const project = await Project.findOne({
@@ -167,6 +176,11 @@ export const getInteriorDesigners = async (
       });
       delete value.__v;
       delete value.password;
+      if (check && JSON.stringify(check?.saveProfiles).includes(value._id)) {
+        value.isSaveProfile = true;
+      } else {
+        value.isSaveProfile = false;
+      }
       if (project) {
         if (project.images) {
           value.images = project.images;
@@ -178,6 +192,7 @@ export const getInteriorDesigners = async (
       }
     });
   }
+
   const total = await User.count({
     ...options,
     ...query2,
@@ -210,15 +225,49 @@ export const getInteriorDesignerById = async (
     .skip(page * limit)
     .limit(limit);
   if (userId) {
-    projects.forEach((val) => {
-      if (val.likedBy) {
-        if (JSON.stringify(val.likedBy).includes(userId)) {
-          val.isLike = true;
-        } else {
-          val.isLike = false;
-        }
+    const user = await User.findOne({
+      _id: userId,
+      isDeleted: false,
+      isVerify: true,
+    }).lean();
+    console.log(user?.saveProfiles ? user?.saveProfiles : [], "jjjjjjjjjjjj");
+    if (
+      user &&
+      JSON.stringify(user?.saveProfiles ? user?.saveProfiles : []).includes(
+        designerId
+      )
+    ) {
+      console.log("jnfjjnjfjnnjfvfvlmfnknlfknknn")
+      user.isSaveProfile = true;
+    } else {
+      console.log("jnfjjnjfjnnjfvfvlmfnuuuuuuuuu");
+      user.isSaveProfile = false;
+    }
+    projects?.forEach((val) => {
+      if (JSON.stringify(user?.saveImages).includes(val?._id)) {
+        val.isLike = true;
+      } else {
+        val.isLike = false;
       }
     });
+  } else {
+    projects?.forEach((val) => {
+      val.isLike = false;
+    });
+  }
+  const project = await Project.findOne({
+    user: userId,
+    isDeleted: false,
+  }).lean();
+
+  if (project) {
+    if (project.images) {
+      designer.images = project.images;
+    } else {
+      designer.images = [];
+    }
+  } else {
+    designer.images = [];
   }
   const totalProjects = await Project.countDocuments({
     user: designerId,
@@ -567,7 +616,6 @@ export const getConsultations = async (page, limit, clientId) => {
     },
     { $set: { isPast: true, isConfirm: false } }
   );
-  console.log(clientId, "jkkkkkkkkh");
   const [UpcomingConsultation, pastConsultations] = await Promise.all([
     Consultations.find({
       user: clientId,
@@ -723,4 +771,29 @@ export const editProjectInquery = async (body, userId) => {
   await formatProjectInquery(projects.toObject());
 
   return projects;
+};
+export const saveImages = async (data, userId) => {
+  const project = await Project.findOne({
+    _id: data.projectId,
+    isDeleted: false,
+  });
+  if (!project) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.PROJECT_NOT_FOUND
+    );
+  }
+  const user = await User.findOneAndUpdate(
+    { _id: userId, isDeleted: false, isVerify: true },
+    { $push: { saveImages: { image: data.image, projectId: data.projectId } } },
+    { new: true }
+  );
+  return user;
+};
+export const getSaveImages = async (page, limit, userId) => {
+  const user = await User.findOne(
+    { _id: userId, isDeleted: false },
+    { saveImages: { $slice: [page * limit, limit] } }
+  );
+  return user?.saveImages;
 };

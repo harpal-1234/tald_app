@@ -326,6 +326,12 @@ export const saveImages = {
     image: Joi.string().required(),
   }),
 };
+export const getSaveImages = {
+  query: Joi.object().keys({
+    page: Joi.number().required(),
+    limit: Joi.number().required(),
+  }),
+};
 export const blockUser = {
   body: Joi.object().keys({
     conversationId: Joi.string().required(),
