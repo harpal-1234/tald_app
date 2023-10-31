@@ -54,7 +54,7 @@ export const getSlots = {
 export const getSlotDates = {
   query: Joi.object().keys({
     designerId: Joi.string().required(),
-    date: Joi.string().required(),
+   // date: Joi.string().required(),
     //timeDuration: Joi.string().required().valid("25_mins", "55_mins"),
   }),
 };

@@ -112,9 +112,9 @@ export const getSlots = catchAsync(async (req, res) => {
   );
 });
 export const getSlotDates = catchAsync(async (req, res) => {
-  const { designerId, date } = req.query;
+  const { designerId} = req.query;
   const userId = req.token.user._id;
-  const slots = await clientServices.getSlotDates(designerId, date);
+  const slots = await clientServices.getSlotDates(designerId);
   return successResponse(
     req,
     res,

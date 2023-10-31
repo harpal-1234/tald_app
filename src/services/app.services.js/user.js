@@ -107,7 +107,7 @@ export const getInteriorDesigners = async (
     options.destinationProject.answer = destination;
   }
   if (preferences) {
-    options.preferences = { $in: JSON.parse(preferences) };
+    options.preferences = { $in: JSON.parse(preferences) }
   }
   if (needHelp) {
     options.needHelp = { $in: JSON.parse(needHelp) };
@@ -121,24 +121,36 @@ export const getInteriorDesigners = async (
   if (styles) {
     options.styles = { $in: JSON.parse(styles) };
   }
-  if ((lat, long)) {
-    options.location = {
+  if (fullServiceClients) {
+    options.fullServiceClients = { $in: fullServiceClients };
+  }
+  if (lat, long) {
+     options.location ={
       $near: {
         $geometry: {
           type: "Point",
           coordinates: [long, lat],
         },
         $maxDistance: 1000000000,
+        // $maxDistance:1000
       },
-    };
+    }
   }
-  if (fullServiceClients) {
-    options.fullServiceClients = { $in: fullServiceClients };
+  if (maximumPrice && minimumPrice) {
+    options.$and = [
+        {
+          minBudget: minimumPrice ? { $gte: minimumPrice } : { $gte: 0 },
+          maxBudget: maximumPrice
+            ? { $lte: maximumPrice }
+            : { $lte: 1000000000000000 },
+        },
+      ]
   }
   // if (virtual_Consultations.answer) {
   //   options.virtual_Consultations.answer=
   // }
-  console.log(options);
+  console.log(options, query2, query3, query);
+
   const designer = await User.find({
     ...options,
     ...query2,
@@ -418,7 +430,7 @@ export const getSlots = async (designerId, date, userId, timeDuration) => {
     return result;
   }
 };
-export const getSlotDates = async (designerId, date) => {
+export const getSlotDates = async (designerId) => {
   const check = await User.findOne({
     _id: designerId,
     isDeleted: false,
@@ -444,7 +456,7 @@ export const getSlotDates = async (designerId, date) => {
     .lean();
 
   const dates = [];
-  let originalDate = new Date(date);
+  let originalDate = new Date();
   originalDate.setMinutes(originalDate.getMinutes() + 1);
   let nextDate = originalDate.toISOString();
   //var nextDate = date;
