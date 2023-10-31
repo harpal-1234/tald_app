@@ -48,7 +48,7 @@ const userSchema = mongoose.Schema(
       answer: {
         type: String,
         enum: [...Object.values(PROJECT_TYPE)],
-        default: "",
+    
       },
     },
     virtual_Consultations: {

@@ -30,7 +30,7 @@ export const userList = async (page, limit) => {
   })
     .skip(page * limit)
     .limit(limit)
-    .lean();
+    .lean().sort({_id: -1});
   const total = await User.countDocuments({
     type: "User",
     isDeleted: false,
@@ -47,7 +47,8 @@ export const vendorList = async (page, limit) => {
   })
     .skip(page * limit)
     .limit(limit)
-    .lean();
+    .lean()
+    .sort({ _id: -1 });
   const total = await User.countDocuments({
     type: "Vendor",
     isDeleted: false,
