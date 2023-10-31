@@ -49,6 +49,7 @@ export const vendorList = async (page, limit) => {
     .limit(limit)
     .lean()
     .sort({ _id: -1 });
+  console.log("first")
   const total = await User.countDocuments({
     type: "Vendor",
     isDeleted: false,
