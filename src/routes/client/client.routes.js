@@ -25,11 +25,11 @@ router.put(
   validate(clientValidation.saveProfile),
   clientController.saveProfile
 );
-router.put(
+router.get(
   "/getSaveProfiles",
   auth(USER_TYPE.USER),
   validate(clientValidation.getSaveProfile),
-  clientController.saveProfile
+  clientController.getSaveProfile
 );
 router.get(
   "/getSlots",

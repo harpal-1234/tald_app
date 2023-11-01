@@ -176,7 +176,7 @@ export const getInteriorDesigners = async (
       });
       delete value.__v;
       delete value.password;
-      if (check && JSON.stringify(check?.saveProfiles).includes(value._id)) {
+      if (check && JSON.stringify(check?.saveProfiles)?.includes(value._id)) {
         value.isSaveProfile = true;
       } else {
         value.isSaveProfile = false;
@@ -230,18 +230,13 @@ export const getInteriorDesignerById = async (
       isDeleted: false,
       isVerify: true,
     }).lean();
-    console.log(user?.saveProfiles ? user?.saveProfiles : [], "jjjjjjjjjjjj");
-    if (
-      user &&
-      JSON.stringify(user?.saveProfiles ? user?.saveProfiles : []).includes(
-        designerId
-      )
-    ) {
-      console.log("jnfjjnjfjnnjfvfvlmfnknlfknknn")
-      user.isSaveProfile = true;
+    // console.log(user?.saveProfiles ? user?.saveProfiles : [], "jjjjjjjjjjjj");
+    if (user && JSON.stringify(user?.saveProfiles)?.includes(designerId)) {
+      console.log("jnfjjnjfjnnjfvfvlmfnknlfknknn");
+      designer.isSaveProfile = true;
     } else {
       console.log("jnfjjnjfjnnjfvfvlmfnuuuuuuuuu");
-      user.isSaveProfile = false;
+      designer.isSaveProfile = false;
     }
     projects?.forEach((val) => {
       if (JSON.stringify(user?.saveImages).includes(val?._id)) {
@@ -300,9 +295,10 @@ export const saveProfile = async (designerId, userId) => {
       // isApproved:true,
       isDeleted: false,
     },
-    { $push: { saveProfile: designerId } },
+    { $push: { saveProfiles: designerId } },
     { new: true }
   );
+  console.log(designer)
   return;
 };
 export const getSlots = async (designerId, date, userId, timeDuration) => {
@@ -562,12 +558,41 @@ export const getSlotDates = async (designerId) => {
   //console.log(dates);
   return dates;
 };
-export const getSaveProfiles = async (page, limit) => {
-  const check = await User.findOne({
-    _id: designerId,
-    isVerify: true,
-    // isApproved:true,
-    isDeleted: false,
+export const getSaveProfiles = async (data, userId) => {
+  const check = await User.findOne(
+    {
+      _id: userId,
+      isVerify: true,
+      // isApproved:true,
+      isDeleted: false,
+    },
+    { saveProfiles: { $slice: [data.page * data.limit, data.limit] } }
+  ).populate({
+    path: "saveProfiles",
+    select: [
+      "email",
+      "name",
+      "isBlocked",
+      "companyName",
+      "address",
+      "instagramLink",
+      "pinterestLink",
+      "about",
+      "projectType",
+      "virtual_Consultations",
+      "newClientProjects",
+      "destinationProject",
+      "feeStructure",
+      "tradeDiscount",
+      "minBudget",
+      "maxBudget",
+      "weeklySchedule",
+      "availability",
+      "goals",
+      "preferences",
+      "projectSize",
+      "styles",
+    ],
   });
   if (!check) {
     throw new OperationalError(
@@ -575,6 +600,7 @@ export const getSaveProfiles = async (page, limit) => {
       ERROR_MESSAGES.DESIGNER_NOT_FOUND
     );
   }
+  return check?.saveProfiles;
 };
 export const bookConsultations = async (
   designerId,

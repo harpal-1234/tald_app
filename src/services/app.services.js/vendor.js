@@ -133,7 +133,7 @@ export const addAvailability = async (
       { _id: userId },
       {
         availability: {
-          startDate: availability.startDate,
+          startDate: currentDate,
           endDate: moment(next40thDay).format("YYYY-MM-DD"),
         },
         weeklySchedule: weeklySchedule,

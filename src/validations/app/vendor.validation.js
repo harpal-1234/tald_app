@@ -39,7 +39,7 @@ export const saveProfile = {
   }),
 };
 export const getSaveProfile = {
-  body: Joi.object().keys({
+  query: Joi.object().keys({
     page: Joi.number().required(),
     limit: Joi.number().required(),
   }),
@@ -332,6 +332,7 @@ export const getSaveImages = {
     limit: Joi.number().required(),
   }),
 };
+
 export const blockUser = {
   body: Joi.object().keys({
     conversationId: Joi.string().required(),

@@ -98,6 +98,7 @@ export const saveProfile = catchAsync(async (req, res) => {
     SUCCESS_MESSAGES.SUCCESS
   );
 });
+
 export const getSlots = catchAsync(async (req, res) => {
   const { designerId, date, timeDuration } = req.query;
   const userId = req.token.user._id;
@@ -167,8 +168,8 @@ export const addFileConsultation = catchAsync(async (req, res) => {
 });
 export const getSaveProfile = catchAsync(async (req, res) => {
   const userId = req.token.user._id;
-  const designer = await clientServices.saveProfile(
-    req.body.designerId,
+  const designer = await clientServices.getSaveProfiles(
+    req.query,
     userId
   );
 
@@ -176,7 +177,8 @@ export const getSaveProfile = catchAsync(async (req, res) => {
     req,
     res,
     STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.SUCCESS
+    SUCCESS_MESSAGES.SUCCESS,
+    designer
   );
 });
 export const getConsultations = catchAsync(async (req, res) => {
