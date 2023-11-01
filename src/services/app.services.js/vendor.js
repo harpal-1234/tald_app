@@ -103,7 +103,7 @@ export const addAvailability = async (
   inviteesSchedule,
   userId
 ) => {
-  const currentDate = new Date(availability.startDate);
+  var currentDate = availability.startDate ? new Date(availability.startDate): new Date()
 
   const next40thDay = new Date(
     currentDate.getTime() + availability.numberOfDays * 24 * 60 * 60 * 1000
