@@ -8,13 +8,6 @@ import {
 import {
   STATUS_CODES,
   ERROR_MESSAGES,
-  OPTIONS,
-  PROJECT_TYPE,
-  PREFERENCES,
-  PROJECT_SIZE,
-  GOALS,
-  STYLE,
-  NEED_HELP,
 } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
 import {
@@ -102,10 +95,10 @@ export const getInteriorDesigners = async (
     isSignUp: true,
   };
   if (projectType) {
-    options.projectType.answer = projectType;
+    options["projectType.answer"] = projectType;
   }
   if (destination) {
-    options.destinationProject.answer = destination;
+    options["destinationProject.answer"] = destination;
   }
   if (preferences) {
     options.preferences = { $in: JSON.parse(preferences) };
