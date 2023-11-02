@@ -163,7 +163,7 @@ export const getInteriorDesigners = async (
       const project = await Project.findOne({
         user: value._id,
         isDeleted: false,
-      });
+      }).sort({_id:-1});
       delete value.__v;
       delete value.password;
       if (project) {
