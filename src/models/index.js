@@ -9,6 +9,7 @@ import { Conversation } from "../models/conversation.js";
 import { Chat } from "../models/chat.js";
 import { projectRequest } from "../models/projectRequest.js";
 import { Filter } from "../models/filter.js";
+import { Review } from "./reviews.js";
 
 export {
   Admin,
@@ -21,5 +22,6 @@ export {
   Conversation,
   Chat,
   projectRequest,
-  Filter
+  Filter,
+  Review,
 };

@@ -372,3 +372,18 @@ export const getSaveImages = catchAsync(async (req, res) => {
     data
   );
 });
+export const review = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const data = await clientServices.review(
+    req.body,
+    userId
+  );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+  );
+});
+

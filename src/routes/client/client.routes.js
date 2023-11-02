@@ -144,4 +144,10 @@ router.get(
   validate(clientValidation.getSaveImages),
   clientController.getSaveImages
 );
+router.post(
+  "/review",
+  auth(USER_TYPE.USER),
+  validate(clientValidation.review),
+  clientController.review
+);
 export default router;

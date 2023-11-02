@@ -4,6 +4,7 @@ import {
   Consultations,
   ProjectInquery,
   projectRequest,
+  Review,
 } from "../../models/index.js";
 import { STATUS_CODES, ERROR_MESSAGES } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
@@ -163,7 +164,7 @@ export const getInteriorDesigners = async (
       const project = await Project.findOne({
         user: value._id,
         isDeleted: false,
-      }).sort({_id:-1});
+      }).sort({ _id: -1 });
       delete value.__v;
       delete value.password;
       if (project) {
@@ -812,4 +813,24 @@ export const getSaveImages = async (page, limit, userId) => {
     { saveImages: { $slice: [page * limit, limit] } }
   );
   return user?.saveImages;
+};
+export const review = async (data, userId) => {
+  const check = await User.findOne({
+    _id: data.designerId,
+    isDeleted: false,
+    isVerify: true,
+  });
+  if (!check) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.DESIGNER_NOT_FOUND
+    );
+  }
+  const reviews = await Review.create({
+    user: userId,
+    designer: data.designerId,
+    reviewText: data.reviewText,
+    rating: data.rating,
+  });
+  return reviews
 };

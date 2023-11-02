@@ -332,6 +332,13 @@ export const getSaveImages = {
     limit: Joi.number().required(),
   }),
 };
+export const review = {
+  body: Joi.object().keys({
+    designerId: Joi.string().required(),
+    rating: Joi.number().required(),
+    reviewText:Joi.string().required()
+  }),
+};
 
 export const blockUser = {
   body: Joi.object().keys({
