@@ -5,10 +5,7 @@ import {
   ProjectInquery,
   projectRequest,
 } from "../../models/index.js";
-import {
-  STATUS_CODES,
-  ERROR_MESSAGES,
-} from "../../config/appConstants.js";
+import { STATUS_CODES, ERROR_MESSAGES } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
 import {
   formatUser,
@@ -169,11 +166,6 @@ export const getInteriorDesigners = async (
       });
       delete value.__v;
       delete value.password;
-      if (check && JSON.stringify(check?.saveProfiles)?.includes(value._id)) {
-        value.isSaveProfile = true;
-      } else {
-        value.isSaveProfile = false;
-      }
       if (project) {
         if (project.images) {
           value.images = project.images;
@@ -182,6 +174,11 @@ export const getInteriorDesigners = async (
         }
       } else {
         value.images = [];
+      }
+      if (check && JSON.stringify(check?.saveProfiles)?.includes(value._id)) {
+        value.isSaveProfile = true;
+      } else {
+        value.isSaveProfile = false;
       }
     });
   }
@@ -291,7 +288,7 @@ export const saveProfile = async (designerId, userId) => {
     { $push: { saveProfiles: designerId } },
     { new: true }
   );
-  console.log(designer)
+  console.log(designer);
   return;
 };
 export const getSlots = async (designerId, date, userId, timeDuration) => {
