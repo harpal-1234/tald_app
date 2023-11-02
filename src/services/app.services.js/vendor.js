@@ -149,8 +149,8 @@ export const addAvailability = async (
 };
 export const getAvailability = async (userId) => {
   const availability = await User.findOne({ _id: userId, isDeleted: false }).lean();
-  const startDate = new Date(availability.availability.startDate);
-  const endDate = new Date(availability.availability.endDate);
+  const startDate = new Date(availability.availability?.startDate);
+  const endDate = new Date(availability.availability?.endDate);
   const timeDifference = endDate - startDate;
   const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
   availability.availability.numberOfDays = daysDifference
