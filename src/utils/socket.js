@@ -26,7 +26,12 @@ let userCache = {};
 
 export const connectSocket = (server) => {
   const io = new Server(server);
-
+  io = socket(server, {
+    allowEIO3: true,
+    cors: {
+      origin: "*",
+    },
+  });
   io.use(function (socket, next) {
     console.log("user is trying to connect");
     if (socket.handshake.query && socket.handshake.query.token) {
@@ -42,7 +47,7 @@ export const connectSocket = (server) => {
             );
           const token = await Token.findOne({
             token: socket.handshake.query.token,
-          }).lean();                                        
+          }).lean();
 
           console.log(
             "decoded",
