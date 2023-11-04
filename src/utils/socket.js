@@ -30,7 +30,7 @@ export const connectSocket = (server) => {
   const io = new Server(server,{
     allowEIO3:true,
     cors:{
-        origins:"http://localhost:3000",
+        origin:"http://localhost:3000",
     }
   });
   io.use(cors());
