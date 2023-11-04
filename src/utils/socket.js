@@ -27,7 +27,12 @@ let userCache = {};
 // const socket = Socket
 
 export const connectSocket = (server) => {
-  const io = new Server(server);
+  const io = new Server(server,{
+    allowEIO3:true,
+    cors:{
+        origins:"http://localhost:3000",
+    }
+  });
   io.use(cors());
   // io = socket(server, {
   //   allowEIO3: true,
