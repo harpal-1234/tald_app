@@ -178,7 +178,7 @@ export const register = async (userData) => {
   console.log(userData);
   const check = await User.findOne({
     email: userData.email,
-    isVerify: true,
+    //isVerify: true,
     type: userData.type,
     isDeleted: false,
   });
@@ -217,7 +217,7 @@ export const getProfile = async (userId) => {
     _id: userId,
     isDeleted: false,
     // type: type,
-    isVerify: true,
+    //isVerify: true,
   }).lean();
 
   if (user.type == "User") {
@@ -235,7 +235,7 @@ export const profile = async (token, name, email) => {
   if (check) {
     const user = await User.findOne({
       _id: check.user,
-      isVerify: true,
+      //isVerify: true,
       isDeleted: false,
     });
     if (user) {
@@ -259,7 +259,7 @@ export const verifyEmails = async (token) => {
 export const createService = async (userId, data) => {
   const check = await User.findOne({
     _id: userId,
-    isVerify: true,
+   // isVerify: true,
     isDeleted: false,
   });
 
@@ -274,7 +274,7 @@ export const createService = async (userId, data) => {
   const user = await User.findOneAndUpdate(
     {
       _id: userId,
-      isVerify: true,
+     // isVerify: true,
       isDeleted: false,
     },
     {
@@ -315,7 +315,7 @@ export const userLogin = async (data) => {
   let user = await User.findOne({
     email: data.email,
     type: data.type,
-    isVerify: true,
+   // isVerify: true,
     isDeleted: false,
   }).lean();
 
@@ -424,7 +424,8 @@ export const resetPassword = async (tokenData, newPassword) => {
   return { tokenvalue, adminvalue };
 };
 export const changePassword = async (userId, oldPassword, newPassword) => {
-  const user = await User.findById(userId);
+  const user = await User.findById(userId).lean();
+  console.log(user)
   if (!(await bcrypt.compare(oldPassword, user.password))) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,

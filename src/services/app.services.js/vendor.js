@@ -166,7 +166,7 @@ export const editProjectDetails = async (data, userId) => {
   const value = await User.findOneAndUpdate(
     {
       _id: userId,
-      isVerify: true,
+      //isVerify: true,
       isDeleted: false,
     },
     {
@@ -185,7 +185,7 @@ export const editCompanyDetails = async (data, userId) => {
   const value = await User.findOneAndUpdate(
     {
       _id: userId,
-      isVerify: true,
+     // isVerify: true,
       isDeleted: false,
     },
     {
@@ -208,7 +208,7 @@ export const editFeeStructure = async (data, userId) => {
     {
       _id: userId,
       isDeleted: false,
-      isVerify: true,
+     // isVerify: true,
     },
     {
       feeStructure: data.feeStructure,
@@ -223,7 +223,7 @@ export const editVendorProfile = async (data, userId) => {
     {
       _id: userId,
       isDeleted: false,
-      isVerify: true,
+      //isVerify: true,
     },
     {
       projectType: data.projectType,
@@ -352,7 +352,7 @@ export const consultationAction = async (
   }
   const designer = await User.find({
     _id: designerId,
-    isVerify: true,
+   // isVerify: true,
     isDeleted: false,
   });
   const zoomLink = await zoomMeeting.createZommLink(

@@ -267,6 +267,7 @@ export const ERROR_MESSAGES = {
   SKILL_ALREADY_EXIST: "Skill already exist with this name.",
   WRONG_PASSWORD: "Password is Incorrect",
   DEAL_ID: "This deal allready exist",
+  OLD_PASSWORD: " Old Password is Incorrect",
   COUPON_DATA: "store not exist",
   COUPON_WEBLINK: "Coupon Already exist",
   STORE_NOT_EXIST: "Store not exists",

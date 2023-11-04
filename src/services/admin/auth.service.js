@@ -26,7 +26,7 @@ export const userList = async (page, limit) => {
   const users = await User.find({
     type: "User",
     isDeleted: false,
-    isVerify: true,
+   // isVerify: true,
   })
     .skip(page * limit)
     .limit(limit)
@@ -34,7 +34,7 @@ export const userList = async (page, limit) => {
   const total = await User.countDocuments({
     type: "User",
     isDeleted: false,
-    isVerify: true,
+   // isVerify: true,
   });
   await formatUser(users);
   return { users, total };
@@ -43,7 +43,7 @@ export const vendorList = async (page, limit) => {
   const users = await User.find({
     type: "Vendor",
     isDeleted: false,
-    isVerify: true,
+   // isVerify: true,
   })
     .skip(page * limit)
     .limit(limit)
@@ -53,7 +53,7 @@ export const vendorList = async (page, limit) => {
   const total = await User.countDocuments({
     type: "Vendor",
     isDeleted: false,
-    isVerify: true,
+   // isVerify: true,
   });
   await formatUser(users);
   return { users, total };
@@ -62,7 +62,7 @@ export const createVendor = async (email, name) => {
   const check = await User.findOne({
     email: email,
     isDeleted: false,
-    isVerify: true,
+   // isVerify: true,
   });
   if (check) {
     throw new OperationalError(
@@ -147,7 +147,7 @@ export const userAction = async (userId) => {
   const user = await User.findOne({
     _id: userId,
     isDeleted: false,
-    isVerify: true,
+   // isVerify: true,
   });
   if (!user) {
     throw new OperationalError(
@@ -160,7 +160,7 @@ export const userAction = async (userId) => {
       {
         _id: userId,
         isDeleted: false,
-        isVerify: true,
+      //  isVerify: true,
       },
       { isBlocked: false },
       { new: true }
@@ -171,7 +171,7 @@ export const userAction = async (userId) => {
       {
         _id: userId,
         isDeleted: false,
-        isVerify: true,
+       // isVerify: true,
       },
       { isBlocked: true },
       { new: true }

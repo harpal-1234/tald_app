@@ -89,7 +89,7 @@ export const getInteriorDesigners = async (
   var options = {
     // isApproved:true,
     isDeleted: false,
-    isVerify: true,
+   // isVerify: true,
     isSignUp: true,
   };
   if (projectType) {
@@ -156,7 +156,7 @@ export const getInteriorDesigners = async (
     check = await User.findOne({
       _id: userId,
       isDeleted: false,
-      isVerify: true,
+     // isVerify: true,
     });
   }
   if (designer.length > 0) {
@@ -200,7 +200,7 @@ export const getInteriorDesignerById = async (
 ) => {
   const designer = await User.findOne({
     _id: designerId,
-    isVerify: true,
+    //isVerify: true,
     // isApproved:true,
     isDeleted: false,
   }).lean();
@@ -219,7 +219,7 @@ export const getInteriorDesignerById = async (
     const user = await User.findOne({
       _id: userId,
       isDeleted: false,
-      isVerify: true,
+     // isVerify: true,
     }).lean();
     // console.log(user?.saveProfiles ? user?.saveProfiles : [], "jjjjjjjjjjjj");
     if (user && JSON.stringify(user?.saveProfiles)?.includes(designerId)) {
@@ -269,7 +269,7 @@ export const getInteriorDesignerById = async (
 export const saveProfile = async (designerId, userId) => {
   const check = await User.findOne({
     _id: designerId,
-    isVerify: true,
+    //isVerify: true,
     // isApproved:true,
     isDeleted: false,
   });
@@ -282,7 +282,7 @@ export const saveProfile = async (designerId, userId) => {
   const designer = await User.findOneAndUpdate(
     {
       _id: userId,
-      isVerify: true,
+      //isVerify: true,
       // isApproved:true,
       isDeleted: false,
     },
@@ -296,7 +296,7 @@ export const getSlots = async (designerId, date, userId, timeDuration) => {
   const check = await User.findOne({
     _id: designerId,
     isDeleted: false,
-    isVerify: true,
+   // isVerify: true,
   });
   if (!check) {
     throw new OperationalError(
@@ -469,7 +469,7 @@ export const getSlotDates = async (designerId) => {
   const check = await User.findOne({
     _id: designerId,
     isDeleted: false,
-    isVerify: true,
+    //isVerify: true,
   });
   if (!check) {
     throw new OperationalError(
@@ -553,7 +553,7 @@ export const getSaveProfiles = async (data, userId) => {
   const check = await User.findOne(
     {
       _id: userId,
-      isVerify: true,
+     // isVerify: true,
       // isApproved:true,
       isDeleted: false,
     },
@@ -603,7 +603,7 @@ export const bookConsultations = async (
 ) => {
   const check = await User.findOne({
     _id: designerId,
-    isVerify: true,
+   // isVerify: true,
     isDeleted: false,
   });
   if (!check) {
@@ -724,7 +724,7 @@ export const getInqueryStatus = async (projectId) => {
 export const submitProjectInquery = async (projectId, designerId, userId) => {
   const check = await User.findOne({
     _id: designerId,
-    isVerify: true,
+  //  isVerify: true,
     isDeleted: false,
   });
   if (!check) {
@@ -801,7 +801,8 @@ export const saveImages = async (data, userId) => {
     );
   }
   const user = await User.findOneAndUpdate(
-    { _id: userId, isDeleted: false, isVerify: true },
+    { _id: userId, isDeleted: false, //isVerify: true 
+  },
     { $push: { saveImages: { image: data.image, projectId: data.projectId } } },
     { new: true }
   );
@@ -818,7 +819,7 @@ export const review = async (data, userId) => {
   const check = await User.findOne({
     _id: data.designerId,
     isDeleted: false,
-    isVerify: true,
+    //isVerify: true,
   });
   if (!check) {
     throw new OperationalError(
