@@ -9,6 +9,8 @@ import {
 import * as socketServices from "../services/user/socketChat.js";
 import { OperationalError } from "../utils/errors.js";
 import { Token } from "../models/index.js";
+import cors from"cors";
+
 
 // const server = new Server();
 
@@ -26,6 +28,7 @@ let userCache = {};
 
 export const connectSocket = (server) => {
   const io = new Server(server);
+  io.use(cors());
   // io = socket(server, {
   //   allowEIO3: true,
   //   cors: {
