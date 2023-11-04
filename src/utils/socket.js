@@ -48,6 +48,7 @@ export const connectSocket = (server) => {
         socket.handshake.query.token,
         config.jwt.secret,
         async function (err, decoded) {
+          console.log(err,decoded.role)
           if (err || decoded.role == USER_TYPE.ADMIN)
             throw new OperationalError(
               STATUS_CODES.ACTION_FAILED,
