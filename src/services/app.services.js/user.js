@@ -167,6 +167,11 @@ export const getInteriorDesigners = async (
       }).sort({ _id: -1 });
       delete value.__v;
       delete value.password;
+      if (check && JSON.stringify(check?.saveProfiles)?.includes(value._id)) {
+        value.isSaveProfile = true;
+      } else {
+        value.isSaveProfile = false;
+      }
       if (project) {
         if (project.images) {
           value.images = project.images;
@@ -176,11 +181,7 @@ export const getInteriorDesigners = async (
       } else {
         value.images = [];
       }
-      if (check && JSON.stringify(check?.saveProfiles)?.includes(value._id)) {
-        value.isSaveProfile = true;
-      } else {
-        value.isSaveProfile = false;
-      }
+      console.log(check && JSON.stringify(check?.saveProfiles)?.includes(value._id))
     });
   }
 
