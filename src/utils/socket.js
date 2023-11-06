@@ -8,30 +8,30 @@ import {
 } from "../config/appConstants.js";
 import * as socketServices from "../services/user/socketChat.js";
 import { OperationalError } from "../utils/errors.js";
-import { Token } from "../models/index.js";
-import cors from"cors";
-
+import { Conversation, Token } from "../models/index.js";
+import cors from "cors";
 
 // const server = new Server();
 
 let userCache = {};
 
-/*
- 
-   userCache ={
-       userId:socketId,
-       user2Id:socketId2
-   }
- 
-*/
+// userCache = {
+//   conversationId: [
+//     {
+//       userId: [socketId],
+//       userId2: [socketId2],
+//     },
+//   ],
+// };
+
 // const socket = Socket
 
 export const connectSocket = (server) => {
-  const io = new Server(server,{
-    allowEIO3:true,
-    cors:{
-        origin:"http://localhost:3000",
-    }
+  const io = new Server(server, {
+    allowEIO3: true,
+    cors: {
+      origin: ["http://localhost:3000", "https://api.tald.co"],
+    },
   });
   //io.use(cors());
   // io = socket(server, {
@@ -48,7 +48,7 @@ export const connectSocket = (server) => {
         socket.handshake.query.token,
         config.jwt.secret,
         async function (err, decoded) {
-          console.log(err,decoded.role)
+          console.log(err, decoded.role);
           if (err || decoded.role == USER_TYPE.ADMIN)
             throw new OperationalError(
               STATUS_CODES.ACTION_FAILED,
@@ -56,6 +56,10 @@ export const connectSocket = (server) => {
             );
           const token = await Token.findOne({
             token: socket.handshake.query.token,
+          }).lean();
+
+          const conversation = await Conversation.findOne({
+            _id: socket.handshake.query.conversationId,
           }).lean();
 
           console.log(
@@ -67,13 +71,27 @@ export const connectSocket = (server) => {
 
           socket.decoded = decoded;
           socket.decoded.user = token.user;
-          let value = socket.decoded.user;
-          if (!userCache[value]) {
-            userCache[value] = [socket.id];
-          } else {
-            userCache[value].push(socket.id);
-          }
+          socket.decoded.conversation = conversation?._id;
 
+          let value = socket.decoded.conversation;
+          if (!userCache[value]) {
+            userCache[value] = [{ [userId]: socket.decode.user[socket.id] }];
+          } else {
+            const keys = Object.keys(userCache[value]);
+            const object = userCache[value];
+
+            const obj = userCache[value].find((item) =>
+              item.hasOwnProperty(userId)
+            );
+            if (obj) {
+              obj[userId].push(socket.decode.user[socket.id]);
+            } else {
+              userCache[value] = {
+                ...object[keys[0]],
+                [userId]: [socket.decode.user[socket.id]],
+              };
+            }
+          }
           console.log("socketHolder", userCache);
           return next();
         }
@@ -132,11 +150,13 @@ export const connectSocket = (server) => {
         console.log(userCache[receiverId], senderId);
         console.log(message);
         if (message.isEmit) {
-          if (userCache[receiverId]) {
-            userCache[receiverId].map((id) => {
-              io.to(id).emit("receiveMessage", message);
-            });
-          }
+          userCache[conversation._id].forEach((users) => {
+            if (users[userId]) {
+              users[userId].forEach((socketId) => {
+                io.to(socketId).emit("receiveMessage", message);
+              });
+            }
+          });
         }
       }
     });
