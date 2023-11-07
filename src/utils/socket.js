@@ -103,6 +103,7 @@ export const connectSocket = (server) => {
     }
   }).on("connection", (socket) => {
     socket.on("sendMessage", async (data) => {
+      console.log(data)
       console.log(data.message, data.type, data.conversationId);
       if (!data.message && !data.type) {
         throw new OperationalError(
