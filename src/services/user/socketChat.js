@@ -25,12 +25,14 @@ export const saveMessages = async (
     _id: conversationId,
     blocked: { $in: senderId },
   });
+  console.log(check,"chjeck check check ")
+  if(check){
   if (JSON.stringify(check.isDeleted).includes(receiverId)) {
     await Conversation.findOneAndUpdate(
       { _id: conversationId },
       { $pull: { isDeleted: receiverId } }
     );
-  }
+  }}
 
   const time = new Date();
   const saveMessage = await Chat.create({

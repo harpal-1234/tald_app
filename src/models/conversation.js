@@ -17,10 +17,8 @@ const conversationSchema = mongoose.Schema(
           type: String,
           enum: [...Object.values(MESSAGE_TYPE)],
         },
-        isDeleted: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
       },
     ],
-
     isDeleted: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
   },
   {
