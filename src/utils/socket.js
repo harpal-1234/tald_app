@@ -151,14 +151,16 @@ export const connectSocket = (server) => {
         console.log(message);
         if (message.isEmit) {
           console.log(userCache[conversation._id],"cccccccccccccccccc")
-          userCache[conversation._id]?.forEach((users) => {
-            if (users[receiverId]) {
-              users[receiverId].forEach((socketId) => {
-                console.log(socketId,"socketId")
-                io.to(socketId).emit("receiveMessage", message);
-              });
+          if (userCache[conversation._id]) {
+            for (const key in userCache[conversation._id]) {
+              if (key === receiverId) {
+                userCache[conversation._id][key].forEach((socketId) => {
+                  console.log(socketId, "socketId");
+                  io.to(socketId).emit("receiveMessage", message);
+                });
+              }
             }
-          });
+          }
         }
       }
     });
