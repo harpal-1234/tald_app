@@ -150,9 +150,12 @@ export const connectSocket = (server) => {
         console.log(userCache[receiverId], senderId);
         console.log(message);
         if (message.isEmit) {
-          console.log(userCache[conversation._id],"cccccccccccccccccc")
+          console.log(userCache[conversation._id],"cccccccccccccccccc");
+          
           if (userCache[conversation._id]) {
+            console.log(userCache[conversation._id],"iiiiiiiiiiiiiiiiiiiiiiiii")
             for (const key in userCache[conversation._id]) {
+              console.log(key === receiverId)
               if (key === receiverId) {
                 userCache[conversation._id][key].forEach((socketId) => {
                   console.log(socketId, "socketId");
