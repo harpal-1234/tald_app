@@ -27,7 +27,7 @@ export const getConversation = async (page, limit, userId) => {
         select: ["name", "email"],
       },
     ]);
-console.log(data,"chatd data chat chat chat")
+
   if (data.length > 0) {
     // data.forEach((val) => {
     //   const pic = val.sender.images[0];

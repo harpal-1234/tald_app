@@ -7,6 +7,7 @@ import {
 } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
 export const oneConversation = async (conversationId) => {
+  console.log(conversationId,"IIIIIIDDDDDDDDDDDDD")
   const conversation = await Conversation.findOne({
     _id: conversationId,
   });

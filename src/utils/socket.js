@@ -113,6 +113,7 @@ console.log(socket.decoded.user,"llllllhihiohohhhhooioggogo")
         );
       }
       if (data.conversationId) {
+        console.log("jgiuhiuhiuhihihgih    conversation")
         const conversation = await socketServices.oneConversation(
           data.conversationId
         );
