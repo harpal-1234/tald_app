@@ -84,11 +84,10 @@ export const connectSocket = (server) => {
             if (userCache[value] && userCache[value].hasOwnProperty(userId)) {
               userCache[value][userId].push(socket._id);
             } else {
-              console.log("replaceeeeeeeeeeeeeeee")
-              userCache[value] = {
-                ...object[keys[0]],
-                [userId]: [socket.id],
-              };
+              if (!userCache[value][userId]) {
+                userCache[value][userId] = [];
+              }
+              userCache[value][userId].push(socket._id);
             }
           }
           console.log("socketHolder", userCache);
