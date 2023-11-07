@@ -82,14 +82,14 @@ console.log(socket.decoded.user,"llllllhihiohohhhhooioggogo")
             const object = userCache[value];
 
             const obj = userCache[value].find((item) =>
-              item.hasOwnProperty(socket.decode.user)
+              item.hasOwnProperty(userId)
             );
             if (obj) {
-              obj[socket.decode.user].push([socket.id]);
+              obj[userId].push([socket.id]);
             } else {
               userCache[value] = {
                 ...object[keys[0]],
-                [socket.decode.user]: [socket.id],
+                [userId]: [socket.id],
               };
             }
           }
