@@ -56,6 +56,6 @@ export const saveMessages = async (
       { path: "receiver", select: ["name", "email"] },
     ])
     .lean();
-  msg.isEmit = JSON.stringify(check.blocked).includes(senderId) ? false : true;
+  msg.isEmit = JSON.stringify(check?.blocked)?.includes(senderId) ? false : true;
   return msg;
 };
