@@ -87,7 +87,7 @@ export const connectSocket = (server) => {
             console.log(obj,"ooooooobbbbbbjjjjjjjjkj")
             if (obj) {
               console.log(obj,"ooooooobbbbbbjjjjjjjjkj")
-              obj[userId].push([socket.id]);
+              obj[userId].push(socket.id);
             } else {
               console.log("replaceeeeeeeeeeeeeeee")
               userCache[value] = {
