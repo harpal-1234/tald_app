@@ -30,7 +30,7 @@ export const connectSocket = (server) => {
   const io = new Server(server, {
     allowEIO3: true,
     cors: {
-      origin: ["http://localhost:3000", "https://api.tald.co"],
+      origin: ["http://localhost:3000", "https://api.tald.co","http://localhost:3001","https://designer.tald.co"],
     },
   });
   //io.use(cors());
@@ -160,66 +160,69 @@ export const connectSocket = (server) => {
         }
       }
     });
-    socket.on("deleteMessage", async (data) => {
-      console.log(data.messageId, data.receiver);
-      const user = socket.decoded.user;
-      if (data.groupId) {
-        const data1 = await EventServices.deleteMessage(
-          data.messageId,
-          data.groupId
-        );
-        const emits = [];
-        data1.receiver.map((id) => {
-          if (JSON.stringify(user) !== JSON.stringify(id)) {
-            emits.push(id);
-          }
-        });
-        if (emits.length > 0) {
-          emits.map((receiverId) => {
-            if (userCache[receiverId]) {
-              userCache[receiverId].map((id) => {
-                io.to(id).emit("receiveDeleteMessage", data1);
-              });
-            } else {
-              console.log(
-                "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiii123iiiiiiiiiiiiiiiii"
-              );
-            }
-          });
-        }
-      } else {
-        const data1 = await socketServices.deleteMessage(data.messageId);
-        if (userCache[data.receiver]) {
-          userCache[data.receiver].map((id) => {
-            io.to(id).emit("receiveDeleteMessage", data1);
-          });
-        }
-      }
-    });
+    // socket.on("deleteMessage", async (data) => {
+    //   console.log(data.messageId, data.receiver);
+    //   const user = socket.decoded.user;
+    //   if (data.groupId) {
+    //     const data1 = await EventServices.deleteMessage(
+    //       data.messageId,
+    //       data.groupId
+    //     );
+    //     const emits = [];
+    //     data1.receiver.map((id) => {
+    //       if (JSON.stringify(user) !== JSON.stringify(id)) {
+    //         emits.push(id);
+    //       }
+    //     });
+    //     if (emits.length > 0) {
+    //       emits.map((receiverId) => {
+    //         if (userCache[receiverId]) {
+    //           userCache[receiverId].map((id) => {
+    //             io.to(id).emit("receiveDeleteMessage", data1);
+    //           });
+    //         } else {
+    //           console.log(
+    //             "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiii123iiiiiiiiiiiiiiiii"
+    //           );
+    //         }
+    //       });
+    //     }
+    //   } else {
+    //     const data1 = await socketServices.deleteMessage(data.messageId);
+    //     if (userCache[data.receiver]) {
+    //       userCache[data.receiver].map((id) => {
+    //         io.to(id).emit("receiveDeleteMessage", data1);
+    //       });
+    //     }
+    //   }
+    // });
 
     socket.on("error", function (error) {
       console.error(error, "something went wrong in socket...");
     });
     socket.on("disconnect", async (data) => {
-      console.log("disconnect....", socket.id, userCache[socket.decoded.user]);
-      const online = await socketServices.offlineStatus(socket.decoded.user);
+      console.log("disconnect....", socket.id, userCache[socket.handshake.query.conversationId]);
+      console.log(socket.handshake.query.conversationId)
+      // const online = await socketServices.offlineStatus(socket.decoded.user);
 
-      online.users.map((receiverId) => {
-        if (userCache[receiverId]) {
-          userCache[receiverId].map((id) => {
-            io.to(id).emit("onlineStatus", {
-              userId: socket.decoded.user,
-              isOnline: online.isOnline,
-              offlineTime: online.offlineTime,
-            });
-          });
-        } else {
-          console.log("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+      // online.users.map((receiverId) => {
+      //   if (userCache[receiverId]) {
+      //     userCache[receiverId].map((id) => {
+      //       io.to(id).emit("onlineStatus", {
+      //         userId: socket.decoded.user,
+      //         isOnline: online.isOnline,
+      //         offlineTime: online.offlineTime,
+      //       });
+      //     });
+      //   } else {
+      //     console.log("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+      //   }
+      // });
+      userCache[socket.handshake.query.conversationId].forEach((users) => {
+        if (users[socket.decoded.user]) {
+          users[socket.decoded.user].filter((socketId) =>socketId !== socket.id);
         }
       });
-      userCache[socket.decoded.user] = userCache[socket.decoded.user].filter(
-        (socketId) => socketId !== socket.id
-      );
       console.log("disconneted", userCache);
     });
   });
