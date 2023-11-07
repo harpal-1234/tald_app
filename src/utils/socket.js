@@ -78,11 +78,11 @@ export const connectSocket = (server) => {
           if (!userCache[value]) {
             userCache[value] = { [userId]: [socket.id] };
           } else {
-            console.log(userCache[value],'usewrcahbhbhjbhbjbkojokjnjbhjbjhbvhjkbhkjbhjbhjbkhjbhkjbjhbjhb')
+            console.log(userCache,'usewrcahbhbhjbhbjbkojokjnjbhjbjhbvhjkbhkjbhjbhjbkhjbhkjbjhbjhb')
             const keys = Object.keys(userCache[value]);
             const object = userCache[value];
 
-            const obj = userCache[value]?.find((item) =>
+            const obj = userCache[value].find((item) =>
               item.hasOwnProperty(userId)
             );
             console.log(obj,"ooooooobbbbbbjjjjjjjjkj")
