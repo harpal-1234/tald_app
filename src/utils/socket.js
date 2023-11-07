@@ -72,7 +72,7 @@ export const connectSocket = (server) => {
           socket.decoded = decoded;
           socket.decoded.user = token.user;
           socket.decoded.conversation = conversation?._id;
-
+console.log(socket.decoded,"bhihiohohhhhooioggogo")
           let value = socket.decoded.conversation;
           if (!userCache[value]) {
             userCache[value] = [{ [socket.decode.user]: socket.decode.user[socket.id] }];
