@@ -75,20 +75,20 @@ export const connectSocket = (server) => {
 
           let value = socket.decoded.conversation;
           if (!userCache[value]) {
-            userCache[value] = [{ [userId]: socket.decode.user[socket.id] }];
+            userCache[value] = [{ [socket.decode.user]: socket.decode.user[socket.id] }];
           } else {
             const keys = Object.keys(userCache[value]);
             const object = userCache[value];
 
             const obj = userCache[value].find((item) =>
-              item.hasOwnProperty(userId)
+              item.hasOwnProperty(socket.decode.user)
             );
             if (obj) {
-              obj[userId].push(socket.decode.user[socket.id]);
+              obj[socket.decode.user].push(socket.decode.user[socket.id]);
             } else {
               userCache[value] = {
                 ...object[keys[0]],
-                [userId]: [socket.decode.user[socket.id]],
+                [socket.decode.user]: [socket.decode.user[socket.id]],
               };
             }
           }
