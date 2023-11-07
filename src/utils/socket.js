@@ -83,7 +83,6 @@ export const connectSocket = (server) => {
             const object = userCache[value];
 
             const obj = userCache[value]?.find((item) =>
-            console.log(item),
               item.hasOwnProperty(userId)
             );
             console.log(obj,"ooooooobbbbbbjjjjjjjjkj")
