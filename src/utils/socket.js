@@ -82,12 +82,12 @@ export const connectSocket = (server) => {
             const keys = Object.keys(userCache[value]);
             const object = userCache[value];
             if (userCache[value] && userCache[value].hasOwnProperty(userId)) {
-              userCache[value][userId].push(socket._id);
+              userCache[value][userId].push(socket.id);
             } else {
               if (!userCache[value][userId]) {
                 userCache[value][userId] = [];
               }
-              userCache[value][userId].push(socket._id);
+              userCache[value][userId].push(socket.id);
             }
           }
           console.log("socketHolder", userCache);
