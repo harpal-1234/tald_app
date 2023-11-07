@@ -152,7 +152,7 @@ console.log(socket.decoded.user,"llllllhihiohohhhhooioggogo")
         console.log(userCache[receiverId], senderId);
         console.log(message);
         if (message.isEmit) {
-          console.log(userCache[conversation._id])
+          console.log(userCache[conversation._id],"cccccccccccccccccc")
           userCache[conversation._id].forEach((users) => {
             if (users[receiverId]) {
               users[receiverId].forEach((socketId) => {
