@@ -61,6 +61,7 @@ export const connectSocket = (server) => {
           const conversation = await Conversation.findOne({
             _id: socket.handshake.query.conversationId,
           }).lean();
+          console.log(conversation)
 
           console.log(
             "decoded",
@@ -156,7 +157,7 @@ export const connectSocket = (server) => {
             for (const key in userCache[conversation._id]) {
               console.log(key,receiverId)
               console.log(key === receiverId)
-              if (key === receiverId) {
+              if (key === receiverId.toString()) {
                 userCache[conversation._id][key].forEach((socketId) => {
                   console.log(socketId, "socketId");
                   io.to(socketId).emit("receiveMessage", message);
