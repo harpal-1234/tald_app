@@ -13,6 +13,7 @@ import {
 import { OperationalError } from "../../utils/errors.js";
 
 export const createUser = async (userData) => {
+ 
   const check = await User.findOneAndUpdate(
     {
       email: userData.email,
