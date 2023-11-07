@@ -154,6 +154,7 @@ console.log(socket.decoded.user,"llllllhihiohohhhhooioggogo")
           userCache[conversation._id].forEach((users) => {
             if (users[userId]) {
               users[userId].forEach((socketId) => {
+                console.log(socketId,"socketId")
                 io.to(socketId).emit("receiveMessage", message);
               });
             }

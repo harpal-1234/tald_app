@@ -9,7 +9,6 @@ import { OperationalError } from "../../utils/errors.js";
 export const oneConversation = async (conversationId) => {
   const conversation = await Conversation.findOne({
     _id: conversationId,
-    isDeleted: false,
   });
   return conversation;
 };
