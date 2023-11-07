@@ -78,6 +78,7 @@ export const connectSocket = (server) => {
           if (!userCache[value]) {
             userCache[value] = { [userId]: [socket.id] };
           } else {
+            console.log(userCache[value])
             const keys = Object.keys(userCache[value]);
             const object = userCache[value];
 
