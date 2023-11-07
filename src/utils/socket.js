@@ -86,9 +86,9 @@ export const connectSocket = (server) => {
               item.hasOwnProperty(userId)
             );
             console.log(obj,"ooooooobbbbbbjjjjjjjjkj")
-            if (obj) {
-              console.log(obj,"ooooooobbbbbbjjjjjjjjkj")
-              obj[userId].push(socket.id);
+            if (userCache[value] && userCache[value].hasOwnProperty(userId)) {
+              userCache[value][userId].push(socket._id);
+              console.log('SocketId added:', userCache[value][userId]);
             } else {
               console.log("replaceeeeeeeeeeeeeeee")
               userCache[value] = {
