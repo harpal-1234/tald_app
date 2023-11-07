@@ -82,7 +82,8 @@ export const connectSocket = (server) => {
             const keys = Object.keys(userCache[value]);
             const object = userCache[value];
 
-            const obj = userCache[value].find((item) =>
+            const obj = userCache[value]?.find((item) =>
+            console.log(item),
               item.hasOwnProperty(userId)
             );
             console.log(obj,"ooooooobbbbbbjjjjjjjjkj")
@@ -157,7 +158,7 @@ export const connectSocket = (server) => {
         console.log(message);
         if (message.isEmit) {
           console.log(userCache[conversation._id],"cccccccccccccccccc")
-          userCache[conversation._id].forEach((users) => {
+          userCache[conversation._id]?.forEach((users) => {
             if (users[receiverId]) {
               users[receiverId].forEach((socketId) => {
                 console.log(socketId,"socketId")
