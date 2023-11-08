@@ -274,8 +274,8 @@ export const createStripeConnectLink= async(userId)=>{
   console.log(user.stripeId)
   const accountLink = await stripe.accountLinks.create({
     account: user.stripeId,
-    refresh_url: `${process.env.API_BASE_URL}/user/auth/reauth?acccountId=${user.stripeId}`,
-    return_url: `${process.env.API_BASE_URL}/user/auth/return?acccountId=${user.stripeId}`,
+    refresh_url: `${process.env.API_BASE_URL}/user/auth/reauth?accountId=${user.stripeId}`,
+    return_url: `${process.env.API_BASE_URL}/user/auth/return?accountId=${user.stripeId}`,
     type: 'account_onboarding',
   });
   return accountLink
