@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { User, Token, Admin, Request, Filter } from "../../models/index.js";
 import { formatUser, formatVendor } from "../../utils/commonFunction.js";
+import * as stripeServices from "../../middlewares/stripe.js";
 import { editProfile } from "../../utils/sendMail.js";
 import {
   USER_TYPE,
@@ -11,9 +12,13 @@ import {
   OPTIONS,
 } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
+import Stripe from "stripe";
+
+const stripe = new Stripe(
+  "sk_test_51NuIYPKs8Y4Y2av4NWgrHFmq8R42IrEiIZ4c8jAsc23JsPqeq60bX7uKZZGb24dujnaheL7J6WsisNUtrJof0wlq00jvt0higK"
+);
 
 export const createUser = async (userData) => {
- 
   const check = await User.findOneAndUpdate(
     {
       email: userData.email,
@@ -206,12 +211,110 @@ export const register = async (userData) => {
     { upsert: true, new: true }
   );
   const value = user.toObject();
-  await formatUser(value);
-  return value;
+  if (userData.type == "Vendor") {
+    const account = await stripe.accounts.create({
+      country: "US",
+      type: "express",
+      userId: user._id,
+      email: userData.email,
+      capabilities: {
+        card_payments: {
+          requested: true,
+        },
+        transfers: {
+          requested: true,
+        },
+      },
+      business_type: "individual",
+      business_profile: {
+        url: "https://api.tald.co",
+      },
+    });
+    console.log(account);
+    await User.findOneAndUpdate(
+      { _id: user._id },
+      { stripeId: account.id },
+      { new: true }
+    );
+    await formatUser(value);
+    return value;
+  } else {
+    const customer = await stripe.customers.create({
+      userId: user._id,
+      email: userData.email,
+      type: "express",
+      address: {
+        line1: "510 Townsend St",
+        postal_code: "98140",
+        city: "San Francisco",
+        state: "CA",
+        country: "US",
+      },
+      description: "Payment",
+    });
+    await User.findOneAndUpdate(
+      { _id: user._id },
+      { stripeId: customer.id },
+      { new: true }
+    );
+    await formatUser(value);
+    return value;
+  }
+
+ 
 };
+export const createStripeConnectLink= async(userId)=>{
+  const user = await User.findOne({_id:userId,isDeleted:false});
+  const accountLink = await stripe.accountLinks.create({
+    account: user.stripeId,
+    refresh_url: 'https://example.com/reauth',
+    return_url: 'https://example.com/return',
+    type: 'account_onboarding',
+  });
+  return accountLink
+}
 export const profileEdit = async (data, userId, token) => {
   await editProfile(data.email, token, data.name);
   return;
+};
+export const payment = async (userId, amount1, plan) => {
+  const user = await User.findOne({ _id: userId, isDeleted: false });
+  // const card = await stripe.customers.createSource(user.stripeId, {
+  //   source: "tok_visa",
+  // });
+  const amount = amount1 * 100;
+  const ephemeralKey = await stripeServices.stripeService(user.stripeId);
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: amount,
+    currency: "USD",
+    customer: user.stripeId,
+    payment_method_types: ["card"],
+    description: "test1",
+    metadata: {
+      userId: JSON.stringify(userId),
+      amount: amount1,
+      plan: plan,
+    },
+  });
+  const customer = paymentIntent.customer;
+  return { ephemeralKey, paymentIntent };
+};
+export const webhook = async (body) => {
+  if (body.type == "payment_intent.succeeded") {
+    const paymentIntent = await stripe.paymentIntents.retrieve(
+      body.data.object.id
+    );
+    const user = await User.findOne({
+      _id: JSON.parse(paymentIntent.metadata.userId),
+      isDeleted: false,
+    });
+    const plan = paymentIntent.metadata.plan;
+    const amount = paymentIntent.metadata.amount;
+    var date = new Date();
+    date = new Date(moment(date).utc().format());
+    var expireDate;
+    var numberOfEvents;
+  }
 };
 export const getProfile = async (userId) => {
   const user = await User.findOne({
@@ -260,11 +363,11 @@ export const verifyEmails = async (token) => {
 export const createService = async (userId, data) => {
   const check = await User.findOne({
     _id: userId,
-   // isVerify: true,
+    // isVerify: true,
     isDeleted: false,
   });
 
-  console.log(data.long,data.lat)
+  console.log(data.long, data.lat);
   if (!check) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
@@ -275,7 +378,7 @@ export const createService = async (userId, data) => {
   const user = await User.findOneAndUpdate(
     {
       _id: userId,
-     // isVerify: true,
+      // isVerify: true,
       isDeleted: false,
     },
     {
@@ -316,7 +419,7 @@ export const userLogin = async (data) => {
   let user = await User.findOne({
     email: data.email,
     type: data.type,
-   // isVerify: true,
+    // isVerify: true,
     isDeleted: false,
   }).lean();
 
@@ -426,7 +529,7 @@ export const resetPassword = async (tokenData, newPassword) => {
 };
 export const changePassword = async (userId, oldPassword, newPassword) => {
   const user = await User.findById(userId).lean();
-  console.log(user)
+  console.log(user);
   if (!(await bcrypt.compare(oldPassword, user.password))) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,

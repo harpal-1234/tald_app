@@ -12,7 +12,8 @@ import {
   STYLE,
   GOALS,
   PROJECT_SIZE,
-  NEED_HELP
+  NEED_HELP,
+  SUBSCRIPTION
 } from "../../config/appConstants.js";
 
 const login = {
@@ -204,6 +205,14 @@ const getProfile = {
     type: Joi.string().required().valid("User","Vendor"),
   }),
 };
+ const payment = {
+  body: Joi.object().keys({
+    amount: Joi.number().required(),
+    plan: Joi.number()
+      .required()
+      .valid(...Object.values(SUBSCRIPTION)),
+  }),
+};
 const verifyEmail = {
   query: Joi.object().keys({
     token: Joi.string().required(),
@@ -228,4 +237,5 @@ export default {
   verifyEmail,
   getProfile,
   filters,
+  payment
 };

@@ -107,6 +107,8 @@ const userSchema = mongoose.Schema(
     ],
     needHelp: [{ type: String, ennum: [...Object.values(NEED_HELP)] }],
     fullServiceClients: { type: String, enum: [...Object.values(OPTIONS)] },
+    stripeId:{type:String,default:""},
+    isPayment:{type:Boolean,default:false},
     isDeleted: { type: Boolean, default: false },
     isVerify: { type: Boolean, default: false },
     isBlocked: { type: Boolean, default: false },

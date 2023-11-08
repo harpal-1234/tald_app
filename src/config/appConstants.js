@@ -21,6 +21,10 @@ export const MESSAGE_TYPE = {
   TEXT: "Text",
   EMPTY: "",
 };
+export const SUBSCRIPTION = {
+  YEARLY: "Yearly",
+  //MONTHLY: "Monthly",
+};
 export const USERTYPE1 = {
   USER: "User",
   VENDOR_ADMIN: "Vendor",

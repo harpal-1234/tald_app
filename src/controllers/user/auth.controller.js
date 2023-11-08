@@ -204,7 +204,7 @@ const createService = catchAsync(async (req, res) => {
     data
   );
 });
- const getFilter = catchAsync(async (req, res) => {
+const getFilter = catchAsync(async (req, res) => {
   const filter = await userService.getFilter(req.query.type);
   return successResponse(
     req,
@@ -254,7 +254,40 @@ const profile = catchAsync(async (req, res) => {
     });
   }
 });
+const subscription = catchAsync(async (req, res) => {
+  const { amount, plan } = req.body;
+  const userId = req.token.user._id;
+  const users = await userService.payment(userId, amount, plan);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    users
 
+    //user.phoneNumber
+  );
+});
+const webhookApi = catchAsync(async (req, res) => {
+  const data = await userService.webhook(req.body);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+  );
+});
+const createStripeConnectLink = catchAsync(async (req, res) => {
+  const data = await userService.createStripeConnectLink(req.token.user._id);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+  );
+});
 export default {
   signUp,
   register,
@@ -270,5 +303,8 @@ export default {
   editProfile,
   profile,
   getProfile,
-  getFilter
+  getFilter,
+  subscription,
+  webhookApi,
+  createStripeConnectLink,
 };

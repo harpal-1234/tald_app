@@ -46,6 +46,13 @@ router.post(
   authController.forgotPassword
 );
 
+router.post(
+  "/payment",
+  auth(USER_TYPE.USER),
+  validate(authValidation.payment),
+  authController.subscription
+);
+router.post("/webhook", authController.webhookApi);
 router
   .route("/resetPassword")
   .get(authController.forgotPage)
@@ -85,5 +92,11 @@ router.get(
   auth(USER_TYPE.USER),
   //validate(authValidation.getProfile),
   authController.getProfile
+);
+router.get(
+  "/stripeConnectLink",
+  auth(USER_TYPE.USER),
+  //validate(authValidation.getProfile),
+  authController.createStripeConnectLink
 );
 export default router;

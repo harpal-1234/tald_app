@@ -30,7 +30,7 @@ export const connectSocket = (server) => {
   const io = new Server(server, {
     allowEIO3: true,
     cors: {
-      origin: ["http://localhost:3000", "https://api.tald.co","http://localhost:3001","https://designer.tald.co"],
+      origin: ["http://localhost:3000", "https://api.tald.co","http://localhost:3001","https://designer.tald.co","https://client.tald.co"],
     },
   });
   //io.use(cors());
