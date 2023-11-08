@@ -304,6 +304,7 @@ export const ERROR_MESSAGES = {
   DESIGNER_NOT_FOUND: "Designer Not Found",
   VALID_DATE: "Please select a valid date",
   CONSULTATION_NOT_EXIST: "Sorry this consultation not exist",
+  ACCOUNT_DOES_NOT_CONNECT:"Sorry This Account Does Not Connect To Stripe"
 };
 export const SOCIAL_TYPE = {
   FACEBOOK: "facebook",

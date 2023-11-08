@@ -223,6 +223,12 @@ export const getConsultations = {
     limit: Joi.number().required(),
   }),
 };
+export const deleteProjectInquery = {
+  body: Joi.object().keys({
+    projectId: Joi.string().required(),
+   // limit: Joi.number().required(),
+  }),
+};
 export const createProjectInquery = {
   body: Joi.object().keys({
     projectName: Joi.string().required(),
@@ -289,6 +295,12 @@ export const submitProjectInquery = {
   body: Joi.object().keys({
     projectId: Joi.string().required(),
     designerId: Joi.string().required(),
+  }),
+};
+export const deleteProjectInqueryImage = {
+  body: Joi.object().keys({
+    projectId: Joi.string().required(),
+    fileId: Joi.string().required(),
   }),
 };
 export const getInqueryStatus = {

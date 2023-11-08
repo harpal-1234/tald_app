@@ -299,6 +299,17 @@ const returnUrl = catchAsync(async (req, res) => {
     data
   );
 });
+const checkOutSession = catchAsync(async (req, res) => {
+  
+  const data = await userService.checkOutSession(req.token.user._id);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+  );
+});
 export default {
   signUp,
   register,
@@ -318,5 +329,6 @@ export default {
   subscription,
   webhookApi,
   createStripeConnectLink,
-  returnUrl
+  returnUrl,
+  checkOutSession
 };

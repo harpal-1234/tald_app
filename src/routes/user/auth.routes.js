@@ -105,4 +105,10 @@ router.get(
   //validate(authValidation.getProfile),
   authController.returnUrl
 );
+router.get(
+  "/checkOutSession",
+  auth(USER_TYPE.USER),
+  //validate(authValidation.getProfile),
+  authController.checkOutSession
+);
 export default router;

@@ -208,6 +208,26 @@ export const createProjectInquery = catchAsync(async (req, res) => {
     project
   );
 });
+export const deleteProjectInqueryImage = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const project = await clientServices.deleteProjectInqueryImage(req.body.fileId,req.body.projectId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+  );
+});
+export const deleteProjectInquery = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const project = await clientServices.deleteProjectInquery(req.body.projectId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS
+  );
+});
 export const submitProjectInquery = catchAsync(async (req, res) => {
   const userId = req.token.user._id;
   const project = await clientServices.submitProjectInquery(

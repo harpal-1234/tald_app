@@ -303,13 +303,13 @@ export const return_url = async (accountId) => {
         isDeleted: false,
       },
       {
-       "stripe.status":STRIPE_STATUS.ENABLE
+        "stripe.status": STRIPE_STATUS.ENABLE,
       },
       {
-        new:true
+        new: true,
       }
-    )
-    console.log(data)
+    );
+    console.log(data);
     // Payment methods (credit card payments) are enabled for this account
 
     return `Payment methods are enabled for this account`;
@@ -360,6 +360,53 @@ export const webhook = async (body) => {
     var expireDate;
     var numberOfEvents;
   }
+};
+export const checkOutSession = async (userId) => {
+  const user = await User.findOne({ _id: userId, isDeleted: false });
+  if (user.stripe.status != STRIPE_STATUS.ENABLE) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.ACCOUNT_DOES_NOT_CONNECT
+    );
+  }
+  const transfer = await stripe.transfers.create({
+    amount: 1000,
+    currency: 'usd',
+    destination: user.stripe.accountId,
+  });
+  // const product = await stripe.products.create({
+  //   name: 'Tald',
+  //   description: 'Comfortable',
+  //   images: ['https://example.com/t-shirt.png'],
+  // });
+  
+  // const price = await stripe.prices.create({
+  //   product: product.id,
+  //   unit_amount: 2000,
+  //   currency: 'usd',
+  // });
+  // console.log(price)
+  // const session = await stripe.checkout.sessions.create({
+  //   mode: "payment",
+  //   line_items: [
+  //     {
+  //       //  price: price.id, // Replace with the actual price ID
+  //       price: price.id,
+  //       quantity: 1, // Specify the quantity
+  //     },
+  //     // Add more line items if needed
+  //   ],
+
+  //   payment_intent_data: {
+  //     application_fee_amount: 123,
+  //     transfer_data: {
+  //       destination: user.stripe.accountId,
+  //     },
+  //   },
+  //   success_url: `${process.env.API_BASE_URL}/user/auth/success`,
+  //   cancel_url: `${process.env.API_BASE_URL}/user/auth/cancel`,
+  // });
+  return transfer;
 };
 export const getProfile = async (userId) => {
   const user = await User.findOne({

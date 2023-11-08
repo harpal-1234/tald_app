@@ -67,6 +67,19 @@ router.post(
   validate(clientValidation.createProjectInquery),
   clientController.createProjectInquery
 );
+router.delete(
+  "/deleteProjectInqueryImage",
+  auth(USER_TYPE.USER),
+  validate(clientValidation.deleteProjectInqueryImage),
+  clientController.deleteProjectInqueryImage
+);
+
+router.delete(
+  "/deleteProjectInquery",
+  auth(USER_TYPE.USER),
+  validate(clientValidation.deleteProjectInquery),
+  clientController.deleteProjectInquery
+);
 router.get(
   "/getProjectInqueries",
   auth(USER_TYPE.USER),
