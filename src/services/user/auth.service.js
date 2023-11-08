@@ -278,13 +278,13 @@ export const createStripeConnectLink= async(userId)=>{
 }
 export const return_url= async(accountId)=>{
   const account = await stripe.accounts.retrieve(accountId);
-  console.log(account)
+  console.log(account.metadata)
   const cardPaymentsCapability = account.capabilities.card_payments;
 
     if (cardPaymentsCapability && account.charges_enabled) {
       // Payment methods (credit card payments) are enabled for this account
 
-      return `Payment methods are enabled for this account${account.metadata}`;
+      return `Payment methods are enabled for this account`;
     } else {
       // Payment methods are not enabled
     return 'Payment methods are not enabled for this account';
