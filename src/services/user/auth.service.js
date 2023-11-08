@@ -216,7 +216,6 @@ export const register = async (userData) => {
     const customer = await stripe.customers.create({
       userId: user._id,
       email: userData.email,
-      type: "express",
       address: {
         line1: "510 Townsend St",
         postal_code: "98140",
@@ -259,7 +258,6 @@ export const register = async (userData) => {
     const customer = await stripe.customers.create({
       userId: user._id,
       email: userData.email,
-      type: "express",
       address: {
         line1: "510 Townsend St",
         postal_code: "98140",
