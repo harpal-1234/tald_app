@@ -99,4 +99,10 @@ router.get(
   //validate(authValidation.getProfile),
   authController.createStripeConnectLink
 );
+router.get(
+  "/return",
+  auth(USER_TYPE.USER),
+  //validate(authValidation.getProfile),
+  authController.returnUrl
+);
 export default router;

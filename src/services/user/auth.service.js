@@ -225,6 +225,9 @@ export const register = async (userData) => {
           requested: true,
         },
       },
+      metadata: {
+        userId: JSON.stringify(user._id),
+      },
       business_type: "individual",
       business_profile: {
         url: "https://api.tald.co",
@@ -267,11 +270,24 @@ export const createStripeConnectLink= async(userId)=>{
   const user = await User.findOne({_id:userId,isDeleted:false});
   const accountLink = await stripe.accountLinks.create({
     account: user.stripeId,
-    refresh_url: 'https://example.com/reauth',
-    return_url: 'https://example.com/return',
+    refresh_url: `${process.env.API_BASE_URL}/user/auth/reauth?acccountId=${user.stripeId}`,
+    return_url: `${process.env.API_BASE_URL}/user/auth/return?acccountId=${user.stripeId}`,
     type: 'account_onboarding',
   });
   return accountLink
+}
+export const return_url= async(accountId)=>{
+  const account = await stripe.accounts.retrieve(accountId);
+  const cardPaymentsCapability = account.capabilities.card_payments;
+
+    if (cardPaymentsCapability && cardPaymentsCapability.enabled) {
+      // Payment methods (credit card payments) are enabled for this account
+      return 'Payment methods are enabled for this account';
+    } else {
+      // Payment methods are not enabled
+    return 'Payment methods are not enabled for this account';
+    }
+  
 }
 export const profileEdit = async (data, userId, token) => {
   await editProfile(data.email, token, data.name);

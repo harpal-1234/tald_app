@@ -288,6 +288,16 @@ const createStripeConnectLink = catchAsync(async (req, res) => {
     data
   );
 });
+const returnUrl = catchAsync(async (req, res) => {
+  const data = await userService.return_url(req.query.accountId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+  );
+});
 export default {
   signUp,
   register,
@@ -307,4 +317,5 @@ export default {
   subscription,
   webhookApi,
   createStripeConnectLink,
+  returnUrl
 };
