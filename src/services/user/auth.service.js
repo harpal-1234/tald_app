@@ -281,7 +281,7 @@ export const return_url= async(accountId)=>{
   console.log(account)
   const cardPaymentsCapability = account.capabilities.card_payments;
 
-    if (cardPaymentsCapability && cardPaymentsCapability.enabled) {
+    if (cardPaymentsCapability && account.charges_enabled) {
       // Payment methods (credit card payments) are enabled for this account
       return 'Payment methods are enabled for this account';
     } else {
