@@ -304,6 +304,9 @@ export const return_url = async (accountId) => {
       },
       {
        "stripe.status":STRIPE_STATUS.ENABLE
+      },
+      {
+        new:true
       }
     )
     console.log(data)
