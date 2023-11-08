@@ -268,6 +268,10 @@ export const register = async (userData) => {
 };
 export const createStripeConnectLink= async(userId)=>{
   const user = await User.findOne({_id:userId,isDeleted:false});
+  // const accId = "acct_1OA8Zt4IA6hQJdV0"
+  // const account = await stripe.accounts.retrieve(accId);
+  // console.log(account.metadata)
+  console.log(user.stripeId)
   const accountLink = await stripe.accountLinks.create({
     account: user.stripeId,
     refresh_url: `${process.env.API_BASE_URL}/user/auth/reauth?acccountId=${user.stripeId}`,
@@ -277,6 +281,7 @@ export const createStripeConnectLink= async(userId)=>{
   return accountLink
 }
 export const return_url= async(accountId)=>{
+  console.log(accountId)
   const account = await stripe.accounts.retrieve(accountId);
   console.log(account.metadata)
   const cardPaymentsCapability = account.capabilities.card_payments;
