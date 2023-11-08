@@ -283,7 +283,8 @@ export const return_url= async(accountId)=>{
 
     if (cardPaymentsCapability && account.charges_enabled) {
       // Payment methods (credit card payments) are enabled for this account
-      return 'Payment methods are enabled for this account';
+
+      return `Payment methods are enabled for this account${account.metadata}`;
     } else {
       // Payment methods are not enabled
     return 'Payment methods are not enabled for this account';
