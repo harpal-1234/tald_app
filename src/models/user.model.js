@@ -9,7 +9,8 @@ import {
   PREFERENCES,
   PROJECT_SIZE,
   STYLE,
-  NEED_HELP
+  NEED_HELP,
+  STRIPE_STATUS,
 } from "../config/appConstants.js";
 // const { address } = require("./commonField.models");
 //const { string } = require("joi");
@@ -48,7 +49,6 @@ const userSchema = mongoose.Schema(
       answer: {
         type: String,
         enum: [...Object.values(PROJECT_TYPE)],
-    
       },
     },
     virtual_Consultations: {
@@ -92,7 +92,11 @@ const userSchema = mongoose.Schema(
     preferences: [
       { type: String, enum: [...Object.values(PREFERENCES)], default: "" },
     ],
-    projectSize: { type: String, enum: [...Object.values(PROJECT_SIZE)], default:""},
+    projectSize: {
+      type: String,
+      enum: [...Object.values(PROJECT_SIZE)],
+      default: "",
+    },
     styles: [{ type: String, enum: [...Object.values(STYLE)] }],
     isSignUp: { type: Boolean, default: false },
     isApproved: { type: Boolean, default: false },
@@ -107,8 +111,16 @@ const userSchema = mongoose.Schema(
     ],
     needHelp: [{ type: String, ennum: [...Object.values(NEED_HELP)] }],
     fullServiceClients: { type: String, enum: [...Object.values(OPTIONS)] },
-    stripeId:{type:String,default:""},
-    isPayment:{type:Boolean,default:false},
+    stripe: {
+      customerId: { type: String, default: "" },
+      accountId: { type: String, default: "" },
+      status: {
+        type: String,
+        enum: [...Object.values(STRIPE_STATUS)],
+        default: STRIPE_STATUS.PENDING,
+      },
+    },
+    isPayment: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
     isVerify: { type: Boolean, default: false },
     isBlocked: { type: Boolean, default: false },

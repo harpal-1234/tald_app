@@ -10,6 +10,7 @@ import {
   FEE_STRUCTURE,
   VALID_FEE_STRUCTURE,
   OPTIONS,
+  STRIPE_STATUS,
 } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
 import Stripe from "stripe";
@@ -212,6 +213,19 @@ export const register = async (userData) => {
   );
   const value = user.toObject();
   if (userData.type == "Vendor") {
+    const customer = await stripe.customers.create({
+      userId: user._id,
+      email: userData.email,
+      type: "express",
+      address: {
+        line1: "510 Townsend St",
+        postal_code: "98140",
+        city: "San Francisco",
+        state: "CA",
+        country: "US",
+      },
+      description: "Payment",
+    });
     const account = await stripe.accounts.create({
       country: "US",
       type: "express",
@@ -236,7 +250,7 @@ export const register = async (userData) => {
     console.log(account);
     await User.findOneAndUpdate(
       { _id: user._id },
-      { stripeId: account.id },
+      { stripe: { accountId: account.id, customerId: customer.id } },
       { new: true }
     );
     await formatUser(value);
@@ -257,45 +271,52 @@ export const register = async (userData) => {
     });
     await User.findOneAndUpdate(
       { _id: user._id },
-      { stripeId: customer.id },
+      { "stripeId.customerId": customer.id },
       { new: true }
     );
     await formatUser(value);
     return value;
   }
-
- 
 };
-export const createStripeConnectLink= async(userId)=>{
-  const user = await User.findOne({_id:userId,isDeleted:false});
+export const createStripeConnectLink = async (userId) => {
+  const user = await User.findOne({ _id: userId, isDeleted: false });
   // const accId = "acct_1OA8Zt4IA6hQJdV0"
   // const account = await stripe.accounts.retrieve(accId);
   // console.log(account.metadata)
-  console.log(user.stripeId)
+  console.log(user.stripeId);
   const accountLink = await stripe.accountLinks.create({
-    account: user.stripeId,
-    refresh_url: `${process.env.API_BASE_URL}/user/auth/reauth?accountId=${user.stripeId}`,
-    return_url: `${process.env.API_BASE_URL}/user/auth/return?accountId=${user.stripeId}`,
-    type: 'account_onboarding',
+    account: user.stripe.accountId,
+    refresh_url: `${process.env.API_BASE_URL}/user/auth/reauth?accountId=${user.stripe.accountId}`,
+    return_url: `${process.env.API_BASE_URL}/user/auth/return?accountId=${user.stripe.accountId}`,
+    type: "account_onboarding",
   });
-  return accountLink
-}
-export const return_url= async(accountId)=>{
-  console.log(accountId,"accountId")
+  return accountLink;
+};
+export const return_url = async (accountId) => {
+  console.log(accountId, "accountId");
   const account = await stripe.accounts.retrieve(accountId);
-  console.log(account)
+  console.log(account);
   const cardPaymentsCapability = account.capabilities.card_payments;
 
-    if (cardPaymentsCapability && account.charges_enabled) {
-      // Payment methods (credit card payments) are enabled for this account
+  if (cardPaymentsCapability && account.charges_enabled) {
+    const data = await User.findOneAndUpdate(
+      {
+        _id: JSON.parse(account.metadata.userId),
+        isDeleted: false,
+      },
+      {
+       "stripe.status":STRIPE_STATUS.ENABLE
+      }
+    )
+    console.log(data)
+    // Payment methods (credit card payments) are enabled for this account
 
-      return `Payment methods are enabled for this account`;
-    } else {
-      // Payment methods are not enabled
-    return 'Payment methods are not enabled for this account';
-    }
-  
-}
+    return `Payment methods are enabled for this account`;
+  } else {
+    // Payment methods are not enabled
+    return "Payment methods are not enabled for this account";
+  }
+};
 export const profileEdit = async (data, userId, token) => {
   await editProfile(data.email, token, data.name);
   return;

@@ -145,7 +145,10 @@ export const OPTIONS = {
   NO: "No",
   empty:""
 };
-
+export const STRIPE_STATUS ={
+  PENDING:"Pending",
+  ENABLE:"Enable"
+}
 export const STATUS = {
   ACCEPTED: "Accepted",
   REJECTED: "Rejected",
