@@ -101,7 +101,7 @@ router.get(
 );
 router.get(
   "/return",
-  auth(USER_TYPE.USER),
+  //auth(USER_TYPE.USER),
   //validate(authValidation.getProfile),
   authController.returnUrl
 );
