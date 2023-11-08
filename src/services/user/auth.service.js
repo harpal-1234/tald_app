@@ -283,7 +283,7 @@ export const createStripeConnectLink= async(userId)=>{
 export const return_url= async(accountId)=>{
   console.log(accountId,"accountId")
   const account = await stripe.accounts.retrieve(accountId);
-  console.log(account.metadata)
+  console.log(account)
   const cardPaymentsCapability = account.capabilities.card_payments;
 
     if (cardPaymentsCapability && account.charges_enabled) {
