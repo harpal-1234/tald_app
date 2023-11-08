@@ -289,6 +289,8 @@ const createStripeConnectLink = catchAsync(async (req, res) => {
   );
 });
 const returnUrl = catchAsync(async (req, res) => {
+  console.log(req.query,"queerrrryyyyy");
+  console.log(req.body,"bodyyyyyyy")
   const data = await userService.return_url(req.query.accountId);
   return successResponse(
     req,
