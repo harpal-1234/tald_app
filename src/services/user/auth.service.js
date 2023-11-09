@@ -381,20 +381,20 @@ export const webhook = async (body) => {
 };
 export const createSubscription = async (sig, stripeSecret, body) => {
   //   let event;
-  console.log(sig, stripeSecret,body);
+  console.log(sig, stripeSecret, body);
   if (body.type === "invoice.payment_succeeded") {
     const subscriptionId = body.data.object.subscription;
-    console.log("jvhjvvkvvvv,")
-    
+    console.log("jvhjvvkvvvv,");
+
     //console.log(valueof(subscriptionId),"jjhsugdfugbfdjkhbvhjxbchsbvhjsbvhjsbvhjdbvjkhdbvkhjdbvhkjbvkhjxbhjfxbvbjnfbjhfxbldfhjvbfsdkhjvb")
     const isSecondPayment =
       body.data.object.billing_reason === "subscription_cycle";
     if (body.data.object.billing_reason === "subscription_create") {
-      const customer = await stripe.customers.retrieve(
-        body.data.object.costumer.toString()
-      );
+      const userId = JSON.stringify(body.data.object.costumer);
+      console.log(userId,"gfufguhfuierhfurhiuhugheruheiuhuihghiuhguihuihuih")
+      const customer = await stripe.customers.retrieve(userId);
       const user = JSON.parse(customer.metadata.userId);
-   
+
       const userData = await User.findOne({ _id: user, isDeleted: false });
       const subscription = await stripe.subscriptions.retrieve(subscriptionId);
       console.log(subscription);
