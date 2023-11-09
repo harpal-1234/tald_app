@@ -392,7 +392,7 @@ export const createSubscription = async (sig, stripeSecret, body) => {
       );
       const user = customer.metadata.userId.toObject;
       const subscriptionId = body.data.object.subscription;
-
+console.log(subscriptionId)
       const userData = await User.findOne({ _id: user, isDeleted: false });
       const subscription = await stripe.subscriptions.retrieve(subscriptionId);
       console.log(subscription);
