@@ -383,16 +383,17 @@ export const createSubscription = async (sig, stripeSecret, body) => {
   //   let event;
   console.log(sig, stripeSecret,body);
   if (body.type === "invoice.payment_succeeded") {
-    const subscriptionId = body.data.object.subscription.toString();
+    const subscriptionId = body.data.object.subscription;
     console.log("jvhjvvkvvvv,")
-    console.log(subscriptionId,"jjhsugdfugbfdjkhbvhjxbchsbvhjsbvhjsbvhjdbvjkhdbvkhjdbvhkjbvkhjxbhjfxbvbjnfbjhfxbldfhjvbfsdkhjvb")
+    
+    console.log(valueof(subscriptionId),"jjhsugdfugbfdjkhbvhjxbchsbvhjsbvhjsbvhjdbvjkhdbvkhjdbvhkjbvkhjxbhjfxbvbjnfbjhfxbldfhjvbfsdkhjvb")
     const isSecondPayment =
       body.data.object.billing_reason === "subscription_cycle";
     if (body.data.object.billing_reason === "subscription_create") {
-      const customer = await stripe.subscriptions.retrieve(
+      const customer = await stripe.customers.retrieve(
         body.data.object.costumer
       );
-      const user = customer.metadata.userId.toObject;
+      const user = customer.metadata.userId.toObject();
    
       const userData = await User.findOne({ _id: user, isDeleted: false });
       const subscription = await stripe.subscriptions.retrieve(subscriptionId);
