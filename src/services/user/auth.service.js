@@ -378,11 +378,11 @@ export const webhook = async (body) => {
 };
 export const createSubscription = async (sig, stripeSecret, body) => {
   let event;
-
+console.log(sig,stripeSecret,body)
   try {
     event = stripe.webhooks.constructEvent(body, sig, stripeSecret);
   } catch (err) {
-    return res.status(400).send(`Webhook Error: ${err.message}`);
+    return err.message;
   }
 
   // Handle the event
