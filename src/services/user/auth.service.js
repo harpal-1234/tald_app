@@ -356,6 +356,7 @@ export const payment = async (userId, amount1, designerId) => {
   return { ephemeralKey, paymentIntent };
 };
 export const webhook = async (body) => {
+  console.log(body);
   if (body.type == "payment_intent.succeeded") {
     const paymentIntent = await stripe.paymentIntents.retrieve(
       body.data.object.id
@@ -375,8 +376,7 @@ export const webhook = async (body) => {
     });
   }
 };
-export const createSubscription=async(sig,stripeSecret,body)=>{
-  
+export const createSubscription = async (sig, stripeSecret, body) => {
   let event;
 
   try {
@@ -387,23 +387,26 @@ export const createSubscription=async(sig,stripeSecret,body)=>{
 
   // Handle the event
   switch (event.type) {
-    case 'invoice.payment_succeeded':
+    case "invoice.payment_succeeded":
       // Retrieve subscription ID from the event data
       const subscriptionId = event.data.object.subscription;
 
       // Check if it's the second payment (you might want to store this information)
       // You can check the invoice's `billing_reason` to identify if it's an automatic payment
-      const isSecondPayment = event.data.object.billing_reason === 'subscription_cycle';
+      const isSecondPayment =
+        event.data.object.billing_reason === "subscription_cycle";
 
       if (isSecondPayment) {
-        console.log(`Second automatic payment for subscription ${subscriptionId} succeeded.`);
+        console.log(
+          `Second automatic payment for subscription ${subscriptionId} succeeded.`
+        );
       }
       break;
     // Add more event handlers as needed
     default:
       console.log(`Unhandled event type ${event.type}`);
-}
-}
+  }
+};
 export const checkOutSession = async (userId) => {
   const user = await User.findOne({ _id: userId, isDeleted: false });
   if (user.stripe.status != STRIPE_STATUS.ENABLE) {
@@ -418,8 +421,8 @@ export const checkOutSession = async (userId) => {
   //   destination: user.stripe.accountId,
   // });
   const product = await stripe.products.create({
-    name: 'consultation',
-    type: 'service'
+    name: "tald",
+    type: "service",
   });
   // const product = stripe.prices.list({
   //   limit:10
@@ -428,22 +431,24 @@ export const checkOutSession = async (userId) => {
 
   const price = await stripe.prices.create({
     unit_amount: 200000, // Replace with the amount in cents (e.g., $9.99 is 999 cents)
-    currency: 'usd', // Replace with your desired currency
-    recurring: { interval: 'month' }, // Set the billing interval
+    currency: "usd", // Replace with your desired currency
+    recurring: { interval: "month" }, // Set the billing interval
     product: product.id,
   });
   // console.log(price);
 
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [{
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    line_items: [
+      {
         price: price.id, // Replace with your actual plan ID
         quantity: 1,
-      }],
-      mode: 'subscription',
-      success_url: 'https://designer.tald.co/',
-      cancel_url: 'https://your-website.com/cancel',
-    });
+      },
+    ],
+    mode: "subscription",
+    success_url: "https://designer.tald.co/",
+    cancel_url: "https://your-website.com/cancel",
+  });
 
   // const session = await stripe.checkout.sessions.create({
   //   mode: "payment",
