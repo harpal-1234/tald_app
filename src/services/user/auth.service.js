@@ -386,7 +386,7 @@ export const createSubscription = async (sig, stripeSecret, body) => {
     const subscriptionId = body.data.object.subscription;
     console.log("jvhjvvkvvvv,")
     
-    console.log(valueof(subscriptionId),"jjhsugdfugbfdjkhbvhjxbchsbvhjsbvhjsbvhjdbvjkhdbvkhjdbvhkjbvkhjxbhjfxbvbjnfbjhfxbldfhjvbfsdkhjvb")
+    //console.log(valueof(subscriptionId),"jjhsugdfugbfdjkhbvhjxbchsbvhjsbvhjsbvhjdbvjkhdbvkhjdbvhkjbvkhjxbhjfxbvbjnfbjhfxbldfhjvbfsdkhjvb")
     const isSecondPayment =
       body.data.object.billing_reason === "subscription_cycle";
     if (body.data.object.billing_reason === "subscription_create") {
