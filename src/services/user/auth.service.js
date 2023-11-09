@@ -378,13 +378,14 @@ export const webhook = async (body) => {
 };
 export const createSubscription = async (sig, stripeSecret, body) => {
   let event;
-console.log(sig,stripeSecret,body)
+console.log(sig,stripeSecret)
   try {
     event = stripe.webhooks.constructEvent(body, sig, stripeSecret);
   } catch (err) {
     return err.message;
   }
-
+  console.log(event,"eeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+  //subscription_create
   // Handle the event
   switch (event.type) {
     case "invoice.payment_succeeded":
@@ -432,7 +433,8 @@ export const checkOutSession = async (userId) => {
   const price = await stripe.prices.create({
     unit_amount: 200000, // Replace with the amount in cents (e.g., $9.99 is 999 cents)
     currency: "usd", // Replace with your desired currency
-    recurring: { interval: "month" }, // Set the billing interval
+    recurring: { interval: 'day', interval_count: 1 },
+    //recurring: { interval: "month" }, // Set the billing interval
     product: product.id,
   });
   // console.log(price);
