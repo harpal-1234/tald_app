@@ -378,7 +378,7 @@ export const webhook = async (body) => {
 };
 export const createSubscription = async (sig, stripeSecret, body) => {
 //   let event;
- console.log(sig,stripeSecret.body)
+ console.log(sig,stripeSecret.body);
 //   try {
 //     console.log("ffuyfyufufuyffkuyfkuyfkyfkuyfckghckhgckuytcf")
 //     event = await stripe.webhooks.constructEvent(body, sig, stripeSecret);
