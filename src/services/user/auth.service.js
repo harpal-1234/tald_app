@@ -547,7 +547,6 @@ export const getProfile = async (userId) => {
 
 export const profile = async (token, name, email) => {
   const check = await Token.findOne({ token: token, isDeleted: false }).lean();
-
   if (check) {
     const user = await User.findOne({
       _id: check.user,

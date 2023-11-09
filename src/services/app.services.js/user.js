@@ -730,14 +730,18 @@ export const deleteProjectInquery = async (projectId) => {
   );
   return project;
 };
-export const deleteProjectInqueryImage = async (Id,projectId) => {
-  const data = await ProjectInquery.findOneAndUpdate({_id:projectId}, {
-    $pull: {
-      files: { _id: Id },
+export const deleteProjectInqueryImage = async (Id, projectId) => {
+  const data = await ProjectInquery.findOneAndUpdate(
+    { _id: projectId },
+    {
+      $pull: {
+        files: { _id: Id },
+      },
     },
-  },{new:true});
-  console.log(data)
-  return data
+    { new: true }
+  );
+  console.log(data);
+  return data;
 };
 export const getInqueryStatus = async (projectId) => {
   const project = await projectRequest
@@ -852,7 +856,7 @@ export const getSaveImages = async (page, limit, userId) => {
   const user = await User.findOne(
     { _id: userId, isDeleted: false },
     { saveImages: { $slice: [page * limit, limit] } }
-  );
+  ).populate("saveImages.projectId");
   return user?.saveImages;
 };
 export const review = async (data, userId) => {
