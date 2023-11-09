@@ -380,7 +380,9 @@ export const createSubscription = async (sig, stripeSecret, body) => {
   let event;
 console.log(sig,stripeSecret)
   try {
+    console.log("ffuyfyufufuyffkuyfkuyfkyfkuyfckghckhgckuytcf")
     event = await stripe.webhooks.constructEvent(body, sig, stripeSecret);
+    console.log(event,"eeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
   } catch (err) {
     return err.message;
   }
