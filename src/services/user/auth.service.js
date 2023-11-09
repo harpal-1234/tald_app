@@ -1,5 +1,12 @@
 import bcrypt from "bcryptjs";
-import { User, Token, Admin, Request, Filter } from "../../models/index.js";
+import {
+  User,
+  Token,
+  Admin,
+  Request,
+  Filter,
+  Payment,
+} from "../../models/index.js";
 import { formatUser, formatVendor } from "../../utils/commonFunction.js";
 import * as stripeServices from "../../middlewares/stripe.js";
 import { editProfile } from "../../utils/sendMail.js";
@@ -14,6 +21,7 @@ import {
 } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
 import Stripe from "stripe";
+import { v4 as uuidv4 } from "uuid";
 
 const stripe = new Stripe(
   "sk_test_51NuIYPKs8Y4Y2av4NWgrHFmq8R42IrEiIZ4c8jAsc23JsPqeq60bX7uKZZGb24dujnaheL7J6WsisNUtrJof0wlq00jvt0higK"
@@ -322,23 +330,26 @@ export const profileEdit = async (data, userId, token) => {
   await editProfile(data.email, token, data.name);
   return;
 };
-export const payment = async (userId, amount1, plan) => {
+export const payment = async (userId, amount1, designerId) => {
   const user = await User.findOne({ _id: userId, isDeleted: false });
-  // const card = await stripe.customers.createSource(user.stripeId, {
-  //   source: "tok_visa",
-  // });
+  const card = await stripe.customers.createSource(user.stripe.customerId, {
+    source: "tok_visa",
+  });
   const amount = amount1 * 100;
-  const ephemeralKey = await stripeServices.stripeService(user.stripeId);
+  const ephemeralKey = await stripeServices.stripeService(
+    user.stripe.customerId
+  );
   const paymentIntent = await stripe.paymentIntents.create({
     amount: amount,
     currency: "USD",
-    customer: user.stripeId,
+    customer: user.stripe.customerId,
     payment_method_types: ["card"],
     description: "test1",
     metadata: {
       userId: JSON.stringify(userId),
       amount: amount1,
-      plan: plan,
+      designerId: JSON.stringify(designerId),
+      // plan: plan,
     },
   });
   const customer = paymentIntent.customer;
@@ -353,14 +364,46 @@ export const webhook = async (body) => {
       _id: JSON.parse(paymentIntent.metadata.userId),
       isDeleted: false,
     });
-    const plan = paymentIntent.metadata.plan;
+    //const plan = paymentIntent.metadata.plan;
     const amount = paymentIntent.metadata.amount;
     var date = new Date();
     date = new Date(moment(date).utc().format());
-    var expireDate;
-    var numberOfEvents;
+    const createOrder = await Payment.create({
+      user: JSON.parse(paymentIntent.metadata.userId),
+      designer: JSON.parse(paymentIntent.metadata.designerId),
+      transitionId: uuidv4(),
+    });
   }
 };
+export const createSubscription=async(sig,stripeSecret,body)=>{
+  
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(body, sig, stripeSecret);
+  } catch (err) {
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  // Handle the event
+  switch (event.type) {
+    case 'invoice.payment_succeeded':
+      // Retrieve subscription ID from the event data
+      const subscriptionId = event.data.object.subscription;
+
+      // Check if it's the second payment (you might want to store this information)
+      // You can check the invoice's `billing_reason` to identify if it's an automatic payment
+      const isSecondPayment = event.data.object.billing_reason === 'subscription_cycle';
+
+      if (isSecondPayment) {
+        console.log(`Second automatic payment for subscription ${subscriptionId} succeeded.`);
+      }
+      break;
+    // Add more event handlers as needed
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+}
+}
 export const checkOutSession = async (userId) => {
   const user = await User.findOne({ _id: userId, isDeleted: false });
   if (user.stripe.status != STRIPE_STATUS.ENABLE) {
@@ -369,23 +412,39 @@ export const checkOutSession = async (userId) => {
       ERROR_MESSAGES.ACCOUNT_DOES_NOT_CONNECT
     );
   }
-  const transfer = await stripe.transfers.create({
-    amount: 1000,
-    currency: 'usd',
-    destination: user.stripe.accountId,
-  });
-  // const product = await stripe.products.create({
-  //   name: 'Tald',
-  //   description: 'Comfortable',
-  //   images: ['https://example.com/t-shirt.png'],
-  // });
-  
-  // const price = await stripe.prices.create({
-  //   product: product.id,
-  //   unit_amount: 2000,
+  // const transfer = await stripe.transfers.create({
+  //   amount: 1,
   //   currency: 'usd',
+  //   destination: user.stripe.accountId,
   // });
-  // console.log(price)
+  const product = await stripe.products.create({
+    name: 'consultation',
+    type: 'service'
+  });
+  // const product = stripe.prices.list({
+  //   limit:10
+  // });
+  // console.log(product)
+
+  const price = await stripe.prices.create({
+    unit_amount: 200000, // Replace with the amount in cents (e.g., $9.99 is 999 cents)
+    currency: 'usd', // Replace with your desired currency
+    recurring: { interval: 'month' }, // Set the billing interval
+    product: product.id,
+  });
+  // console.log(price);
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [{
+        price: price.id, // Replace with your actual plan ID
+        quantity: 1,
+      }],
+      mode: 'subscription',
+      success_url: 'https://designer.tald.co/',
+      cancel_url: 'https://your-website.com/cancel',
+    });
+
   // const session = await stripe.checkout.sessions.create({
   //   mode: "payment",
   //   line_items: [
@@ -394,7 +453,7 @@ export const checkOutSession = async (userId) => {
   //       price: price.id,
   //       quantity: 1, // Specify the quantity
   //     },
-  //     // Add more line items if needed
+  //     //     // Add more line items if needed
   //   ],
 
   //   payment_intent_data: {
@@ -406,7 +465,7 @@ export const checkOutSession = async (userId) => {
   //   success_url: `${process.env.API_BASE_URL}/user/auth/success`,
   //   cancel_url: `${process.env.API_BASE_URL}/user/auth/cancel`,
   // });
-  return transfer;
+  return session;
 };
 export const getProfile = async (userId) => {
   const user = await User.findOne({

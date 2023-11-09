@@ -8,7 +8,6 @@ const projectSchema = mongoose.Schema(
     isDeleted: { type: Boolean, default: false },
     isVerify: { type: Boolean, default: false },
     isBlocked: { type: Boolean, default: false },
-    isDeleted: { type: Boolean, default: false },
   },
   {
     timestamps: true,

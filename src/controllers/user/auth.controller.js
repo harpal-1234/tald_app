@@ -254,10 +254,10 @@ const profile = catchAsync(async (req, res) => {
     });
   }
 });
-const subscription = catchAsync(async (req, res) => {
-  const { amount, plan } = req.body;
+const payments = catchAsync(async (req, res) => {
+  const { amount, designerId } = req.body;
   const userId = req.token.user._id;
-  const users = await userService.payment(userId, amount, plan);
+  const users = await userService.payment(userId, amount, designerId);
   return successResponse(
     req,
     res,
@@ -310,6 +310,18 @@ const checkOutSession = catchAsync(async (req, res) => {
     data
   );
 });
+const createSubscription = catchAsync(async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  const stripeSecret = "we_1OAUcvKs8Y4Y2av4oiCKo6yA";
+  const data = await userService.createSubscription(sig,stripeSecret,req.body);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+  );
+});
 export default {
   signUp,
   register,
@@ -326,9 +338,10 @@ export default {
   profile,
   getProfile,
   getFilter,
-  subscription,
+  payments,
   webhookApi,
   createStripeConnectLink,
   returnUrl,
-  checkOutSession
+  checkOutSession,
+  createSubscription
 };

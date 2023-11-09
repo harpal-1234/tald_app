@@ -13,7 +13,7 @@ import {
   GOALS,
   PROJECT_SIZE,
   NEED_HELP,
-  SUBSCRIPTION
+  SUBSCRIPTION,
 } from "../../config/appConstants.js";
 
 const login = {
@@ -98,7 +98,9 @@ const createServices = {
     needHelp: Joi.array()
       .required()
       .items(Joi.string().valid(...Object.values(NEED_HELP))),
-    fullServiceClients: Joi.string().required().valid(...Object.values(OPTIONS)),
+    fullServiceClients: Joi.string()
+      .required()
+      .valid(...Object.values(OPTIONS)),
     minBudget: Joi.number().required().allow(null),
     maxBudget: Joi.number().required().allow(null),
   }),
@@ -197,20 +199,18 @@ const editProfile = {
 };
 const filters = {
   query: Joi.object().keys({
-    type: Joi.string().required().valid("All","Virtual","Interior","signUp"),
+    type: Joi.string().required().valid("All", "Virtual", "Interior", "signUp"),
   }),
 };
 const getProfile = {
   query: Joi.object().keys({
-    type: Joi.string().required().valid("User","Vendor"),
+    type: Joi.string().required().valid("User", "Vendor"),
   }),
 };
- const payment = {
+const payment = {
   body: Joi.object().keys({
     amount: Joi.number().required(),
-    plan: Joi.number()
-      .required()
-      .valid(...Object.values(SUBSCRIPTION)),
+    designerId: Joi.string().required(),
   }),
 };
 const verifyEmail = {
@@ -237,5 +237,5 @@ export default {
   verifyEmail,
   getProfile,
   filters,
-  payment
+  payment,
 };

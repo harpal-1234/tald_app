@@ -10,6 +10,7 @@ import { Chat } from "../models/chat.js";
 import { projectRequest } from "../models/projectRequest.js";
 import { Filter } from "../models/filter.js";
 import { Review } from "./reviews.js";
+import {Payment}from "./payments.js"
 
 export {
   Admin,
@@ -24,4 +25,5 @@ export {
   projectRequest,
   Filter,
   Review,
+  Payment
 };

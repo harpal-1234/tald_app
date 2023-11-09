@@ -50,9 +50,10 @@ router.post(
   "/payment",
   auth(USER_TYPE.USER),
   validate(authValidation.payment),
-  authController.subscription
+  authController.payments
 );
 router.post("/webhook", authController.webhookApi);
+router.post("/createSubscription", authController.createSubscription);
 router
   .route("/resetPassword")
   .get(authController.forgotPage)
