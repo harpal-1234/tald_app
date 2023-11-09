@@ -390,7 +390,7 @@ export const createSubscription = async (sig, stripeSecret, body) => {
   //subscription_create
   // Handle the event
   
-  
+
   switch (body.type) {
     case "invoice.payment_succeeded":
       // Retrieve subscription ID from the event data
@@ -402,7 +402,7 @@ export const createSubscription = async (sig, stripeSecret, body) => {
         body.data.object.billing_reason === "subscription_cycle";
 if(body.data.object.billing_reason === "subscription_create"){
 
-  console.log(bo)
+  console.log(body)
 }
       if (isSecondPayment) {
         console.log(
