@@ -390,6 +390,7 @@ export const createSubscription = async (sig, stripeSecret, body) => {
   //subscription_create
   // Handle the event
   
+  
   switch (body.type) {
     case "invoice.payment_succeeded":
       // Retrieve subscription ID from the event data
