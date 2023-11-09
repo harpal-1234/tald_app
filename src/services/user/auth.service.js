@@ -381,7 +381,7 @@ export const webhook = async (body) => {
 };
 export const createSubscription = async (sig, stripeSecret, body) => {
   //   let event;
-  console.log(sig, stripeSecret, body);
+  //console.log(sig, stripeSecret, body);
   if (body.type === "invoice.payment_succeeded") {
     const subscriptionId = body.data.object.subscription;
     console.log("jvhjvvkvvvv,");
@@ -396,13 +396,43 @@ export const createSubscription = async (sig, stripeSecret, body) => {
       const user = customer.metadata.userId;
       const userData = await User.findOne({ _id: user, isDeleted: false });
       const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-      console.log(subscription);
-      console.log(userData);
+      if (userData && subscription) {
+        const values = await User.findOneAndUpdate(
+          { _id: user, isDeleted: false },
+          {
+            $push: {
+              subscriptions: {
+                data: JSON.stringify(body),
+                type: "subscription_create",
+              },
+            },
+          },
+          { new: true }
+        );
+        console.log(values)
+      }
     }
     if (isSecondPayment) {
-      console.log(
-        `Second automatic payment for subscription ${subscriptionId} succeeded.`
-      );
+      const userId = body.data.object.customer;
+      console.log(userId, "gfufguhfuierhfurhiuhugheruheiuhuihghiuhguihuihuih");
+      const customer = await stripe.customers.retrieve(userId);
+      const user = customer.metadata.userId;
+      const userData = await User.findOne({ _id: user, isDeleted: false });
+      const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+      if (userData && subscription) {
+        await User.findOneAndUpdate(
+          { _id: user, isDeleted: false },
+          {
+            $push: {
+              subscriptions: {
+                data: JSON.stringify(body),
+                type: "subscription_cycle",
+              },
+            },
+          },
+          { new: true }
+        );
+      }
     }
   }
 };
@@ -444,7 +474,7 @@ export const checkOutSession = async (userId) => {
 
   // console.log(price);
 
-  const customer = await stripe.customers.retrieve("cus_OyUuEfWs3C32c8");
+  //const customer = await stripe.customers.retrieve("cus_OyUuEfWs3C32c8");
 
   const session = await stripe.checkout.sessions.create({
     customer: user.stripe.customerId,

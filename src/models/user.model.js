@@ -103,9 +103,12 @@ const userSchema = mongoose.Schema(
     isIndefinitely: { type: Boolean, default: false },
     inviteesSchedule: { type: Number },
     saveProfiles: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
-    subscriptions:[{
-      data:{type:String}
-    }],
+    subscriptions: [
+      {
+        data: { type: String },
+        type: { type: String },
+      },
+    ],
     saveImages: [
       {
         image: { type: String },
