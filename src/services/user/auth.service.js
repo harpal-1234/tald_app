@@ -390,8 +390,8 @@ export const createSubscription = async (sig, stripeSecret, body) => {
     const isSecondPayment =
       body.data.object.billing_reason === "subscription_cycle";
     if (body.data.object.billing_reason === "subscription_create") {
-      const userId = JSON.stringify(body.data.object.costumer);
-      console.log(userId,"gfufguhfuierhfurhiuhugheruheiuhuihghiuhguihuihuih")
+      const userId = body.data.object.customer;
+      console.log(userId, "gfufguhfuierhfurhiuhugheruheiuhuihghiuhguihuihuih");
       const customer = await stripe.customers.retrieve(userId);
       const user = JSON.parse(customer.metadata.userId);
 
