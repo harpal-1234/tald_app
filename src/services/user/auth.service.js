@@ -391,7 +391,7 @@ export const createSubscription = async (sig, stripeSecret, body) => {
       body.data.object.billing_reason === "subscription_cycle";
     if (body.data.object.billing_reason === "subscription_create") {
       const customer = await stripe.customers.retrieve(
-        body.data.object.costumer
+        body.data.object.costumer.toObject()
       );
       const user = customer.metadata.userId.toObject();
    
