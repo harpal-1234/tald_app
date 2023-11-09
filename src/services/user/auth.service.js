@@ -383,7 +383,7 @@ export const createSubscription = async (sig, stripeSecret, body) => {
   //   let event;
   console.log(sig, stripeSecret,body);
   if (body.type === "invoice.payment_succeeded") {
-    const subscriptionId = body.data.object.subscription;
+    const subscriptionId = body.data.object.subscription.toString();
     console.log(subscriptionId,"jjhsugdfugbfdjkhbvhjxbchsbvhjsbvhjsbvhjdbvjkhdbvkhjdbvhkjbvkhjxbhjfxbvbjnfbjhfxbldfhjvbfsdkhjvb")
     const isSecondPayment =
       body.data.object.billing_reason === "subscription_cycle";
