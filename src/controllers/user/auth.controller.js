@@ -278,6 +278,16 @@ const webhookApi = catchAsync(async (req, res) => {
     data
   );
 });
+const getSubscription = catchAsync(async (req, res) => {
+  const data = await userService.getSubscription();
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+  );
+});
 const createStripeConnectLink = catchAsync(async (req, res) => {
   const data = await userService.createStripeConnectLink(req.token.user._id);
   return successResponse(
@@ -301,7 +311,7 @@ const returnUrl = catchAsync(async (req, res) => {
 });
 const checkOutSession = catchAsync(async (req, res) => {
   
-  const data = await userService.checkOutSession(req.token.user._id);
+  const data = await userService.checkOutSession(req.token.user._id,req.query.priceId);
   return successResponse(
     req,
     res,
@@ -343,5 +353,6 @@ export default {
   createStripeConnectLink,
   returnUrl,
   checkOutSession,
-  createSubscription
+  createSubscription,
+  getSubscription
 };

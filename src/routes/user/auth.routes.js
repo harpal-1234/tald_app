@@ -7,11 +7,7 @@ import { USER_TYPE } from "../../config/appConstants.js";
 
 const router = express.Router();
 
-router.post(
-  "/signUp",
-  validate(authValidation.signUp),
-  authController.signUp
-);
+router.post("/signUp", validate(authValidation.signUp), authController.signUp);
 
 router.post(
   "/register",
@@ -28,7 +24,7 @@ router.get(
   validate(authValidation.verifyProfile),
   authController.profile
 );
-router.post("/login", validate(authValidation.login), authController.userLogin)
+router.post("/login", validate(authValidation.login), authController.userLogin);
 router.put(
   "/changePassword",
   auth(USER_TYPE.USER),
@@ -54,6 +50,7 @@ router.post(
 );
 router.post("/webhook", authController.webhookApi);
 router.post("/createSubscription", authController.createSubscription);
+router.get("/getPlans", auth(USER_TYPE.NON_USER), authController.getSubscription);
 router
   .route("/resetPassword")
   .get(authController.forgotPage)
@@ -65,11 +62,7 @@ router
     authController.resetForgotPassword
   );
 
-router.post(
-  "/logout",
-  auth(USER_TYPE.USER),
-  authController.userLogout
-);
+router.post("/logout", auth(USER_TYPE.USER), authController.userLogout);
 router.post(
   "/createService",
   auth(USER_TYPE.USER),
@@ -109,7 +102,7 @@ router.get(
 router.get(
   "/checkOutSession",
   auth(USER_TYPE.USER),
-  //validate(authValidation.getProfile),
+  validate(authValidation.priceId),
   authController.checkOutSession
 );
 export default router;

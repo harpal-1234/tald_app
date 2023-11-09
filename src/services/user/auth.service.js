@@ -375,6 +375,7 @@ export const webhook = async (body) => {
     const createOrder = await Payment.create({
       user: JSON.parse(paymentIntent.metadata.userId),
       designer: JSON.parse(paymentIntent.metadata.designerId),
+      ammount:amount,
       transitionId: uuidv4(),
     });
   }
@@ -436,7 +437,37 @@ export const createSubscription = async (sig, stripeSecret, body) => {
     }
   }
 };
-export const checkOutSession = async (userId) => {
+export const getSubscription = async()=>{
+ const plan = {
+    id: 'price_1OAZYXKs8Y4Y2av4zq7HQPHO',
+    object: 'price',
+    active: true,
+    billing_scheme: 'per_unit',
+    created: 1699541405,
+    currency: 'usd',
+    custom_unit_amount: null,
+    livemode: false,
+    lookup_key: null,
+    metadata: {},
+    nickname: null,
+    product: 'prod_OyWb7z0QuWTk3w',
+    recurring: {
+      aggregate_usage: null,
+      interval: 'year',
+      interval_count: 1,
+      trial_period_days: null,
+      usage_type: 'licensed'
+    },
+    tax_behavior: 'unspecified',
+    tiers_mode: null,
+    transform_quantity: null,
+    type: 'recurring',
+    unit_amount: 110000,
+    unit_amount_decimal: '110000'
+  }
+return plan
+}
+export const checkOutSession = async (userId,priceId) => {
   const user = await User.findOne({ _id: userId, isDeleted: false });
   // if (user.stripe.status != STRIPE_STATUS.ENABLE) {
   //   throw new OperationalError(
@@ -465,12 +496,13 @@ export const checkOutSession = async (userId) => {
   // console.log(product)
 
   // const price = await stripe.prices.create({
-  //   unit_amount: 200000, // Replace with the amount in cents (e.g., $9.99 is 999 cents)
+  //   unit_amount: 110000, // Replace with the amount in cents (e.g., $9.99 is 999 cents)
   //   currency: "usd", // Replace with your desired currency
-  //   recurring: { interval: 'day', interval_count: 1 },
-  //   //recurring: { interval: "month" }, // Set the billing interval
+  //  // recurring: { interval: 'day', interval_count: 1 },
+  //   recurring: { interval: "year" }, // Set the billing interval
   //   product: product.id,
   // });
+  // console.log(price)
 
   // console.log(price);
 
@@ -482,7 +514,7 @@ export const checkOutSession = async (userId) => {
     payment_method_types: ["card"],
     line_items: [
       {
-        price: "price_1OAX7NKs8Y4Y2av4GxyC2glh", // Replace with your actual plan ID
+        price: priceId, // Replace with your actual plan ID
         quantity: 1,
       },
     ],

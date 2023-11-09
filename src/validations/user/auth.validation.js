@@ -207,6 +207,11 @@ const getProfile = {
     type: Joi.string().required().valid("User", "Vendor"),
   }),
 };
+const checkOutSession = {
+  query: Joi.object().keys({
+    priceId: Joi.string().required().valid("User", "Vendor"),
+  }),
+};
 const payment = {
   body: Joi.object().keys({
     amount: Joi.number().required(),
@@ -238,4 +243,5 @@ export default {
   getProfile,
   filters,
   payment,
+  checkOutSession
 };
