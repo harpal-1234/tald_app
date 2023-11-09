@@ -377,33 +377,38 @@ export const webhook = async (body) => {
   }
 };
 export const createSubscription = async (sig, stripeSecret, body) => {
-  let event;
-console.log(sig,stripeSecret)
-  try {
-    console.log("ffuyfyufufuyffkuyfkuyfkyfkuyfckghckhgckuytcf")
-    event = await stripe.webhooks.constructEvent(body, sig, stripeSecret);
-    console.log(event,"eeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
-  } catch (err) {
-    return err.message;
-  }
-  console.log(event,"eeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+//   let event;
+ console.log(sig,stripeSecret.body)
+//   try {
+//     console.log("ffuyfyufufuyffkuyfkuyfkyfkuyfckghckhgckuytcf")
+//     event = await stripe.webhooks.constructEvent(body, sig, stripeSecret);
+//     console.log(event,"eeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+//   } catch (err) {
+//     return err.message;
+//   }
+//   console.log(event,"eeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
   //subscription_create
   // Handle the event
-  switch (event.type) {
+  
+  switch (body.type) {
     case "invoice.payment_succeeded":
       // Retrieve subscription ID from the event data
-      const subscriptionId = event.data.object.subscription;
+      const subscriptionId = body.data.object.subscription;
 
       // Check if it's the second payment (you might want to store this information)
       // You can check the invoice's `billing_reason` to identify if it's an automatic payment
       const isSecondPayment =
-        event.data.object.billing_reason === "subscription_cycle";
+        body.data.object.billing_reason === "subscription_cycle";
+if(body.data.object.billing_reason === "subscription_create"){
 
+  console.log(bo)
+}
       if (isSecondPayment) {
         console.log(
           `Second automatic payment for subscription ${subscriptionId} succeeded.`
         );
       }
+
       break;
     // Add more event handlers as needed
     default:
@@ -452,6 +457,9 @@ export const checkOutSession = async (userId) => {
     mode: "subscription",
     success_url: "https://designer.tald.co/",
     cancel_url: "https://your-website.com/cancel",
+    metadata:{
+      userId:userId.toString(),
+    }
   });
 
   // const session = await stripe.checkout.sessions.create({
