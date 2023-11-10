@@ -168,6 +168,7 @@ export const blockUser = async (conversationId, userId) => {
         },
       }
     );
+    console.log(data)
     return;
   }
   return;
