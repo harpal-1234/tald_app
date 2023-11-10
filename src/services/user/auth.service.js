@@ -339,45 +339,72 @@ export const payment = async (userId, amount1, designerId) => {
     source: "tok_visa",
   });
   const amount = amount1 * 100;
-  const ephemeralKey = await stripeServices.stripeService(
-    user.stripe.customerId
-  );
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: amount,
-    currency: "USD",
+  // const ephemeralKey = await stripeServices.stripeService(
+  //   user.stripe.customerId
+  // );
+  // const paymentIntent = await stripe.paymentIntents.create({
+  //   amount: amount,
+  //   currency: "USD",
+  //   customer: user.stripe.customerId,
+  //   payment_method_types: ["card"],
+  //   description: "test1",
+  //   metadata: {
+  //     userId: JSON.stringify(userId),
+  //     amount: amount1,
+  //     designerId: JSON.stringify(designerId),
+  //     // plan: plan,
+  //   },
+  // });
+  //const customer = paymentIntent.customer;
+  const session = await stripe.checkout.sessions.create({
     customer: user.stripe.customerId,
-    payment_method_types: ["card"],
-    description: "test1",
+    payment_method_types: ['card'],
+    line_items: [
+      {
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: 'consultation',
+          },
+          unit_amount: amount,
+        },
+        quantity: 1,
+      },
+    ],
     metadata: {
       userId: JSON.stringify(userId),
       amount: amount1,
       designerId: JSON.stringify(designerId),
       // plan: plan,
     },
+    mode: 'payment',
+    success_url: `${process.env.API_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${process.env.API_BASE_URL}/cancel`,
   });
-  const customer = paymentIntent.customer;
-  return { ephemeralKey, paymentIntent };
+  //return { ephemeralKey, paymentIntent };
+  return session
 };
 export const webhook = async (body) => {
-  console.log(body);
+  console.log(body,"hbhdfihviufboifgiubhifuhuifghbuifghbifhbngjigfkjbjidfbjkbjknjknjfnjcfbhbhjbjhbhjbhbjbljkblhj");
   if (body.type == "payment_intent.succeeded") {
     const paymentIntent = await stripe.paymentIntents.retrieve(
       body.data.object.id
     );
-    const user = await User.findOne({
-      _id: JSON.parse(paymentIntent.metadata.userId),
-      isDeleted: false,
-    });
-    //const plan = paymentIntent.metadata.plan;
+    console.log(paymentIntent)
+    // const user = await User.findOne({
+    //   _id: JSON.parse(paymentIntent.metadata.userId),
+    //   isDeleted: false,
+    // });
+    // //const plan = paymentIntent.metadata.plan;
     const amount = paymentIntent.metadata.amount;
     var date = new Date();
     date = new Date(moment(date).utc().format());
-    const createOrder = await Payment.create({
-      user: JSON.parse(paymentIntent.metadata.userId),
-      designer: JSON.parse(paymentIntent.metadata.designerId),
-      ammount:amount,
-      transitionId: uuidv4(),
-    });
+    // const createOrder = await Payment.create({
+    //   user: JSON.parse(paymentIntent.metadata.userId),
+    //   designer: JSON.parse(paymentIntent.metadata.designerId),
+    //   ammount:amount,
+    //   transitionId: uuidv4(),
+    // });
   }
 };
 export const createSubscription = async (sig, stripeSecret, body) => {
