@@ -387,7 +387,7 @@ export const payment = async (userId, amount1, designerId) => {
 };
 export const webhook = async (body, sig, stripeSecret) => {
   console.log(
-    body.type,
+    body,
     "hbhdfihviufboifgiubhifuhuifghbuifghbifhbngjigfkjbjidfbjkbjknjknjfnjcfbhbhjbjhbhjbhbjbljkblhj"
   );
   if (body.type == "checkout.session.completed" ) {
