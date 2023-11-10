@@ -26,7 +26,7 @@ export const getInteriorDesigners = catchAsync(async (req, res) => {
     endDate,
   } = req.query;
 
-   var userId;
+  var userId;
   const token = req.token;
   if (token) {
     userId = token.user._id;
@@ -86,16 +86,14 @@ export const getInteriorDesignerById = catchAsync(async (req, res) => {
 });
 export const saveProfile = catchAsync(async (req, res) => {
   const userId = req.token.user._id;
-  const designer = await clientServices.saveProfile(
-    req.body.designerId,
-    userId
-  );
+  const data = await clientServices.saveProfile(req.body.designerId, userId);
 
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.SUCCESS
+    SUCCESS_MESSAGES.SUCCESS,
+    data
   );
 });
 
@@ -168,10 +166,7 @@ export const addFileConsultation = catchAsync(async (req, res) => {
 });
 export const getSaveProfile = catchAsync(async (req, res) => {
   const userId = req.token.user._id;
-  const designer = await clientServices.getSaveProfiles(
-    req.query,
-    userId
-  );
+  const designer = await clientServices.getSaveProfiles(req.query, userId);
 
   return successResponse(
     req,
@@ -210,12 +205,15 @@ export const createProjectInquery = catchAsync(async (req, res) => {
 });
 export const deleteProjectInqueryImage = catchAsync(async (req, res) => {
   const userId = req.token.user._id;
-  const project = await clientServices.deleteProjectInqueryImage(req.body.fileId,req.body.projectId);
+  const project = await clientServices.deleteProjectInqueryImage(
+    req.body.fileId,
+    req.body.projectId
+  );
   return successResponse(
     req,
     res,
     STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS
   );
 });
 export const deleteProjectInquery = catchAsync(async (req, res) => {
@@ -374,7 +372,8 @@ export const saveImages = catchAsync(async (req, res) => {
     req,
     res,
     STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.SUCCESS
+    SUCCESS_MESSAGES.SUCCESS,
+    data
   );
 });
 export const getSaveImages = catchAsync(async (req, res) => {
@@ -394,10 +393,7 @@ export const getSaveImages = catchAsync(async (req, res) => {
 });
 export const review = catchAsync(async (req, res) => {
   const userId = req.token.user._id;
-  const data = await clientServices.review(
-    req.body,
-    userId
-  );
+  const data = await clientServices.review(req.body, userId);
   return successResponse(
     req,
     res,
@@ -406,4 +402,3 @@ export const review = catchAsync(async (req, res) => {
     data
   );
 });
-

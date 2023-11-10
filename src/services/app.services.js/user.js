@@ -282,18 +282,34 @@ export const saveProfile = async (designerId, userId) => {
       ERROR_MESSAGES.DESIGNER_NOT_FOUND
     );
   }
-  const designer = await User.findOneAndUpdate(
-    {
-      _id: userId,
-      //isVerify: true,
-      // isApproved:true,
-      isDeleted: false,
-    },
-    { $push: { saveProfiles: designerId } },
-    { new: true }
-  );
-  console.log(designer);
-  return;
+  const checkUser = await User.findOne({ _id: userId, isDeleted: false });
+  if (!JSON.stringify(checkUser?.saveProfiles).includes(designerId)) {
+    const designer = await User.findOneAndUpdate(
+      {
+        _id: userId,
+        //isVerify: true,
+        // isApproved:true,
+        isDeleted: false,
+      },
+      { $push: { saveProfiles: designerId } },
+      { new: true }
+    );
+
+    return { isSaveProfile: true };
+  } else {
+    const designer = await User.findOneAndUpdate(
+      {
+        _id: userId,
+        //isVerify: true,
+        // isApproved:true,
+        isDeleted: false,
+      },
+      { $pull: { saveProfiles: designerId } },
+      { new: true }
+    );
+
+    return { isSaveProfile: false };
+  }
 };
 export const getSlots = async (designerId, date, userId, timeDuration) => {
   const check = await User.findOne({
@@ -842,15 +858,33 @@ export const saveImages = async (data, userId) => {
       ERROR_MESSAGES.PROJECT_NOT_FOUND
     );
   }
-  const user = await User.findOneAndUpdate(
-    {
-      _id: userId,
-      isDeleted: false, //isVerify: true
-    },
-    { $push: { saveImages: { image: data.image, projectId: data.projectId } } },
-    { new: true }
-  );
-  return user;
+
+  const check = await User.findOne({ _id: userId, isDeleted: false });
+  if (!JSON.stringify(check.saveImages).includes(data.projectId)) {
+    const user = await User.findOneAndUpdate(
+      {
+        _id: userId,
+        isDeleted: false, //isVerify: true
+      },
+      {
+        $push: { saveImages: { image: data.image, projectId: data.projectId } },
+      },
+      { new: true }
+    );
+    return { isSave: true };
+  } else {
+    const user = await User.findOneAndUpdate(
+      {
+        _id: userId,
+        isDeleted: false, //isVerify: true
+      },
+      {
+        $pull: { saveImages: { image: data.image, projectId: data.projectId } },
+      },
+      { new: true }
+    );
+    return { isSave: false };
+  }
 };
 export const getSaveImages = async (page, limit, userId) => {
   const user = await User.findOne(

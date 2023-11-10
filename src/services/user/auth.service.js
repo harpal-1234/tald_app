@@ -49,30 +49,37 @@ export const getFilter = async (type) => {
     const data = [
       {
         key: "projectType",
+        isMultiple: false,
         value: filter.projectType,
       },
       {
         key: "AcceptVirtualConsultation",
+        isMultiple: false,
         value: ["yes", "No"],
       },
       {
         key: "fullServiceClient",
+        isMultiple: false,
         value: ["Yes", "No"],
       },
       {
         key: "destination",
+        isMultiple: false,
         value: ["Yes", "No"],
       },
       {
         key: "styles",
+        isMultiple: true,
         value: filter.style,
       },
       {
         key: "preferences",
+        isMultiple: true,
         value: filter.preferences,
       },
       {
         key: "projectSize",
+        isMultiple: false,
         value: filter.projectSize,
       },
     ];
@@ -82,30 +89,37 @@ export const getFilter = async (type) => {
     const data = [
       {
         key: "projectSize",
+        isMultiple: false,
         value: filter.projectSize,
       },
       {
         key: "dateRange",
+        isMultiple: false,
         value: ["startDate", "endDate"],
       },
       {
         key: "consultationLength",
+        isMultiple: false,
         value: ["25 mins", "55 mins"],
       },
       {
         key: "consultationFee",
+        isMultiple: false,
         value: ["minimumPrice", "maximumPrice"],
       },
       {
         key: "goals",
+        isMultiple: true,
         value: filter.goals,
       },
       {
         key: "styles",
+        isMultiple: true,
         value: filter.style,
       },
       {
         key: "preferences",
+        isMultiple: true,
         value: filter.preferences,
       },
     ];
@@ -115,26 +129,32 @@ export const getFilter = async (type) => {
     const data = [
       {
         key: "destination",
+        isMultiple: false,
         value: ["Yes", "No"],
       },
       {
         key: "projectSize",
+        isMultiple: false,
         value: filter.projectSize,
       },
       {
         key: "feeStructure",
+        isMultiple: false,
         value: VALID_FEE_STRUCTURE,
       },
       {
-        key: "consultationFee",
+        key: "totalProjectSpend",
+        isMultiple: false,
         value: ["minimumPrice", "maximumPrice"],
       },
       {
         key: "styles",
+        isMultiple: true,
         value: filter.style,
       },
       {
         key: "preferences",
+        isMultiple: true,
         value: filter.preferences,
       },
     ];
@@ -296,7 +316,7 @@ export const createStripeConnectLink = async (userId) => {
   console.log(user.stripeId);
   const accountLink = await stripe.accountLinks.create({
     account: user.stripe.accountId,
-    refresh_url: `${process.env.API_BASE_URL}/user/auth/reauth?accountId=${user.stripe.accountId}`,
+    refresh_url: `https://designer.tald.co`,
     return_url: `${process.env.API_BASE_URL}/user/auth/return?accountId=${user.stripe.accountId}`,
     type: "account_onboarding",
   });
@@ -324,10 +344,10 @@ export const return_url = async (accountId) => {
     console.log(data);
     // Payment methods (credit card payments) are enabled for this account
 
-    return `Payment methods are enabled for this account`;
+    return `https://designer.tald.co/my-subscriptions`;
   } else {
     // Payment methods are not enabled
-    return "Payment methods are not enabled for this account";
+    return "error : Payment methods are not enabled for this account";
   }
 };
 export const profileEdit = async (data, userId, token) => {
@@ -380,7 +400,7 @@ export const payment = async (userId, amount1, designerId, consultationId) => {
     ],
 
     mode: "payment",
-    success_url: `https://client.tald.co/designers/${consultationId}`,
+    success_url: `https://client.tald.co/designers/${designerId}`,
     cancel_url: `${process.env.API_BASE_URL}/cancel`,
   });
   //return { ephemeralKey, paymentIntent };
@@ -395,7 +415,10 @@ export const webhook = async (body, sig, stripeSecret) => {
     const paymentIntent = await stripe.paymentIntents.retrieve(
       body.data.object.payment_intent
     );
-    console.log(body.data.object.metadata, "jbijhiuhiughuighrikhikhiughiuhgipuh");
+    console.log(
+      body.data.object.metadata,
+      "jbijhiuhiughuighrikhikhiughiuhgipuh"
+    );
     const user = await User.findOne({
       _id: JSON.parse(body.data.object.metadata.userId),
       isDeleted: false,
@@ -561,7 +584,7 @@ export const checkOutSession = async (userId, priceId) => {
       },
     ],
     mode: "subscription",
-    success_url: "https://designer.tald.co/",
+    success_url: "https://designer.tald.co",
     cancel_url: "https://your-website.com/cancel",
     metadata: {
       userId: userId.toString(),
