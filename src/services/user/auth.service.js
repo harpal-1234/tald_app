@@ -357,13 +357,13 @@ export const payment = async (userId, amount1, designerId) => {
   // });
   const session = await stripe.checkout.sessions.create({
     customer: user.stripe.customerId,
-    payment_method_types: ['card'],
+    payment_method_types: ["card"],
     line_items: [
       {
         price_data: {
-          currency: 'usd',
+          currency: "usd",
           product_data: {
-            name: 'consultation',
+            name: "consultation",
           },
           unit_amount: amount,
         },
@@ -375,20 +375,23 @@ export const payment = async (userId, amount1, designerId) => {
       amount: amount1,
       designerId: JSON.stringify(designerId),
     },
-    mode: 'payment',
+    mode: "payment",
     success_url: `${process.env.API_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${process.env.API_BASE_URL}/cancel`,
   });
   //return { ephemeralKey, paymentIntent };
-  return session
+  return session;
 };
-export const webhook = async (body,sig,stripeSecret) => {
- console.log(body,"hbhdfihviufboifgiubhifuhuifghbuifghbifhbngjigfkjbjidfbjkbjknjknjfnjcfbhbhjbjhbhjbhbjbljkblhj");
+export const webhook = async (body, sig, stripeSecret) => {
+  console.log(
+    body,
+    "hbhdfihviufboifgiubhifuhuifghbuifghbifhbngjigfkjbjidfbjkbjknjknjfnjcfbhbhjbjhbhjbhbjbljkblhj"
+  );
   if (body.type == "payment_intent.succeeded") {
     const paymentIntent = await stripe.paymentIntents.retrieve(
       body.data.object.id
     );
-    console.log(paymentIntent,"jbijhiuhiughuighrikhikhiughiuhgipuh")
+    console.log(paymentIntent.metadata, "jbijhiuhiughuighrikhikhiughiuhgipuh");
     // const user = await User.findOne({
     //   _id: JSON.parse(paymentIntent.metadata.userId),
     //   isDeleted: false,
@@ -435,7 +438,7 @@ export const createSubscription = async (sig, stripeSecret, body) => {
           },
           { new: true }
         );
-        console.log(values)
+        console.log(values);
       }
     }
     if (isSecondPayment) {
@@ -462,37 +465,37 @@ export const createSubscription = async (sig, stripeSecret, body) => {
     }
   }
 };
-export const getSubscription = async()=>{
- const plan = {
-    id: 'price_1OAZYXKs8Y4Y2av4zq7HQPHO',
-    object: 'price',
+export const getSubscription = async () => {
+  const plan = {
+    id: "price_1OAZYXKs8Y4Y2av4zq7HQPHO",
+    object: "price",
     active: true,
-    billing_scheme: 'per_unit',
+    billing_scheme: "per_unit",
     created: 1699541405,
-    currency: 'usd',
+    currency: "usd",
     custom_unit_amount: null,
     livemode: false,
     lookup_key: null,
     metadata: {},
     nickname: null,
-    product: 'prod_OyWb7z0QuWTk3w',
+    product: "prod_OyWb7z0QuWTk3w",
     recurring: {
       aggregate_usage: null,
-      interval: 'year',
+      interval: "year",
       interval_count: 1,
       trial_period_days: null,
-      usage_type: 'licensed'
+      usage_type: "licensed",
     },
-    tax_behavior: 'unspecified',
+    tax_behavior: "unspecified",
     tiers_mode: null,
     transform_quantity: null,
-    type: 'recurring',
+    type: "recurring",
     unit_amount: 110000,
-    unit_amount_decimal: '110000'
-  }
-return plan
-}
-export const checkOutSession = async (userId,priceId) => {
+    unit_amount_decimal: "110000",
+  };
+  return plan;
+};
+export const checkOutSession = async (userId, priceId) => {
   const user = await User.findOne({ _id: userId, isDeleted: false });
   // if (user.stripe.status != STRIPE_STATUS.ENABLE) {
   //   throw new OperationalError(
