@@ -384,7 +384,7 @@ export const payment = async (userId, amount1, designerId) => {
   return session
 };
 export const webhook = async (body,sig,stripeSecret) => {
- connsole.log(body.id,"hbhdfihviufboifgiubhifuhuifghbuifghbifhbngjigfkjbjidfbjkbjknjknjfnjcfbhbhjbjhbhjbhbjbljkblhj");
+ console.log(body.id,"hbhdfihviufboifgiubhifuhuifghbuifghbifhbngjigfkjbjidfbjkbjknjknjfnjcfbhbhjbjhbhjbhbjbljkblhj");
   if (body.type == "payment_intent.succeeded") {
     const paymentIntent = await stripe.events.retrieve(
       body.id
