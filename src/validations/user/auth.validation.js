@@ -216,6 +216,7 @@ const payment = {
   body: Joi.object().keys({
     amount: Joi.number().required(),
     designerId: Joi.string().required(),
+    consultationId:Joi.string().required(),
   }),
 };
 const verifyEmail = {

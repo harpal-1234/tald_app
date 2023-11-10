@@ -3,8 +3,12 @@ const paymentsSchema = mongoose.Schema(
   {
     user: { type: mongoose.SchemaTypes.ObjectId, ref: "user" },
     designer: { type: mongoose.SchemaTypes.ObjectId, ref: "user" },
-    transitionId:{type:String,required:true},
-    ammount:{type:String,required:true},
+    transitionId: { type: String, required: true },
+    consultationId: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: "consultations",
+    },
+    amount: { type: String, required: true },
     isDeleted: { type: Boolean, default: false },
     isBlocked: { type: Boolean, default: false },
   },

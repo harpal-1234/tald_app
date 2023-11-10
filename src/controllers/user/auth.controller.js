@@ -255,9 +255,14 @@ const profile = catchAsync(async (req, res) => {
   }
 });
 const payments = catchAsync(async (req, res) => {
-  const { amount, designerId } = req.body;
+  const { amount, designerId, consultationId } = req.body;
   const userId = req.token.user._id;
-  const users = await userService.payment(userId, amount, designerId);
+  const users = await userService.payment(
+    userId,
+    amount,
+    designerId,
+    consultationId
+  );
   return successResponse(
     req,
     res,
@@ -269,9 +274,9 @@ const payments = catchAsync(async (req, res) => {
   );
 });
 const webhookApi = catchAsync(async (req, res) => {
-  const sig =  req.headers['stripe-signature'];
-  const stripeSecret = 'we_1O9o4rKs8Y4Y2av4XWVXUixx';
-  const data = await userService.webhook(req.body,sig,stripeSecret);
+  const sig = req.headers["stripe-signature"];
+  const stripeSecret = "we_1O9o4rKs8Y4Y2av4XWVXUixx";
+  const data = await userService.webhook(req.body, sig, stripeSecret);
   return successResponse(
     req,
     res,
@@ -281,7 +286,6 @@ const webhookApi = catchAsync(async (req, res) => {
   );
 });
 const getSubscription = catchAsync(async (req, res) => {
-  
   const data = await userService.getSubscription();
   return successResponse(
     req,
@@ -302,7 +306,6 @@ const createStripeConnectLink = catchAsync(async (req, res) => {
   );
 });
 const returnUrl = catchAsync(async (req, res) => {
-  
   const data = await userService.return_url(req.query.accountId);
   return successResponse(
     req,
@@ -313,8 +316,10 @@ const returnUrl = catchAsync(async (req, res) => {
   );
 });
 const checkOutSession = catchAsync(async (req, res) => {
-  
-  const data = await userService.checkOutSession(req.token.user._id,req.query.priceId);
+  const data = await userService.checkOutSession(
+    req.token.user._id,
+    req.query.priceId
+  );
   return successResponse(
     req,
     res,
@@ -324,9 +329,13 @@ const checkOutSession = catchAsync(async (req, res) => {
   );
 });
 const createSubscription = catchAsync(async (req, res) => {
-  const sig = req.headers['stripe-signature'];
+  const sig = req.headers["stripe-signature"];
   const stripeSecret = "we_1OAUcvKs8Y4Y2av4oiCKo6yA";
-  const data = await userService.createSubscription(sig,stripeSecret,req.body);
+  const data = await userService.createSubscription(
+    sig,
+    stripeSecret,
+    req.body
+  );
   return successResponse(
     req,
     res,
@@ -357,5 +366,5 @@ export default {
   returnUrl,
   checkOutSession,
   createSubscription,
-  getSubscription
+  getSubscription,
 };

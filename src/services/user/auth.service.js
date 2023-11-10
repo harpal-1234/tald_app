@@ -6,6 +6,7 @@ import {
   Request,
   Filter,
   Payment,
+  Consultations,
 } from "../../models/index.js";
 import { formatUser, formatVendor } from "../../utils/commonFunction.js";
 import * as stripeServices from "../../middlewares/stripe.js";
@@ -333,7 +334,7 @@ export const profileEdit = async (data, userId, token) => {
   await editProfile(data.email, token, data.name);
   return;
 };
-export const payment = async (userId, amount1, designerId) => {
+export const payment = async (userId, amount1, designerId, consultationId) => {
   const user = await User.findOne({ _id: userId, isDeleted: false });
   // const card = await stripe.customers.createSource(user.stripe.customerId, {
   //   source: "tok_visa",
@@ -356,7 +357,6 @@ export const payment = async (userId, amount1, designerId) => {
   //   },
   // });
 
-
   const session = await stripe.checkout.sessions.create({
     customer: user.stripe.customerId,
     payment_method_types: ["card"],
@@ -364,6 +364,7 @@ export const payment = async (userId, amount1, designerId) => {
       userId: JSON.stringify(userId),
       amount: amount1,
       designerId: JSON.stringify(designerId),
+      consultationId: JSON.stringify(consultationId),
     },
     line_items: [
       {
@@ -390,25 +391,35 @@ export const webhook = async (body, sig, stripeSecret) => {
     body,
     "hbhdfihviufboifgiubhifuhuifghbuifghbifhbngjigfkjbjidfbjkbjknjknjfnjcfbhbhjbjhbhjbhbjbljkblhj"
   );
-  if (body.type == "checkout.session.completed" ) {
+  if (body.type == "checkout.session.completed") {
     const paymentIntent = await stripe.paymentIntents.retrieve(
       body.data.object.payment_intent
     );
     console.log(paymentIntent.metadata, "jbijhiuhiughuighrikhikhiughiuhgipuh");
-    // const user = await User.findOne({
-    //   _id: JSON.parse(paymentIntent.metadata.userId),
-    //   isDeleted: false,
-    // });
+    const user = await User.findOne({
+      _id: JSON.parse(paymentIntent.metadata.userId),
+      isDeleted: false,
+    });
     // //const plan = paymentIntent.metadata.plan;
-    // const amount = paymentIntent.metadata.amount;
+    const amount = paymentIntent.metadata.amount;
     // var date = new Date();
     // date = new Date(moment(date).utc().format());
-    // const createOrder = await Payment.create({
-    //   user: JSON.parse(paymentIntent.metadata.userId),
-    //   designer: JSON.parse(paymentIntent.metadata.designerId),
-    //   ammount:amount,
-    //   transitionId: uuidv4(),
-    // });
+    const createOrder = await Payment.create({
+      user: JSON.parse(paymentIntent.metadata.userId),
+      designer: JSON.parse(paymentIntent.metadata.designerId),
+      amount: amount,
+      consultationId: JSON.parase(paymentIntent.metadata.consultationId),
+      transitionId: body.data.object.payment_intent,
+    });
+    const consultation = await Consultations.findOneAndUpdate(
+      {
+        _id: JSON.parase(paymentIntent.metadata.consultationId),
+        isDeleted: false,
+      },
+      { isPayment: true },
+      { new: true }
+    );
+    console.log(createOrder, consultation);
   }
 };
 export const createSubscription = async (sig, stripeSecret, body) => {

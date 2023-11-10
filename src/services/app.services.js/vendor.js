@@ -279,6 +279,7 @@ export const getConsultations = async (page, limit, designerId) => {
         isDeleted: false,
         isConfirm: false,
         isPast: false,
+        isPayment:true
       })
         .skip(page * limit)
         .limit(limit)
