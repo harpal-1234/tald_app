@@ -355,9 +355,8 @@ export const payment = async (userId, amount1, designerId) => {
   //     // plan: plan,
   //   },
   // });
-  const paymentIntent = await stripe.paymentIntents.retrieve(
-    "pi_3OAoS6Ks8Y4Y2av40OSIWxuG"
-  );
+
+
   const session = await stripe.checkout.sessions.create({
     customer: user.stripe.customerId,
     payment_method_types: ["card"],
@@ -388,14 +387,14 @@ export const payment = async (userId, amount1, designerId) => {
 };
 export const webhook = async (body, sig, stripeSecret) => {
   console.log(
-    body.data.object.metadata,
+    body.type,
     "hbhdfihviufboifgiubhifuhuifghbuifghbifhbngjigfkjbjidfbjkbjknjknjfnjcfbhbhjbjhbhjbhbjbljkblhj"
   );
-  if (body.type == "payment_intent.succeeded") {
+  if (body.type == "payment_intent.succeeded" && body.type == "checkout.session.completed" ) {
     const paymentIntent = await stripe.paymentIntents.retrieve(
       body.data.object.id
     );
-     console.log(paymentIntent.metadata, "jbijhiuhiughuighrikhikhiughiuhgipuh");
+    console.log(paymentIntent.metadata, "jbijhiuhiughuighrikhikhiughiuhgipuh");
     // const user = await User.findOne({
     //   _id: JSON.parse(paymentIntent.metadata.userId),
     //   isDeleted: false,
