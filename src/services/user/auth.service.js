@@ -390,7 +390,7 @@ export const webhook = async (body, sig, stripeSecret) => {
     body.type,
     "hbhdfihviufboifgiubhifuhuifghbuifghbifhbngjigfkjbjidfbjkbjknjknjfnjcfbhbhjbjhbhjbhbjbljkblhj"
   );
-  if (body.type == "payment_intent.succeeded" && body.type == "checkout.session.completed" ) {
+  if (body.type == "checkout.session.completed" ) {
     const paymentIntent = await stripe.paymentIntents.retrieve(
       body.data.object.id
     );
