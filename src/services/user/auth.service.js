@@ -355,7 +355,6 @@ export const payment = async (userId, amount1, designerId) => {
       // plan: plan,
     },
   });
-;
   const session = await stripe.checkout.sessions.create({
     customer: user.stripe.customerId,
     payment_method_types: ['card'],
@@ -375,7 +374,7 @@ export const payment = async (userId, amount1, designerId) => {
       userId: JSON.stringify(userId),
       amount: amount1,
       designerId: JSON.stringify(designerId),
-      // plan: plan,
+      paymentIntentId: paymentIntent.id, 
     },
     mode: 'payment',
     success_url: `${process.env.API_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
@@ -384,13 +383,14 @@ export const payment = async (userId, amount1, designerId) => {
   //return { ephemeralKey, paymentIntent };
   return session
 };
-export const webhook = async (body) => {
+export const webhook = async (body,sig,stripeSecret) => {
   console.log(body,"hbhdfihviufboifgiubhifuhuifghbuifghbifhbngjigfkjbjidfbjkbjknjknjfnjcfbhbhjbjhbhjbhbjbljkblhj");
   if (body.type == "payment_intent.succeeded") {
     const paymentIntent = await stripe.paymentIntents.retrieve(
       body.data.object.id
     );
-    console.log(paymentIntent)
+    const event = await stripe.webhooks.constructEvent(body, sig, stripeSecret);
+    console.log(event,"gchfytfyfvhvkvhvhgvhvhvhgvv")
     // const user = await User.findOne({
     //   _id: JSON.parse(paymentIntent.metadata.userId),
     //   isDeleted: false,

@@ -269,7 +269,9 @@ const payments = catchAsync(async (req, res) => {
   );
 });
 const webhookApi = catchAsync(async (req, res) => {
-  const data = await userService.webhook(req.body);
+  const sig =  req.headers['stripe-signature'];
+  const stripeSecret = 'we_1O9o4rKs8Y4Y2av4XWVXUixx';
+  const data = await userService.webhook(req.body,sig,stripeSecret);
   return successResponse(
     req,
     res,
@@ -279,6 +281,7 @@ const webhookApi = catchAsync(async (req, res) => {
   );
 });
 const getSubscription = catchAsync(async (req, res) => {
+  
   const data = await userService.getSubscription();
   return successResponse(
     req,
