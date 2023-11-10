@@ -378,24 +378,24 @@ export const payment = async (userId, amount1, designerId) => {
         quantity: 1,
       },
     ],
-    
+
     mode: "payment",
     success_url: `${process.env.API_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${process.env.API_BASE_URL}/cancel`,
   });
   //return { ephemeralKey, paymentIntent };
-  return paymentIntent;
+  return session;
 };
 export const webhook = async (body, sig, stripeSecret) => {
   console.log(
-    body,
+    body.data.object.metadata,
     "hbhdfihviufboifgiubhifuhuifghbuifghbifhbngjigfkjbjidfbjkbjknjknjfnjcfbhbhjbjhbhjbhbjbljkblhj"
   );
   if (body.type == "payment_intent.succeeded") {
     const paymentIntent = await stripe.paymentIntents.retrieve(
       body.data.object.id
     );
-   // console.log(paymentIntent.metadata, "jbijhiuhiughuighrikhikhiughiuhgipuh");
+     console.log(paymentIntent.metadata, "jbijhiuhiughuighrikhikhiughiuhgipuh");
     // const user = await User.findOne({
     //   _id: JSON.parse(paymentIntent.metadata.userId),
     //   isDeleted: false,
