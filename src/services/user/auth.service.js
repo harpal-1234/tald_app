@@ -335,27 +335,27 @@ export const profileEdit = async (data, userId, token) => {
 };
 export const payment = async (userId, amount1, designerId) => {
   const user = await User.findOne({ _id: userId, isDeleted: false });
-  const card = await stripe.customers.createSource(user.stripe.customerId, {
-    source: "tok_visa",
-  });
+  // const card = await stripe.customers.createSource(user.stripe.customerId, {
+  //   source: "tok_visa",
+  // });
   const amount = amount1 * 100;
   // const ephemeralKey = await stripeServices.stripeService(
   //   user.stripe.customerId
   // );
-  // const paymentIntent = await stripe.paymentIntents.create({
-  //   amount: amount,
-  //   currency: "USD",
-  //   customer: user.stripe.customerId,
-  //   payment_method_types: ["card"],
-  //   description: "test1",
-  //   metadata: {
-  //     userId: JSON.stringify(userId),
-  //     amount: amount1,
-  //     designerId: JSON.stringify(designerId),
-  //     // plan: plan,
-  //   },
-  // });
-  //const customer = paymentIntent.customer;
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: amount,
+    currency: "USD",
+    customer: user.stripe.customerId,
+    payment_method_types: ["card"],
+    description: "test1",
+    metadata: {
+      userId: JSON.stringify(userId),
+      amount: amount1,
+      designerId: JSON.stringify(designerId),
+      // plan: plan,
+    },
+  });
+;
   const session = await stripe.checkout.sessions.create({
     customer: user.stripe.customerId,
     payment_method_types: ['card'],
