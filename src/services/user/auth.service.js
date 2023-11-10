@@ -380,7 +380,7 @@ export const payment = async (userId, amount1, designerId, consultationId) => {
     ],
 
     mode: "payment",
-    success_url: `${process.env.API_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+    success_url: `https://client.tald.co/designers/${consultationId}`,
     cancel_url: `${process.env.API_BASE_URL}/cancel`,
   });
   //return { ephemeralKey, paymentIntent };
@@ -395,25 +395,25 @@ export const webhook = async (body, sig, stripeSecret) => {
     const paymentIntent = await stripe.paymentIntents.retrieve(
       body.data.object.payment_intent
     );
-    console.log(paymentIntent.metadata, "jbijhiuhiughuighrikhikhiughiuhgipuh");
+    console.log(body.data.object.metadata, "jbijhiuhiughuighrikhikhiughiuhgipuh");
     const user = await User.findOne({
-      _id: JSON.parse(paymentIntent.metadata.userId),
+      _id: JSON.parse(body.data.object.metadata.userId),
       isDeleted: false,
     });
     // //const plan = paymentIntent.metadata.plan;
-    const amount = paymentIntent.metadata.amount;
+    const amount = body.data.object.metadata.amount;
     // var date = new Date();
     // date = new Date(moment(date).utc().format());
     const createOrder = await Payment.create({
-      user: JSON.parse(paymentIntent.metadata.userId),
-      designer: JSON.parse(paymentIntent.metadata.designerId),
+      user: JSON.parse(body.data.object.metadata.userId),
+      designer: JSON.parse(body.data.object.metadata.designerId),
       amount: amount,
-      consultationId: JSON.parase(paymentIntent.metadata.consultationId),
+      consultationId: JSON.parase(body.data.object.metadata.consultationId),
       transitionId: body.data.object.payment_intent,
     });
     const consultation = await Consultations.findOneAndUpdate(
       {
-        _id: JSON.parase(paymentIntent.metadata.consultationId),
+        _id: JSON.parase(body.data.object.metadata.consultationId),
         isDeleted: false,
       },
       { isPayment: true },
