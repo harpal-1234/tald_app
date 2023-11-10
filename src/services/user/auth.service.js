@@ -342,19 +342,19 @@ export const payment = async (userId, amount1, designerId) => {
   // const ephemeralKey = await stripeServices.stripeService(
   //   user.stripe.customerId
   // );
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: amount,
-    currency: "USD",
-    customer: user.stripe.customerId,
-    payment_method_types: ["card"],
-    description: "test1",
-    metadata: {
-      userId: JSON.stringify(userId),
-      amount: amount1,
-      designerId: JSON.stringify(designerId),
-      // plan: plan,
-    },
-  });
+  // const paymentIntent = await stripe.paymentIntents.create({
+  //   amount: amount,
+  //   currency: "USD",
+  //   customer: user.stripe.customerId,
+  //   payment_method_types: ["card"],
+  //   description: "test1",
+  //   metadata: {
+  //     userId: JSON.stringify(userId),
+  //     amount: amount1,
+  //     designerId: JSON.stringify(designerId),
+  //     // plan: plan,
+  //   },
+  // });
   const session = await stripe.checkout.sessions.create({
     customer: user.stripe.customerId,
     payment_method_types: ['card'],
@@ -374,7 +374,6 @@ export const payment = async (userId, amount1, designerId) => {
       userId: JSON.stringify(userId),
       amount: amount1,
       designerId: JSON.stringify(designerId),
-      paymentIntentId: paymentIntent.id, 
     },
     mode: 'payment',
     success_url: `${process.env.API_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
@@ -384,10 +383,10 @@ export const payment = async (userId, amount1, designerId) => {
   return session
 };
 export const webhook = async (body,sig,stripeSecret) => {
- console.log(body.id,"hbhdfihviufboifgiubhifuhuifghbuifghbifhbngjigfkjbjidfbjkbjknjknjfnjcfbhbhjbjhbhjbhbjbljkblhj");
+ console.log(body,"hbhdfihviufboifgiubhifuhuifghbuifghbifhbngjigfkjbjidfbjkbjknjknjfnjcfbhbhjbjhbhjbhbjbljkblhj");
   if (body.type == "payment_intent.succeeded") {
-    const paymentIntent = await stripe.events.retrieve(
-      body.id
+    const paymentIntent = await stripe.paymentIntents.retrieve(
+      body.data.object.id
     );
     console.log(paymentIntent,"jbijhiuhiughuighrikhikhiughiuhgipuh")
     // const user = await User.findOne({
@@ -395,9 +394,9 @@ export const webhook = async (body,sig,stripeSecret) => {
     //   isDeleted: false,
     // });
     // //const plan = paymentIntent.metadata.plan;
-    const amount = paymentIntent.metadata.amount;
-    var date = new Date();
-    date = new Date(moment(date).utc().format());
+    // const amount = paymentIntent.metadata.amount;
+    // var date = new Date();
+    // date = new Date(moment(date).utc().format());
     // const createOrder = await Payment.create({
     //   user: JSON.parse(paymentIntent.metadata.userId),
     //   designer: JSON.parse(paymentIntent.metadata.designerId),
