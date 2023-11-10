@@ -408,12 +408,12 @@ export const webhook = async (body, sig, stripeSecret) => {
       user: JSON.parse(body.data.object.metadata.userId),
       designer: JSON.parse(body.data.object.metadata.designerId),
       amount: amount,
-      consultationId: JSON.parase(body.data.object.metadata.consultationId),
+      consultationId: JSON.parse(body.data.object.metadata.consultationId),
       transitionId: body.data.object.payment_intent,
     });
     const consultation = await Consultations.findOneAndUpdate(
       {
-        _id: JSON.parase(body.data.object.metadata.consultationId),
+        _id: JSON.parse(body.data.object.metadata.consultationId),
         isDeleted: false,
       },
       { isPayment: true },
