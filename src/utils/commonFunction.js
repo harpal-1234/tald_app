@@ -94,13 +94,13 @@ export const formatVendor = (userData) => {
       delete data.preferences;
       delete data.projectSize;
       delete data.styles;
-      delete data.isSignUp;
+      //delete data.isSignUp;
       delete data.isApproved;
       delete data.isIndefinitely;
       delete data.inviteesSchedule;
       delete data.saveProfiles;
       delete data.saveImages;
-      delete data.subscription;
+      //delete data.subscription;
       delete data.stripe;
       delete data.needHelp;
     });
@@ -121,13 +121,13 @@ export const formatVendor = (userData) => {
     delete userData.preferences;
     delete userData.projectSize;
     delete userData.styles;
-    delete userData.isSignUp;
+    //delete userData.isSignUp;
     delete userData.isApproved;
     delete userData.isIndefinitely;
     delete userData.inviteesSchedule;
     delete userData.saveProfiles;
     delete userData.saveImages;
-    delete userData.subscription;
+    //delete userData.subscription;
     delete userData.stripe;
     delete userData.needHelp;
   }
