@@ -319,7 +319,7 @@ export const createStripeConnectLink = async (userId) => {
   const accountLink = await stripe.accountLinks.create({
     account: user.stripe.accountId,
     refresh_url: `https://designer.tald.co`,
-    return_url: `${process.env.API_BASE_URL}/user/auth/return?accountId=${user.stripe.accountId}`,
+    return_url: `https://designer.tald.co`,
     type: "account_onboarding",
   });
   return accountLink;
