@@ -464,6 +464,7 @@ export const createSubscription = async (sig, stripeSecret, body) => {
       const user = customer.metadata.userId;
       const userData = await User.findOne({ _id: user, isDeleted: false });
       const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+      console.log(subscription)
       if (userData && subscription) {
         await User.findOneAndUpdate(
           { _id: user, isDeleted: false },
@@ -471,8 +472,8 @@ export const createSubscription = async (sig, stripeSecret, body) => {
             subscription: {
               transitionId: body.data.object.id,
               startDate: subscription.current_period_start,
-              expireDate: subscription.urrent_period_end,
-              amount: subscription.paln.amount / 100,
+              expireDate: subscription.current_period_end,
+              amount: subscription.plan.amount / 100,
               currentPlan: `${subscription.plan.interval}  $${
                 subscription.plan.amount / 100
               }`,
@@ -486,8 +487,8 @@ export const createSubscription = async (sig, stripeSecret, body) => {
           designer: user,
           transitionId: body.data.object.id,
           startDate: subscription.current_period_start,
-          expireDate: subscription.urrent_period_end,
-          amount: subscription.paln.amount / 100,
+          expireDate: subscription.current_period_end,
+          amount: subscription.plan.amount / 100,
           currentPlan: `${subscription.plan.interval}  $${
             subscription.plan.amount / 100
           }`,
@@ -509,8 +510,8 @@ export const createSubscription = async (sig, stripeSecret, body) => {
             subscription: {
               transitionId: body.data.object.id,
               startDate: subscription.current_period_start,
-              expireDate: subscription.urrent_period_end,
-              amount: subscription.paln.amount / 100,
+              expireDate: subscription.current_period_end,
+              amount: subscription.plan.amount / 100,
               currentPlan: `${subscription.plan.interval}  $${
                 subscription.plan.amount / 100
               }`,
@@ -523,8 +524,8 @@ export const createSubscription = async (sig, stripeSecret, body) => {
           designer: user,
           transitionId: body.data.object.id,
           startDate: subscription.current_period_start,
-          expireDate: subscription.urrent_period_end,
-          amount: subscription.paln.amount / 100,
+          expireDate: subscription.current_period_end,
+          amount: subscription.plan.amount / 100,
           currentPlan: `${subscription.plan.interval}  $${
             subscription.plan.amount / 100
           }`,
