@@ -7,6 +7,7 @@ import {
   Filter,
   Payment,
   Consultations,
+  Subscriptions,
 } from "../../models/index.js";
 import { formatUser, formatVendor } from "../../utils/commonFunction.js";
 import * as stripeServices from "../../middlewares/stripe.js";
@@ -464,19 +465,34 @@ export const createSubscription = async (sig, stripeSecret, body) => {
       const userData = await User.findOne({ _id: user, isDeleted: false });
       const subscription = await stripe.subscriptions.retrieve(subscriptionId);
       if (userData && subscription) {
-        const values = await User.findOneAndUpdate(
+        await User.findOneAndUpdate(
           { _id: user, isDeleted: false },
           {
-            $push: {
-              subscriptions: {
-                data: JSON.stringify(body),
-                type: "subscription_create",
-              },
+            subscription: {
+              transitionId: body.data.object.id,
+              startDate: subscription.current_period_start,
+              expireDate: subscription.urrent_period_end,
+              amount: subscription.paln.amount / 100,
+              currentPlan: `${subscription.plan.interval}  $${
+                subscription.plan.amount / 100
+              }`,
+              billingCycle: subscription.plan.interval,
             },
+            isSubscription: true,
           },
           { new: true }
         );
-        console.log(values);
+        await Subscriptions.create({
+          designer: user,
+          transitionId: body.data.object.id,
+          startDate: subscription.current_period_start,
+          expireDate: subscription.urrent_period_end,
+          amount: subscription.paln.amount / 100,
+          currentPlan: `${subscription.plan.interval}  $${
+            subscription.plan.amount / 100
+          }`,
+          billingCycle: subscription.plan.interval,
+        });
       }
     }
     if (isSecondPayment) {
@@ -490,20 +506,39 @@ export const createSubscription = async (sig, stripeSecret, body) => {
         await User.findOneAndUpdate(
           { _id: user, isDeleted: false },
           {
-            $push: {
-              subscriptions: {
-                data: JSON.stringify(body),
-                type: "subscription_cycle",
-              },
+            subscription: {
+              transitionId: body.data.object.id,
+              startDate: subscription.current_period_start,
+              expireDate: subscription.urrent_period_end,
+              amount: subscription.paln.amount / 100,
+              currentPlan: `${subscription.plan.interval}  $${
+                subscription.plan.amount / 100
+              }`,
+              billingCycle: subscription.plan.interval,
             },
           },
           { new: true }
         );
+        await Subscriptions.create({
+          designer: user,
+          transitionId: body.data.object.id,
+          startDate: subscription.current_period_start,
+          expireDate: subscription.urrent_period_end,
+          amount: subscription.paln.amount / 100,
+          currentPlan: `${subscription.plan.interval}  $${
+            subscription.plan.amount / 100
+          }`,
+          billingCycle: subscription.plan.interval,
+        });
       }
     }
   }
 };
 export const getSubscription = async () => {
+  const subscription = await stripe.subscriptions.retrieve(
+    "sub_1OAZVcKs8Y4Y2av4x0dLCuIZ"
+  );
+  console.log(subscription);
   const plan = {
     id: "price_1OAZYXKs8Y4Y2av4zq7HQPHO",
     object: "price",
@@ -531,7 +566,7 @@ export const getSubscription = async () => {
     unit_amount: 110000,
     unit_amount_decimal: "110000",
   };
-  return plan;
+  return subscription;
 };
 export const checkOutSession = async (userId, priceId) => {
   const user = await User.findOne({ _id: userId, isDeleted: false });

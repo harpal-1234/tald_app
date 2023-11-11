@@ -160,31 +160,33 @@ export const getInteriorDesigners = async (
     });
   }
   if (designer.length > 0) {
-    await designer.forEach(async (value) => {
-      const project = await Project.findOne({
-        user: value._id,
-        isDeleted: false,
-      }).sort({ _id: -1 });
-      delete value.__v;
-      delete value.password;
-      if (check && JSON.stringify(check?.saveProfiles)?.includes(value._id)) {
-        value.isSaveProfile = true;
-      } else {
-        value.isSaveProfile = false;
-      }
-      if (project) {
-        if (project.images) {
-          value.images = project.images;
+    Promise.all(
+      await designer.forEach(async (value) => {
+        const project = await Project.findOne({
+          user: value._id,
+          isDeleted: false,
+        }).sort({ _id: -1 });
+        delete value.__v;
+        delete value.password;
+        if (check && JSON.stringify(check?.saveProfiles)?.includes(value._id)) {
+          value.isSaveProfile = true;
+        } else {
+          value.isSaveProfile = false;
+        }
+        if (project) {
+          if (project.images) {
+            value.images = project.images;
+          } else {
+            value.images = [];
+          }
         } else {
           value.images = [];
         }
-      } else {
-        value.images = [];
-      }
-      console.log(
-        check && JSON.stringify(check?.saveProfiles)?.includes(value._id)
-      );
-    });
+        console.log(
+          check && JSON.stringify(check?.saveProfiles)?.includes(value._id)
+        );
+      })
+    );
   }
 
   const total = await User.count({
