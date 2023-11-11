@@ -24,6 +24,7 @@ import {
 import { OperationalError } from "../../utils/errors.js";
 import Stripe from "stripe";
 import { v4 as uuidv4 } from "uuid";
+import moment from "moment";
 
 const stripe = new Stripe(
   "sk_test_51NuIYPKs8Y4Y2av4NWgrHFmq8R42IrEiIZ4c8jAsc23JsPqeq60bX7uKZZGb24dujnaheL7J6WsisNUtrJof0wlq00jvt0higK"
@@ -464,15 +465,19 @@ export const createSubscription = async (sig, stripeSecret, body) => {
       const user = customer.metadata.userId;
       const userData = await User.findOne({ _id: user, isDeleted: false });
       const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-      console.log(subscription)
+      console.log(subscription);
       if (userData && subscription) {
         await User.findOneAndUpdate(
           { _id: user, isDeleted: false },
           {
             subscription: {
               transitionId: body.data.object.id,
-              startDate: subscription.current_period_start,
-              expireDate: subscription.current_period_end,
+              startDate: moment
+                .unix(subscription.current_period_start)
+                .format("YYYY-MM-DD"),
+              expireDate: moment
+                .unix(subscription.current_period_end)
+                .format("YYYY-MM-DD"),
               amount: subscription.plan.amount / 100,
               currentPlan: `${subscription.plan.interval}  $${
                 subscription.plan.amount / 100
@@ -486,8 +491,12 @@ export const createSubscription = async (sig, stripeSecret, body) => {
         await Subscriptions.create({
           designer: user,
           transitionId: body.data.object.id,
-          startDate: subscription.current_period_start,
-          expireDate: subscription.current_period_end,
+          startDate: moment
+            .unix(subscription.current_period_start)
+            .format("YYYY-MM-DD"),
+          expireDate: moment
+            .unix(subscription.current_period_end)
+            .format("YYYY-MM-DD"),
           amount: subscription.plan.amount / 100,
           currentPlan: `${subscription.plan.interval}  $${
             subscription.plan.amount / 100
@@ -509,8 +518,12 @@ export const createSubscription = async (sig, stripeSecret, body) => {
           {
             subscription: {
               transitionId: body.data.object.id,
-              startDate: subscription.current_period_start,
-              expireDate: subscription.current_period_end,
+              startDate: moment
+                .unix(subscription.current_period_start)
+                .format("YYYY-MM-DD"),
+              expireDate: moment
+                .unix(subscription.current_period_end)
+                .format("YYYY-MM-DD"),
               amount: subscription.plan.amount / 100,
               currentPlan: `${subscription.plan.interval}  $${
                 subscription.plan.amount / 100
@@ -523,8 +536,12 @@ export const createSubscription = async (sig, stripeSecret, body) => {
         await Subscriptions.create({
           designer: user,
           transitionId: body.data.object.id,
-          startDate: subscription.current_period_start,
-          expireDate: subscription.current_period_end,
+          startDate: moment
+            .unix(subscription.current_period_start)
+            .format("YYYY-MM-DD"),
+          expireDate: moment
+            .unix(subscription.current_period_end)
+            .format("YYYY-MM-DD"),
           amount: subscription.plan.amount / 100,
           currentPlan: `${subscription.plan.interval}  $${
             subscription.plan.amount / 100
@@ -536,10 +553,6 @@ export const createSubscription = async (sig, stripeSecret, body) => {
   }
 };
 export const getSubscription = async () => {
-  const subscription = await stripe.subscriptions.retrieve(
-    "sub_1OAZVcKs8Y4Y2av4x0dLCuIZ"
-  );
-  console.log(subscription);
   const plan = {
     id: "price_1OAZYXKs8Y4Y2av4zq7HQPHO",
     object: "price",
@@ -567,7 +580,7 @@ export const getSubscription = async () => {
     unit_amount: 110000,
     unit_amount_decimal: "110000",
   };
-  return subscription;
+  return plan;
 };
 export const checkOutSession = async (userId, priceId) => {
   const user = await User.findOne({ _id: userId, isDeleted: false });
@@ -604,7 +617,7 @@ export const checkOutSession = async (userId, priceId) => {
   //   recurring: { interval: "year" }, // Set the billing interval
   //   product: product.id,
   // });
-  // console.log(price)
+  //  console.log(price)
 
   // console.log(price);
 
