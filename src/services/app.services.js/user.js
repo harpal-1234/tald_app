@@ -569,7 +569,7 @@ export const getSlotDates = async (designerId) => {
     }
   }
   //console.log(dates);
-  delete dates?.[0];
+   dates.shift();
   return dates;
 };
 export const getSaveProfiles = async (data, userId) => {
