@@ -582,8 +582,31 @@ export const getSubscription = async () => {
   };
   return plan;
 };
+export const getDesignerSubscription = async (userId) => {
+  const check = await User.findOne({ _id: userId, isDeleted: false });
+  if (check?.subscription?.expireDate > currentDate) {
+    await User.findOneAndUpdate(
+      { _id: userId, isDeleted: false },
+      { isSubscription: false }
+    );
+  }
+  const designer = await User.findOne({ _id: userId, isDeleted: false });
+
+  return {
+    subscription: designer?.subscription,
+    isSubscription: designer?.isSubscription,
+  };
+};
 export const checkOutSession = async (userId, priceId) => {
   const user = await User.findOne({ _id: userId, isDeleted: false });
+  const currentDate = new Date();
+
+  if (user?.isSubscription && user?.subscription?.expireDate > currentDate) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.SUBSCRIPTION_ALLREADY
+    );
+  }
   // if (user.stripe.status != STRIPE_STATUS.ENABLE) {
   //   throw new OperationalError(
   //     STATUS_CODES.ACTION_FAILED,
@@ -768,7 +791,7 @@ export const userLogin = async (data) => {
       ERROR_MESSAGES.WRONG_PASSWORD
     );
   }
-  await formatUser(user);
+  await formatVendor(user);
 
   return user;
 };

@@ -105,4 +105,10 @@ router.get(
   validate(authValidation.priceId),
   authController.checkOutSession
 );
+router.get(
+  "/getSubscription",
+  auth(USER_TYPE.USER),
+ // validate(authValidation.priceId),
+  authController.getDesignerSubscription
+);
 export default router;

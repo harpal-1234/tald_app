@@ -285,8 +285,8 @@ const webhookApi = catchAsync(async (req, res) => {
     data
   );
 });
-const getSubscription = catchAsync(async (req, res) => {
-  const data = await userService.getSubscription();
+const getDesignerSubscription = catchAsync(async (req, res) => {
+  const data = await userService.getDesignerSubscription(req.token.user._id);
   return successResponse(
     req,
     res,
@@ -316,6 +316,19 @@ const returnUrl = catchAsync(async (req, res) => {
   );
 });
 const checkOutSession = catchAsync(async (req, res) => {
+  const data = await userService.checkOutSession(
+    req.token.user._id,
+    req.query.priceId
+  );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+  );
+});
+const getSubscription = catchAsync(async (req, res) => {
   const data = await userService.checkOutSession(
     req.token.user._id,
     req.query.priceId
@@ -367,4 +380,5 @@ export default {
   checkOutSession,
   createSubscription,
   getSubscription,
+  getDesignerSubscription,
 };

@@ -100,7 +100,9 @@ export const formatVendor = (userData) => {
       delete data.inviteesSchedule;
       delete data.saveProfiles;
       delete data.saveImages;
-      // delete data.dealPurchases;
+      delete data.subscription;
+      delete data.stripe;
+      delete data.needHelp;
     });
   } else {
     delete userData.__v;
@@ -125,6 +127,9 @@ export const formatVendor = (userData) => {
     delete userData.inviteesSchedule;
     delete userData.saveProfiles;
     delete userData.saveImages;
+    delete userData.subscription;
+    delete userData.stripe;
+    delete userData.needHelp;
   }
   return userData;
 };

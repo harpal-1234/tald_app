@@ -633,6 +633,7 @@ export const bookConsultations = async (
       ERROR_MESSAGES.DESIGNER_NOT_FOUND
     );
   }
+  
   const data = await Consultations.create({
     designer: designerId,
     timeSlots: timeSlots,

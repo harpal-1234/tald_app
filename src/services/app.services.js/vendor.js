@@ -103,6 +103,18 @@ export const addAvailability = async (
   inviteesSchedule,
   userId
 ) => {
+  const check = await User.findOne({ _id: userId, isDeleted: false }).lean();
+  if (check?.subscription?.expireDate < currentDate || !check.subscription) {
+    await User.findOneAndUpdate(
+      { _id: userId, isDeleted: false },
+      { isSubscription: false }
+    );
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.UPGRATE
+    );
+  }
+
   var currentDate = availability.startDate
     ? new Date(availability.startDate)
     : new Date();
@@ -279,7 +291,7 @@ export const getConsultations = async (page, limit, designerId) => {
         isDeleted: false,
         isConfirm: false,
         isPast: false,
-        isPayment:true
+        isPayment: true,
       })
         .skip(page * limit)
         .limit(limit)
