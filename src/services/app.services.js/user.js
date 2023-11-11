@@ -371,7 +371,7 @@ export const getSlots = async (designerId, date, userId, timeDuration) => {
           });
         }
         nextDate.setHours(0, 0, 0, 0);
-        nextDate.setDate(nextDate.getDate() + 1);
+        nextDate.setDate(nextDate.getDate() );  // +1 add 
         nextDate = new Date(nextDate);
         moment(nextDate).format("dddd");
         //console.log(nextDate,"nnnnnnnnnnnnnnn",moment(nextDate).format("dddd"))
