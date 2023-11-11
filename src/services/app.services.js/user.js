@@ -371,7 +371,7 @@ export const getSlots = async (designerId, date, userId, timeDuration) => {
           });
         }
         nextDate.setHours(0, 0, 0, 0);
-        nextDate.setDate(nextDate.getDate() );  // +1 add 
+        nextDate.setDate(nextDate.getDate()); // +1 add
         nextDate = new Date(nextDate);
         moment(nextDate).format("dddd");
         //console.log(nextDate,"nnnnnnnnnnnnnnn",moment(nextDate).format("dddd"))
@@ -545,7 +545,7 @@ export const getSlotDates = async (designerId) => {
           });
         }
         nextDate.setHours(0, 0, 0, 0);
-        nextDate.setDate(nextDate.getDate() + 1);
+        nextDate.setDate(nextDate.getDate() ); //+1
         nextDate = new Date(nextDate);
         moment(nextDate).format("dddd");
         //console.log(nextDate,"nnnnnnnnnnnnnnn",moment(nextDate).format("dddd"))
@@ -568,6 +568,7 @@ export const getSlotDates = async (designerId) => {
     }
   }
   //console.log(dates);
+  delete dates?.[0];
   return dates;
 };
 export const getSaveProfiles = async (data, userId) => {
@@ -633,7 +634,7 @@ export const bookConsultations = async (
       ERROR_MESSAGES.DESIGNER_NOT_FOUND
     );
   }
-  
+
   const data = await Consultations.create({
     designer: designerId,
     timeSlots: timeSlots,
