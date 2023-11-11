@@ -329,10 +329,7 @@ const checkOutSession = catchAsync(async (req, res) => {
   );
 });
 const getSubscription = catchAsync(async (req, res) => {
-  const data = await userService.checkOutSession(
-    req.token.user._id,
-    req.query.priceId
-  );
+  const data = await userService.getSubscription();
   return successResponse(
     req,
     res,
