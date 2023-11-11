@@ -501,6 +501,7 @@ export const getSlotDates = async (designerId) => {
   if (!JSON.stringify(check.weeklySchedule).includes(true)) {
     return [];
   }
+  console.log(check.weeklySchedule);
 
   const consultations = await Consultations.find({
     designer: designerId,
