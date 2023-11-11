@@ -301,7 +301,7 @@ export const register = async (userData) => {
     });
     await User.findOneAndUpdate(
       { _id: user._id },
-      { "stripeId.customerId": customer.id },
+      { stripe: { customerId: customer.id } },
       { new: true }
     );
     await formatUser(value);
@@ -356,6 +356,7 @@ export const profileEdit = async (data, userId, token) => {
 };
 export const payment = async (userId, amount1, designerId, consultationId) => {
   const user = await User.findOne({ _id: userId, isDeleted: false });
+  console.log(user);
   // const card = await stripe.customers.createSource(user.stripe.customerId, {
   //   source: "tok_visa",
   // });
