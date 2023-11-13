@@ -948,7 +948,49 @@ export const cancelBooking = async (body, userId) => {
       new: true,
     }
   );
-  const user = await User.findOne({ _id: userId, isDeleted: true }).lean();
-  sendEmail.cancelBooking(body.consultationId, user?.name, body.reason);
+  const user = await User.findOne({ _id: userId, isDeleted: false }).lean();
+  sendEmail.cancelBooking(
+    body.consultationId,
+    user?.name,
+    body.reason,
+    user?.email
+  );
   return data;
+};
+export const rescheduledBookConsultations = async (body, userId) => {
+  const check = await Consultations.findOne({
+    _id: body.consultationId,
+    isDeleted: false,
+    //isConfirm: true,
+  });
+  if (!check) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.CONSULTATION_NOT_EXIST
+    );
+  }
+  const consultationId = body.consultationId;
+  delete body.consultationId;
+  delete body.isConfirm;
+  body.isConfirm = false;
+  body.isReschedule = true;
+  const user = await User.findOne({ _id: userId, isDeleted: false });
+  console.log(user);
+  const update = await Consultations.findOneAndUpdate(
+    {
+      _id: consultationId,
+      isDeleted: false,
+      //isConfirm: true,
+    },
+    body,
+    {
+      new: true,
+    }
+  );
+  sendEmail.rescheduledBookConsultationsBookingClient(
+    consultationId,
+    user?.name,
+    user?.email
+  );
+  return update;
 };

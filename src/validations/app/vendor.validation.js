@@ -72,6 +72,21 @@ export const bookConsultations = {
     durationTime: Joi.string().required().valid("25_mins", "55_mins"),
   }),
 };
+export const rescheduledBookConsultations = {
+  body: Joi.object().keys({
+    consultationId: Joi.string().required(),
+    designerId: Joi.string().required(),
+    timeSlots: Joi.array().required(),
+    projectSummary: Joi.string().required().allow(null, ""),
+    files: Joi.array().items(
+      Joi.object({
+        file: Joi.string().required(),
+        fileType: Joi.string().required(),
+      })
+    ),
+    durationTime: Joi.string().required().valid("25_mins", "55_mins"),
+  }),
+};
 export const addFileConsultation = {
   body: Joi.object().keys({
     consultationId: Joi.string().required(),
@@ -357,7 +372,12 @@ export const cancelBooking = {
     reason: Joi.string().required(),
   }),
 };
-
+// export const rescheduledConsultation = {
+//   body: Joi.object().keys({
+//     consultationId: Joi.string().required(),
+//     reason: Joi.string().required(),
+//   }),
+// };
 export const blockUser = {
   body: Joi.object().keys({
     conversationId: Joi.string().required(),

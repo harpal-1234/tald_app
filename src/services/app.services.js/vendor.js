@@ -498,6 +498,51 @@ export const cancelBooking = async (body, userId) => {
     }
   );
   const user = await User.findOne({ _id: userId, isDeleted: true });
-  sendEmail.cancelBooking(body.consultationId, user?.name, body.reason);
+  sendEmail.cancelBooking(
+    body.consultationId,
+    user?.name,
+    body.reason,
+    user?.email
+  );
   return data;
+};
+export const rescheduledBookConsultations = async (body, userId) => {
+  const check = await Consultations.findOne({
+    _id: body.consultationId,
+    isDeleted: false,
+    //isConfirm: true,
+  });
+  if (!check) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.CONSULTATION_NOT_EXIST
+    );
+  }
+  const consultationId = body.consultationId;
+  // delete body.consultationId;
+  // delete body.isConfirm;
+  // body.isConfirm = false;
+  // body.isReschedule = true;
+  const user = await User.findOne({ _id: userId, isDeleted: false });
+  // console.log(user);
+  // const update = await Consultations.findOneAndUpdate(
+  //   {
+  //     _id: consultationId,
+  //     isDeleted: false,
+  //     //isConfirm: true,
+  //   },
+  //   body,
+  //   {
+  //     new: true,
+  //   }
+  // );
+  console.log(user.email);
+  const link = `https://client.tald.co/designers/${check?.designer}?reschedule=true`;
+  sendEmail.rescheduledBookConsultationsBookingDesigner(
+    consultationId,
+    user?.name,
+    user?.email,
+    link
+  );
+  return;
 };

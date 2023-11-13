@@ -172,13 +172,56 @@ export const editProfile = (email, token, name) => {
     });
   });
 };
-export const cancelBooking = async (consultationId, name, reason) => {
+export const cancelBooking = async (consultationId, name, reason, email) => {
   return new Promise((resolve, reject) => {
     var info = {
       from: process.env.SENDER_EMAIL,
-      to: process.env.SENDER_EMAIL,
+      to: email,
       subject: "Cancel Consultation Booking",
-      html: `<b><span>message:</span></b><span>${name} canceled Your Booking </span><b><span>consultationId:</span></b><span>${consultationId}</span><b><br><br><span>name:</span></b>${name}<br><br><b><span>reason:</span></b>${reason}`,
+      html: `<b><span>message:</span></b><span>${name} canceled Your Booking </span><b><br><span>consultationId:</span></b><span>${consultationId}</span><b><br><br><span>name:</span></b>${name}<br><br><b><span>reason:</span></b>${reason}`,
+    };
+
+    transporter.sendMail(info, (error, accept) => {
+      if (error) {
+        reject(error);
+      }
+      resolve(accept, console.log("Mail Sended"));
+    });
+  });
+};
+export const rescheduledBookConsultationsBookingClient = async (
+  consultationId,
+  name,
+  email
+) => {
+  return new Promise((resolve, reject) => {
+    var info = {
+      from: process.env.SENDER_EMAIL,
+      to: email,
+      subject: "Cancel Consultation Booking",
+      html: `<b><span>message:</span></b><span>${name} rescheduled a  consultation  </span><b><br><span>consultationId:</span></b><span>${consultationId}</span><b><br><br><span>name:</span></b>${name}<br><br><b>`,
+    };
+
+    transporter.sendMail(info, (error, accept) => {
+      if (error) {
+        reject(error);
+      }
+      resolve(accept, console.log("Mail Sended"));
+    });
+  });
+};
+export const rescheduledBookConsultationsBookingDesigner = async (
+  consultationId,
+  name,
+  email,
+  link
+) => {
+  return new Promise((resolve, reject) => {
+    var info = {
+      from: process.env.SENDER_EMAIL,
+      to: email,
+      subject: "Cancel Consultation Booking",
+      html: `<b><span>message:</span></b><span>${name} want to rescheduled a  consultation  </span><b><br><span>consultationId:</span></b><span>${consultationId}</span><b><br><span>name:</span></b>${name}<br><br>please click below link<br><br>${link}`,
     };
 
     transporter.sendMail(info, (error, accept) => {

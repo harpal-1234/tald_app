@@ -50,6 +50,12 @@ router.post(
   clientController.bookConsultations
 );
 router.put(
+  "/rescheduledConsultation",
+  auth(USER_TYPE.USER),
+  validate(clientValidation.rescheduledBookConsultations),
+  clientController.rescheduledBookConsultations
+);
+router.put(
   "/addFileConsultation",
   auth(USER_TYPE.USER),
   validate(clientValidation.addFileConsultation),
@@ -86,11 +92,7 @@ router.get(
   validate(clientValidation.getProjectInqueries),
   clientController.getProjectInqueries
 );
-router.get(
-  "/getProjects",
-  auth(USER_TYPE.USER),
-  clientController.getProjects
-);
+router.get("/getProjects", auth(USER_TYPE.USER), clientController.getProjects);
 router.put(
   "/editProjectInqueries",
   auth(USER_TYPE.USER),
@@ -128,7 +130,7 @@ router.delete(
   clientController.deleteChat
 );
 router.put(
-  "/blockUser",                                           
+  "/blockUser",
   auth(USER_TYPE.USER),
   validate(clientValidation.blockUser),
   clientController.blockUser
@@ -169,4 +171,5 @@ router.put(
   validate(clientValidation.cancelBooking),
   clientController.cancelBooking
 );
+
 export default router;

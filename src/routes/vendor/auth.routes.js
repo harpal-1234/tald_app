@@ -140,4 +140,10 @@ router.put(
   validate(vendorValidation.cancelBooking),
   vendorController.cancelBooking
 );
+router.put(
+  "/rescheduledConsultation",
+  auth(USER_TYPE.USER),
+  validate(vendorValidation.rescheduledBookConsultations),
+  vendorController.rescheduledBookConsultations
+);
 export default router;

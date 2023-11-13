@@ -15,6 +15,7 @@ const consultationSchema = mongoose.Schema(
     isDeleted: { type: Boolean, default: false },
     isBlocked: { type: Boolean, default: false },
     isCancel: { type: Boolean, default: false },
+    isReschedule: { type: Boolean, default: false },
     reason: { type: String },
     canceledBy: { type: mongoose.SchemaTypes.ObjectId, ref: "user" },
   },
