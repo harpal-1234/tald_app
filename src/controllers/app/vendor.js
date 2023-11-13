@@ -304,3 +304,14 @@ export const clearConversation = catchAsync(async (req, res) => {
     SUCCESS_MESSAGES.SUCCESS
   );
 });
+export const cancelBooking = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const data = await vendorServices.cancelBooking(req.body, userId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+  );
+});

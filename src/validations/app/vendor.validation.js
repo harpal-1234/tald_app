@@ -54,7 +54,7 @@ export const getSlots = {
 export const getSlotDates = {
   query: Joi.object().keys({
     designerId: Joi.string().required(),
-   // date: Joi.string().required(),
+    // date: Joi.string().required(),
     //timeDuration: Joi.string().required().valid("25_mins", "55_mins"),
   }),
 };
@@ -226,7 +226,7 @@ export const getConsultations = {
 export const deleteProjectInquery = {
   body: Joi.object().keys({
     projectId: Joi.string().required(),
-   // limit: Joi.number().required(),
+    // limit: Joi.number().required(),
   }),
 };
 export const createProjectInquery = {
@@ -348,7 +348,13 @@ export const review = {
   body: Joi.object().keys({
     designerId: Joi.string().required(),
     rating: Joi.number().required(),
-    reviewText:Joi.string().required()
+    reviewText: Joi.string().required(),
+  }),
+};
+export const cancelBooking = {
+  body: Joi.object().keys({
+    consultationId: Joi.string().required(),
+    reason: Joi.string().required(),
   }),
 };
 

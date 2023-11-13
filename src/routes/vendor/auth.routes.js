@@ -134,4 +134,10 @@ router.put(
   validate(vendorValidation.deleteChat),
   vendorController.clearConversation
 );
+router.put(
+  "/cancelBooking",
+  auth(USER_TYPE.USER),
+  validate(vendorValidation.cancelBooking),
+  vendorController.cancelBooking
+);
 export default router;

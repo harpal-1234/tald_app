@@ -546,7 +546,7 @@ export const getSlotDates = async (designerId) => {
           });
         }
         nextDate.setHours(0, 0, 0, 0);
-        nextDate.setDate(nextDate.getDate() ); //+1
+        nextDate.setDate(nextDate.getDate()); //+1
         nextDate = new Date(nextDate);
         moment(nextDate).format("dddd");
         //console.log(nextDate,"nnnnnnnnnnnnnnn",moment(nextDate).format("dddd"))
@@ -569,7 +569,7 @@ export const getSlotDates = async (designerId) => {
     }
   }
   //console.log(dates);
-   dates.shift();
+  dates.shift();
   return dates;
 };
 export const getSaveProfiles = async (data, userId) => {
@@ -917,4 +917,35 @@ export const review = async (data, userId) => {
     rating: data.rating,
   });
   return reviews;
+};
+export const cancelBooking = async (body, userId) => {
+  const check = await Consultations.findOne({
+    _id: body.consultationId,
+    isDeleted: false,
+    isConfirm: false,
+    //isCancel: false,
+  });
+  if (!check) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.CONSULTATION_NOT_EXIST
+    );
+  }
+  const data = await Consultations.findOneAndUpdate(
+    {
+      _id: body.consultationId,
+      isDeleted: false,
+      isConfirm: false,
+      // isCancel: false,
+    },
+    {
+      isCancel: true,
+      reason: body.reason,
+      canceledBy: userId,
+    },
+    {
+      new: true,
+    }
+  );
+  return data;
 };

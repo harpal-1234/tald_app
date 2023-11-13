@@ -163,5 +163,10 @@ router.post(
   validate(clientValidation.review),
   clientController.review
 );
-
+router.put(
+  "/cancelBooking",
+  auth(USER_TYPE.USER),
+  validate(clientValidation.cancelBooking),
+  clientController.cancelBooking
+);
 export default router;

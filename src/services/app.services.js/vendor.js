@@ -468,3 +468,34 @@ export const actionProjectInquery = async (Id, status, designerId) => {
 
   return project;
 };
+export const cancelBooking = async (body, userId) => {
+  const check = await Consultations.findOne({
+    _id: body.consultationId,
+    isDeleted: false,
+    isConfirm: false,
+    //isCancel: false,
+  });
+  if (!check) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.CONSULTATION_NOT_EXIST
+    );
+  }
+  const data = await Consultations.findOneAndUpdate(
+    {
+      _id: body.consultationId,
+      isDeleted: false,
+      isConfirm: false,
+      // isCancel: false,
+    },
+    {
+      isCancel: true,
+      reason: body.reason,
+      canceledBy: userId,
+    },
+    {
+      new: true,
+    }
+  );
+  return data;
+};
