@@ -14,6 +14,7 @@ import {
   formatProjects,
 } from "../../utils/commonFunction.js";
 import moment from "moment";
+import * as sendEmail from "../../utils/sendMail.js";
 
 export const getInteriorDesigners = async (
   type,
@@ -947,5 +948,7 @@ export const cancelBooking = async (body, userId) => {
       new: true,
     }
   );
+  const user = await User.findOne({ _id: userId, isDeleted: true }).lean();
+  sendEmail.cancelBooking(body.consultationId, user?.name, body.reason);
   return data;
 };

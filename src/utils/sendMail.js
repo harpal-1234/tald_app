@@ -172,3 +172,20 @@ export const editProfile = (email, token, name) => {
     });
   });
 };
+export const cancelBooking = async (consultationId, name, reason) => {
+  return new Promise((resolve, reject) => {
+    var info = {
+      from: process.env.SENDER_EMAIL,
+      to: process.env.SENDER_EMAIL,
+      subject: "Cancel Consultation Booking",
+      html: `<b><span>message:</span></b><span>${name} canceled Your Booking </span><b><span>consultationId:</span></b><span>${consultationId}</span><b><br><br><span>name:</span></b>${name}<br><br><b><span>reason:</span></b>${reason}`,
+    };
+
+    transporter.sendMail(info, (error, accept) => {
+      if (error) {
+        reject(error);
+      }
+      resolve(accept, console.log("Mail Sended"));
+    });
+  });
+};

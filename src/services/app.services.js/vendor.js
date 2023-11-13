@@ -15,7 +15,7 @@ import {
   formatProjectInquery,
 } from "../../utils/commonFunction.js";
 import * as zoomMeeting from "../../utils/zoomMeeting.js";
-
+import * as sendEmail from "../../utils/sendMail.js";
 export const createProject = async (userId, projectName) => {
   const check = await Project.findOne({
     projectName: projectName,
@@ -497,5 +497,7 @@ export const cancelBooking = async (body, userId) => {
       new: true,
     }
   );
+  const user = await User.findOne({ _id: userId, isDeleted: true });
+  sendEmail.cancelBooking(body.consultationId, user?.name, body.reason);
   return data;
 };
