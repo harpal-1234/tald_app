@@ -907,10 +907,13 @@ export const changePassword = async (userId, oldPassword, newPassword) => {
       ERROR_MESSAGES.OLD_PASSWORD
     );
   }
-  let updatedPassword = { password: newPassword };
-  Object.assign(user, updatedPassword);
+  let updatedPassword = { password: await bcrypt.hash(newPassword, 8) };
+  //Object.assign(user, updatedPassword);
 
-  await user.save();
+  await user.findByIdAndUpdate(
+    { _id: userId, isDeleted: false },
+    { updatedPassword }
+  );
   return user;
 };
 export const splitCheckout = async (userId) => {
