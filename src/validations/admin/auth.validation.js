@@ -117,7 +117,13 @@ const filterData = {
     feeStructure: Joi.array().required(),
     goals: Joi.array().required(),
     projectType: Joi.array().required(),
-    consultationLength:Joi.array().required(),
+    consultationLength: Joi.array().required(),
+  }),
+};
+export const dashboard = {
+  query: Joi.object().keys({
+    startDate: Joi.string().required(),
+    endDate: Joi.string().required(),
   }),
 };
 export default {
@@ -128,5 +134,5 @@ export default {
   createInteriorDesigner,
   changePassword,
   register,
-  filterData
+  filterData,
 };

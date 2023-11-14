@@ -445,6 +445,12 @@ export const webhook = async (body, sig, stripeSecret) => {
       { isPayment: true },
       { new: true }
     );
+    await Admin.findByIdAndUpdate(
+      { isDeleted: false },
+      {
+        $inc: { totalRevenue: parseInt(amount) },
+      }
+    );
     console.log(createOrder, consultation);
   }
 };
@@ -503,6 +509,12 @@ export const createSubscription = async (sig, stripeSecret, body) => {
           }`,
           billingCycle: subscription.plan.interval,
         });
+        await Admin.findByIdAndUpdate(
+          { isDeleted: false },
+          {
+            $inc: { totalRevenue: parseInt(subscription.plan.amount / 100) },
+          }
+        );
       }
     }
     if (isSecondPayment) {
@@ -548,6 +560,12 @@ export const createSubscription = async (sig, stripeSecret, body) => {
           }`,
           billingCycle: subscription.plan.interval,
         });
+        await Admin.findByIdAndUpdate(
+          { isDeleted: false },
+          {
+            $inc: { totalRevenue: parseInt(subscription.plan.amount / 100) },
+          }
+        );
       }
     }
   }

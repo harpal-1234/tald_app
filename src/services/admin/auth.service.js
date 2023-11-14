@@ -1,4 +1,12 @@
-import { Admin, Token, User, Request, Filter } from "../../models/index.js";
+import {
+  Admin,
+  Token,
+  User,
+  Request,
+  Filter,
+  Consultations,
+  ProjectInquery,
+} from "../../models/index.js";
 import { STATUS_CODES, ERROR_MESSAGES } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
 //import { formatUser } from "../../utils/formatResponse.js";
@@ -26,15 +34,16 @@ export const userList = async (page, limit) => {
   const users = await User.find({
     type: "User",
     isDeleted: false,
-   // isVerify: true,
+    // isVerify: true,
   })
     .skip(page * limit)
     .limit(limit)
-    .lean().sort({_id: -1});
+    .lean()
+    .sort({ _id: -1 });
   const total = await User.countDocuments({
     type: "User",
     isDeleted: false,
-   // isVerify: true,
+    // isVerify: true,
   });
   await formatUser(users);
   return { users, total };
@@ -43,17 +52,17 @@ export const vendorList = async (page, limit) => {
   const users = await User.find({
     type: "Vendor",
     isDeleted: false,
-   // isVerify: true,
+    // isVerify: true,
   })
     .skip(page * limit)
     .limit(limit)
     .lean()
     .sort({ _id: -1 });
-  console.log("first")
+  console.log("first");
   const total = await User.countDocuments({
     type: "Vendor",
     isDeleted: false,
-   // isVerify: true,
+    // isVerify: true,
   });
   await formatUser(users);
   return { users, total };
@@ -62,7 +71,7 @@ export const createVendor = async (email, name) => {
   const check = await User.findOne({
     email: email,
     isDeleted: false,
-   // isVerify: true,
+    // isVerify: true,
   });
   if (check) {
     throw new OperationalError(
@@ -73,8 +82,8 @@ export const createVendor = async (email, name) => {
   // function getRandomNumber(min, max) {
   //   return Math.floor(Math.random() * (max - min + 1)) + min;
   // }
- const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
- const specialCharacters = "!@#$%^&*";
+  const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
+  const specialCharacters = "!@#$%^&*";
   let password = "";
   const randomUppercase = String.fromCharCode(
     65 + Math.floor(Math.random() * 26)
@@ -136,7 +145,7 @@ export const requestAction = async (status, requestId) => {
 export const filterData = async (data) => {
   const check = await Filter.findOne({ isDeleted: false });
   if (!check) {
-    console.log(data)
+    console.log(data);
     const value = await Filter.create(data);
     return value;
   } else {
@@ -147,7 +156,7 @@ export const userAction = async (userId) => {
   const user = await User.findOne({
     _id: userId,
     isDeleted: false,
-   // isVerify: true,
+    // isVerify: true,
   });
   if (!user) {
     throw new OperationalError(
@@ -160,7 +169,7 @@ export const userAction = async (userId) => {
       {
         _id: userId,
         isDeleted: false,
-      //  isVerify: true,
+        //  isVerify: true,
       },
       { isBlocked: false },
       { new: true }
@@ -171,7 +180,7 @@ export const userAction = async (userId) => {
       {
         _id: userId,
         isDeleted: false,
-       // isVerify: true,
+        // isVerify: true,
       },
       { isBlocked: true },
       { new: true }
@@ -238,4 +247,52 @@ export const adminLogout = async (tokenId) => {
     isDeleted: true,
   });
   return updatedToken;
+};
+export const dashboard = async (startDate, endDate) => {
+  const options = {
+    isDeleted: false,
+  };
+  if (startDate && endDate) {
+    options.createdAt = {
+      $gte: new Date(startDate),
+      $lt: new Date(endDate),
+    };
+  }
+  const [
+    virtualConsultation,
+    ProjectInquerys,
+    interiorDesigner,
+    totalClient,
+    totalRevenue,
+  ] = await Promise.all([
+    Consultations.countDocuments(options),
+    ProjectInquery.countDocuments(options),
+    User.countDocuments({ ...options, type: "Vendor" }),
+    User.countDocuments({ ...options, type: "User" }),
+    Admin.findOne(),
+  ]);
+  console.log(totalRevenue);
+  const response = [
+    {
+      key: "virtualConsultation",
+      value: virtualConsultation,
+    },
+    {
+      key: "ProjectInquerys",
+      value: ProjectInquerys,
+    },
+    {
+      key: "interiorDesigner",
+      value: interiorDesigner,
+    },
+    {
+      key: "totalClient",
+      value: totalClient,
+    },
+    {
+      key: "totalRevenue",
+      value: totalRevenue?.totalRevenue ? totalRevenue?.totalRevenue : 0,
+    },
+  ];
+  return response;
 };

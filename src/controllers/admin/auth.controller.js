@@ -58,7 +58,7 @@ export const createVendor = catchAsync(async (req, res) => {
     req,
     res,
     STATUS_CODES.SUCCESS,
-    SUCCESS_MESSAGES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS
   );
 });
 export const requests = catchAsync(async (req, res) => {
@@ -94,7 +94,7 @@ export const userAction = catchAsync(async (req, res) => {
     value
   );
 });
-export const filterData = catchAsync(async(req,res)=>{
+export const filterData = catchAsync(async (req, res) => {
   const data = await adminService.filterData(req.body);
   return successResponse(
     req,
@@ -103,7 +103,7 @@ export const filterData = catchAsync(async(req,res)=>{
     SUCCESS_MESSAGES.SUCCESS,
     data
   );
-})
+});
 export const changePassword = catchAsync(async (req, res) => {
   await adminService.changePassword(
     req.token.admin._id,
@@ -120,5 +120,18 @@ export const adminLogout = catchAsync(async (req, res) => {
     res,
     STATUS_CODES.SUCCESS,
     SUCCESS_MESSAGES.LOGOUT
+  );
+});
+export const dashboard = catchAsync(async (req, res) => {
+  const data = await adminService.dashboard(
+    req.query.startDate,
+    req.query.endDate
+  );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
   );
 });

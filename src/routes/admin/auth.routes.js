@@ -61,5 +61,10 @@ router.post(
   authController.filterData
 );
 router.post("/logout", auth(USER_TYPE.ADMIN), authController.adminLogout);
-
+router.get(
+  "/dashboard",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.dashboard),
+  authController.dashboard
+);
 export default router;

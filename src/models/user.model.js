@@ -134,6 +134,7 @@ const userSchema = mongoose.Schema(
       currentPlan: { type: String, required: true },
       billingCycle: { type: String, required: true },
     },
+    totalRevenue:{type:Number,default:0},
     isSubscription: { type: Boolean, default: false },
     isPayment: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
