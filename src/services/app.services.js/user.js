@@ -804,7 +804,7 @@ export const submitProjectInquery = async (projectId, designerId, userId) => {
     projectId: projectId,
     inqueryTime: moment(date).format(),
     status: "Pending",
-    isVerify: true,
+   // isVerify: true,
   });
   // const project = data.toObject();
   // await formatProjectInquery(project);

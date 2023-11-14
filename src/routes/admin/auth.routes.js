@@ -67,4 +67,22 @@ router.get(
   validate(authValidation.dashboard),
   authController.dashboard
 );
+router.get(
+  "/virtualConsultations",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.getConsultation),
+  authController.getConsultations
+);
+router.get(
+  "/inqueryList",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.getConsultation),
+  authController.inqueryList
+);
+router.get(
+  "/approvedInqueryList",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.getConsultation),
+  authController.approvedInqueryList
+);
 export default router;

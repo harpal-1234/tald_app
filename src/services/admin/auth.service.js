@@ -6,12 +6,14 @@ import {
   Filter,
   Consultations,
   ProjectInquery,
+  projectRequest,
 } from "../../models/index.js";
 import { STATUS_CODES, ERROR_MESSAGES } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
 //import { formatUser } from "../../utils/formatResponse.js";
 import { createVendorMail } from "../../utils/sendMail.js";
 import { formatUser } from "../../utils/commonFunction.js";
+import { getConsultations } from "../app.services.js/vendor.js";
 
 export const adminLogin = async (email, password) => {
   const admin = await Admin.findOne({ email: email });
@@ -30,11 +32,21 @@ export const adminLogin = async (email, password) => {
   }
   return admin;
 };
-export const userList = async (page, limit) => {
-  const users = await User.find({
-    type: "User",
+export const userList = async (page, limit, search) => {
+  const options = {
     isDeleted: false,
     // isVerify: true,
+  };
+  const escapedSearchTerm = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
+  if (search) {
+    options.$or = [
+      { name: { $regex: new RegExp(escapedSearchTerm, "i") } },
+      { email: { $regex: new RegExp(escapedSearchTerm, "i") } },
+    ];
+  }
+  const users = await User.find({
+    type: "User",
+    ...options,
   })
     .skip(page * limit)
     .limit(limit)
@@ -42,16 +54,26 @@ export const userList = async (page, limit) => {
     .sort({ _id: -1 });
   const total = await User.countDocuments({
     type: "User",
-    isDeleted: false,
-    // isVerify: true,
+    ...options,
   });
   await formatUser(users);
   return { users, total };
 };
-export const vendorList = async (page, limit) => {
+export const vendorList = async (page, limit, search) => {
+  const options = {
+    isDeleted: false,
+    isApproved: true,
+  };
+  const escapedSearchTerm = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
+  if (search) {
+    options.$or = [
+      { name: { $regex: new RegExp(escapedSearchTerm, "i") } },
+      { email: { $regex: new RegExp(escapedSearchTerm, "i") } },
+    ];
+  }
   const users = await User.find({
     type: "Vendor",
-    isDeleted: false,
+    ...options,
     // isVerify: true,
   })
     .skip(page * limit)
@@ -61,7 +83,7 @@ export const vendorList = async (page, limit) => {
   console.log("first");
   const total = await User.countDocuments({
     type: "Vendor",
-    isDeleted: false,
+    ...options,
     // isVerify: true,
   });
   await formatUser(users);
@@ -295,4 +317,61 @@ export const dashboard = async (startDate, endDate) => {
     },
   ];
   return response;
+};
+export const getConsultation = async (page, limit) => {
+  const consultations = await Consultations.find({ isDeleted: false })
+    .populate([
+      { path: "designer", select: ["name", "email"] },
+      { path: "user", select: ["name", "email"] },
+    ])
+    .sort({ _id: -1 })
+    .skip(page * limit)
+    .limit(limit);
+  const totalConsultations = await Consultations.find({ isDeleted: false });
+
+  return {
+    consultations: consultations,
+    totalConsultations: totalConsultations,
+  };
+};
+export const approvedInqueryList = async (page, limit) => {
+  const inqueryList = await projectRequest
+    .find({ isDeleted: false, isVerify: true })
+    .populate([
+      { path: "designer", select: ["name", "email"] },
+      { path: "user", select: ["name", "email"] },
+    ])
+    .sort({ _id: -1 })
+    .skip(page * limit)
+    .limit(limit);
+  const totalInqueryList = await projectRequest.find({
+    isDeleted: false,
+    isVerify: true,
+  });
+
+  return {
+    inqueryList: inqueryList,
+    totalInqueryList: totalInqueryList,
+  };
+};
+
+export const inqueryList = async (page, limit) => {
+  const inqueryList = await projectRequest
+    .find({ isDeleted: false, isVerify: false })
+    .populate([
+      { path: "designer", select: ["name", "email"] },
+      { path: "user", select: ["name", "email"] },
+    ])
+    .sort({ _id: -1 })
+    .skip(page * limit)
+    .limit(limit);
+  const totalInqueryList = await projectRequest.find({
+    isDeleted: false,
+    isVerify: false,
+  });
+
+  return {
+    inqueryList: inqueryList,
+    totalInqueryList: totalInqueryList,
+  };
 };

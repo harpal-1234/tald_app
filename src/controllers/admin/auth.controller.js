@@ -30,8 +30,8 @@ export const adminLogin = catchAsync(async (req, res) => {
 });
 
 export const userList = catchAsync(async (req, res) => {
-  let { page, limit } = req.query;
-  const users = await adminService.userList(page, limit);
+  let { page, limit, search } = req.query;
+  const users = await adminService.userList(page, limit, search);
   return successResponse(
     req,
     res,
@@ -41,8 +41,8 @@ export const userList = catchAsync(async (req, res) => {
   );
 });
 export const vendorList = catchAsync(async (req, res) => {
-  let { page, limit } = req.query;
-  const users = await adminService.vendorList(page, limit);
+  let { page, limit, search } = req.query;
+  const users = await adminService.vendorList(page, limit, search);
   return successResponse(
     req,
     res,
@@ -126,6 +126,42 @@ export const dashboard = catchAsync(async (req, res) => {
   const data = await adminService.dashboard(
     req.query.startDate,
     req.query.endDate
+  );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+  );
+});
+export const getConsultations = catchAsync(async (req, res) => {
+  const data = await adminService.getConsultation(
+    req.query.page,
+    req.query.limit
+  );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+  );
+});
+export const inqueryList = catchAsync(async (req, res) => {
+  const data = await adminService.inqueryList(req.query.page, req.query.limit);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+  );
+});
+export const approvedInqueryList = catchAsync(async (req, res) => {
+  const data = await adminService.approvedInqueryList(
+    req.query.page,
+    req.query.limit
   );
   return successResponse(
     req,

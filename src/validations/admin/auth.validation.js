@@ -20,6 +20,7 @@ const getUsers = {
   query: Joi.object().keys({
     page: Joi.number().required(),
     limit: Joi.number().required(),
+    search: Joi.string().required().allow(null, ""),
   }),
 };
 const changePassword = {
@@ -126,6 +127,13 @@ export const dashboard = {
     endDate: Joi.string().required(),
   }),
 };
+export const getConsultation = {
+  query: Joi.object().keys({
+    page: Joi.number().required(),
+    limit: Joi.number().required(),
+  }),
+};
+
 export default {
   adminLogin,
   getUsers,
@@ -135,4 +143,6 @@ export default {
   changePassword,
   register,
   filterData,
+  dashboard,
+  getConsultation,
 };
