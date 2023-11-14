@@ -294,36 +294,19 @@ export const dashboard = async (startDate, endDate) => {
     Admin.findOne(),
   ]);
   console.log(totalRevenue);
-  const response = [
-    {
-      key: "virtualConsultation",
-      value: virtualConsultation,
-    },
-    {
-      key: "ProjectInquerys",
-      value: ProjectInquerys,
-    },
-    {
-      key: "interiorDesigner",
-      value: interiorDesigner,
-    },
-    {
-      key: "totalClient",
-      value: totalClient,
-    },
-    {
-      key: "consultationRevenue",
-      value: totalRevenue?.consultationRevenue
-        ? totalRevenue?.consultationRevenue
-        : 0,
-    },
-    {
-      key: "membershipRevenue",
-      value: totalRevenue?.membershipRevenue
-        ? totalRevenue?.membershipRevenue
-        : 0,
-    },
-  ];
+  const response = {
+    virtualConsultation: virtualConsultation,
+    ProjectInquerys: ProjectInquerys,
+    interiorDesigner: interiorDesigner,
+    totalClient: totalClient,
+    consultationRevenue: totalRevenue?.consultationRevenue
+      ? totalRevenue?.consultationRevenue
+      : 0,
+    membershipRevenue: totalRevenue?.membershipRevenue
+      ? totalRevenue?.membershipRevenue
+      : 0,
+  };
+
   return response;
 };
 export const getConsultation = async (page, limit) => {
