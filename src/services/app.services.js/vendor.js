@@ -539,7 +539,7 @@ export const rescheduledBookConsultations = async (body, userId) => {
   //   }
   // );
   console.log(user.email);
-  const link = `https://client.tald.co/designers/${check?.designer}?reschedule=true`;
+  const link = `https://client.tald.co/consultations?reschedule=${consultationId}`;
   sendEmail.rescheduledBookConsultationsBookingDesigner(
     consultationId,
     user?.name,
