@@ -151,7 +151,8 @@ export const getInteriorDesigners = async (
   })
     .lean()
     .skip(page * limit)
-    .limit(limit);
+    .limit(limit)
+    .sort({ _id: -1 });
   var check;
   if (userId) {
     check = await User.findOne({
@@ -804,7 +805,7 @@ export const submitProjectInquery = async (projectId, designerId, userId) => {
     projectId: projectId,
     inqueryTime: moment(date).format(),
     status: "Pending",
-   // isVerify: true,
+    // isVerify: true,
   });
   // const project = data.toObject();
   // await formatProjectInquery(project);
