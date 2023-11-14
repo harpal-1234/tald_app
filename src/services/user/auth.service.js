@@ -910,7 +910,7 @@ export const changePassword = async (userId, oldPassword, newPassword) => {
   let updatedPassword = { password: await bcrypt.hash(newPassword, 8) };
   //Object.assign(user, updatedPassword);
 
-  await user.findOneAndUpdate(
+  await User.findOneAndUpdate(
     { _id: userId, isDeleted: false },
     { updatedPassword }
   );
