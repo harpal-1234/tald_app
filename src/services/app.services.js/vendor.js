@@ -474,7 +474,7 @@ export const cancelBooking = async (body, userId) => {
   const check = await Consultations.findOne({
     _id: body.consultationId,
     isDeleted: false,
-    isConfirm: false,
+    //isConfirm: false,
     //isCancel: false,
   });
   if (!check) {
@@ -487,7 +487,7 @@ export const cancelBooking = async (body, userId) => {
     {
       _id: body.consultationId,
       isDeleted: false,
-      isConfirm: false,
+      //isConfirm: false,
       // isCancel: false,
     },
     {
