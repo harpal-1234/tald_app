@@ -900,20 +900,18 @@ export const resetPassword = async (tokenData, newPassword) => {
 };
 export const changePassword = async (userId, oldPassword, newPassword) => {
   const user = await User.findById(userId).lean();
- // console.log(user);
+  // console.log(user);
   if (!(await bcrypt.compare(oldPassword, user.password))) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
       ERROR_MESSAGES.OLD_PASSWORD
     );
   }
-  let updatedPassword = { password: await bcrypt.hash(newPassword, 8) };
+  const password = await bcrypt.hash(newPassword, 8);
+  // let updatedPassword = { password: await bcrypt.hash(newPassword, 8) };
   //Object.assign(user, updatedPassword);
 
-  await User.findOneAndUpdate(
-    { _id: userId, isDeleted: false },
-    { updatedPassword }
-  );
+  await User.findByIdAndUpdate(userId, { password: password });
   return user;
 };
 export const splitCheckout = async (userId) => {
