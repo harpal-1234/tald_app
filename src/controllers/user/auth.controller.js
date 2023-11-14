@@ -13,6 +13,7 @@ import {
   successMessage,
 } from "../../utils/commonFunction.js";
 import dotenv from "dotenv";
+//import { splitPayment } from "../../services/user/auth.service.js";
 dotenv.config();
 
 const signUp = catchAsync(async (req, res) => {
@@ -354,6 +355,17 @@ const createSubscription = catchAsync(async (req, res) => {
     data
   );
 });
+export const splitCheckout = catchAsync(async (req, res) => {
+  const userId = req.token.user._id;
+  const data = await userService.splitCheckout(userId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+  );
+});
 export default {
   signUp,
   register,
@@ -378,4 +390,5 @@ export default {
   createSubscription,
   getSubscription,
   getDesignerSubscription,
+  splitCheckout
 };

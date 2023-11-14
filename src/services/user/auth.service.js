@@ -26,7 +26,6 @@ import Stripe from "stripe";
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
 
-
 const stripe = new Stripe(
   "sk_test_51NuIYPKs8Y4Y2av4NWgrHFmq8R42IrEiIZ4c8jAsc23JsPqeq60bX7uKZZGb24dujnaheL7J6WsisNUtrJof0wlq00jvt0higK"
 );
@@ -888,6 +887,22 @@ export const changePassword = async (userId, oldPassword, newPassword) => {
   }
   let updatedPassword = { password: newPassword };
   Object.assign(user, updatedPassword);
+
   await user.save();
   return user;
+};
+export const splitCheckout = async (userId) => {
+  const user = await User.findOne({
+    _id: userId,
+    isDeleted: false,
+    type: "Vendor",
+  });
+  const balance = await stripe.balance.retrieve();
+
+  // const transfer = await stripe.transfers.create({
+  //   amount: 0,
+  //   currency: "usd",
+  //   destination: user.stripe.accountId,
+  // });
+  return balance;
 };

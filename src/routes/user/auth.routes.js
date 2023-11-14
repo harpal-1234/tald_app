@@ -50,7 +50,11 @@ router.post(
 );
 router.post("/webhook", authController.webhookApi);
 router.post("/createSubscription", authController.createSubscription);
-router.get("/getPlans", auth(USER_TYPE.NON_USER), authController.getSubscription);
+router.get(
+  "/getPlans",
+  auth(USER_TYPE.NON_USER),
+  authController.getSubscription
+);
 router
   .route("/resetPassword")
   .get(authController.forgotPage)
@@ -108,7 +112,13 @@ router.get(
 router.get(
   "/getSubscription",
   auth(USER_TYPE.USER),
- // validate(authValidation.priceId),
+  // validate(authValidation.priceId),
   authController.getDesignerSubscription
+);
+router.get(
+  "/splitCheckout",
+  auth(USER_TYPE.USER),
+  // validate(authValidation.priceId),
+  authController.splitCheckout
 );
 export default router;

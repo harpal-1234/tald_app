@@ -252,10 +252,12 @@ export const editVendorProfile = async (data, userId) => {
       minBudget: data.minBudget,
       maxBudget: data.maxBudget,
       companyName: data.companyName,
-      location: {
-        type: "Point",
-        coordinates: [data.long, data.lat],
-      },
+      // $set: {
+      //   location: {
+      //     type: "Point",
+      //     coordinates: [data.long, data.lat],
+      //   },
+      // },
       address: data.address,
       instagramLink: data.instagramLink,
       pinterestLink: data.pinterestLink,
