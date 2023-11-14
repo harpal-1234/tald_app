@@ -900,7 +900,7 @@ export const resetPassword = async (tokenData, newPassword) => {
 };
 export const changePassword = async (userId, oldPassword, newPassword) => {
   const user = await User.findById(userId).lean();
-  // console.log(user);
+  console.log(user);
   if (!(await bcrypt.compare(oldPassword, user.password))) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
@@ -910,10 +910,7 @@ export const changePassword = async (userId, oldPassword, newPassword) => {
   let updatedPassword = { password: newPassword };
   Object.assign(user, updatedPassword);
 
-  await User.findByIdAndUpdate(
-    { _id: userId, isDeleted: false },
-    updatedPassword
-  );
+  await user.save();
   return user;
 };
 export const splitCheckout = async (userId) => {
