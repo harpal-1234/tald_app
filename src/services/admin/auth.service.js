@@ -312,8 +312,16 @@ export const dashboard = async (startDate, endDate) => {
       value: totalClient,
     },
     {
-      key: "totalRevenue",
-      value: totalRevenue?.totalRevenue ? totalRevenue?.totalRevenue : 0,
+      key: "consultationRevenue",
+      value: totalRevenue?.consultationRevenue
+        ? totalRevenue?.consultationRevenue
+        : 0,
+    },
+    {
+      key: "membershipRevenue",
+      value: totalRevenue?.membershipRevenue
+        ? totalRevenue?.membershipRevenue
+        : 0,
     },
   ];
   return response;

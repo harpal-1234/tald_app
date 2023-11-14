@@ -448,7 +448,7 @@ export const webhook = async (body, sig, stripeSecret) => {
     await Admin.findByIdAndUpdate(
       { isDeleted: false },
       {
-        $inc: { totalRevenue: parseInt(amount) },
+        $inc: { consultationRevenue: parseInt(amount) },
       }
     );
     console.log(createOrder, consultation);
@@ -512,7 +512,9 @@ export const createSubscription = async (sig, stripeSecret, body) => {
         await Admin.findByIdAndUpdate(
           { isDeleted: false },
           {
-            $inc: { totalRevenue: parseInt(subscription.plan.amount / 100) },
+            $inc: {
+              membershipRevenue: parseInt(subscription.plan.amount / 100),
+            },
           }
         );
       }
@@ -563,7 +565,9 @@ export const createSubscription = async (sig, stripeSecret, body) => {
         await Admin.findByIdAndUpdate(
           { isDeleted: false },
           {
-            $inc: { totalRevenue: parseInt(subscription.plan.amount / 100) },
+            $inc: {
+              membershipRevenue: parseInt(subscription.plan.amount / 100),
+            },
           }
         );
       }

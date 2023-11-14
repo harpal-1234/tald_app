@@ -6,6 +6,8 @@ const adminSchema = mongoose.Schema(
     email: { type: String, lowercase: true, trim: true, unique: true },
     password: { type: String, required: true },
     requests: [{ type: mongoose.SchemaTypes.ObjectId, ref: "user" }],
+    membershipRevenue:{type:Number,default:0},
+    consultationRevenue:{type:Number,default:0}
   },
   {
     timestamps: true,
