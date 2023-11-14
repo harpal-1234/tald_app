@@ -403,7 +403,7 @@ export const getProjectInqueries = async (page, limit, designerId) => {
   const projects = await projectRequest
     .find({
       designer: designerId,
-      isVerify: true,
+     // isVerify: true,
       isDeleted: false,
     })
     .skip(page * limit)
@@ -429,7 +429,7 @@ export const actionProjectInquery = async (Id, status, designerId) => {
     _id: Id,
     designer: designerId,
     isDeleted: false,
-    isVerify: true,
+   // isVerify: true,
   });
   if (!check) {
     throw new OperationalError(
@@ -443,7 +443,7 @@ export const actionProjectInquery = async (Id, status, designerId) => {
       _id: Id,
       designer: designerId,
       isDeleted: false,
-      isVerify: true,
+     // isVerify: true,
     },
     {
       status: status,
