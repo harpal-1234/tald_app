@@ -259,9 +259,9 @@ export const createProjectInquery = {
     projectType: Joi.string()
       .valid(...Object.values(PROJECT_TYPE))
       .allow(null, ""),
-    kindOfAssistance: Joi.string()
-      .required()
-      .valid(...Object.values(KIND_OF_ASSITANCE)),
+    kindOfAssistance: Joi.array()
+      .items(Joi.string().valid(...Object.values(KIND_OF_ASSITANCE)))
+      .required(),
     projectSummary: Joi.string().required(),
     address: Joi.string().required(),
     lat: Joi.number().required(),
@@ -289,9 +289,9 @@ export const editProjectInquery = {
     projectType: Joi.string()
       .valid(...Object.values(PROJECT_TYPE))
       .allow(null, ""),
-    kindOfAssistance: Joi.string()
-      .required()
-      .valid(...Object.values(KIND_OF_ASSITANCE)),
+    kindOfAssistance: Joi.array()
+      .items(Joi.string().valid(...Object.values(KIND_OF_ASSITANCE)))
+      .required(),
     projectSummary: Joi.string().required(),
     address: Joi.string().required(),
     lat: Joi.number().required(),

@@ -16,11 +16,14 @@ const projectInquerySchema = mongoose.Schema(
       required: true,
       enum: [...Object.values(PROJECT_TYPE)],
     },
-    kindOfAssistance: {
-      type: String,
-      required: true,
-      enum: [...Object.values(KIND_OF_ASSITANCE)],
-    },
+    kindOfAssistance: [
+      {
+        type: String,
+        required: true,
+        enum: [...Object.values(KIND_OF_ASSITANCE)],
+        default: "",
+      },
+    ],
     projectSummary: { type: String, required: true },
     address: { type: String },
     location: {
@@ -34,7 +37,7 @@ const projectInquerySchema = mongoose.Schema(
     startDate: { type: String, default: "" },
     endDate: { type: String, default: "" },
     projectFund: { type: Number, required: true },
-    primaryDecisionMaker: { type: String,required:true},
+    primaryDecisionMaker: { type: String, required: true },
     workedWithInteriorDesigner: {
       type: String,
       enum: [...Object.values(OPTIONS)],

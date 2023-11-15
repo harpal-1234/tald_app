@@ -836,7 +836,10 @@ export const editProjectInquery = async (body, userId) => {
   const projectId = body.projectId;
   body.user = userId;
   delete body.projectId;
-
+  const val = body.kindOfAssistance;
+  delete body.kindOfAssistance;
+  body.$set = { kindOfAssistance: val };
+  console.log(body);
   const check = await ProjectInquery.findOne({
     _id: projectId,
     isDeleted: false,
