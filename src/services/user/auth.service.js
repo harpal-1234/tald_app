@@ -57,7 +57,7 @@ export const getFilter = async (type) => {
       {
         key: "AcceptVirtualConsultation",
         isMultiple: false,
-        value: ["yes", "No"],
+        value: ["Yes", "No"],
       },
       {
         key: "fullServiceClient",
