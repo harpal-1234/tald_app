@@ -36,7 +36,7 @@ export const getInteriorDesigners = async (
   startDate,
   endDate,
   userId,
-  virtual_Consultations
+  AcceptVirtualConsultation
 ) => {
   var query;
   var query1;

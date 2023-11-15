@@ -113,7 +113,7 @@ export const getInteriorDesigner = {
     destination: Joi.string()
       .valid(...Object.values(OPTIONS))
       .allow(null, ""),
-    virtual_Consultations: Joi.string()
+    AcceptVirtualConsultation: Joi.string()
       .valid(...Object.values(OPTIONS))
       .allow(null, ""),
     consultationLength: Joi.string()
