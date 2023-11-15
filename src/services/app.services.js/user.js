@@ -162,7 +162,8 @@ export const getInteriorDesigners = async (
       // isVerify: true,
     });
   }
-  if (designer.length > 0) {
+  console.log(designer);
+  if (designer?.length > 0) {
     Promise.all(
       await designer.forEach(async (value) => {
         const project = await Project.findOne({
