@@ -24,6 +24,7 @@ export const getInteriorDesigners = catchAsync(async (req, res) => {
     fullServiceClients,
     startDate,
     endDate,
+    virtual_Consultations
   } = req.query;
 
   var userId;
@@ -50,7 +51,8 @@ export const getInteriorDesigners = catchAsync(async (req, res) => {
     fullServiceClients,
     startDate,
     endDate,
-    userId
+    userId,
+    virtual_Consultations
   );
 
   return successResponse(

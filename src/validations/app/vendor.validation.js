@@ -113,6 +113,9 @@ export const getInteriorDesigner = {
     destination: Joi.string()
       .valid(...Object.values(OPTIONS))
       .allow(null, ""),
+    virtual_Consultations: Joi.string()
+      .valid(...Object.values(OPTIONS))
+      .allow(null, ""),
     consultationLength: Joi.string()
       .valid("25 mins", "55 mins")
       .allow(null, ""),

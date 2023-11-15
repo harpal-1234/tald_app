@@ -35,7 +35,8 @@ export const getInteriorDesigners = async (
   fullServiceClients,
   startDate,
   endDate,
-  userId
+  userId,
+  virtual_Consultations
 ) => {
   var query;
   var query1;
