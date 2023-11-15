@@ -49,6 +49,9 @@ const createServices = {
       question: Joi.string().required().allow(null, ""),
       answer: Joi.string().valid(...Object.values(PROJECT_TYPE)),
     }).required(),
+    projectSize:Joi.array()
+    .required()
+    .items(Joi.string().valid(...Object.values(PROJECT_SIZE))),
     virtual_Consultations: Joi.object({
       question: Joi.string().required().allow(null, ""),
       answer: Joi.string().valid(...Object.values(OPTIONS)),
@@ -92,9 +95,6 @@ const createServices = {
           .required()
           .valid(...Object.values(GOALS))
       ),
-    projectSize: Joi.string()
-      .required()
-      .valid(...Object.values(PROJECT_SIZE)),
     needHelp: Joi.array()
       .required()
       .items(Joi.string().valid(...Object.values(NEED_HELP))),

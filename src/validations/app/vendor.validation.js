@@ -146,9 +146,7 @@ export const getInteriorDesigner = {
     //       .valid(...Object.values(GOALS))
     //   )
     //   .allow(null, ""),
-    projectSize: Joi.string()
-      .valid(...Object.values(PROJECT_SIZE))
-      .allow(null, ""),
+    projectSize: Joi.string().allow(null, ""),
     needHelp: Joi.string().allow(null, ""),
     fullServiceClients: Joi.string()
       .allow(null, "")
@@ -270,8 +268,7 @@ export const createProjectInquery = {
     endDate: Joi.string().allow("", null),
     projectFund: Joi.number().required(),
     primaryDecisionMaker: Joi.string().required(),
-    workedWithInteriorDesigner: Joi.string()
-      .required(),
+    workedWithInteriorDesigner: Joi.string().required(),
     involvedYourProject: Joi.string().required(),
     files: Joi.array().items(
       Joi.object({
@@ -428,6 +425,9 @@ export const editVendorProfile = {
         .valid(...Object.values(PROJECT_TYPE))
         .required(),
     }),
+    projectSize: Joi.array()
+      .required()
+      .items(Joi.string().valid(...Object.values(PROJECT_SIZE))),
     virtual_Consultations: Joi.object({
       question: Joi.string().allow(null, "").required(),
       answer: Joi.string()
@@ -489,8 +489,5 @@ export const editVendorProfile = {
     needHelp: Joi.array().items(
       Joi.string().valid(...Object.values(NEED_HELP))
     ),
-    projectSize: Joi.string()
-      // .required()
-      .valid(...Object.values(PROJECT_SIZE)),
   }),
 };

@@ -92,11 +92,13 @@ const userSchema = mongoose.Schema(
     preferences: [
       { type: String, enum: [...Object.values(PREFERENCES)], default: "" },
     ],
-    projectSize: {
-      type: String,
-      enum: [...Object.values(PROJECT_SIZE)],
-      default: "",
-    },
+    projectSize: [
+      {
+        type: String,
+        enum: [...Object.values(PROJECT_SIZE)],
+        default: "",
+      },
+    ],
     styles: [{ type: String, enum: [...Object.values(STYLE)] }],
     isSignUp: { type: Boolean, default: false },
     isApproved: { type: Boolean, default: false },
@@ -134,7 +136,7 @@ const userSchema = mongoose.Schema(
       currentPlan: { type: String, required: true },
       billingCycle: { type: String, required: true },
     },
-    totalRevenue:{type:Number,default:0},
+    totalRevenue: { type: Number, default: 0 },
     isSubscription: { type: Boolean, default: false },
     isPayment: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },

@@ -166,46 +166,52 @@ export const getFilter = async (type) => {
     const data = [
       {
         key: "projectSize",
+        isMultiple: true,
         value: filter.projectSize,
       },
       {
         key: "projectType",
+        isMultiple: false,
         value: filter.projectType,
       },
       {
         key: "goals",
+        isMultiple: true,
         value: filter.goals,
       },
       {
         key: "destination",
+        isMultiple: false,
         value: ["Yes", "No"],
       },
       {
-        key: "goals",
-        value: filter.goals,
-      },
-      {
         key: "preferences",
+        isMultiple: true,
         value: filter.preferences,
       },
       {
         key: "styles",
+        isMultiple: true,
         value: filter.style,
       },
       {
         key: "feeStructure",
+        isMultiple: false,
         value: VALID_FEE_STRUCTURE,
       },
       {
         key: "tradeDiscount",
+        isMultiple: false,
         value: ["Yes", "No"],
       },
       {
         key: "needHelp",
+        isMultiple: true,
         value: filter.needHelp,
       },
       {
         key: "fullServiceClient",
+        isMultiple: false,
         value: ["Yes", "No"],
       },
     ];

@@ -107,7 +107,7 @@ export const getInteriorDesigners = async (
     options.needHelp = { $in: JSON.parse(needHelp) };
   }
   if (projectSize) {
-    options.projectSize = projectSize;
+    options.projectSize = { $in: JSON.parse(projectSize) };
   }
   if (goals) {
     options.goals = { $in: JSON.parse(goals) };
