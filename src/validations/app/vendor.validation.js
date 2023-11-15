@@ -271,8 +271,7 @@ export const createProjectInquery = {
     projectFund: Joi.number().required(),
     primaryDecisionMaker: Joi.string().required(),
     workedWithInteriorDesigner: Joi.string()
-      .required()
-      .valid(...Object.values(OPTIONS)),
+      .required(),
     involvedYourProject: Joi.string().required(),
     files: Joi.array().items(
       Joi.object({
@@ -299,9 +298,7 @@ export const editProjectInquery = {
     startDate: Joi.string().allow("", null),
     endDate: Joi.string().allow("", null),
     projectFund: Joi.number().required(),
-    primaryDecisionMaker: Joi.string()
-      .required()
-      .valid(...Object.values(OPTIONS)),
+    primaryDecisionMaker: Joi.string().required(),
     workedWithInteriorDesigner: Joi.string()
       .required()
       .valid(...Object.values(OPTIONS)),
