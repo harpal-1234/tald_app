@@ -123,8 +123,8 @@ const filterData = {
 };
 export const dashboard = {
   query: Joi.object().keys({
-    startDate: Joi.string().required(),
-    endDate: Joi.string().required(),
+    startDate: Joi.string().required().allow(null,""),
+    endDate: Joi.string().required().allow(null,""),,
   }),
 };
 export const getConsultation = {
