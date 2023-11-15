@@ -143,7 +143,7 @@ router.put(
 router.put(
   "/rescheduledConsultation",
   auth(USER_TYPE.USER),
-  validate(vendorValidation.rescheduledBookConsultations),
+  validate(vendorValidation.rescheduledBookConsultationsVendor),
   vendorController.rescheduledBookConsultations
 );
 export default router;

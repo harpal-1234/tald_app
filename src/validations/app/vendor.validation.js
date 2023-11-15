@@ -87,6 +87,11 @@ export const rescheduledBookConsultations = {
     durationTime: Joi.string().required().valid("25_mins", "55_mins"),
   }),
 };
+export const rescheduledBookConsultationsVendor = {
+  body: Joi.object().keys({
+    consultationId: Joi.string().required(),
+  }),
+};
 export const addFileConsultation = {
   body: Joi.object().keys({
     consultationId: Joi.string().required(),

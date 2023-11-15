@@ -525,7 +525,8 @@ export const rescheduledBookConsultations = async (body, userId) => {
   // delete body.isConfirm;
   // body.isConfirm = false;
   // body.isReschedule = true;
-  const user = await User.findOne({ _id: userId, isDeleted: false });
+  const designer = await User.findOne({ _id: userId, isDeleted: false });
+  const user = await User.findOne({ _id: check.user, isDeleted: false });
   // console.log(user);
   // const update = await Consultations.findOneAndUpdate(
   //   {
@@ -542,7 +543,7 @@ export const rescheduledBookConsultations = async (body, userId) => {
   const link = `https://client.tald.co/consultations?reschedule=${consultationId}`;
   sendEmail.rescheduledBookConsultationsBookingDesigner(
     consultationId,
-    user?.name,
+    designer?.name,
     user?.email,
     link
   );
