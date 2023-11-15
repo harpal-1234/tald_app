@@ -60,7 +60,7 @@ export const getFilter = async (type) => {
         value: ["Yes", "No"],
       },
       {
-        key: "fullServiceClient",
+        key: "fullServiceClients",
         isMultiple: false,
         value: ["Yes", "No"],
       },
