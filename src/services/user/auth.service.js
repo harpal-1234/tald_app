@@ -81,7 +81,7 @@ export const getFilter = async (type) => {
       },
       {
         key: "projectSize",
-        isMultiple: false,
+        isMultiple: true,
         value: filter.projectSize,
       },
     ];
@@ -91,7 +91,7 @@ export const getFilter = async (type) => {
     const data = [
       {
         key: "projectSize",
-        isMultiple: false,
+        isMultiple: true,
         value: filter.projectSize,
       },
       {
@@ -136,12 +136,12 @@ export const getFilter = async (type) => {
       },
       {
         key: "projectSize",
-        isMultiple: false,
+        isMultiple: true,
         value: filter.projectSize,
       },
       {
         key: "feeStructure",
-        isMultiple: false,
+        isMultiple: true,
         value: VALID_FEE_STRUCTURE,
       },
       {
@@ -196,7 +196,7 @@ export const getFilter = async (type) => {
       },
       {
         key: "feeStructure",
-        isMultiple: false,
+        isMultiple: true,
         value: VALID_FEE_STRUCTURE,
       },
       {

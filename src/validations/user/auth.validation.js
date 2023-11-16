@@ -49,9 +49,9 @@ const createServices = {
       question: Joi.string().required().allow(null, ""),
       answer: Joi.string().valid(...Object.values(PROJECT_TYPE)),
     }).required(),
-    projectSize:Joi.array()
-    .required()
-    .items(Joi.string().valid(...Object.values(PROJECT_SIZE))),
+    projectSize: Joi.array()
+      .required()
+      .items(Joi.string().valid(...Object.values(PROJECT_SIZE))),
     virtual_Consultations: Joi.object({
       question: Joi.string().required().allow(null, ""),
       answer: Joi.string().valid(...Object.values(OPTIONS)),
@@ -72,7 +72,9 @@ const createServices = {
     }).required(),
     feeStructure: Joi.object({
       question: Joi.string().required().allow(null, ""),
-      answer: Joi.string().valid(...Object.values(FEE_STRUCTURE)),
+      answer: Joi.array().items(
+        Joi.string().valid(...Object.values(FEE_STRUCTURE))
+      ),
     }),
     tradeDiscount: Joi.object({
       question: Joi.string().required().allow(null, ""),
@@ -216,7 +218,7 @@ const payment = {
   body: Joi.object().keys({
     amount: Joi.number().required(),
     designerId: Joi.string().required(),
-    consultationId:Joi.string().required(),
+    consultationId: Joi.string().required(),
   }),
 };
 const verifyEmail = {
@@ -244,5 +246,5 @@ export default {
   getProfile,
   filters,
   payment,
-  checkOutSession
+  checkOutSession,
 };

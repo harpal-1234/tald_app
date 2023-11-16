@@ -40,6 +40,17 @@ export const userList = catchAsync(async (req, res) => {
     users
   );
 });
+export const getClientDetails = catchAsync(async (req, res) => {
+  let { userId } = req.query;
+  const users = await adminService.userList(userId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    users
+  );
+});
 export const vendorList = catchAsync(async (req, res) => {
   let { page, limit, search } = req.query;
   const users = await adminService.vendorList(page, limit, search);
@@ -163,6 +174,16 @@ export const approvedInqueryList = catchAsync(async (req, res) => {
     req.query.page,
     req.query.limit
   );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    data
+  );
+});
+export const actionOnInquery = catchAsync(async (req, res) => {
+  const data = await adminService.actionOnInquery(req.body.Id, req.body.status);
   return successResponse(
     req,
     res,

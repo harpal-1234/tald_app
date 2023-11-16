@@ -85,4 +85,10 @@ router.get(
   validate(authValidation.getConsultation),
   authController.approvedInqueryList
 );
+router.get(
+  "/actionOnInquery",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.iqueryOnAction),
+  authController.actionOnInquery
+);
 export default router;

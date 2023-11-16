@@ -71,11 +71,13 @@ const userSchema = mongoose.Schema(
     },
     feeStructure: {
       question: { type: String },
-      answer: {
-        type: String,
-        enum: [...Object.values(FEE_STRUCTURE)],
-        default: "",
-      },
+      answer: [
+        {
+          type: String,
+          enum: [...Object.values(FEE_STRUCTURE)],
+          default: "",
+        },
+      ],
     },
     tradeDiscount: {
       question: { type: String },

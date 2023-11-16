@@ -123,14 +123,20 @@ const filterData = {
 };
 export const dashboard = {
   query: Joi.object().keys({
-    startDate: Joi.string().required().allow(null,""),
-    endDate: Joi.string().required().allow(null,""),
+    startDate: Joi.string().required().allow(null, ""),
+    endDate: Joi.string().required().allow(null, ""),
   }),
 };
 export const getConsultation = {
   query: Joi.object().keys({
     page: Joi.number().required(),
     limit: Joi.number().required(),
+  }),
+};
+export const iqueryOnAction = {
+  body: Joi.object().keys({
+    Id: Joi.string().required(),
+    status: Joi.string().required().valid("Accept", "Reject"),
   }),
 };
 
@@ -145,4 +151,5 @@ export default {
   filterData,
   dashboard,
   getConsultation,
+  iqueryOnAction
 };

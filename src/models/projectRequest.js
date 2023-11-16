@@ -9,6 +9,7 @@ const projectRquestSchema = mongoose.Schema(
       ref: "projectInqueries",
     },
     isVerify: { type: Boolean, default: false },
+    isReject: { type: Boolean, default: false },
     status: {
       type: String,
       default: STATUS.PENDING,

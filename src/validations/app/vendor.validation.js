@@ -123,6 +123,7 @@ export const getInteriorDesigner = {
     minimumPrice: Joi.number().allow(null, ""),
     maximumPrice: Joi.number().allow(null, ""),
     preferences: Joi.string().allow(null, ""),
+    feeStructure: Joi.string().allow(null, ""),
     // Joi.array()
     //   .items(
     //     Joi.string()
@@ -456,8 +457,8 @@ export const editVendorProfile = {
     maxBudget: Joi.number().allow(null),
     feeStructure: Joi.object({
       question: Joi.string().required().allow(null, ""),
-      answer: Joi.string()
-        .valid(...Object.values(FEE_STRUCTURE))
+      answer: Joi.array()
+        .items(Joi.string().valid(...Object.values(FEE_STRUCTURE)))
         .required(),
     }),
     tradeDiscount: Joi.object({

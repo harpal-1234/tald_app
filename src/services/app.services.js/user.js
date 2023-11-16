@@ -36,7 +36,8 @@ export const getInteriorDesigners = async (
   startDate,
   endDate,
   userId,
-  AcceptVirtualConsultation
+  AcceptVirtualConsultation,
+  feeStructure
 ) => {
   var query;
   var query1;
@@ -117,6 +118,9 @@ export const getInteriorDesigners = async (
   }
   if (fullServiceClients) {
     options.fullServiceClients = { $in: fullServiceClients };
+  }
+  if (feeStructure) {
+    options["feeStructure.answer"] = { $in: JSON.parse(feeStructure) };
   }
   if ((lat, long)) {
     options.location = {

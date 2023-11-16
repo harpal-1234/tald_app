@@ -59,6 +59,20 @@ export const userList = async (page, limit, search) => {
   await formatUser(users);
   return { users, total };
 };
+export const getClientDetails = async (userId) => {
+  const user = await User.findOne({
+    _id: userId,
+    isDeleted: false,
+  }).lean();
+  if (!user) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.USER_NOT_FOUND
+    );
+  }
+  await formatUser(user);
+  return { user, total };
+};
 export const vendorList = async (page, limit, search) => {
   const options = {
     isDeleted: false,
@@ -365,4 +379,26 @@ export const inqueryList = async (page, limit) => {
     inqueryList: inqueryList,
     totalInqueryList: totalInqueryList,
   };
+};
+
+export const actionOnInquery = async (Id, status) => {
+  let query;
+  if (status == "Accept") {
+    query.isVerify = true;
+  }
+  if (status == "Reject") {
+    query.isReject = true;
+  }
+  const inquery = await projectRequest.findOneAndUpdate(
+    {
+      _id: Id,
+      isDeleted: false,
+      isVerify: false,
+    },
+    query,
+    {
+      new: true,
+    }
+  );
+  return inquery;
 };
