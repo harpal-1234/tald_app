@@ -368,7 +368,34 @@ export const payment = async (userId, amount1, designerId, consultationId) => {
   // const card = await stripe.customers.createSource(user.stripe.customerId, {
   //   source: "tok_visa",
   // });
-  const amount = amount1 * 100;
+  let amount;
+  const consultation = await Consultations.findOne({
+    _id: consultationId,
+    isDeleted: false,
+  });
+  if (!consultation) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.CONSULTATION_NOT_EXIST
+    );
+  }
+  const designer = await User.findOne({ _id: designerId, isDeleted: false });
+  if (!designer) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.DESIGNER_NOT_FOUND
+    );
+  }
+  if (consultation?.durationTime == "55_mins") {
+    amount = designer?.virtual_Consultations.chargers_55_mins
+      ? parseInt(designer?.virtual_Consultations.chargers_55_mins) * 100
+      : 5500;
+  } else {
+    amount = designer?.virtual_Consultations.chargers_25_mins
+      ? parseInt(designer?.virtual_Consultations.chargers_25_mins) * 100
+      : 2500;
+  }
+
   // const ephemeralKey = await stripeServices.stripeService(
   //   user.stripe.customerId
   // );
@@ -391,7 +418,7 @@ export const payment = async (userId, amount1, designerId, consultationId) => {
     payment_method_types: ["card"],
     metadata: {
       userId: JSON.stringify(userId),
-      amount: amount1,
+      amount: amount / 100,
       designerId: JSON.stringify(designerId),
       consultationId: JSON.stringify(consultationId),
     },

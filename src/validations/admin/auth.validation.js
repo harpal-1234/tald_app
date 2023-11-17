@@ -153,6 +153,13 @@ export const getDesignerDetails = {
     // limit:Joi.number().required()
   }),
 };
+export const getSubscriptions = {
+  query: Joi.object().keys({
+   // userId: Joi.string().required(),
+    page: Joi.number().required(),
+    limit:Joi.number().required()
+  }),
+};
 export default {
   adminLogin,
   getUsers,
@@ -167,4 +174,5 @@ export default {
   iqueryOnAction,
   getClientDetails,
   getDesignerDetails,
+  getSubscriptions
 };

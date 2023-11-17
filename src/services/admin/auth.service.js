@@ -8,6 +8,8 @@ import {
   ProjectInquery,
   projectRequest,
   Project,
+  Subscriptions,
+  Payment,
 } from "../../models/index.js";
 import { STATUS_CODES, ERROR_MESSAGES } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
@@ -15,6 +17,7 @@ import { OperationalError } from "../../utils/errors.js";
 import { createVendorMail } from "../../utils/sendMail.js";
 import { formatUser } from "../../utils/commonFunction.js";
 import { getConsultations } from "../app.services.js/vendor.js";
+import { payment } from "../user/auth.service.js";
 
 export const adminLogin = async (email, password) => {
   const admin = await Admin.findOne({ email: email });
@@ -154,6 +157,26 @@ export const getDesignerDetails = async (userId) => {
     portfolio: portfolio,
   };
   return response;
+};
+export const getSubscription = async (page, limit) => {
+  const subScriptions = await Subscriptions.find({ isDeleted: false })
+    .populate({ path: "designer", select: ["name", "email"] })
+    .skip(page * limit)
+    .limit(limit)
+    .sort({ _id: -1 });
+  return subScriptions;
+};
+export const getConsultationPayments = async (page, limit) => {
+  const payments = await Payment.find({ isDeleted: false })
+    .populate([
+      { path: "user", select: ["name", "email"] },
+      { path: "designer", select: ["name", "email"] },
+      { path: "consultationId" },
+    ])
+    .skip(page * limit)
+    .limit(limit)
+    .sort({ _id: -1 });
+  return payments;
 };
 export const vendorList = async (page, limit, search) => {
   const options = {

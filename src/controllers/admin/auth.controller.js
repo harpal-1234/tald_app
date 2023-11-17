@@ -62,6 +62,32 @@ export const getDesignerDetails = catchAsync(async (req, res) => {
     users
   );
 });
+export const getSubscription = catchAsync(async (req, res) => {
+  const subscription = await adminService.getSubscription(
+    req.query.page,
+    req.query.limit
+  );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    subscription
+  );
+});
+export const getConsultationPayments = catchAsync(async (req, res) => {
+  const subscription = await adminService.getConsultationPayments(
+    req.query.page,
+    req.query.limit
+  );
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    subscription
+  );
+});
 export const vendorList = catchAsync(async (req, res) => {
   let { page, limit, search } = req.query;
   const users = await adminService.vendorList(page, limit, search);

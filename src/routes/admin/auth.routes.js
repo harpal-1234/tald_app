@@ -103,4 +103,16 @@ router.get(
   validate(authValidation.getDesignerDetails),
   authController.getDesignerDetails
 );
+router.get(
+  "/getSubscriptions",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.getSubscriptions),
+  authController.getSubscription
+);
+router.get(
+  "/getConsultationPayments",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.getSubscriptions),
+  authController.getConsultationPayments
+);
 export default router;
