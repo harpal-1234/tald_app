@@ -105,7 +105,7 @@ export const getClientDetails = async (userId, page, limit) => {
   };
   return response;
 };
-export const getDesignerDetails = async (userId, page, limit) => {
+export const getDesignerDetails = async (userId) => {
   const user = await User.findOne({
     _id: userId,
     type: "Vendor",
@@ -142,10 +142,7 @@ export const getDesignerDetails = async (userId, page, limit) => {
   const portfolio = await Project.find({
     isDeleted: false,
     user: userId,
-  })
-    .skip(page * limit)
-    .limit(limit)
-    .sort({ _id: -1 });
+  }).sort({ _id: -1 });
   await formatUser(user);
   const response = {
     designer: user,
