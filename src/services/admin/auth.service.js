@@ -83,22 +83,22 @@ export const getClientDetails = async (userId, page, limit) => {
     user: userId,
     isCancel: false,
   });
-  const projects = await projectRequest
+  const projects = await ProjectInquery
     .find({
       isDeleted: false,
       user: userId,
       // isCancel: false,
     })
-    .populate([
-      {
-        path: "projectId",
-      },
-      { path: "user", select: ["name", "email"] },
-      { path: "designer", select: ["name", "email"] },
-    ])
-    .skip(page * limit)
-    .limit(limit)
-    .sort({ _id: -1 });
+    // .populate([
+    //   {
+    //     path: "projectId",
+    //   },
+    //   { path: "user", select: ["name", "email"] },
+    //   { path: "designer", select: ["name", "email"] },
+    // ])
+    // .skip(page * limit)
+    // .limit(limit)
+    // .sort({ _id: -1 });
   await formatUser(user);
   const response = {
     user: user,

@@ -142,8 +142,8 @@ export const iqueryOnAction = {
 export const getClientDetails = {
   query: Joi.object().keys({
     userId: Joi.string().required(),
-    page: Joi.number().required(),
-    limit: Joi.number().required(),
+    // page: Joi.number().required(),
+    // limit: Joi.number().required(),
   }),
 };
 export const getDesignerDetails = {
