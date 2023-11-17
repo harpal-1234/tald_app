@@ -51,6 +51,17 @@ export const getClientDetails = catchAsync(async (req, res) => {
     users
   );
 });
+export const getDesignerDetails = catchAsync(async (req, res) => {
+  let { userId, page, limit } = req.query;
+  const users = await adminService.getDesignerDetails(userId, page, limit);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    users
+  );
+});
 export const vendorList = catchAsync(async (req, res) => {
   let { page, limit, search } = req.query;
   const users = await adminService.vendorList(page, limit, search);

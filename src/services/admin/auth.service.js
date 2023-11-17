@@ -7,6 +7,7 @@ import {
   Consultations,
   ProjectInquery,
   projectRequest,
+  Project,
 } from "../../models/index.js";
 import { STATUS_CODES, ERROR_MESSAGES } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
@@ -83,7 +84,7 @@ export const getClientDetails = async (userId, page, limit) => {
     .find({
       isDeleted: false,
       user: userId,
-     // isCancel: false,
+      // isCancel: false,
     })
     .populate([
       {
@@ -93,13 +94,67 @@ export const getClientDetails = async (userId, page, limit) => {
       { path: "designer", select: ["name", "email"] },
     ])
     .skip(page * limit)
-    .limit(limit);
+    .limit(limit)
+    .sort({ _id: -1 });
   await formatUser(user);
   const response = {
     user: user,
     totalProjectInqueries: ProjectInquerys,
     totalVirtualConsultation: consultations,
     projects,
+  };
+  return response;
+};
+export const getDesignerDetails = async (userId, page, limit) => {
+  const user = await User.findOne({
+    _id: userId,
+    type: "Vendor",
+    isDeleted: false,
+  }).lean();
+  if (!user) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.USER_NOT_FOUND
+    );
+  }
+  const ProjectInquerys = await projectRequest.countDocuments({
+    isDeleted: false,
+    designer: userId,
+    isConfirm: true,
+  });
+  const totalConsultations = await Consultations.countDocuments({
+    isDeleted: false,
+    designer: userId,
+    // isCancel: false,
+  });
+  const pendingConsultations = await Consultations.countDocuments({
+    isDeleted: false,
+    designer: userId,
+    isConfirm: false,
+    // isCancel: false,
+  });
+  const bookConsultations = await Consultations.countDocuments({
+    isDeleted: false,
+    designer: userId,
+    isConfirm: true,
+    // isCancel: false,
+  });
+  const portfolio = await Project.find({
+    isDeleted: false,
+    user: userId,
+  })
+    .skip(page * limit)
+    .limit(limit)
+    .sort({ _id: -1 });
+  await formatUser(user);
+  const response = {
+    designer: user,
+    totalVirtualConsultation: totalConsultations,
+    totalProjectInqueries: ProjectInquerys,
+    pendingConsultations: pendingConsultations,
+    bookConsultations: bookConsultations,
+    revenue: user?.totalRevenue ? user?.totalRevenue : 0,
+    portfolio: portfolio,
   };
   return response;
 };

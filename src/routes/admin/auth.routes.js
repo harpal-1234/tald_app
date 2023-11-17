@@ -97,4 +97,10 @@ router.get(
   validate(authValidation.getClientDetails),
   authController.getClientDetails
 );
+router.get(
+  "/getDesignerDetails",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.getClientDetails),
+  authController.getDesignerDetails
+);
 export default router;
