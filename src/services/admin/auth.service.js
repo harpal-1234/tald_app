@@ -59,7 +59,7 @@ export const userList = async (page, limit, search) => {
   await formatUser(users);
   return { users, total };
 };
-export const getClientDetails = async (userId) => {
+export const getClientDetails = async (userId, page, limit) => {
   const user = await User.findOne({
     _id: userId,
     isDeleted: false,
@@ -70,8 +70,38 @@ export const getClientDetails = async (userId) => {
       ERROR_MESSAGES.USER_NOT_FOUND
     );
   }
+  const ProjectInquerys = await projectRequest.countDocuments({
+    isDeleted: false,
+    user: userId,
+  });
+  const consultations = await Consultations.countDocuments({
+    isDeleted: false,
+    user: userId,
+    isCancel: false,
+  });
+  const projects = await projectRequest
+    .find({
+      isDeleted: false,
+      user: userId,
+     // isCancel: false,
+    })
+    .populate([
+      {
+        path: "projectId",
+      },
+      { path: "user", select: ["name", "email"] },
+      { path: "designer", select: ["name", "email"] },
+    ])
+    .skip(page * limit)
+    .limit(limit);
   await formatUser(user);
-  return { user, total };
+  const response = {
+    user: user,
+    totalProjectInqueries: ProjectInquerys,
+    totalVirtualConsultation: consultations,
+    projects,
+  };
+  return response;
 };
 export const vendorList = async (page, limit, search) => {
   const options = {

@@ -139,6 +139,13 @@ export const iqueryOnAction = {
     status: Joi.string().required().valid("Accept", "Reject"),
   }),
 };
+export const getClientDetails = {
+  query: Joi.object().keys({
+    userId: Joi.string().required(),
+    page: Joi.number().required(),
+    limit:Joi.number().required()
+  }),
+};
 
 export default {
   adminLogin,
@@ -151,5 +158,6 @@ export default {
   filterData,
   dashboard,
   getConsultation,
-  iqueryOnAction
+  iqueryOnAction,
+  getClientDetails
 };

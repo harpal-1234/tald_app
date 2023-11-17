@@ -91,4 +91,10 @@ router.get(
   validate(authValidation.iqueryOnAction),
   authController.actionOnInquery
 );
+router.get(
+  "/getClientDetails",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.getClientDetails),
+  authController.getClientDetails
+);
 export default router;

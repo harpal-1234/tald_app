@@ -41,8 +41,8 @@ export const userList = catchAsync(async (req, res) => {
   );
 });
 export const getClientDetails = catchAsync(async (req, res) => {
-  let { userId } = req.query;
-  const users = await adminService.userList(userId);
+  let { userId, page, limit } = req.query;
+  const users = await adminService.getClientDetails(userId, page, limit);
   return successResponse(
     req,
     res,
