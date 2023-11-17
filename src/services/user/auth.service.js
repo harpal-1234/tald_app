@@ -49,11 +49,11 @@ export const getFilter = async (type) => {
   const filter = await Filter.findOne({ isDeleted: false });
   if (type == "All") {
     const data = [
-      {
-        key: "projectType",
-        isMultiple: false,
-        value: filter.projectType,
-      },
+      // {
+      //   key: "projectType",
+      //   isMultiple: false,
+      //   value: filter.projectType,
+      // },
       {
         key: "AcceptVirtualConsultation",
         isMultiple: false,
@@ -89,11 +89,11 @@ export const getFilter = async (type) => {
   }
   if (type == "Virtual") {
     const data = [
-      {
-        key: "projectSize",
-        isMultiple: true,
-        value: filter.projectSize,
-      },
+      // {
+      //   key: "projectSize",
+      //   isMultiple: true,
+      //   value: filter.projectSize,
+      // },
       {
         key: "dateRange",
         isMultiple: false,
@@ -110,9 +110,9 @@ export const getFilter = async (type) => {
         value: ["minimumPrice", "maximumPrice"],
       },
       {
-        key: "goals",
+        key: "needHelp",
         isMultiple: true,
-        value: filter.goals,
+        value: filter.needHelp,
       },
       {
         key: "styles",
