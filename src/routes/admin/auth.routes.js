@@ -98,6 +98,12 @@ router.get(
   authController.getClientDetails
 );
 router.get(
+  "/getProjectInqueryStatus",
+  auth(USER_TYPE.ADMIN),
+  validate(authValidation.getProjectInqueryStatus),
+  authController.getProjectInqueryStatus
+);
+router.get(
   "/getDesignerDetails",
   auth(USER_TYPE.ADMIN),
   validate(authValidation.getDesignerDetails),

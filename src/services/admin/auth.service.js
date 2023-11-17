@@ -83,22 +83,21 @@ export const getClientDetails = async (userId, page, limit) => {
     user: userId,
     isCancel: false,
   });
-  const projects = await ProjectInquery
-    .find({
-      isDeleted: false,
-      user: userId,
-      // isCancel: false,
-    })
-    // .populate([
-    //   {
-    //     path: "projectId",
-    //   },
-    //   { path: "user", select: ["name", "email"] },
-    //   { path: "designer", select: ["name", "email"] },
-    // ])
-    // .skip(page * limit)
-    // .limit(limit)
-    // .sort({ _id: -1 });
+  const projects = await ProjectInquery.find({
+    isDeleted: false,
+    user: userId,
+    // isCancel: false,
+  });
+  // .populate([
+  //   {
+  //     path: "projectId",
+  //   },
+  //   { path: "user", select: ["name", "email"] },
+  //   { path: "designer", select: ["name", "email"] },
+  // ])
+  // .skip(page * limit)
+  // .limit(limit)
+  // .sort({ _id: -1 });
   await formatUser(user);
   const response = {
     user: user,
@@ -107,6 +106,23 @@ export const getClientDetails = async (userId, page, limit) => {
     projects,
   };
   return response;
+};
+export const getProjectInqueryStatus = async (projectId) => {
+  const projects = await projectRequest
+    .find({
+      isDeleted: false,
+      projectId: projectId,
+      // isCancel: false,
+    })
+    .populate([
+      {
+        path: "projectId",
+      },
+      { path: "user", select: ["name", "email"] },
+      { path: "designer", select: ["name", "email"] },
+    ]);
+
+  return projects;
 };
 export const getDesignerDetails = async (userId) => {
   const user = await User.findOne({
@@ -153,6 +169,10 @@ export const getDesignerDetails = async (userId) => {
     totalProjectInqueries: ProjectInquerys,
     pendingConsultations: pendingConsultations,
     bookConsultations: bookConsultations,
+    totalProfileSave: user?.numberOfSaveProfiles
+      ? user?.numberOfSaveProfiles
+      : 0,
+    totalImageSave: user?.numberOfSaveImage ? user?.numberOfSaveImage : 0,
     revenue: user?.totalRevenue ? user?.totalRevenue : 0,
     portfolio: portfolio,
   };

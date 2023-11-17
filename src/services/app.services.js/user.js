@@ -304,6 +304,10 @@ export const saveProfile = async (designerId, userId) => {
       { $push: { saveProfiles: designerId } },
       { new: true }
     );
+    await User.findOneAndUpdate(
+      { _id: designerId, isDeleted: false },
+      { $inc: { numberOfSaveProfiles: 1 } }
+    );
 
     return { isSaveProfile: true };
   } else {
@@ -316,6 +320,10 @@ export const saveProfile = async (designerId, userId) => {
       },
       { $pull: { saveProfiles: designerId } },
       { new: true }
+    );
+    await User.findOneAndUpdate(
+      { _id: designerId, isDeleted: false },
+      { $inc: { numberOfSaveProfiles: -1 } }
     );
 
     return { isSaveProfile: false };
@@ -887,6 +895,12 @@ export const saveImages = async (data, userId) => {
       },
       { new: true }
     );
+    await User.findOneAndUpdate(
+      { _id: project.user, isDeleted: false },
+      {
+        $inc: { numberOfSaveImage: 1 },
+      }
+    );
     return { isSave: true };
   } else {
     const user = await User.findOneAndUpdate(
@@ -898,6 +912,12 @@ export const saveImages = async (data, userId) => {
         $pull: { saveImages: { image: data.image, projectId: data.projectId } },
       },
       { new: true }
+    );
+    await User.findOneAndUpdate(
+      { _id: project.user, isDeleted: false },
+      {
+        $inc: { numberOfSaveImage: -1 },
+      }
     );
     return { isSave: false };
   }

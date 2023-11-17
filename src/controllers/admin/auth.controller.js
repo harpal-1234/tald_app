@@ -51,6 +51,17 @@ export const getClientDetails = catchAsync(async (req, res) => {
     users
   );
 });
+export const getProjectInqueryStatus = catchAsync(async (req, res) => {
+  let { projectId } = req.query;
+  const users = await adminService.getProjectInqueryStatus(projectId);
+  return successResponse(
+    req,
+    res,
+    STATUS_CODES.SUCCESS,
+    SUCCESS_MESSAGES.SUCCESS,
+    users
+  );
+});
 export const getDesignerDetails = catchAsync(async (req, res) => {
   let { userId } = req.query;
   const users = await adminService.getDesignerDetails(userId);

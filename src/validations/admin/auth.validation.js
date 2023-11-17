@@ -160,6 +160,11 @@ export const getSubscriptions = {
     limit:Joi.number().required()
   }),
 };
+export const getProjectInqueryStatus = {
+  query: Joi.object().keys({
+   projectId: Joi.string().required()
+  }),
+};
 export default {
   adminLogin,
   getUsers,
@@ -174,5 +179,6 @@ export default {
   iqueryOnAction,
   getClientDetails,
   getDesignerDetails,
-  getSubscriptions
+  getSubscriptions,
+  getProjectInqueryStatus
 };

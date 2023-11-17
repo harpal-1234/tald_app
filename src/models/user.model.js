@@ -130,6 +130,8 @@ const userSchema = mongoose.Schema(
         default: STRIPE_STATUS.PENDING,
       },
     },
+    numberOfSaveImage: { type: Number, default: 0 },
+    numberOfSaveProfiles: { type: Number, default: 0 },
     subscription: {
       transitionId: { type: String, required: true },
       startDate: { type: Date, required: true },
