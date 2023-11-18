@@ -46,7 +46,7 @@ export const GOALS = {
   PAINT_COLORS: "Paint Colors",
   WINDOW_TREATMENT: "Window Treatment",
   CAREER_GUIDANCE: "Career Guidance for Designers",
-  Empty:""
+  Empty: "",
 };
 export const STYLE = {
   AMERICANA: "Americana",
@@ -143,12 +143,12 @@ export const VALID_FEE_STRUCTURE = [
 export const OPTIONS = {
   YES: "Yes",
   NO: "No",
-  empty:""
+  empty: "",
 };
-export const STRIPE_STATUS ={
-  PENDING:"Pending",
-  ENABLE:"Enable"
-}
+export const STRIPE_STATUS = {
+  PENDING: "Pending",
+  ENABLE: "Enable",
+};
 export const STATUS = {
   ACCEPTED: "Accepted",
   REJECTED: "Rejected",
@@ -304,9 +304,9 @@ export const ERROR_MESSAGES = {
   DESIGNER_NOT_FOUND: "Designer Not Found",
   VALID_DATE: "Please select a valid date",
   CONSULTATION_NOT_EXIST: "Sorry this consultation not exist",
-  ACCOUNT_DOES_NOT_CONNECT:"Sorry This Account Does Not Connect To Stripe",
-  SUBSCRIPTION_ALLREADY:"You have already purchased a subscription.",
-  
+  ACCOUNT_DOES_NOT_CONNECT: "Sorry This Account Does Not Connect To Stripe",
+  SUBSCRIPTION_ALLREADY: "You have already purchased a subscription.",
+  ALREADY_CANCEL: "This Consultation Booking Already Canceled",
 };
 export const SOCIAL_TYPE = {
   FACEBOOK: "facebook",

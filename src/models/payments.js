@@ -11,6 +11,7 @@ const paymentsSchema = mongoose.Schema(
     amount: { type: String, required: true },
     isDeleted: { type: Boolean, default: false },
     isBlocked: { type: Boolean, default: false },
+    isRefund: { type: Boolean, default: false },
   },
   {
     timestamps: true,

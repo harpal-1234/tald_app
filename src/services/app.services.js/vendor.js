@@ -5,6 +5,7 @@ import {
   ProjectInquery,
   Conversation,
   projectRequest,
+  Payment,
   Filter,
 } from "../../models/index.js";
 import { STATUS_CODES, ERROR_MESSAGES } from "../../config/appConstants.js";
@@ -16,6 +17,10 @@ import {
 } from "../../utils/commonFunction.js";
 import * as zoomMeeting from "../../utils/zoomMeeting.js";
 import * as sendEmail from "../../utils/sendMail.js";
+import Stripe from "stripe";
+const stripe = new Stripe(
+  "sk_test_51NuIYPKs8Y4Y2av4NWgrHFmq8R42IrEiIZ4c8jAsc23JsPqeq60bX7uKZZGb24dujnaheL7J6WsisNUtrJof0wlq00jvt0higK"
+);
 export const createProject = async (userId, projectName) => {
   const check = await Project.findOne({
     projectName: projectName,
@@ -403,7 +408,7 @@ export const getProjectInqueries = async (page, limit, designerId) => {
   const projects = await projectRequest
     .find({
       designer: designerId,
-     // isVerify: true,
+      // isVerify: true,
       isDeleted: false,
     })
     .skip(page * limit)
@@ -429,7 +434,7 @@ export const actionProjectInquery = async (Id, status, designerId) => {
     _id: Id,
     designer: designerId,
     isDeleted: false,
-   // isVerify: true,
+    // isVerify: true,
   });
   if (!check) {
     throw new OperationalError(
@@ -443,7 +448,7 @@ export const actionProjectInquery = async (Id, status, designerId) => {
       _id: Id,
       designer: designerId,
       isDeleted: false,
-     // isVerify: true,
+      // isVerify: true,
     },
     {
       status: status,
@@ -481,6 +486,35 @@ export const cancelBooking = async (body, userId) => {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
       ERROR_MESSAGES.CONSULTATION_NOT_EXIST
+    );
+  }
+  if (check.isCancel) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.ALREADY_CANCEL
+    );
+  }
+  const order = await Payment.findOne({
+    consultationId: body.consultationId,
+    isDeleted: false,
+  });
+  if (order) {
+    try {
+      const refund = await stripe.refunds.create({
+        payment_intent: order?.transitionId,
+      });
+    } catch (error) {
+      return error.message;
+    }
+
+    await Payment.findOneAndUpdate(
+      {
+        consultationId: body.consultationId,
+        isDeleted: false,
+      },
+      {
+        isRefund: true,
+      }
     );
   }
   const data = await Consultations.findOneAndUpdate(
@@ -548,4 +582,60 @@ export const rescheduledBookConsultations = async (body, userId) => {
     link
   );
   return;
+};
+export const checkConsultationStatus = async () => {
+  const check = await Consultations.find({
+    isDeleted: false,
+    isConfirm: false,
+    isCancel: false,
+    isPast: false,
+  });
+  for (const value of check) {
+    const date = new Date();
+    const timeDifferenceInMilliseconds = Math.abs(date - value.createdAt);
+    const timeDifferenceInHours =
+      timeDifferenceInMilliseconds / (1000 * 60 * 60);
+    const time = parseInt(timeDifferenceInHours.toFixed());
+    if (time > 72) {
+      const order = await Payment.findOne({
+        consultationId: value.consultationId,
+        isDeleted: false,
+      });
+      if (order) {
+        try {
+          const refund = await stripe.refunds.create({
+            payment_intent: order?.transitionId,
+          });
+        } catch (error) {
+          return error.message;
+        }
+
+        await Payment.findOneAndUpdate(
+          {
+            consultationId: value.consultationId,
+            isDeleted: false,
+          },
+          {
+            isRefund: true,
+          }
+        );
+        const data = await Consultations.findOneAndUpdate(
+          {
+            _id: value.consultationId,
+            isDeleted: false,
+            //isConfirm: false,
+            // isCancel: false,
+          },
+          {
+            isCancel: true,
+            // reason: body.reason,
+            //canceledBy: userId,
+          },
+          {
+            new: true,
+          }
+        );
+      }
+    }
+  }
 };

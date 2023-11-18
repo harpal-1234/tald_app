@@ -5,6 +5,7 @@ import {
   ProjectInquery,
   projectRequest,
   Review,
+  Payment,
 } from "../../models/index.js";
 import { STATUS_CODES, ERROR_MESSAGES } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
@@ -15,7 +16,11 @@ import {
 } from "../../utils/commonFunction.js";
 import moment from "moment";
 import * as sendEmail from "../../utils/sendMail.js";
-
+import { payment } from "../user/auth.service.js";
+import Stripe from "stripe";
+const stripe = new Stripe(
+  "sk_test_51NuIYPKs8Y4Y2av4NWgrHFmq8R42IrEiIZ4c8jAsc23JsPqeq60bX7uKZZGb24dujnaheL7J6WsisNUtrJof0wlq00jvt0higK"
+);
 export const getInteriorDesigners = async (
   type,
   lat,
@@ -963,6 +968,43 @@ export const cancelBooking = async (body, userId) => {
       STATUS_CODES.ACTION_FAILED,
       ERROR_MESSAGES.CONSULTATION_NOT_EXIST
     );
+  }
+  if (check.isCancel) {
+    throw new OperationalError(
+      STATUS_CODES.ACTION_FAILED,
+      ERROR_MESSAGES.ALREADY_CANCEL
+    );
+  }
+  
+  const date = new Date();
+  const timeDifferenceInMilliseconds = Math.abs(date - check.createdAt);
+  const timeDifferenceInHours = timeDifferenceInMilliseconds / (1000 * 60 * 60);
+  const time = parseInt(timeDifferenceInHours.toFixed());
+
+  if (time <= 72) {
+    const order = await Payment.findOne({
+      consultationId: body.consultationId,
+      isDeleted: false,
+    });
+    if (order) {
+      try {
+        const refund = await stripe.refunds.create({
+          payment_intent: order?.transitionId,
+        });
+      } catch (error) {
+        return error.message;
+      }
+      
+      await Payment.findOneAndUpdate(
+        {
+          consultationId: body.consultationId,
+          isDeleted: false,
+        },
+        {
+          isRefund: true,
+        }
+      );
+    }
   }
   const data = await Consultations.findOneAndUpdate(
     {
