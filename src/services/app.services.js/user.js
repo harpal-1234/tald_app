@@ -173,6 +173,7 @@ export const getInteriorDesigners = async (
         const project = await Project.findOne({
           user: value._id,
           isDeleted: false,
+          "images.image": { $exists: true },
         }).sort({ _id: -1 });
         delete value.__v;
         delete value.password;
@@ -257,6 +258,7 @@ export const getInteriorDesignerById = async (
   const project = await Project.findOne({
     user: userId,
     isDeleted: false,
+    "images.image": { $exists: true },
   }).lean();
 
   if (project) {
