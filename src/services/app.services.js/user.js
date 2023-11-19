@@ -95,7 +95,7 @@ export const getInteriorDesigners = async (
     }
   }
   var options = {
-    // isApproved:true,
+    isApproved: true,
     isDeleted: false,
     // isVerify: true,
     isSignUp: true,
@@ -975,7 +975,7 @@ export const cancelBooking = async (body, userId) => {
       ERROR_MESSAGES.ALREADY_CANCEL
     );
   }
-  
+
   const date = new Date();
   const timeDifferenceInMilliseconds = Math.abs(date - check.createdAt);
   const timeDifferenceInHours = timeDifferenceInMilliseconds / (1000 * 60 * 60);
@@ -994,7 +994,7 @@ export const cancelBooking = async (body, userId) => {
       } catch (error) {
         return error.message;
       }
-      
+
       await Payment.findOneAndUpdate(
         {
           consultationId: body.consultationId,
