@@ -1009,7 +1009,12 @@ export const getSaveImages = async (page, limit, userId) => {
   const user = await User.findOne(
     { _id: userId, isDeleted: false },
     { saveImages: { $slice: [page * limit, limit] } }
-  ).populate("saveImages.projectId");
+  )
+    .populate("saveImages.projectId")
+    .lean();
+  user?.saveImages.forEach((val) => {
+    val.isLike = true;
+  });
   return user?.saveImages;
 };
 export const review = async (data, userId) => {
