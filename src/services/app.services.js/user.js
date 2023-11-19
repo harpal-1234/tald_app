@@ -703,11 +703,11 @@ export const bookConsultations = async (
     durationTime: durationTime,
   });
 
-  const slot = data?.timeSlots.map((val) => {
-    return momentTz.tz(val, timeZone).format("YYYY-MM-DDTHH:mm:ss");
-  });
-  delete data.timeSlots;
-  data.timeSlots = slot;
+  // const slot = data?.timeSlots.map((val) => {
+  //   return momentTz.tz(val, timeZone).format("YYYY-MM-DDTHH:mm:ss");
+  // });
+  // delete data.timeSlots;
+  // data.timeSlots = slot;
 
   return data;
 };
