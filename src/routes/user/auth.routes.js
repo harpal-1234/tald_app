@@ -56,7 +56,7 @@ router.get(
   authController.getSubscription
 );
 router
-  .route("/user/auth/resetPassword")
+  .route("/resetPassword")
   .get(authController.forgotPage)
   .post(
     validateView(
