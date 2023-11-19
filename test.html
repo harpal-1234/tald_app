@@ -11,7 +11,7 @@
     <div class="mainDiv">
       <div class="cardStyle">
         <form
-          action="/user/auth/resetPassword?token={{token}}"
+          action=""
           method="post"
           name="signupForm"
           id="signupForm"
@@ -52,35 +52,22 @@
     </div>
     <script type="text/javascript" src="/forgotPassword.js"></script>
     <script>
+      document.getElementById('signupForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        
+        var token = 'your_token_value';  // Replace with your actual token value
+        
+        // Construct the correct action URL
+        var actionUrl = 'user/auth/resetPassword?token=' + token;
+        
+        // Set the form action and submit the form
+        document.getElementById('signupForm').action = actionUrl;
+        document.getElementById('signupForm').submit();
+      });
+
       function validateSignupForm() {
-        var password = document.getElementById('password').value;
-        var confirmPassword = document.getElementById('confirmPassword').value;
-
-        // Check minimum length
-        if (password.length < 8) {
-          alert('Password must be at least 8 characters long.');
-          return false;
-        }
-
-        // Check for at least one special character
-        if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-          alert('Password must contain at least one special character.');
-          return false;
-        }
-
-        // Check for at least one capital letter
-        if (!/[A-Z]/.test(password)) {
-          alert('Password must contain at least one capital letter.');
-          return false;
-        }
-
-        // Check if passwords match
-        if (password !== confirmPassword) {
-          alert('Passwords do not match.');
-          return false;
-        }
-
-        return true;
+        // Your validation logic here
+        return true;  // Return true if validation passes, false otherwise
       }
     </script>
   </body>
