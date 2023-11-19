@@ -508,13 +508,14 @@ export const inqueryList = async (page, limit) => {
 };
 
 export const actionOnInquery = async (Id, status) => {
-  let query;
+  var query = {};
   if (status == "Accept") {
     query.isVerify = true;
   }
   if (status == "Reject") {
     query.isReject = true;
   }
+  console.log(query);
   const inquery = await projectRequest.findOneAndUpdate(
     {
       _id: Id,
@@ -529,5 +530,6 @@ export const actionOnInquery = async (Id, status) => {
   // if(status == "Reject"){
 
   // }
+  console.log(inquery);
   return inquery;
 };

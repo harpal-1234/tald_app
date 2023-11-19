@@ -7,6 +7,7 @@ import {
   Review,
   Payment,
 } from "../../models/index.js";
+import momentTz from "moment-timezone";
 import { STATUS_CODES, ERROR_MESSAGES } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
 import {
@@ -336,7 +337,13 @@ export const saveProfile = async (designerId, userId) => {
     return { isSaveProfile: false };
   }
 };
-export const getSlots = async (designerId, date, userId, timeDuration) => {
+export const getSlots = async (
+  designerId,
+  date,
+  userId,
+  timeDuration,
+  timeZone
+) => {
   const check = await User.findOne({
     _id: designerId,
     isDeleted: false,
@@ -490,8 +497,16 @@ export const getSlots = async (designerId, date, userId, timeDuration) => {
     .lean();
   console.log(data);
   if (timeDuration == "25_mins") {
-    const timeSlots = slots.filter((date) => !data.includes(date));
-    return timeSlots;
+    const timeSlots = await Promise.all(
+      slots.filter((date) => !data.includes(date))
+    );
+
+    const data1 = timeSlots?.map((slots) => {
+      slots = momentTz.tz(slots, timeZone).format("YYYY-MM-DDTHH:mm:ss");
+      //console.log(new Date(slots));
+      return new Date(slots);
+    });
+    return data1;
   } else {
     function isWithin30Minutes(date1, date2) {
       const dateA = new Date(date1);
@@ -506,10 +521,15 @@ export const getSlots = async (designerId, date, userId, timeDuration) => {
       );
       return !matchingDate;
     });
-    return result;
+    const data1 = result?.map((slots) => {
+      slots = momentTz.tz(slots, timeZone).format("YYYY-MM-DDTHH:mm:ss");
+      //console.log(new Date(slots),"ggiigig");
+      return new Date(slots);
+    });
+    return data1;
   }
 };
-export const getSlotDates = async (designerId) => {
+export const getSlotDates = async (designerId, timeZone) => {
   const check = await User.findOne({
     _id: designerId,
     isDeleted: false,
@@ -537,6 +557,12 @@ export const getSlotDates = async (designerId) => {
 
   const dates = [];
   let originalDate = new Date();
+  console.log(originalDate, "originambbcbbnjkkbjb");
+  originalDate = momentTz
+    .tz(originalDate, timeZone)
+    .format("YYYY-MM-DDTHH:mm:ss");
+  originalDate = new Date(originalDate);
+  console.log(originalDate, "tztztztztzttztztztzz");
   originalDate.setMinutes(originalDate.getMinutes() + 1);
   let nextDate = originalDate.toISOString();
   //var nextDate = date;
@@ -645,7 +671,8 @@ export const bookConsultations = async (
   projectSummary,
   userId,
   files,
-  durationTime
+  durationTime,
+  timeZone
 ) => {
   const check = await User.findOne({
     _id: designerId,
@@ -658,7 +685,15 @@ export const bookConsultations = async (
       ERROR_MESSAGES.DESIGNER_NOT_FOUND
     );
   }
-
+  // const slots = timeSlots?.map((slot) => {
+  //   const originalDate = new Date(slot);
+  //   console.log(originalDate.toISOString());
+  //   return originalDate.toISOString();
+  // });
+  // const slots = timeSlots?.map((slot) => {
+  //   return moment.tz(slot, timeZone).utc().toDate();
+  // });
+  // console.log(slots);
   const data = await Consultations.create({
     designer: designerId,
     timeSlots: timeSlots,
@@ -667,9 +702,16 @@ export const bookConsultations = async (
     files: files,
     durationTime: durationTime,
   });
+
+  const slot = data?.timeSlots.map((val) => {
+    return momentTz.tz(val, timeZone).format("YYYY-MM-DDTHH:mm:ss");
+  });
+  delete data.timeSlots;
+  data.timeSlots = slot;
+
   return data;
 };
-export const getConsultations = async (page, limit, clientId) => {
+export const getConsultations = async (page, limit, clientId, timeZone) => {
   const date = new Date();
   const currentDate = moment(date).format();
   await Consultations.updateMany(
@@ -708,6 +750,38 @@ export const getConsultations = async (page, limit, clientId) => {
         select: ["_id", "email", "name", "companyName"],
       }),
   ]);
+  UpcomingConsultation?.forEach((val) => {
+    const newvalue = val.timeSlots.map((slots) => {
+      slots = momentTz.tz(slots, timeZone).format("YYYY-MM-DDTHH:mm:ss");
+      console.log(new Date(slots));
+      return new Date(slots);
+    });
+    const confirmTime = val?.confirmSlotTime;
+    delete val.timeSlots,
+      delete val?.confirmSlotTime,
+      (val.timeSlots = newvalue);
+    if (confirmTime) {
+      val.confirmSlotTime = momentTz
+        .tz(confirmTime, timeZone)
+        .format("YYYY-MM-DDTHH:mm:ss");
+    }
+  });
+  pastConsultations?.forEach((val) => {
+    const newvalue = val.timeSlots.map((slots) => {
+      slots = momentTz.tz(slots, timeZone).format("YYYY-MM-DDTHH:mm:ss");
+      console.log(new Date(slots));
+      return new Date(slots);
+    });
+    const confirmTime = val?.confirmSlotTime;
+    delete val.timeSlots,
+      delete val?.confirmSlotTime,
+      (val.timeSlots = newvalue);
+    if (confirmTime) {
+      val.confirmSlotTime = momentTz
+        .tz(confirmTime, timeZone)
+        .format("YYYY-MM-DDTHH:mm:ss");
+    }
+  });
   const consultations = [
     {
       type: "UpcomingConsultations",

@@ -85,7 +85,7 @@ router.get(
   validate(authValidation.getConsultation),
   authController.approvedInqueryList
 );
-router.get(
+router.put(
   "/actionOnInquery",
   auth(USER_TYPE.ADMIN),
   validate(authValidation.iqueryOnAction),

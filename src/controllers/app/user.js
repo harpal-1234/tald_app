@@ -25,7 +25,7 @@ export const getInteriorDesigners = catchAsync(async (req, res) => {
     startDate,
     endDate,
     AcceptVirtualConsultation,
-    feeStructure
+    feeStructure,
   } = req.query;
 
   var userId;
@@ -108,7 +108,8 @@ export const getSlots = catchAsync(async (req, res) => {
     designerId,
     date,
     userId,
-    timeDuration
+    timeDuration,
+    req.headers.timezone
   );
 
   return successResponse(
@@ -122,7 +123,10 @@ export const getSlots = catchAsync(async (req, res) => {
 export const getSlotDates = catchAsync(async (req, res) => {
   const { designerId } = req.query;
   const userId = req.token.user._id;
-  const slots = await clientServices.getSlotDates(designerId);
+  const slots = await clientServices.getSlotDates(
+    designerId,
+    req.headers.timezone
+  );
   return successResponse(
     req,
     res,
@@ -141,7 +145,8 @@ export const bookConsultations = catchAsync(async (req, res) => {
     projectSummary,
     userId,
     files,
-    durationTime
+    durationTime,
+    req.headers.timezone
   );
 
   return successResponse(
@@ -185,7 +190,8 @@ export const getConsultations = catchAsync(async (req, res) => {
   const consultations = await clientServices.getConsultations(
     req.query.page,
     req.query.limit,
-    userId
+    userId,
+    req.headers.timezone
   );
 
   return successResponse(
@@ -419,7 +425,10 @@ export const cancelBooking = catchAsync(async (req, res) => {
 });
 export const rescheduledBookConsultations = catchAsync(async (req, res) => {
   const userId = req.token.user._id;
-  const data = await clientServices.rescheduledBookConsultations(req.body, userId);
+  const data = await clientServices.rescheduledBookConsultations(
+    req.body,
+    userId
+  );
   return successResponse(
     req,
     res,
