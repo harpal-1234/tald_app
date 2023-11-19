@@ -630,39 +630,44 @@ export const getSaveProfiles = async (data, userId) => {
       isDeleted: false,
     },
     { saveProfiles: { $slice: [data.page * data.limit, data.limit] } }
-  ).populate({
-    path: "saveProfiles",
-    select: [
-      "email",
-      "name",
-      "isBlocked",
-      "companyName",
-      "address",
-      "instagramLink",
-      "pinterestLink",
-      "about",
-      "projectType",
-      "virtual_Consultations",
-      "newClientProjects",
-      "destinationProject",
-      "feeStructure",
-      "tradeDiscount",
-      "minBudget",
-      "maxBudget",
-      "weeklySchedule",
-      "availability",
-      "goals",
-      "preferences",
-      "projectSize",
-      "styles",
-    ],
-  });
+  )
+    .populate({
+      path: "saveProfiles",
+      select: [
+        "email",
+        "name",
+        "isBlocked",
+        "companyName",
+        "address",
+        "instagramLink",
+        "pinterestLink",
+        "about",
+        "projectType",
+        "virtual_Consultations",
+        "newClientProjects",
+        "destinationProject",
+        "feeStructure",
+        "tradeDiscount",
+        "minBudget",
+        "maxBudget",
+        "weeklySchedule",
+        "availability",
+        "goals",
+        "preferences",
+        "projectSize",
+        "styles",
+      ],
+    })
+    .lean();
   if (!check) {
     throw new OperationalError(
       STATUS_CODES.ACTION_FAILED,
       ERROR_MESSAGES.DESIGNER_NOT_FOUND
     );
   }
+  check?.saveProfiles.forEach((val) => {
+    val.isSaveProfile = true;
+  });
   return check?.saveProfiles;
 };
 export const bookConsultations = async (
