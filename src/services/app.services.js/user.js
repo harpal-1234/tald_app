@@ -708,6 +708,7 @@ export const bookConsultations = async (
   // });
   // delete data.timeSlots;
   // data.timeSlots = slot;
+  //clg
 
   return data;
 };
