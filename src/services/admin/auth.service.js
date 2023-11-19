@@ -475,7 +475,7 @@ export const approvedInqueryList = async (page, limit) => {
     .sort({ _id: -1 })
     .skip(page * limit)
     .limit(limit);
-  const totalInqueryList = await projectRequest.find({
+  const totalInqueryList = await projectRequest.countDocuments({
     isDeleted: false,
     isVerify: true,
   });
@@ -496,7 +496,7 @@ export const inqueryList = async (page, limit) => {
     .sort({ _id: -1 })
     .skip(page * limit)
     .limit(limit);
-  const totalInqueryList = await projectRequest.find({
+  const totalInqueryList = await projectRequest.countDocuments({
     isDeleted: false,
     isVerify: false,
   });
