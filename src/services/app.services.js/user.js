@@ -837,7 +837,8 @@ export const getProjectInqueries = async (page, limit, userId) => {
   const projects = await ProjectInquery.find({ user: userId, isDeleted: false })
     .lean()
     .skip(page * limit)
-    .limit(limit);
+    .limit(limit)
+    .sort({ _id: -1 });
   await formatProjectInquery(projects);
 
   return projects;

@@ -114,6 +114,7 @@ export const getProjectInqueryStatus = async (projectId) => {
       projectId: projectId,
       // isCancel: false,
     })
+    .sort({ _id: -1 })
     .populate([
       {
         path: "projectId",

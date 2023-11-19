@@ -414,6 +414,7 @@ export const getProjectInqueries = async (page, limit, designerId) => {
       isDeleted: false,
     })
     .skip(page * limit)
+    .sort({ _id: -1 })
     .limit(limit)
     .lean()
     .populate([
