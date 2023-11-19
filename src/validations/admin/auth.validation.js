@@ -155,14 +155,14 @@ export const getDesignerDetails = {
 };
 export const getSubscriptions = {
   query: Joi.object().keys({
-   // userId: Joi.string().required(),
+    // userId: Joi.string().required(),
     page: Joi.number().required(),
-    limit:Joi.number().required()
+    limit: Joi.number().required(),
   }),
 };
 export const getProjectInqueryStatus = {
   query: Joi.object().keys({
-   projectId: Joi.string().required()
+    projectId: Joi.string().required(),
   }),
 };
 export default {
@@ -180,5 +180,5 @@ export default {
   getClientDetails,
   getDesignerDetails,
   getSubscriptions,
-  getProjectInqueryStatus
+  getProjectInqueryStatus,
 };
