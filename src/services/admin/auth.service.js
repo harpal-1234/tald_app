@@ -525,5 +525,8 @@ export const actionOnInquery = async (Id, status) => {
       new: true,
     }
   );
+  // if(status == "Reject"){
+
+  // }
   return inquery;
 };

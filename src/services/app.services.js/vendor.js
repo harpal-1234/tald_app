@@ -77,7 +77,9 @@ export const addImages = async (userId, projectId, images) => {
   return project;
 };
 export const Portfolio = async (userId) => {
-  const data = await Project.find({ user: userId, isDeleted: false });
+  const data = await Project.find({ user: userId, isDeleted: false }).sort({
+    _id: -1,
+  });
   return data;
 };
 export const deleteProject = async (userId, projectId) => {
@@ -408,7 +410,7 @@ export const getProjectInqueries = async (page, limit, designerId) => {
   const projects = await projectRequest
     .find({
       designer: designerId,
-      // isVerify: true,
+      isVerify: true,
       isDeleted: false,
     })
     .skip(page * limit)
