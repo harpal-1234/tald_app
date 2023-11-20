@@ -355,6 +355,32 @@ export const getConsultations = async (page, limit, designerId, timeZone) => {
         .format("YYYY-MM-DDTHH:mm:ss");
     }
   });
+  requestedConsultations?.forEach((val) => {
+    const newvalue = val.timeSlots.map((slots) => {
+      slots = momentTz.tz(slots, timeZone).format("YYYY-MM-DDTHH:mm:ss");
+      // console.log(new Date(slots));
+      return slots;
+    });
+    delete val.timeSlots,
+      delete val?.confirmSlotTime,
+      (val.timeSlots = newvalue);
+  });
+  pastConsultations?.forEach((val) => {
+    const newvalue = val.timeSlots.map((slots) => {
+      slots = momentTz.tz(slots, timeZone).format("YYYY-MM-DDTHH:mm:ss");
+      // console.log(new Date(slots));
+      return slots;
+    });
+    const confirmTime = val?.confirmSlotTime;
+    delete val.timeSlots,
+      delete val?.confirmSlotTime,
+      (val.timeSlots = newvalue);
+    if (confirmTime) {
+      val.confirmSlotTime = momentTz
+        .tz(confirmTime, timeZone)
+        .format("YYYY-MM-DDTHH:mm:ss");
+    }
+  });
   const consultations = [
     {
       type: "requestedConsultations",
@@ -374,7 +400,8 @@ export const getConsultations = async (page, limit, designerId, timeZone) => {
 export const consultationAction = async (
   consultationId,
   confirmTime,
-  designerId
+  designerId,
+  timeZone
 ) => {
   const check = await Consultations.findOne({
     _id: consultationId,
@@ -414,7 +441,11 @@ export const consultationAction = async (
       isPast: false,
     },
     {
-      confirmSlotTime: confirmTime,
+      confirmSlotTime: moment
+        .tz(confirmTime, timeZone)
+        .utc()
+        .toDate()
+        .toISOString(),
       isConfirm: true,
       zoomMeetingLink: zoomLink,
     },
@@ -448,7 +479,6 @@ export const getProjectInqueries = async (page, limit, designerId) => {
   formatProjectInquery(projects);
   return projects;
 };
-
 export const actionProjectInquery = async (Id, status, designerId) => {
   const check = await projectRequest.findOne({
     _id: Id,

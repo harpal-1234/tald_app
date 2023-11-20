@@ -172,7 +172,8 @@ export const getConsultations = catchAsync(async (req, res) => {
   const consultations = await vendorServices.getConsultations(
     req.query.page,
     req.query.limit,
-    designerId
+    designerId,
+    req.headers.timezone
   );
   return successResponse(
     req,
@@ -188,7 +189,8 @@ export const consultationAction = catchAsync(async (req, res) => {
   const consultation = await vendorServices.consultationAction(
     req.body.consultationId,
     req.body.confirmTime,
-    designerId
+    designerId,
+    req.headers.timezone
   );
   return successResponse(
     req,
@@ -317,7 +319,10 @@ export const cancelBooking = catchAsync(async (req, res) => {
 });
 export const rescheduledBookConsultations = catchAsync(async (req, res) => {
   const userId = req.token.user._id;
-  const data = await vendorServices.rescheduledBookConsultations(req.body, userId);
+  const data = await vendorServices.rescheduledBookConsultations(
+    req.body,
+    userId
+  );
   return successResponse(
     req,
     res,
