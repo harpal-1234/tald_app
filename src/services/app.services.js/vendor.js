@@ -426,7 +426,7 @@ export const consultationAction = async (
       ERROR_MESSAGES.VALID_DATE
     );
   }
-  const designer = await User.find({
+  const designer = await User.findOne({
     _id: designerId,
     // isVerify: true,
     isDeleted: false,
@@ -456,7 +456,7 @@ export const consultationAction = async (
   );
   const user = await User.findOne({ _id: check.user, isDeleted: false });
   sendEmail.acceptBooking(
-    body.consultationId,
+    consultationId,
     designer?.name,
     //body.reason,
     user?.email
