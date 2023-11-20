@@ -186,7 +186,8 @@ export const getSubscription = async (page, limit) => {
     .skip(page * limit)
     .limit(limit)
     .sort({ _id: -1 });
-  return subScriptions;
+  const total = await Subscriptions.countDocuments({ isDeleted: false });
+  return { subScriptions, total };
 };
 export const getConsultationPayments = async (page, limit) => {
   const payments = await Payment.find({ isDeleted: false })
@@ -198,7 +199,9 @@ export const getConsultationPayments = async (page, limit) => {
     .skip(page * limit)
     .limit(limit)
     .sort({ _id: -1 });
-  return payments;
+  const total = await Payment.countDocuments({ isDeleted: false });
+
+  return { payments, total };
 };
 export const vendorList = async (page, limit, search) => {
   const options = {
@@ -486,7 +489,7 @@ export const approvedInqueryList = async (page, limit) => {
 
   return {
     inqueryList: inqueryList,
-    totalInqueryList: totalInqueryList,
+    total: totalInqueryList,
   };
 };
 
@@ -507,7 +510,7 @@ export const inqueryList = async (page, limit) => {
 
   return {
     inqueryList: inqueryList,
-    totalInqueryList: totalInqueryList,
+    total: totalInqueryList,
   };
 };
 

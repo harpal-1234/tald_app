@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
-import cors from"cors";
+import cors from "cors";
 import app from "./app.js";
 import config from "./src/config/config.js";
 import logger from "./src/config/logger.js";
 import CreateAdmin from "./src/utils/bootstrap.js";
 import { connectSocket } from "./src/utils/socket.js";
-
+import * as cron from "./src/utils/cron.js";
 
 // Enable CORS for socket.io
 
