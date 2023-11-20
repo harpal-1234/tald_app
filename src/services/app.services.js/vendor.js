@@ -301,6 +301,7 @@ export const getConsultations = async (page, limit, designerId, timeZone) => {
         isDeleted: false,
         isConfirm: false,
         isPast: false,
+        isCancel: false,
         isPayment: true,
       })
         .skip(page * limit)
@@ -315,6 +316,7 @@ export const getConsultations = async (page, limit, designerId, timeZone) => {
         designer: designerId,
         isDeleted: false,
         isConfirm: true,
+        isCancel: false,
         isPast: false,
       })
         .skip(page * limit)
@@ -329,6 +331,7 @@ export const getConsultations = async (page, limit, designerId, timeZone) => {
         designer: designerId,
         isDeleted: false,
         isPast: true,
+        isCancel: false,
       })
         .skip(page * limit)
         .limit(limit)
@@ -451,7 +454,13 @@ export const consultationAction = async (
     },
     { new: true }
   );
-
+  const user = await User.findOne({ _id: check.user, isDeleted: false });
+  sendEmail.acceptBooking(
+    body.consultationId,
+    designer?.name,
+    //body.reason,
+    user?.email
+  );
   return data;
 };
 export const getProjectInqueries = async (page, limit, designerId) => {

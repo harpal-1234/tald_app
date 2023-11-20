@@ -14,6 +14,7 @@ import {
 import { STATUS_CODES, ERROR_MESSAGES } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
 //import { formatUser } from "../../utils/formatResponse.js";
+import * as sendEmail from "../../utils/sendMail.js";
 import { createVendorMail } from "../../utils/sendMail.js";
 import { formatUser } from "../../utils/commonFunction.js";
 import { getConsultations } from "../app.services.js/vendor.js";
@@ -458,11 +459,13 @@ export const getConsultation = async (page, limit) => {
     .sort({ _id: -1 })
     .skip(page * limit)
     .limit(limit);
-  const totalConsultations = await Consultations.find({ isDeleted: false });
+  const totalConsultations = await Consultations.countDocuments({
+    isDeleted: false,
+  });
 
   return {
     consultations: consultations,
-    totalConsultations: totalConsultations,
+    total: totalConsultations,
   };
 };
 export const approvedInqueryList = async (page, limit) => {
@@ -528,9 +531,14 @@ export const actionOnInquery = async (Id, status) => {
       new: true,
     }
   );
-  // if(status == "Reject"){
-
-  // }
+  if (status == "Reject") {
+    const user = await User.findOne({ _id: inquery.user, isDeleted: false });
+    sendEmail.InqueryBooking(
+      Id,
+      "Admin Reject Your Inquery Request",
+      user?.email
+    );
+  }
   console.log(inquery);
   return inquery;
 };

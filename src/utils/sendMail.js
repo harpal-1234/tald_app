@@ -189,6 +189,40 @@ export const cancelBooking = async (consultationId, name, reason, email) => {
     });
   });
 };
+export const acceptBooking = async (consultationId, name, email) => {
+  return new Promise((resolve, reject) => {
+    var info = {
+      from: process.env.SENDER_EMAIL,
+      to: email,
+      subject: "Accept Consultation Booking",
+      html: `<b><span>message:</span></b><span>${name} Accept Your Consultation Booking </span><b><br><span>consultationId:</span></b><span>${consultationId}</span><b><br><br><span>name:</span></b>${name}<br>`,
+    };
+
+    transporter.sendMail(info, (error, accept) => {
+      if (error) {
+        reject(error);
+      }
+      resolve(accept, console.log("Mail Sended"));
+    });
+  });
+};
+export const InqueryBooking = async (Id, message, email) => {
+  return new Promise((resolve, reject) => {
+    var info = {
+      from: process.env.SENDER_EMAIL,
+      to: email,
+      subject: "Accept Consultation Booking",
+      html: `<b><span>message:</span></b><span>${message}</span><b><br><span>consultationId:</span></b><span>${Id}</span><b>`,
+    };
+
+    transporter.sendMail(info, (error, accept) => {
+      if (error) {
+        reject(error);
+      }
+      resolve(accept, console.log("Mail Sended"));
+    });
+  });
+};
 export const rescheduledBookConsultationsBookingClient = async (
   consultationId,
   name,
