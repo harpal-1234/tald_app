@@ -249,11 +249,15 @@ export const getInteriorDesignerById = async (
       console.log("jnfjjnjfjnnjfvfvlmfnuuuuuuuuu");
       designer.isSaveProfile = false;
     }
-    console.log(user)
+    console.log(user);
     projects?.forEach((val) => {
-      console.log(user?.saveImages,"iiiiiiiiiiiiiiiii", val?._id);
-      if (JSON.stringify(user?.saveImages).includes(val?._id)) {
-        val.isLike = true;
+      console.log(user?.saveImages, "iiiiiiiiiiiiiiiii", val?._id);
+      if (user?.saveImages) {
+        if (JSON.stringify(user?.saveImages).includes(val?._id)) {
+          val.isLike = true;
+        } else {
+          val.isLike = false;
+        }
       } else {
         val.isLike = false;
       }
