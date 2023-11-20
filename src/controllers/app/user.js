@@ -204,7 +204,11 @@ export const getConsultations = catchAsync(async (req, res) => {
 });
 export const createProjectInquery = catchAsync(async (req, res) => {
   const userId = req.token.user._id;
-  const project = await clientServices.createProjectInquery(req.body, userId);
+  const project = await clientServices.createProjectInquery(
+    req.body,
+    userId,
+    req.headers.timezone
+  );
   return successResponse(
     req,
     res,
@@ -241,7 +245,8 @@ export const submitProjectInquery = catchAsync(async (req, res) => {
   const project = await clientServices.submitProjectInquery(
     req.body.projectId,
     req.body.designerId,
-    userId
+    userId,
+    req.headers.timezone
   );
   return successResponse(
     req,
@@ -256,7 +261,8 @@ export const getProjectInqueries = catchAsync(async (req, res) => {
   const projects = await clientServices.getProjectInqueries(
     req.query.page,
     req.query.limit,
-    userId
+    userId,
+    req.headers.timezone
   );
   return successResponse(
     req,

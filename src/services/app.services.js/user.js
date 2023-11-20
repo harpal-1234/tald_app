@@ -503,8 +503,8 @@ export const getSlots = async (
 
     const data1 = timeSlots?.map((slots) => {
       slots = momentTz.tz(slots, timeZone).format("YYYY-MM-DDTHH:mm:ss");
-      //console.log(new Date(slots));
-      return new Date(slots);
+      console.log(slots);
+      return slots;
     });
     return data1;
   } else {
@@ -524,7 +524,7 @@ export const getSlots = async (
     const data1 = result?.map((slots) => {
       slots = momentTz.tz(slots, timeZone).format("YYYY-MM-DDTHH:mm:ss");
       //console.log(new Date(slots),"ggiigig");
-      return new Date(slots);
+      return slots;
     });
     return data1;
   }
@@ -690,18 +690,18 @@ export const bookConsultations = async (
       ERROR_MESSAGES.DESIGNER_NOT_FOUND
     );
   }
-  // const slots = timeSlots?.map((slot) => {
-  //   const originalDate = new Date(slot);
-  //   console.log(originalDate.toISOString());
-  //   return originalDate.toISOString();
-  // });
+  const slots = await Promise.all(
+    timeSlots?.map((slot) => {
+      return moment.tz(slot, timeZone).utc().toDate().toISOString();
+    })
+  );
   // const slots = timeSlots?.map((slot) => {
   //   return moment.tz(slot, timeZone).utc().toDate();
   // });
-  // console.log(slots);
+  console.log(slots);
   const data = await Consultations.create({
     designer: designerId,
-    timeSlots: timeSlots,
+    timeSlots: slots,
     projectSummary: projectSummary,
     user: userId,
     files: files,
@@ -711,8 +711,8 @@ export const bookConsultations = async (
   // const slot = data?.timeSlots.map((val) => {
   //   return momentTz.tz(val, timeZone).format("YYYY-MM-DDTHH:mm:ss");
   // });
-  // delete data.timeSlots;
-  // data.timeSlots = slot;
+  delete data.timeSlots;
+  data.timeSlots = timeSlots;
   //clg
 
   return data;
@@ -759,8 +759,8 @@ export const getConsultations = async (page, limit, clientId, timeZone) => {
   UpcomingConsultation?.forEach((val) => {
     const newvalue = val.timeSlots.map((slots) => {
       slots = momentTz.tz(slots, timeZone).format("YYYY-MM-DDTHH:mm:ss");
-      console.log(new Date(slots));
-      return new Date(slots);
+      // console.log(new Date(slots));
+      return slots;
     });
     const confirmTime = val?.confirmSlotTime;
     delete val.timeSlots,
@@ -775,8 +775,7 @@ export const getConsultations = async (page, limit, clientId, timeZone) => {
   pastConsultations?.forEach((val) => {
     const newvalue = val.timeSlots.map((slots) => {
       slots = momentTz.tz(slots, timeZone).format("YYYY-MM-DDTHH:mm:ss");
-      console.log(new Date(slots));
-      return new Date(slots);
+      return slots;
     });
     const confirmTime = val?.confirmSlotTime;
     delete val.timeSlots,
@@ -822,9 +821,21 @@ export const addFileConsultation = async (consultationId, file, fileType) => {
   );
   return consultation;
 };
-export const createProjectInquery = async (body, userId) => {
+export const createProjectInquery = async (body, userId, timeZone) => {
   body.user = userId;
   body.isVerify = true;
+  if (body.startDate && body.endDate) {
+    body.startDate = moment
+      .tz(body.startDate, timeZone)
+      .utc()
+      .toDate()
+      .toISOString();
+    body.endDate = moment
+      .tz(body.endDate, timeZone)
+      .utc()
+      .toDate()
+      .toISOString();
+  }
   const project = await ProjectInquery.create(body);
   return project;
 };
@@ -913,14 +924,21 @@ export const submitProjectInquery = async (projectId, designerId, userId) => {
 
   return data;
 };
-export const getProjectInqueries = async (page, limit, userId) => {
+export const getProjectInqueries = async (page, limit, userId, timeZone) => {
   const projects = await ProjectInquery.find({ user: userId, isDeleted: false })
     .lean()
     .skip(page * limit)
     .limit(limit)
     .sort({ _id: -1 });
   await formatProjectInquery(projects);
-
+  projects?.forEach((val) => {
+    val.startDate = momentTz
+      .tz(val.startDate, timeZone)
+      .format("YYYY-MM-DDTHH:mm:ss");
+    val.endDate = momentTz
+      .tz(val.endDate, timeZone)
+      .format("YYYY-MM-DDTHH:mm:ss");
+  });
   return projects;
 };
 export const getProjects = async (userId) => {
