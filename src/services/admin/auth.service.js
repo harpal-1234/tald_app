@@ -206,7 +206,7 @@ export const getConsultationPayments = async (page, limit) => {
 export const vendorList = async (page, limit, search) => {
   const options = {
     isDeleted: false,
-    isApproved: true,
+    //isApproved: true,
   };
   const escapedSearchTerm = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
   if (search) {
