@@ -467,7 +467,7 @@ export const getConsultation = async (page, limit) => {
 };
 export const approvedInqueryList = async (page, limit) => {
   const inqueryList = await projectRequest
-    .find({ isDeleted: false, isVerify: true })
+    .find({ isDeleted: false, isVerify: true, isReject: false })
     .populate([
       { path: "designer", select: ["name", "email"] },
       { path: "user", select: ["name", "email"] },
@@ -478,6 +478,7 @@ export const approvedInqueryList = async (page, limit) => {
   const totalInqueryList = await projectRequest.countDocuments({
     isDeleted: false,
     isVerify: true,
+    isReject: false,
   });
 
   return {
