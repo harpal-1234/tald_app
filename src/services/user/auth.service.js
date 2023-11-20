@@ -470,6 +470,7 @@ export const webhook = async (body, sig, stripeSecret) => {
       consultationId: JSON.parse(body.data.object.metadata.consultationId),
       transitionId: body.data.object.payment_intent,
     });
+    console.log("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
     const consultation = await Consultations.findOneAndUpdate(
       {
         _id: JSON.parse(body.data.object.metadata.consultationId),
