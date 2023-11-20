@@ -294,7 +294,12 @@ export const getInqueriesStatus = catchAsync(async (req, res) => {
   );
 });
 export const editProjectInquery = catchAsync(async (req, res) => {
-  const project = await clientServices.editProjectInquery(req.body);
+  const userId = req.token.user._id;
+  const project = await clientServices.editProjectInquery(
+    req.body,
+    userId,
+    req.headers.timezone
+  );
   return successResponse(
     req,
     res,
@@ -433,7 +438,8 @@ export const rescheduledBookConsultations = catchAsync(async (req, res) => {
   const userId = req.token.user._id;
   const data = await clientServices.rescheduledBookConsultations(
     req.body,
-    userId
+    userId,
+    req.headers.timezone
   );
   return successResponse(
     req,

@@ -11,6 +11,7 @@ import {
 import { STATUS_CODES, ERROR_MESSAGES } from "../../config/appConstants.js";
 import { OperationalError } from "../../utils/errors.js";
 import moment from "moment";
+import momentTz from "moment-timezone";
 import {
   formatUser,
   formatProjectInquery,
@@ -282,7 +283,7 @@ export const editVendorProfile = async (data, userId) => {
   );
   return profile;
 };
-export const getConsultations = async (page, limit, designerId) => {
+export const getConsultations = async (page, limit, designerId, timeZone) => {
   const date = new Date();
   const currentDate = moment(date).format();
   await Consultations.updateMany(
@@ -338,6 +339,22 @@ export const getConsultations = async (page, limit, designerId) => {
           select: ["_id", "email", "name"],
         }),
     ]);
+  confirmedConsultations?.forEach((val) => {
+    const newvalue = val.timeSlots.map((slots) => {
+      slots = momentTz.tz(slots, timeZone).format("YYYY-MM-DDTHH:mm:ss");
+      // console.log(new Date(slots));
+      return slots;
+    });
+    const confirmTime = val?.confirmSlotTime;
+    delete val.timeSlots,
+      delete val?.confirmSlotTime,
+      (val.timeSlots = newvalue);
+    if (confirmTime) {
+      val.confirmSlotTime = momentTz
+        .tz(confirmTime, timeZone)
+        .format("YYYY-MM-DDTHH:mm:ss");
+    }
+  });
   const consultations = [
     {
       type: "requestedConsultations",

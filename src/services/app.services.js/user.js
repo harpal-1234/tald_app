@@ -931,13 +931,16 @@ export const getProjectInqueries = async (page, limit, userId, timeZone) => {
     .limit(limit)
     .sort({ _id: -1 });
   await formatProjectInquery(projects);
+
   projects?.forEach((val) => {
-    val.startDate = momentTz
-      .tz(val.startDate, timeZone)
-      .format("YYYY-MM-DDTHH:mm:ss");
-    val.endDate = momentTz
-      .tz(val.endDate, timeZone)
-      .format("YYYY-MM-DDTHH:mm:ss");
+    if (val.startDate && val.endDate) {
+      val.startDate = momentTz
+        .tz(val.startDate, timeZone)
+        .format("YYYY-MM-DDTHH:mm:ss");
+      val.endDate = momentTz
+        .tz(val.endDate, timeZone)
+        .format("YYYY-MM-DDTHH:mm:ss");
+    }
   });
   return projects;
 };
@@ -950,14 +953,27 @@ export const getProjects = async (userId) => {
 
   return projects;
 };
-export const editProjectInquery = async (body, userId) => {
+export const editProjectInquery = async (body, userId, timeZone) => {
   const projectId = body.projectId;
   body.user = userId;
   delete body.projectId;
   const val = body.kindOfAssistance;
   delete body.kindOfAssistance;
   body.$set = { kindOfAssistance: val };
-  console.log(body);
+  //console.log(body);
+
+  if (body.startDate && body.endDate) {
+    body.startDate = moment
+      .tz(body.startDate, timeZone)
+      .utc()
+      .toDate()
+      .toISOString();
+    body.endDate = moment
+      .tz(body.endDate, timeZone)
+      .utc()
+      .toDate()
+      .toISOString();
+  }
   const check = await ProjectInquery.findOne({
     _id: projectId,
     isDeleted: false,
@@ -968,13 +984,22 @@ export const editProjectInquery = async (body, userId) => {
       ERROR_MESSAGES.PROJECT_NOT_FOUND
     );
   }
+
+  console.log(body);
   const projects = await ProjectInquery.findOneAndUpdate(
     { _id: projectId, isDeleted: false },
-    { body },
+    body,
     { new: true }
   );
   await formatProjectInquery(projects.toObject());
-
+  if (projects.startDate && projects.endDate) {
+    projects.startDate = momentTz
+      .tz(projects.startDate, timeZone)
+      .format("YYYY-MM-DDTHH:mm:ss");
+    projects.endDate = momentTz
+      .tz(projects.endDate, timeZone)
+      .format("YYYY-MM-DDTHH:mm:ss");
+  }
   return projects;
 };
 export const saveImages = async (data, userId) => {
@@ -1135,7 +1160,7 @@ export const cancelBooking = async (body, userId) => {
   );
   return data;
 };
-export const rescheduledBookConsultations = async (body, userId) => {
+export const rescheduledBookConsultations = async (body, userId, timeZone) => {
   const check = await Consultations.findOne({
     _id: body.consultationId,
     isDeleted: false,
@@ -1153,7 +1178,13 @@ export const rescheduledBookConsultations = async (body, userId) => {
   body.isConfirm = false;
   body.isReschedule = true;
   const user = await User.findOne({ _id: userId, isDeleted: false });
-  console.log(user);
+  const userSlots = body.timeSlots;
+  const slots = await Promise.all(
+    body.timeSlots?.map((slot) => {
+      return moment.tz(slot, timeZone).utc().toDate().toISOString();
+    })
+  );
+  body.timeSlots = slots;
   const update = await Consultations.findOneAndUpdate(
     {
       _id: consultationId,
@@ -1170,5 +1201,7 @@ export const rescheduledBookConsultations = async (body, userId) => {
     user?.name,
     user?.email
   );
+  await update.toObject();
+  update.timeSlots = userSlots;
   return update;
 };
