@@ -479,11 +479,14 @@ export const webhook = async (body, sig, stripeSecret) => {
       { isPayment: true },
       { new: true }
     );
-    console.log("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+    console.log(
+      "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii",
+      typeof amount
+    );
     await Admin.findByIdAndUpdate(
       { isDeleted: false },
       {
-        $inc: { consultationRevenue: parseInt(amount) },
+        $inc: { consultationRevenue: amount },
       }
     );
     console.log(createOrder, consultation);
