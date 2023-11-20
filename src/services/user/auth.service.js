@@ -480,7 +480,7 @@ export const webhook = async (body, sig, stripeSecret) => {
       { new: true }
     );
     console.log("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
-    await Admin.findByIdAndUpdate(
+    await Admin.findOneAndUpdate(
       {},
       {
         $inc: { consultationRevenue: parseInt(amount) },
